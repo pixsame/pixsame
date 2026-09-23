@@ -7,6 +7,11 @@
     "packages/cypress-plugin-visual-regression-diff": {
       "path": "packages/cypress-plugin-visual-regression-diff",
       "component": "@pixsame/cypress-plugin-visual-regression-diff"
+    },
+    "packages/playwright-visual-regression-diff": {
+      "path": "packages/playwright-visual-regression-diff",
+      "component": "@pixsame/playwright",
+      "release-as": "0.1.0"
     }
   }
 }

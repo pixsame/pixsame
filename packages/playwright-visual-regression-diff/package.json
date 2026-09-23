@@ -1,0 +1,81 @@
+{
+  "name": "@frsource/playwright-visual-regression-diff",
+  "description": "Visual regression testing for Playwright: the matchImage flow, baseline layout, run manifest and CI tooling of @frsource/cypress-plugin-visual-regression-diff, plus a pinned remote browser in Docker for drift-free pixels.",
+  "version": "0.0.0",
+  "author": "Jakub Freisler <jakub.freisler@frsource.org>",
+  "homepage": "https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/tree/main/packages/playwright-visual-regression-diff",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff.git",
+    "directory": "packages/playwright-visual-regression-diff"
+  },
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./remote": {
+      "types": "./dist/remote.d.ts",
+      "default": "./dist/remote.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "del-cli dist && tsc -p tsconfig.build.json",
+    "format": "prettier --write .",
+    "format:ci": "prettier --check .",
+    "test:integration": "vitest run",
+    "test:integration:watch": "vitest",
+    "test:integration:coverage": "vitest run --coverage",
+    "test:integration:ci": "CI=true vitest run --coverage",
+    "test:smoke": "playwright test -c e2e/playwright.config.ts",
+    "test:smoke:remote": "playwright test -c e2e/playwright.remote.config.ts"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "packageManager": "pnpm@12.5.1",
+  "peerDependencies": {
+    "@playwright/test": ">=1.40.0"
+  },
+  "dependencies": {
+    "meta-png": "1.0.6",
+    "pixelmatch": "7.2.0",
+    "sanitize-filename": "1.6.4",
+    "sharp": "0.35.4"
+  },
+  "devDependencies": {
+    "@frsource/prettier-config": "^1.11.0",
+    "@playwright/test": "1.63.0",
+    "@types/node": "20.19.43",
+    "@types/tmp": "0.2.6",
+    "@vitest/coverage-v8": "4.1.11",
+    "del-cli": "7.0.0",
+    "prettier": "3.9.8",
+    "tmp-promise": "3.0.3",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
+  },
+  "keywords": [
+    "Playwright",
+    "Playwright fixture",
+    "visual regression testing",
+    "visual diff",
+    "image diff",
+    "visual comparison",
+    "image comparison",
+    "screenshot testing",
+    "image snapshot"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ]
+}
