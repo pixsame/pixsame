@@ -1,0 +1,5 @@
+node_modules
+coverage
+dist
+e2e/test-results
+e2e/**/__image_snapshots__
