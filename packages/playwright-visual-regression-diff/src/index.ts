@@ -15,11 +15,9 @@ export {
   type CompareResult,
   type CompareStatus,
 } from './compare';
-export { ManifestWriter } from './manifest';
-export type * from './manifest.types';
 export {
-  DEFAULT_IMAGES_PATH,
-  MANIFEST_FILE_PREFIX,
-  MANIFEST_VERSION,
-  PATH_VARIABLES,
-} from './constants';
+  manifestFileNameFor,
+  rendererFor,
+  type ManifestWorkerInput,
+} from './manifest.utils';
+export { DEFAULT_IMAGES_PATH, PATH_VARIABLES } from './constants';

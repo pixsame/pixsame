@@ -1,16 +1,5 @@
 export const PLUGIN_NAME = 'pw-visual-regression-diff';
 
-/**
- * Shared with `@frsource/cypress-plugin-visual-regression-diff`, so CI tooling
- * (the GitHub App, review services) finds every manifest of a run with one
- * glob: `**\/*cp-visual-regression-diff-manifest*.json`.
- */
-export const MANIFEST_FILE_PREFIX = 'cp-visual-regression-diff-manifest';
-/** One manifest per Playwright worker; they are merged by the consumer like manifests of several machines. */
-export const getManifestFileName = (workerIndex: number) =>
-  `${MANIFEST_FILE_PREFIX}.playwright.w${workerIndex}.json`;
-export const MANIFEST_VERSION = 1;
-
 export enum FILE_SUFFIX {
   diff = '.diff',
   actual = '.actual',

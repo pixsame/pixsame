@@ -1,4 +1,3 @@
-import { createRequire } from 'module';
 import path from 'path';
 import {
   test as base,
@@ -12,22 +11,21 @@ import {
   type PlaywrightWorkerArgs,
   type PlaywrightWorkerOptions,
   type TestInfo,
-  type WorkerInfo,
 } from '@playwright/test';
+import type { ManifestWriter } from '@frsource/visual-regression-manifest';
 import {
   compareImages,
   type CompareStatus,
   type PixelmatchOptions,
 } from './compare';
-import {
-  DEFAULT_IMAGES_PATH,
-  FILE_SUFFIX,
-  getManifestFileName,
-} from './constants';
+import { DEFAULT_IMAGES_PATH, FILE_SUFFIX } from './constants';
 import { toPosix } from './fs.utils';
-import { ManifestWriter } from './manifest';
-import type { ManifestEntryOptions, ManifestRenderer } from './manifest.types';
-import { readRemoteInfo } from './remote';
+import {
+  createManifestWriter,
+  manifestPathFor,
+  rendererFor,
+  toManifestOptions,
+} from './manifest.utils';
 import { resolveImagesDir, ScreenshotNamer } from './screenshotPath';
 
 export type MatchImageOptions = {
@@ -88,10 +86,12 @@ export type VisualRegressionTestFixtures = {
 
 export type VisualRegressionWorkerFixtures = {
   /**
-   * Where this worker writes its run manifest; `false` disables it.
-   * @default '<outputDir>/cp-visual-regression-diff-manifest.playwright.w<index>.json'
+   * Where this worker writes its run manifest (relative paths resolve against
+   * `rootDir`); `false` disables it.
+   * @default '<outputDir>/visual-regression-manifest.playwright.w<parallelIndex>.json'
    */
   visualRegressionManifestPath: string | false | undefined;
+  /** The worker's manifest writer from `@frsource/visual-regression-manifest`; `null` when disabled. */
   visualRegressionManifest: ManifestWriter | null;
 };
 
@@ -113,74 +113,6 @@ const withDefaults = (
   };
 };
 
-type ResolvedOptions = ReturnType<typeof withDefaults>;
-
-const toManifestOptions = (cfg: ResolvedOptions): ManifestEntryOptions => ({
-  imagesPath: cfg.imagesPath,
-  title: cfg.title,
-  maxDiffThreshold: cfg.maxDiffThreshold,
-  diffConfig: cfg.diffConfig as Record<string, unknown>,
-  createMissingImages: cfg.createMissingImages,
-  updateImages: cfg.updateImages,
-  // Playwright screenshots come at the context's deviceScaleFactor (1 by default)
-  forceDeviceScaleFactor: false,
-  matchAgainstPath: cfg.matchAgainstPath,
-  screenshotConfig: Object.fromEntries(
-    Object.entries(cfg.screenshotConfig).filter(
-      ([, value]) => typeof value !== 'function',
-    ),
-  ),
-});
-
-/* c8 ignore start */
-const playwrightVersion = (): string | undefined => {
-  try {
-    return (
-      createRequire(__filename)('@playwright/test/package.json') as {
-        version?: string;
-      }
-    ).version;
-  } catch {
-    return undefined;
-  }
-};
-/* c8 ignore stop */
-
-const relativeToRoot = (rootDir: string, p: string | undefined) =>
-  p ? toPosix(path.relative(rootDir, p)) || '.' : undefined;
-
-/**
- * Where the pixels came from: the remote Docker browser started by
- * `remoteBrowser()` when it is in use, the local browser otherwise.
- */
-const rendererFor = (
-  browserName: string,
-  browserVersion: string,
-): ManifestRenderer => {
-  const remote = readRemoteInfo();
-  return remote
-    ? {
-        backend: 'docker',
-        browser: browserName,
-        browserVersion,
-        rendererVersion: remote.playwrightVersion,
-        ...(remote.imageDigest && { imageDigest: remote.imageDigest }),
-      }
-    : { backend: 'native', browser: browserName, browserVersion };
-};
-
-const manifestPathFor = (
-  option: string | false | undefined,
-  workerInfo: WorkerInfo,
-) => {
-  if (option === false) return null;
-  if (option) return path.resolve(workerInfo.config.rootDir, option);
-  return path.join(
-    workerInfo.project.outputDir,
-    getManifestFileName(workerInfo.parallelIndex),
-  );
-};
-
 export const visualRegressionFixtures: Fixtures<
   VisualRegressionTestFixtures,
   VisualRegressionWorkerFixtures,
@@ -196,11 +128,12 @@ export const visualRegressionFixtures: Fixtures<
       use,
       workerInfo,
     ) => {
-      const manifestPath = manifestPathFor(
-        visualRegressionManifestPath,
-        workerInfo,
-      );
-      const { config, project } = workerInfo;
+      const { config, project, parallelIndex } = workerInfo;
+      const manifestPath = manifestPathFor(visualRegressionManifestPath, {
+        rootDir: config.rootDir,
+        outputDir: project.outputDir,
+        parallelIndex,
+      });
       const options = {
         ...((project.use as { visualRegression?: VisualRegressionOptions })
           .visualRegression ?? {}),
@@ -209,29 +142,16 @@ export const visualRegressionFixtures: Fixtures<
         }),
       };
       const writer = manifestPath
-        ? new ManifestWriter(manifestPath, {
-            projectRoot: config.rootDir,
-            options,
-            runner: {
-              name: 'playwright',
-              version: playwrightVersion(),
-              mode: 'run',
-              configFile: relativeToRoot(config.rootDir, config.configFile),
-              browser: {
-                name: browserName,
-                version: browser.version(),
-                headless,
-              },
-              baseUrl: project.use.baseURL ?? null,
-              viewport: project.use.viewport ?? undefined,
-              retries: project.retries,
-              project: project.name || undefined,
-              testDir: relativeToRoot(config.rootDir, project.testDir),
-              outputDir: relativeToRoot(config.rootDir, project.outputDir),
-              workers: config.workers,
-              shard: config.shard ?? undefined,
-              parallelIndex: workerInfo.parallelIndex,
+        ? createManifestWriter(manifestPath, {
+            config,
+            project,
+            parallelIndex,
+            browser: {
+              name: browserName,
+              version: browser.version(),
+              headless,
             },
+            options,
           })
         : null;
       await use(writer);
@@ -299,8 +219,8 @@ export const visualRegressionFixtures: Fixtures<
         diffRatio: result.diffRatio,
         threshold: result.threshold,
         baselineWritten: result.baselineWritten,
-        imgNewSize: result.imgNewSize,
-        imgOldSize: result.imgOldSize,
+        actualSize: result.imgNewSize,
+        baselineSize: result.imgOldSize,
         message: result.message,
         platform: {
           os: process.platform,

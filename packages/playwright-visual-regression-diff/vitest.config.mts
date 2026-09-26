@@ -17,7 +17,6 @@ export default defineConfig({
         'src/fixture.ts',
         'src/remote.global-setup.ts',
         'src/remote.global-teardown.ts',
-        'src/manifest.types.ts',
         'src/index.ts',
       ],
       thresholds: {

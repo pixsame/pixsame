@@ -42,6 +42,7 @@
     "@playwright/test": ">=1.40.0"
   },
   "dependencies": {
+    "@frsource/visual-regression-manifest": "workspace:^",
     "meta-png": "1.0.6",
     "pixelmatch": "7.2.0",
     "sanitize-filename": "1.6.4",
@@ -76,6 +77,7 @@
   "files": [
     "dist",
     "package.json",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ]
 }

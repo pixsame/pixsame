@@ -1,6 +1,11 @@
 import fs from 'fs';
 import path from 'path';
+import {
+  readManifestFile,
+  validateManifest,
+} from '@frsource/visual-regression-manifest';
 import { test, expect } from '../src';
+import { manifestFileNameFor } from '../src/manifest.utils';
 
 const html = (accent: string) => `<!doctype html>
 <html><head><style>
@@ -85,21 +90,24 @@ test.describe('matchImage', () => {
     fs.rmSync(path.join(dir, 'changing card_#1.diff.png'));
   });
 
-  test('writes a manifest per worker', async ({
+  test('writes a manifest per worker that validates against the standard', async ({
     page,
     matchImage,
   }, testInfo) => {
     await page.setContent(html('#3b82f6'));
     await matchImage();
-    const manifestPath = `${testInfo.project.outputDir}/cp-visual-regression-diff-manifest.playwright.w${testInfo.parallelIndex}.json`;
-    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    const manifestPath = path.join(
+      testInfo.project.outputDir,
+      manifestFileNameFor(testInfo.parallelIndex),
+    );
+    const manifest = readManifestFile(manifestPath);
+    expect(validateManifest(manifest)).toEqual([]);
     expect(manifest).toMatchObject({
       version: 1,
       runner: { name: 'playwright', browser: { name: 'chromium' } },
     });
-    const entry = manifest.entries.find(
-      (e: { test: { titlePath: string[] } }) =>
-        e.test.titlePath.join(' ').endsWith('writes a manifest per worker'),
+    const entry = manifest.entries.find((e) =>
+      e.test.titlePath.join(' ').endsWith('validates against the standard'),
     );
     expect(entry).toMatchObject({
       test: { file: 'smoke.spec.ts' },
@@ -107,6 +115,6 @@ test.describe('matchImage', () => {
       platform: { browser: { name: 'chromium' } },
       viewport: { width: 640, height: 400 },
     });
-    expect(entry.hashes.baseline).toMatch(/^[0-9a-f]{64}$/);
+    expect(entry?.hashes?.baseline).toMatch(/^[0-9a-f]{64}$/);
   });
 });
