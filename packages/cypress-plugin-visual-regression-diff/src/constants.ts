@@ -25,9 +25,22 @@ export const TASK = {
 
 export const PATH_VARIABLES = {
   specPath: '{spec_path}',
+  /** `{os}-{browser}`, e.g. `linux-chrome` */
+  platform: '{platform}',
+  /** `Cypress.platform`: `linux`, `darwin` or `win32` */
+  os: '{os}',
+  /** The browser that rendered the screenshot: `Cypress.browser.name` (`chrome`, `electron`, `firefox`, ...) for native screenshots */
+  browser: '{browser}',
   unixSystemRootPath: '{unix_system_root_path}',
   winSystemRootPath: '{win_system_root_path}',
 } as const;
+
+/**
+ * Values the `{platform}`, `{os}` and `{browser}` path tokens expand to.
+ * The caller decides what rendered the screenshot: the browser Cypress drives
+ * today, the browser of a pinned renderer once one is in use.
+ */
+export type PathVariables = { os: string; browser: string };
 
 export const WINDOWS_LIKE_DRIVE_REGEX = /^[A-Z]:$/;
 
