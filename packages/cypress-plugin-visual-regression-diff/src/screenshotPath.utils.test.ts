@@ -104,6 +104,36 @@ describe('path variables', () => {
     );
   });
 
+  it('does not throw when a value is missing (dropped by the task bridge)', () => {
+    expect(
+      expandPathVariables('{platform}', {
+        os: 'linux',
+        browser: undefined as unknown as string,
+      }),
+    ).toBe('linux-unknown');
+  });
+
+  it('numbers and retries screenshots per expanded path', () => {
+    const tokenised = (retry = 0) =>
+      generateScreenshotPath({
+        titleFromOptions: 'title',
+        imagesPath: 'shots/{platform}',
+        specPath: 'some/spec.ts',
+        pathVariables,
+        currentRetryNumber: retry,
+        testId: 'r1',
+      })
+        .split(path.sep)
+        .join('/')
+        .replace(`${IMAGE_SNAPSHOT_PREFIX}/`, '');
+    expect([tokenised(), tokenised()]).toEqual([
+      'shots/linux-chrome/title_#0.actual.png',
+      'shots/linux-chrome/title_#1.actual.png',
+    ]);
+    // a retry of the same test reuses the names of the failed attempt
+    expect(tokenised(1)).toBe('shots/linux-chrome/title_#0.actual.png');
+  });
+
   it("does not count another platform's screenshot as used", () => {
     dirFor('shots/{platform}');
     expect(wasScreenshotUsed('shots/linux-chrome/title_#0.png')).toBe(true);

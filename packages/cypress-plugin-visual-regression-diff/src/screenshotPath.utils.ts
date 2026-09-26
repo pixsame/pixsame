@@ -22,8 +22,10 @@ const resetMap = (map: Record<string, unknown>) => {
 };
 
 // a token value becomes a directory name (or part of one), so it must be safe
-// as a file name; only custom browser names can be anything unusual
-const toPathToken = (value: string) => sanitize(value) || 'unknown';
+// as a file name; only custom browser names can be anything unusual. The
+// values cross the `cy.task` JSON bridge, so a missing one must not throw here
+const toPathToken = (value: string | undefined) =>
+  sanitize(String(value ?? '')) || 'unknown';
 
 // every occurrence, without needing the es2021 lib for `replaceAll`
 const replaceToken = (text: string, token: string, value: string) =>
