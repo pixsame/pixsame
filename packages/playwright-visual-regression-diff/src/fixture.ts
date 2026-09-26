@@ -86,9 +86,12 @@ export type VisualRegressionTestFixtures = {
 
 export type VisualRegressionWorkerFixtures = {
   /**
-   * Where this worker writes its run manifest (relative paths resolve against
-   * `rootDir`); `false` disables it.
-   * @default '<outputDir>/visual-regression-manifest.playwright.w<parallelIndex>.json'
+   * Where the run manifest goes (relative paths resolve against `rootDir`);
+   * `false` disables it. Every worker process writes its own file, so a
+   * configured `reports/run.json` becomes `reports/run.w0.json`,
+   * `reports/run.w1.json`, ... (`w<workerIndex>`, unique per process even
+   * when Playwright restarts a worker after a failure).
+   * @default '<outputDir>/visual-regression-manifest.playwright.w<workerIndex>.json'
    */
   visualRegressionManifestPath: string | false | undefined;
   /** The worker's manifest writer from `@frsource/visual-regression-manifest`; `null` when disabled. */
@@ -128,11 +131,11 @@ export const visualRegressionFixtures: Fixtures<
       use,
       workerInfo,
     ) => {
-      const { config, project, parallelIndex } = workerInfo;
+      const { config, project, parallelIndex, workerIndex } = workerInfo;
       const manifestPath = manifestPathFor(visualRegressionManifestPath, {
         rootDir: config.rootDir,
         outputDir: project.outputDir,
-        parallelIndex,
+        workerIndex,
       });
       const options = {
         ...((project.use as { visualRegression?: VisualRegressionOptions })
@@ -146,6 +149,7 @@ export const visualRegressionFixtures: Fixtures<
             config,
             project,
             parallelIndex,
+            workerIndex,
             browser: {
               name: browserName,
               version: browser.version(),

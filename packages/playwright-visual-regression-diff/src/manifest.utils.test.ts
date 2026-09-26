@@ -5,8 +5,10 @@ import { dir, setGracefulCleanup } from 'tmp-promise';
 import {
   ManifestWriter,
   isManifestFileName,
+  mergeManifests,
   parseManifestJson,
   readManifestFile,
+  readManifestFiles,
   validateManifest,
 } from '@frsource/visual-regression-manifest';
 import { REMOTE_INFO_ENV_KEY } from './constants';
@@ -47,6 +49,7 @@ const workerInput = (
     },
   },
   parallelIndex: 0,
+  workerIndex: 0,
   browser: { name: 'chromium', version: '131.0.0.0', headless: true },
   options: { maxDiffThreshold: 0.02 },
   env: {},
@@ -54,7 +57,7 @@ const workerInput = (
 });
 
 describe('manifestFileNameFor / manifestPathFor', () => {
-  it('names the file the way every manifest writer does, with a per-worker label', () => {
+  it('names the file the way every manifest writer does, with a per-worker-process label', () => {
     expect(manifestFileNameFor(3)).toBe(
       'visual-regression-manifest.playwright.w3.json',
     );
@@ -65,7 +68,7 @@ describe('manifestFileNameFor / manifestPathFor', () => {
     const where = {
       rootDir: '/proj',
       outputDir: '/proj/test-results',
-      parallelIndex: 1,
+      workerIndex: 1,
     };
     expect(manifestPathFor(undefined, where)).toBe(
       path.join(
@@ -73,8 +76,12 @@ describe('manifestFileNameFor / manifestPathFor', () => {
         'visual-regression-manifest.playwright.w1.json',
       ),
     );
+    // a configured path is per worker process too, or workers would overwrite each other
     expect(manifestPathFor('out/m.json', where)).toBe(
-      path.resolve('/proj', 'out/m.json'),
+      path.resolve('/proj', 'out/m.w1.json'),
+    );
+    expect(manifestPathFor('out/m', where)).toBe(
+      path.resolve('/proj', 'out/m.w1'),
     );
     expect(manifestPathFor(false, where)).toBeNull();
   });
@@ -175,6 +182,7 @@ describe('createManifestWriter', () => {
       workers: 2,
       shard: undefined,
       parallelIndex: 0,
+      workerIndex: 0,
     });
     expect(
       runnerFor(
@@ -208,7 +216,7 @@ describe('createManifestWriter', () => {
     const manifestPath = manifestPathFor(undefined, {
       rootDir: root,
       outputDir: path.join(root, 'test-results'),
-      parallelIndex: 0,
+      workerIndex: 0,
     }) as string;
     const writer = createManifestWriter(
       manifestPath,
@@ -279,7 +287,7 @@ describe('createManifestWriter', () => {
       projectRoot: root,
       ci: { provider: 'github', repository: 'o/r', pullRequest: { number: 7 } },
       options: { maxDiffThreshold: 0.02 },
-      runner: { name: 'playwright', parallelIndex: 0 },
+      runner: { name: 'playwright', parallelIndex: 0, workerIndex: 0 },
     });
     expect(manifest.entries.map((e) => [e.name, e.status])).toEqual([
       ['home_#0', 'failed'],
@@ -295,5 +303,83 @@ describe('createManifestWriter', () => {
       renderer: { backend: 'native', browser: 'chromium' },
       hashes: { baseline: expect.stringMatching(/^[0-9a-f]{64}$/) },
     });
+  });
+
+  it('merges the files of several worker processes into one run without warnings', async () => {
+    const { path: root } = await dir();
+    const outputDir = path.join(root, 'test-results');
+    const env = {
+      GITHUB_ACTIONS: 'true',
+      GITHUB_REPOSITORY: 'o/r',
+      GITHUB_RUN_ID: '9',
+      GITHUB_RUN_ATTEMPT: '1',
+      GITHUB_WORKSPACE: root,
+    };
+    const shots = path.join(root, 'tests', '__image_snapshots__');
+    fs.mkdirSync(shots, { recursive: true });
+    for (const name of ['home_#0.png', 'nav_#0.png', 'nav_#0.actual.png'])
+      fs.writeFileSync(path.join(shots, name), fixture);
+    const entry = (
+      name: string,
+      retry: number,
+      status: 'passed' | 'failed',
+    ) => ({
+      actualPath: path.join(shots, `${name}.actual.png`),
+      baselinePath: path.join(shots, `${name}.png`),
+      testFile: path.join(root, 'tests', 'home.spec.ts'),
+      titlePath: ['home', name],
+      retry,
+      status,
+      platform: { os: 'linux', browser: { name: 'chromium' } },
+    });
+
+    // worker 0 ran two tests and failed on the second; Playwright then
+    // restarted the slot as worker 2 (index 1 was busy), which retried it
+    const workers = [
+      { workerIndex: 0, parallelIndex: 0 },
+      { workerIndex: 2, parallelIndex: 0 },
+    ].map((w) =>
+      createManifestWriter(
+        manifestPathFor(undefined, {
+          rootDir: root,
+          outputDir,
+          workerIndex: w.workerIndex,
+        }) as string,
+        workerInput(root, { ...w, env }),
+      ),
+    );
+    workers[0].record(entry('home_#0', 0, 'passed'));
+    workers[0].record(entry('nav_#0', 0, 'failed'));
+    workers[1].record(entry('nav_#0', 1, 'passed'));
+
+    const files = readManifestFiles(outputDir);
+    expect(files.map((f) => path.basename(f.file))).toEqual([
+      'visual-regression-manifest.playwright.w0.json',
+      'visual-regression-manifest.playwright.w2.json',
+    ]);
+    // the same identity in every file: one run, one commit
+    expect(new Set(files.map((f) => f.manifest.ci?.runId))).toEqual(
+      new Set(['9']),
+    );
+
+    const run = mergeManifests(
+      files.map((f) => ({ manifest: f.manifest, label: f.file })),
+      { runId: '9', repository: 'o/r' },
+    );
+    expect(run.warnings).toEqual([]);
+    expect(
+      run.entries.map((e) => [
+        e.entry.name,
+        e.entry.status,
+        e.entry.test.retry,
+        path.basename(e.source.label as string),
+      ]),
+    ).toEqual([
+      ['home_#0', 'passed', 0, 'visual-regression-manifest.playwright.w0.json'],
+      // the later file wins, which is the retry as long as files sort by worker index
+      ['nav_#0', 'passed', 1, 'visual-regression-manifest.playwright.w2.json'],
+    ]);
+    expect(run.needsHuman).toEqual([]);
+    expect(run.entries.every((e) => e.repoPaths.baseline)).toBe(true);
   });
 });

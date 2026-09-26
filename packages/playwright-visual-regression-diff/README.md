@@ -61,8 +61,8 @@ export default defineConfig({
       maxDiffThreshold: 0.01,
       imagesPath: '{spec_path}/__image_snapshots__',
     },
-    // where each worker writes its manifest (relative to rootDir); `false` turns it off
-    // default: `<outputDir>/visual-regression-manifest.playwright.w<parallelIndex>.json`
+    // where the manifests go (relative to rootDir), one file per worker process; `false` turns it off
+    // default: `<outputDir>/visual-regression-manifest.playwright.w<workerIndex>.json`
     visualRegressionManifestPath: undefined,
   },
 });
@@ -137,11 +137,11 @@ Things to know:
 
 ## Run manifest
 
-Each worker writes `<outputDir>/visual-regression-manifest.playwright.w<parallelIndex>.json` (Playwright clears `outputDir` at the start of a run, so there are never stale files). The file is written through [`@frsource/visual-regression-manifest`](https://www.npmjs.com/package/@frsource/visual-regression-manifest), which owns the format: the JSON Schema, the TypeScript types, a validating reader and a merger that treats the files of several workers like the manifests of several machines. Consumers glob `**/*visual-regression-manifest*.json` (`MANIFEST_FILE_GLOB` in that package), so the GitHub App and other tooling built for the Cypress plugin pick these files up unchanged.
+Each worker process writes `<outputDir>/visual-regression-manifest.playwright.w<workerIndex>.json` (Playwright clears `outputDir` at the start of a run, so there are never stale files). The label is Playwright's `workerIndex`, which is unique for the whole run: after a test failure Playwright restarts the worker, and the new process gets a new file instead of overwriting the one with the failure in it. A configured `visualRegressionManifestPath: 'reports/run.json'` gets the same treatment (`reports/run.w0.json`, `reports/run.w1.json`, ...). The file is written through [`@frsource/visual-regression-manifest`](https://www.npmjs.com/package/@frsource/visual-regression-manifest), which owns the format: the JSON Schema, the TypeScript types, a validating reader and a merger that treats the files of several workers like the manifests of several machines. Consumers glob `**/*visual-regression-manifest*.json` (`MANIFEST_FILE_GLOB` in that package), so the GitHub App and other tooling built for the Cypress plugin pick these files up unchanged.
 
 Two blocks are worth calling out:
 
-- `runner`: `{ name: 'playwright', version, mode: 'run', configFile, browser, baseUrl, viewport, retries, project, testDir, outputDir, workers, shard, parallelIndex }`.
+- `runner`: `{ name: 'playwright', version, mode: 'run', configFile, browser, baseUrl, viewport, retries, project, testDir, outputDir, workers, shard, parallelIndex, workerIndex }`.
 - `renderer` (per entry): where the pixels came from. `{ backend: 'native', browser, browserVersion }` for a locally installed browser; `{ backend: 'docker', browser, browserVersion, rendererVersion, imageDigest }` when `remoteBrowser()` is in use, where `rendererVersion` is the Playwright version of the image and `imageDigest` its content digest. Entries with different renderers are different baselines; the GitHub App keys and labels them separately.
 
 Every entry records the resolved `matchImage` options in the shared vocabulary (`imagesPath`, `maxDiffThreshold`, `diffConfig`, `createMissingImages`, `updateImages`, `title`, `matchAgainstPath`, `screenshotConfig` without callbacks). `forceDeviceScaleFactor` is always `false` here: Playwright screenshots come at the context's `deviceScaleFactor`.
