@@ -10,7 +10,7 @@ import {
   readManifestFile,
   readManifestFiles,
   validateManifest,
-} from '@frsource/visual-regression-manifest';
+} from '@tozsame/manifest';
 import { REMOTE_INFO_ENV_KEY } from './constants';
 import {
   createManifestWriter,
