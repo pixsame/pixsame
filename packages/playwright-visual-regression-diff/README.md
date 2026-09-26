@@ -2,14 +2,14 @@
 
 Visual regression testing for [Playwright](https://playwright.dev) with the same `matchImage` flow, baseline layout, run manifest and CI tooling as [`@frsource/cypress-plugin-visual-regression-diff`](../cypress-plugin-visual-regression-diff/README.md), plus an optional **remote browser in Docker** so that the pixels you approve locally are the pixels CI produces.
 
-> Status: initial implementation. The API below is small on purpose and may still move before 1.0.
+> Status: 0.x, published on the `next` dist-tag: options may still change. The API below is small on purpose and may still move before 1.0.
 
 ## Why another Playwright screenshot tool
 
 Playwright ships `toHaveScreenshot()`, and it is good. This package exists for teams that already use the Cypress plugin (or its GitHub App) and want one baseline format, one manifest and one review workflow across both runners:
 
 - **Same comparison.** `pixelmatch` with `includeAA: false`, the same padding for size mismatches, the same `<name>_#n.png` / `.actual.png` / `.diff.png` files, the same PNG marker. A baseline recorded by the Cypress plugin is a valid baseline here and vice versa.
-- **Same run manifest.** Every comparison lands in a `cp-visual-regression-diff-manifest.playwright.w<n>.json` next to Playwright's test results, in the [shared manifest format](../cypress-plugin-visual-regression-diff/README.md#run-manifest-ci-integration) that the GitHub App and other consumers read. Only the `runner` block is Playwright-specific.
+- **Same run manifest.** Every comparison lands in a `visual-regression-manifest.playwright.w<n>.json` next to Playwright's test results, written through [`@frsource/visual-regression-manifest`](https://www.npmjs.com/package/@frsource/visual-regression-manifest), the runner-agnostic standard the GitHub App and other consumers read. Only the `runner` block is Playwright-specific.
 - **Drift-free pixels without leaving your machine.** `remoteBrowser()` runs the browser inside the official Playwright image and keeps the test runner, your app and your editor native. Local and CI screenshots then come from the same browser build, fonts and rasteriser.
 
 ## Install
@@ -18,7 +18,7 @@ Playwright ships `toHaveScreenshot()`, and it is good. This package exists for t
 npm i -D @frsource/playwright-visual-regression-diff
 ```
 
-`@playwright/test` >= 1.40 is a peer dependency. Node.js >= 20.9.
+`@playwright/test` >= 1.40 is a peer dependency. Node.js >= 20.9. Pre-releases are published on the `next` dist-tag: `npm i -D @frsource/playwright-visual-regression-diff@next`.
 
 ## Use
 
@@ -61,7 +61,8 @@ export default defineConfig({
       maxDiffThreshold: 0.01,
       imagesPath: '{spec_path}/__image_snapshots__',
     },
-    // where each worker writes its manifest; `false` turns it off
+    // where each worker writes its manifest (relative to rootDir); `false` turns it off
+    // default: `<outputDir>/visual-regression-manifest.playwright.w<parallelIndex>.json`
     visualRegressionManifestPath: undefined,
   },
 });
@@ -136,18 +137,22 @@ Things to know:
 
 ## Run manifest
 
-Each worker writes `<outputDir>/cp-visual-regression-diff-manifest.playwright.w<parallelIndex>.json` (Playwright clears `outputDir` at the start of a run, so there are never stale files). Consumers glob `**/*cp-visual-regression-diff-manifest*.json` and concatenate the `entries`, exactly as they do for a Cypress run split over several machines.
+Each worker writes `<outputDir>/visual-regression-manifest.playwright.w<parallelIndex>.json` (Playwright clears `outputDir` at the start of a run, so there are never stale files). The file is written through [`@frsource/visual-regression-manifest`](https://www.npmjs.com/package/@frsource/visual-regression-manifest), which owns the format: the JSON Schema, the TypeScript types, a validating reader and a merger that treats the files of several workers like the manifests of several machines. Consumers glob `**/*visual-regression-manifest*.json` (`MANIFEST_FILE_GLOB` in that package), so the GitHub App and other tooling built for the Cypress plugin pick these files up unchanged.
 
-The format is the one documented in the [Cypress plugin README](../cypress-plugin-visual-regression-diff/README.md#run-manifest-ci-integration). Two blocks are worth calling out:
+Two blocks are worth calling out:
 
 - `runner`: `{ name: 'playwright', version, mode: 'run', configFile, browser, baseUrl, viewport, retries, project, testDir, outputDir, workers, shard, parallelIndex }`.
-- `renderer`: where the pixels came from. `{ backend: 'native', browser, browserVersion }` for a locally installed browser; `{ backend: 'docker', browser, browserVersion, rendererVersion, imageDigest }` when `remoteBrowser()` is in use, where `rendererVersion` is the Playwright version of the image and `imageDigest` its content digest. Entries with different renderers are different baselines; the GitHub App keys and labels them separately.
+- `renderer` (per entry): where the pixels came from. `{ backend: 'native', browser, browserVersion }` for a locally installed browser; `{ backend: 'docker', browser, browserVersion, rendererVersion, imageDigest }` when `remoteBrowser()` is in use, where `rendererVersion` is the Playwright version of the image and `imageDigest` its content digest. Entries with different renderers are different baselines; the GitHub App keys and labels them separately.
+
+Every entry records the resolved `matchImage` options in the shared vocabulary (`imagesPath`, `maxDiffThreshold`, `diffConfig`, `createMissingImages`, `updateImages`, `title`, `matchAgainstPath`, `screenshotConfig` without callbacks). `forceDeviceScaleFactor` is always `false` here: Playwright screenshots come at the context's `deviceScaleFactor`.
+
+The `visualRegressionManifest` worker fixture exposes the underlying `ManifestWriter` (`null` when `visualRegressionManifestPath: false`) if you want to record something yourself.
 
 ## Relation to the Cypress plugin and what is next
 
 This package is the Playwright adapter from the renderer design that drives v5 of the Cypress plugin. Cypress cannot drive a remote browser, so there the plan is a DOM-snapshot sidecar; Playwright can, so the remote browser came first here. Planned next, in this order:
 
-1. A shared core package for the comparison, the path tokens and the manifest writer (today the code is mirrored between the two packages).
+1. A shared core package for the comparison and the path tokens (today that code is mirrored between the two packages; the manifest is already shared through `@frsource/visual-regression-manifest`).
 2. `{browser}` naming the renderer's browser explicitly once several renderers per run are possible.
 3. DOM-snapshot capture (`page.evaluate` + `page.on('response')`) for the hosted renderer and for uploading snapshots alongside images.
 4. A `toMatchImage()` matcher for people who prefer `expect(page).toMatchImage()` over the fixture.
@@ -161,4 +166,4 @@ pnpm --filter @frsource/playwright-visual-regression-diff test:smoke           #
 pnpm --filter @frsource/playwright-visual-regression-diff test:smoke:remote    # needs Docker; pulls the Playwright image
 ```
 
-The smoke tests write their baselines to `e2e/__image_snapshots__` (gitignored): the first run creates them, the second compares.
+The unit and smoke tests import `@frsource/visual-regression-manifest` from the workspace, so build that package first (`pnpm --filter visual-regression-manifest build`). The smoke tests write their baselines to `e2e/__image_snapshots__` (gitignored): the first run creates them, the second compares.
