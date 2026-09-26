@@ -479,7 +479,7 @@ Things to decide once you split:
 
 - **Splitting only by browser or only by OS.** Use `{browser}` or `{os}` on their own, e.g. `{spec_path}/__image_snapshots__/{browser}`.
 
-- **Cleanup.** `pluginVisualRegressionCleanupUnusedImages` globs the whole project and treats the other platforms' baselines as unused, so enable it only on the platform whose baselines you commit, typically CI.
+- **Cleanup deletes the other platforms' baselines.** `pluginVisualRegressionCleanupUnusedImages` globs the whole project for plugin-made PNGs and knows nothing about platforms: a run on `darwin-electron` treats every file under `linux-chrome/` as unused and deletes it. Keep it off on machines that hold more than one platform's folder (a developer's checkout with committed CI baselines is exactly that) and enable it only where a single platform's baselines live, typically the CI job that produces them. If it does bite, the deleted folders come back with `git checkout -- <folder>`.
 
 Where this is heading: the plan for [#212](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/212) is a renderer that produces the pixels in a pinned Docker image no matter where Cypress runs, so local and CI images stop drifting by construction. `{browser}` then names the renderer's browser rather than the one Cypress drives, and `{platform}` remains useful for keeping several rendered browsers apart rather than for local-vs-CI drift. The manifest already records both sides: `platform` is where the test ran, `renderer` is where the pixels came from.
 
@@ -809,7 +809,7 @@ npx cypress run --expose "pluginVisualRegressionImagesPath={spec_path}/__image_s
 npx cypress run --env "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{browser}"
 ```
 
-This creates separate image directories per browser (`__image_snapshots__/chrome/`, `__image_snapshots__/firefox/`). See [Per-platform baselines](#per-platform-baselines) for `{platform}` and `{os}`, which also split by operating system, and for which folders to commit.
+This creates separate image directories per browser (`__image_snapshots__/chrome/`, `__image_snapshots__/firefox/`). See [Per-platform baselines](#per-platform-baselines) for `{platform}` and `{os}`, which also split by operating system, for which folders to commit, and for why `pluginVisualRegressionCleanupUnusedImages` must stay off on a machine that holds more than one browser's folder (it would delete the other browsers' baselines).
 
 </details>
 
