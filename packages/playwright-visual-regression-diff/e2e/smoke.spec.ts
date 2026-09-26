@@ -98,7 +98,7 @@ test.describe('matchImage', () => {
     await matchImage();
     const manifestPath = path.join(
       testInfo.project.outputDir,
-      manifestFileNameFor(testInfo.parallelIndex),
+      manifestFileNameFor(testInfo.workerIndex),
     );
     const manifest = readManifestFile(manifestPath);
     expect(validateManifest(manifest)).toEqual([]);

@@ -17,25 +17,42 @@ import { readRemoteInfo } from './remote';
  * the format and the file. Nothing here knows the manifest shape itself.
  */
 
-/** `visual-regression-manifest.playwright.w<parallelIndex>.json`: one file per worker, merged by the consumer like manifests of several machines. */
-export const manifestFileNameFor = (parallelIndex: number) =>
-  getManifestFileName(`playwright.w${parallelIndex}`);
+/**
+ * `visual-regression-manifest.playwright.w<workerIndex>.json`: one file per
+ * worker process, merged by the consumer like manifests of several machines.
+ *
+ * The label is `workerIndex`, not `parallelIndex`: Playwright restarts a
+ * worker after a test failure, and the new process keeps the `parallelIndex`
+ * but gets a fresh `workerIndex`. A file named after `parallelIndex` would be
+ * overwritten by the restarted worker, dropping every entry the earlier
+ * process recorded, the failed one included.
+ */
+export const manifestFileNameFor = (workerIndex: number) =>
+  getManifestFileName(`playwright.w${workerIndex}`);
+
+/** `reports/run.json` -> `reports/run.w3.json`: a configured path still gets one file per worker process. */
+export const withWorkerLabel = (file: string, workerIndex: number) => {
+  const ext = path.extname(file);
+  return `${file.slice(0, file.length - ext.length)}.w${workerIndex}${ext}`;
+};
 
 /**
  * Resolves where a worker writes its manifest: the configured path relative
- * to `rootDir`, the project's `outputDir` by default, `null` when disabled.
+ * to `rootDir` (with the worker label inserted before the extension), the
+ * project's `outputDir` by default, `null` when disabled.
  */
 export const manifestPathFor = (
   option: string | false | undefined,
   {
     rootDir,
     outputDir,
-    parallelIndex,
-  }: { rootDir: string; outputDir: string; parallelIndex: number },
+    workerIndex,
+  }: { rootDir: string; outputDir: string; workerIndex: number },
 ) => {
   if (option === false) return null;
-  if (option) return path.resolve(rootDir, option);
-  return path.join(outputDir, manifestFileNameFor(parallelIndex));
+  if (option)
+    return withWorkerLabel(path.resolve(rootDir, option), workerIndex);
+  return path.join(outputDir, manifestFileNameFor(workerIndex));
 };
 
 /* c8 ignore start */
@@ -119,7 +136,10 @@ export type ManifestWorkerInput = {
     FullProject,
     'name' | 'testDir' | 'outputDir' | 'retries' | 'use'
   >;
+  /** Slot of the worker, `0..workers - 1`; a restarted worker keeps it. */
   parallelIndex: number;
+  /** Unique per worker process for the whole run; a restarted worker gets a new one. */
+  workerIndex: number;
   browser: { name: string; version: string; headless: boolean };
   /** Global `matchImage` options as configured in `use`, verbatim. */
   options: Record<string, unknown>;
@@ -131,6 +151,7 @@ export const runnerFor = ({
   config,
   project,
   parallelIndex,
+  workerIndex,
   browser,
 }: ManifestWorkerInput): ManifestRunner => ({
   name: 'playwright',
@@ -147,6 +168,7 @@ export const runnerFor = ({
   workers: config.workers,
   shard: config.shard ?? undefined,
   parallelIndex,
+  workerIndex,
 });
 
 /** A `ManifestWriter` for one worker, with Playwright's `rootDir` as the project root. */
