@@ -30,6 +30,6 @@ export const METADATA_KEY = 'FRSOURCE_CPVRD_V';
 export const DIFF_IMAGES_VERSION = '1';
 
 /** Set by `remoteBrowser()` in `playwright.config`, read by the global setup/teardown. */
-export const REMOTE_ENV_KEY = 'FRSOURCE_PW_VRD_REMOTE';
+export const REMOTE_ENV_KEY = 'TOZSAME_PLAYWRIGHT_REMOTE';
 /** Set by the global setup once the container runs, read by every worker for the manifest's `renderer` block. */
-export const REMOTE_INFO_ENV_KEY = 'FRSOURCE_PW_VRD_REMOTE_INFO';
+export const REMOTE_INFO_ENV_KEY = 'TOZSAME_PLAYWRIGHT_REMOTE_INFO';
