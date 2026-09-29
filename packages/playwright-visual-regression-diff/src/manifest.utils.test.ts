@@ -10,7 +10,7 @@ import {
   readManifestFile,
   readManifestFiles,
   validateManifest,
-} from '@tozsame/manifest';
+} from '@pixsame/manifest';
 import { REMOTE_INFO_ENV_KEY } from './constants';
 import {
   createManifestWriter,

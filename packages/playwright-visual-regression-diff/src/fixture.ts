@@ -12,7 +12,7 @@ import {
   type PlaywrightWorkerOptions,
   type TestInfo,
 } from '@playwright/test';
-import type { ManifestWriter } from '@tozsame/manifest';
+import type { ManifestWriter } from '@pixsame/manifest';
 import {
   compareImages,
   type CompareStatus,
@@ -94,7 +94,7 @@ export type VisualRegressionWorkerFixtures = {
    * @default '<outputDir>/visual-regression-manifest.playwright.w<workerIndex>.json'
    */
   visualRegressionManifestPath: string | false | undefined;
-  /** The worker's manifest writer from `@tozsame/manifest`; `null` when disabled. */
+  /** The worker's manifest writer from `@pixsame/manifest`; `null` when disabled. */
   visualRegressionManifest: ManifestWriter | null;
 };
 
