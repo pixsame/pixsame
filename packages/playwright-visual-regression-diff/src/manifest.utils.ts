@@ -7,13 +7,13 @@ import {
   type ManifestEntryOptions,
   type ManifestRenderer,
   type ManifestRunner,
-} from '@tozsame/manifest';
+} from '@pixsame/manifest';
 import { toPosix } from './fs.utils';
 import { readRemoteInfo } from './remote';
 
 /**
  * The Playwright side of the run manifest: maps a worker's config onto
- * `ManifestWriter` from `@tozsame/manifest`, which owns
+ * `ManifestWriter` from `@pixsame/manifest`, which owns
  * the format and the file. Nothing here knows the manifest shape itself.
  */
 

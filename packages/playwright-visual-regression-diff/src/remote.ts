@@ -355,7 +355,7 @@ export type RemoteBrowser = ResolvedRemote & {
  *
  * ```ts
  * // playwright.config.ts
- * import { remoteBrowser } from '@tozsame/playwright/remote';
+ * import { remoteBrowser } from '@pixsame/playwright/remote';
  * const remote = remoteBrowser();
  * export default defineConfig({
  *   globalSetup: remote.globalSetup,

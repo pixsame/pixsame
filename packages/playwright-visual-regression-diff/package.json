@@ -1,9 +1,9 @@
 {
-  "name": "@tozsame/playwright",
-  "description": "Tożsame for Playwright: visual regression testing for Playwright with the matchImage flow, baseline layout, run manifest and CI tooling of @frsource/cypress-plugin-visual-regression-diff, plus a pinned remote browser in Docker for drift-free pixels.",
+  "name": "@pixsame/playwright",
+  "description": "Pixsame for Playwright: visual regression testing for Playwright with the matchImage flow, baseline layout, run manifest and CI tooling of @frsource/cypress-plugin-visual-regression-diff, plus a pinned remote browser in Docker for drift-free pixels.",
   "version": "0.0.0",
   "author": "Jakub Freisler <jakub.freisler@frsource.org>",
-  "homepage": "https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/tree/main/packages/playwright-visual-regression-diff",
+  "homepage": "https://pixsame.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff.git",
@@ -42,7 +42,7 @@
     "@playwright/test": ">=1.40.0"
   },
   "dependencies": {
-    "@tozsame/manifest": "workspace:^",
+    "@pixsame/manifest": "workspace:^",
     "meta-png": "1.0.6",
     "pixelmatch": "7.2.0",
     "sanitize-filename": "1.6.4",

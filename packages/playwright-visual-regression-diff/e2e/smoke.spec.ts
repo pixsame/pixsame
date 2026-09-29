@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { readManifestFile, validateManifest } from '@tozsame/manifest';
+import { readManifestFile, validateManifest } from '@pixsame/manifest';
 import { test, expect } from '../src';
 import { manifestFileNameFor } from '../src/manifest.utils';
 
