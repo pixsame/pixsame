@@ -15,9 +15,9 @@
     "test:integration:coverage": "pnpm -r test:integration:coverage",
     "test:integration:ci": "pnpm -r test:integration:ci",
     "test:ct": "pnpm -r test:ct",
-    "test:ct:ci": "pnpm -r test:ct:ci",
+    "test:ct:ci": "pnpm -r --workspace-concurrency=1 test:ct:ci",
     "test:e2e": "pnpm -r test:e2e",
-    "test:e2e:ci": "pnpm -r test:e2e:ci",
+    "test:e2e:ci": "pnpm -r --workspace-concurrency=1 test:e2e:ci",
     "record-demo": "node scripts/record-batch-demo.mjs"
   },
   "engines": {
