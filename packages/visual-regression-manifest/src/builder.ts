@@ -18,6 +18,7 @@ import type {
   ManifestRunner,
   ManifestStatus,
   ManifestUpload,
+  ManifestTarget,
   ManifestViewport,
 } from './types';
 
@@ -61,6 +62,9 @@ export type ManifestEntryInput = {
   baselineSize?: ImageSize;
   actualSize?: ImageSize;
   platform?: ManifestEntryPlatform;
+  target?: ManifestTarget;
+  /** Tells entries of the same screenshot name apart when manifests get merged. */
+  variant?: string;
   viewport?: ManifestViewport;
   options?: ManifestEntryOptions;
   /** Defaults to a `native` renderer derived from `platform.browser`. */
@@ -152,7 +156,7 @@ export const hashesOf = (files: {
 export const nativeRenderer = (
   platform: ManifestEntryPlatform | undefined,
 ): ManifestRenderer | undefined =>
-  platform && {
+  platform?.browser && {
     backend: 'native',
     browser: platform.browser.name,
     ...(platform.browser.version && {
@@ -251,6 +255,8 @@ export class ManifestBuilder {
       baselineWritten: input.baselineWritten ?? false,
       recordedAt: input.recordedAt ?? now(),
       platform: input.platform,
+      target: input.target,
+      variant: input.variant,
       viewport: input.viewport,
       options: input.options,
       renderer: input.renderer ?? nativeRenderer(input.platform),
@@ -292,6 +298,8 @@ export class ManifestBuilder {
       baselineWritten: true,
       recordedAt: now(),
       platform: existing?.platform,
+      target: existing?.target,
+      variant: existing?.variant,
       viewport: existing?.viewport,
       options: existing?.options,
       renderer: existing?.renderer,

@@ -14,6 +14,7 @@ import type {
   ManifestEntryPlatform,
   ManifestRenderer,
   ManifestStatus,
+  ManifestTarget,
   ManifestViewport,
 } from '../types';
 
@@ -40,6 +41,8 @@ export type ImageTriple = {
   baselineWritten?: boolean;
   message?: string;
   platform?: ManifestEntryPlatform;
+  target?: ManifestTarget;
+  variant?: string;
   viewport?: ManifestViewport;
   options?: ManifestEntryOptions;
   renderer?: ManifestRenderer;
@@ -105,6 +108,8 @@ export const fromImageTriples = ({
       baselineSize: readPngSize(baselineAbs),
       actualSize: readPngSize(actualAbs),
       platform: triple.platform,
+      target: triple.target,
+      variant: triple.variant,
       viewport: triple.viewport,
       options: triple.options,
       renderer: triple.renderer,

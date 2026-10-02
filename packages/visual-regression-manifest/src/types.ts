@@ -32,7 +32,11 @@ export type ManifestBrowser = {
   headless?: boolean;
 };
 
-/** Where the run happened. `os` uses Node's `process.platform` names (`linux`, `darwin`, `win32`). */
+/**
+ * The machine that ran the tests (the host), which is not necessarily the
+ * device under test (see `ManifestEntry.target`). `os` is an open string;
+ * Node-based writers use `process.platform` names (`linux`, `darwin`, `win32`).
+ */
 export type ManifestPlatform = {
   os: string;
   arch: string;
@@ -51,25 +55,32 @@ export type ManifestEntryOptions = {
   diffConfig: Record<string, unknown>;
   createMissingImages: boolean;
   updateImages: boolean | 'failures-only';
-  forceDeviceScaleFactor: boolean;
+  /** Browser runners only. */
+  forceDeviceScaleFactor?: boolean;
   matchAgainstPath?: string;
-  /** Only JSON-serialisable keys; callbacks are dropped. */
-  screenshotConfig: Record<string, unknown>;
+  /** Capture options in the runner's vocabulary; only JSON-serialisable keys, callbacks are dropped. */
+  screenshotConfig?: Record<string, unknown>;
 };
 
 /** Which kind of renderer produced the compared pixels. */
-export type ManifestRendererBackend = 'native' | 'docker' | 'cloud';
+export type ManifestRendererBackend =
+  'native' | 'docker' | 'cloud' | (string & {});
 
 /**
  * Where the pixels of a screenshot came from, as opposed to `platform`, which
  * is where the test ran. Under `native` (a screenshot taken by the test
- * runner's own browser) `browser` repeats `platform.browser.name`; a Docker
+ * runner's own browser) `browser` repeats `platform.browser.name`; non-browser
+ * producers describe their renderer with `name` (an app, a device) instead. A Docker
  * or cloud renderer additionally reports its own version and image digest,
  * which together identify the renderer that produced a baseline.
  */
 export type ManifestRenderer = {
   backend: ManifestRendererBackend;
-  browser: string;
+  /** What rendered the pixels: a browser, an app or a device. */
+  name?: string;
+  version?: string;
+  /** Browser renderers only. */
+  browser?: string;
   browserVersion?: string;
   /** Version of the renderer image; absent under `native`. */
   rendererVersion?: string;
@@ -88,8 +99,38 @@ export type ManifestHashes = {
 
 export type ManifestEntryPlatform = {
   os: string;
+  osVersion?: string;
   arch?: string;
-  browser: ManifestBrowser;
+  /** Absent for non-browser targets (desktop and mobile applications). */
+  browser?: ManifestBrowser;
+};
+
+/**
+ * What was captured, for tools that are not a browser: an application on a
+ * desktop, a mobile device, an emulator or a remote device farm. Every key is
+ * optional; writers may add their own.
+ */
+export type ManifestTarget = {
+  /** Known values: `browser`, `desktop`, `mobile`, `embedded`. */
+  kind?: string;
+  os?: string;
+  osVersion?: string;
+  arch?: string;
+  device?: { model?: string; id?: string; formFactor?: string };
+  display?: {
+    width?: number;
+    height?: number;
+    /** Device pixels per logical pixel. */
+    density?: number;
+    orientation?: string;
+  };
+  locale?: string;
+  theme?: string;
+  app?: { id?: string; version?: string; build?: string };
+  /** Automation driver, e.g. `appium`, `xcuitest`, `espresso`, `maestro`. */
+  driver?: string;
+  emulated?: boolean;
+  [targetSpecific: string]: unknown;
 };
 
 export type ManifestViewport = { width: number; height: number };
@@ -120,6 +161,14 @@ export type ManifestEntry = {
   recordedAt: string;
   /** Where this particular screenshot was taken; kept per entry because manifests of several machines get merged. */
   platform?: ManifestEntryPlatform;
+  target?: ManifestTarget;
+  /**
+   * Producer-chosen id that tells entries of the same screenshot name apart
+   * (device, OS version, density, locale, theme, project...). Part of the
+   * baseline identity when merging; absent, identity falls back to
+   * `platform.os` + `platform.browser.name` + renderer.
+   */
+  variant?: string;
   viewport?: ManifestViewport;
   /** Absent on entries created without a preceding comparison (e.g. by a review UI). */
   options?: ManifestEntryOptions;
@@ -146,7 +195,8 @@ export type ManifestUpload = {
  * that write to the PR branch must use `pullRequest.headSha` / `headRef`.
  */
 export type ManifestCi = {
-  provider: 'github' | 'gitlab' | null;
+  /** `github` and `gitlab` are detected; other ids are free-form. */
+  provider: 'github' | 'gitlab' | (string & {}) | null;
   /** `owner/repo` (GitHub) or `group/project` (GitLab). */
   repository?: string;
   sha?: string;

@@ -75,11 +75,11 @@ describe('validateAgainst (cross-checked with Ajv)', () => {
 
   it('checks the ci block including its nullable pull request', () => {
     expect(
-      agreesWithAjv(manifest([], { ci: { provider: 'circle' } as never })),
+      agreesWithAjv(manifest([], { ci: { provider: 5 } as never })),
     ).toEqual([
       {
         path: 'ci.provider',
-        message: 'expected one of "github", "gitlab", null, got "circle"',
+        message: 'expected string or null, got 5',
       },
     ]);
     expect(
@@ -153,13 +153,28 @@ describe('validateAgainst (cross-checked with Ajv)', () => {
       },
     ]);
     expect(
-      agreesWithAjv(withEntry({ renderer: { backend: 'gpu', browser: 'x' } })),
+      agreesWithAjv(withEntry({ renderer: { backend: 7, browser: 'x' } })),
     ).toEqual([
       {
         path: 'entries.0.renderer.backend',
-        message: 'expected one of "native", "docker", "cloud", got "gpu"',
+        message: 'expected string, got 7',
       },
     ]);
+    // non-browser producers: no browser anywhere, any backend
+    expect(
+      agreesWithAjv(
+        withEntry({
+          platform: { os: 'ios', osVersion: '18.2' },
+          renderer: { backend: 'device', name: 'iPhone 16' },
+          target: {
+            kind: 'mobile',
+            device: { model: 'iPhone 16' },
+            display: { density: 3, orientation: 'portrait' },
+          },
+          variant: 'iphone16-ios18-light',
+        }),
+      ),
+    ).toEqual([]);
     expect(
       agreesWithAjv(
         withEntry({
@@ -180,8 +195,14 @@ describe('validateAgainst (cross-checked with Ajv)', () => {
         message: 'does not match any allowed shape, got "always"',
       },
     ]);
-    expect(agreesWithAjv(withEntry({ platform: { os: 'linux' } }))).toEqual([
-      { path: 'entries.0.platform.browser', message: 'is required' },
+    expect(
+      agreesWithAjv(withEntry({ platform: { arch: 'x64' } as never })),
+    ).toEqual([{ path: 'entries.0.platform.os', message: 'is required' }]);
+    expect(agreesWithAjv({ ...manifest(), createdAt: 'yesterday' })).toEqual([
+      {
+        path: 'createdAt',
+        message: expect.stringContaining('must match'),
+      },
     ]);
     expect(agreesWithAjv(withEntry({ name: '', message: 5 }))).toEqual([
       { path: 'entries.0.name', message: 'must not be empty' },

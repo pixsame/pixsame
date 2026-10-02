@@ -59,7 +59,9 @@ export type MergeOptions = {
 export const rendererLabel = (entry: ManifestEntry) => {
   const renderer = entry.renderer;
   if (!renderer || renderer.backend === 'native') return '';
-  return `${renderer.backend} ${renderer.browser}`;
+  return [renderer.backend, renderer.name ?? renderer.browser]
+    .filter(Boolean)
+    .join(' ');
 };
 
 export const entryKey = (entry: ManifestEntry) =>
@@ -69,6 +71,7 @@ export const entryKey = (entry: ManifestEntry) =>
     entry.platform?.os ?? '',
     entry.platform?.browser?.name ?? '',
     rendererLabel(entry),
+    entry.variant ?? '',
   ].join('\u0000');
 
 export const keyHash = (key: string) =>
@@ -78,7 +81,7 @@ export const keyHash = (key: string) =>
 export const platformLabel = (entry: ManifestEntry) => {
   const os = entry.platform?.os;
   const browser = entry.platform?.browser?.name;
-  const platform = [os, browser].filter(Boolean).join(' / ');
+  const platform = [os, browser, entry.variant].filter(Boolean).join(' / ');
   const renderer = rendererLabel(entry);
   if (!renderer) return platform;
   return platform ? `${platform} (${renderer})` : renderer;

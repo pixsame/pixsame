@@ -25,7 +25,7 @@ This package has no runtime dependencies.
 
 ## The format
 
-The normative description is the JSON Schema (draft 2020-12), shipped as [`schema.json`](./src/schema.json) and importable as `@pixsame/manifest/schema.json` or the `manifestSchema` export. The TypeScript types (`Manifest`, `ManifestEntry`, ...) mirror it. A trimmed example:
+The normative description is the JSON Schema (draft 2020-12), shipped as `schema.json` (in the package, and in the repository under `src/`) and importable as `@pixsame/manifest/schema.json` or the `manifestSchema` export. The TypeScript types (`Manifest`, `ManifestEntry`, ...) mirror it. A trimmed example:
 
 ```jsonc
 {
@@ -115,6 +115,9 @@ Rules every writer and reader follows:
 - **Paths** are relative to `projectRoot` with `/` separators and may point outside the project (`../…`). `projectRoot` is the tested project, not necessarily the repository root: `ci.workspace` is the checkout directory.
 - **`failed` and `missing-baseline` need a human.** Copying `images.actual.path` over `images.baseline.path` approves them. `baselineWritten` says whether the working tree changed, whatever the status.
 - **`platform` is where the test ran, `renderer` is where the pixels came from.** Under `native` the renderer is the test browser itself. Entries with different renderers are different baselines.
+- **Browsers are optional.** Desktop and mobile tools leave `platform.browser` out and describe what they captured in the entry's `target` (device, OS version, display density and orientation, locale, theme, app, driver). The run-level `platform` is the host that ran the tests, not necessarily the device. `renderer.backend` is an open string (`native`, `docker`, `cloud`, or your own, e.g. `device`); `renderer.name` names what rendered the pixels.
+- **`variant` is the baseline identity you control.** Entries of the same screenshot name with a different `variant` (`iphone-16-ios18-dark`) never overwrite each other when manifests are merged. Without one, identity is `platform.os` + `platform.browser.name` + renderer.
+- **Baseline, actual and diff share one image extension** (PNG for every current writer); `.actual` and `.diff` go before it.
 - **Every entry is self-sufficient** (its own `platform`, `viewport`, `renderer`), so the entries of several manifests (a matrix of machines, one file per worker, e2e + component) can be merged.
 - **One file per writer process**, named `visual-regression-manifest[.<label>].json`, rewritten after every comparison, so it is complete even when the run is aborted. `**/*visual-regression-manifest*.json` finds all of them in an artifact.
 - **Consumers ignore keys they do not know.** `version` is bumped on breaking changes only.

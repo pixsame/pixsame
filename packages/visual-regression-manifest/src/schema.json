@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/pixsame/cypress-plugin-visual-regression-diff/main/packages/visual-regression-manifest/schema.json",
+  "$id": "https://raw.githubusercontent.com/pixsame/cypress-plugin-visual-regression-diff/main/packages/visual-regression-manifest/src/schema.json",
   "title": "Visual regression run manifest",
   "description": "A machine-readable record of every screenshot comparison made during a test run, written by a visual regression tool and read by CI tooling (PR comment bots, review dashboards, approval tools). Runner-agnostic: everything specific to the test runner lives in `runner`. Consumers must ignore keys they do not know.",
   "type": "object",
@@ -52,7 +52,7 @@
   "$defs": {
     "timestamp": {
       "type": "string",
-      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
       "minLength": 1
     },
     "status": {
@@ -68,7 +68,7 @@
       ]
     },
     "platform": {
-      "description": "Where the run happened. `os` uses Node's `process.platform` names (`linux`, `darwin`, `win32`).",
+      "description": "The machine that ran the tests (the host), which is not necessarily the device under test: for a mobile or remote-device run see the entries' `target`. `os` is an open string; Node-based writers use `process.platform` names (`linux`, `darwin`, `win32`).",
       "type": "object",
       "required": ["os", "arch"],
       "properties": {
@@ -87,6 +87,51 @@
         "headless": { "type": "boolean" }
       }
     },
+    "target": {
+      "description": "What was captured, for tools that are not a browser: a desktop or mobile application on a device, an emulator or a remote farm. Everything is optional; unknown keys are allowed.",
+      "type": "object",
+      "properties": {
+        "kind": {
+          "description": "Known values: `browser`, `desktop`, `mobile`, `embedded`; free-form otherwise.",
+          "type": "string"
+        },
+        "os": { "type": "string" },
+        "osVersion": { "type": "string" },
+        "arch": { "type": "string" },
+        "device": {
+          "type": "object",
+          "properties": {
+            "model": { "type": "string" },
+            "id": { "type": "string" },
+            "formFactor": { "type": "string" }
+          }
+        },
+        "display": {
+          "type": "object",
+          "properties": {
+            "width": { "type": "number" },
+            "height": { "type": "number" },
+            "density": {
+              "description": "Device pixels per logical pixel (scale factor / dpr).",
+              "type": "number"
+            },
+            "orientation": { "type": "string" }
+          }
+        },
+        "locale": { "type": "string" },
+        "theme": { "type": "string" },
+        "app": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "version": { "type": "string" },
+            "build": { "type": "string" }
+          }
+        },
+        "driver": { "type": "string" },
+        "emulated": { "type": "boolean" }
+      }
+    },
     "viewport": {
       "type": "object",
       "required": ["width", "height"],
@@ -99,7 +144,10 @@
       "type": "object",
       "required": ["provider"],
       "properties": {
-        "provider": { "enum": ["github", "gitlab", null] },
+        "provider": {
+          "description": "Known values: `github`, `gitlab`. Other CI systems are free-form lowercase ids; `null` when only a generic CI flag was set.",
+          "type": ["string", "null"]
+        },
         "repository": {
           "description": "`owner/repo` (GitHub) or `group/project` (GitLab).",
           "type": "string"
@@ -197,7 +245,7 @@
       "required": ["path"],
       "properties": {
         "path": {
-          "description": "Relative to `projectRoot`, `/` separators; `null` when the file does not exist.",
+          "description": "Relative to `projectRoot`, `/` separators; `null` when the file does not exist. Baseline, actual and diff of an entry share one extension (PNG for all current writers); `.actual` and `.diff` go before it.",
           "type": ["string", "null"]
         },
         "width": { "type": "integer", "minimum": 0 },
@@ -207,10 +255,22 @@
     "renderer": {
       "description": "Where the pixels came from, as opposed to `platform`, which is where the test ran. Entries with different renderers are different baselines.",
       "type": "object",
-      "required": ["backend", "browser"],
+      "required": ["backend"],
       "properties": {
-        "backend": { "enum": ["native", "docker", "cloud"] },
-        "browser": { "type": "string" },
+        "backend": {
+          "description": "Known values: `native` (the test runner's own capture), `docker`, `cloud`. Writers may add their own, e.g. `device` or `emulator`.",
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "description": "What rendered the pixels: a browser, an app or a device. Absent when `backend` says enough.",
+          "type": "string"
+        },
+        "version": { "type": "string" },
+        "browser": {
+          "description": "Browser name; kept for browser renderers, same as `name`.",
+          "type": "string"
+        },
         "browserVersion": { "type": "string" },
         "rendererVersion": {
           "description": "Version of the renderer image; absent under `native`.",
@@ -235,9 +295,7 @@
         "maxDiffThreshold",
         "diffConfig",
         "createMissingImages",
-        "updateImages",
-        "forceDeviceScaleFactor",
-        "screenshotConfig"
+        "updateImages"
       ],
       "properties": {
         "imagesPath": { "type": "string" },
@@ -248,9 +306,15 @@
         "updateImages": {
           "anyOf": [{ "type": "boolean" }, { "const": "failures-only" }]
         },
-        "forceDeviceScaleFactor": { "type": "boolean" },
+        "forceDeviceScaleFactor": {
+          "description": "Browser runners only.",
+          "type": "boolean"
+        },
         "matchAgainstPath": { "type": "string" },
-        "screenshotConfig": { "type": "object" }
+        "screenshotConfig": {
+          "description": "Capture options in the runner's vocabulary (Cypress `screenshot` config); JSON-serialisable keys only.",
+          "type": "object"
+        }
       }
     },
     "entry": {
@@ -324,12 +388,21 @@
         "platform": {
           "description": "Where this screenshot was taken; per entry because manifests of several machines get merged.",
           "type": "object",
-          "required": ["os", "browser"],
+          "required": ["os"],
           "properties": {
             "os": { "type": "string" },
+            "osVersion": { "type": "string" },
             "arch": { "type": "string" },
-            "browser": { "$ref": "#/$defs/browser" }
+            "browser": {
+              "description": "Absent for non-browser targets (desktop and mobile apps).",
+              "$ref": "#/$defs/browser"
+            }
           }
+        },
+        "target": { "$ref": "#/$defs/target" },
+        "variant": {
+          "description": "Producer-chosen id that tells entries of the same screenshot name apart (device, OS version, density, locale, theme, project, ...). Part of the baseline identity when merging manifests; absent, identity falls back to `platform.os` + `platform.browser.name` + renderer.",
+          "type": "string"
         },
         "viewport": { "$ref": "#/$defs/viewport" },
         "options": { "$ref": "#/$defs/entryOptions" },
