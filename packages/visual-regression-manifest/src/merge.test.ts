@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import type { ManifestEntry } from './types';
 import {
   entry,
   HEAD_SHA,
@@ -271,5 +272,50 @@ describe('producer-chosen variant', () => {
         renderer: { backend: 'device', name: 'iPhone 16' },
       }),
     ).toBe('device iPhone 16');
+  });
+});
+
+describe('same screenshot reported twice', () => {
+  const failed = entry({ status: 'failed' });
+  const passed = entry({
+    status: 'passed',
+    images: { ...entry().images, actual: { path: null } },
+  });
+  const run = (attempt: string) =>
+    manifest([], { ci: { ...must(manifest().ci), runAttempt: attempt } });
+  const withEntries = (entries: ManifestEntry[], attempt = '1') => ({
+    manifest: { ...run(attempt), entries },
+  });
+
+  it('warns when the same attempt gives one identity two different results', () => {
+    const { warnings, entries } = mergeManifests([
+      { ...withEntries([failed]), label: 'worker 1' },
+      { ...withEntries([passed]), label: 'worker 2' },
+    ]);
+    expect(entries).toHaveLength(1);
+    expect(entries[0]?.entry.status).toBe('passed');
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toMatch(
+      /^worker 2: `home_#0`.*also reported by worker 1.*distinct `variant`/,
+    );
+  });
+
+  it('stays quiet for an identical duplicate and for a re-run attempt', () => {
+    expect(
+      mergeManifests([withEntries([failed]), withEntries([failed])]).warnings,
+    ).toEqual([]);
+    expect(
+      mergeManifests([withEntries([failed]), withEntries([passed], '2')])
+        .warnings,
+    ).toEqual([]);
+  });
+
+  it('stays quiet when a variant tells them apart', () => {
+    const { warnings, entries } = mergeManifests([
+      withEntries([{ ...failed, variant: 'a' }]),
+      withEntries([{ ...passed, variant: 'b' }]),
+    ]);
+    expect(warnings).toEqual([]);
+    expect(entries).toHaveLength(2);
   });
 });

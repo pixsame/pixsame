@@ -119,7 +119,7 @@ Rules every writer and reader follows:
 - **`variant` is the baseline identity you control.** Entries of the same screenshot name with a different `variant` (`iphone-16-ios18-dark`) never overwrite each other when manifests are merged. Without one, identity is `platform.os` + `platform.browser.name` + renderer.
 - **Baseline, actual and diff share one image extension** (PNG for every current writer); `.actual` and `.diff` go before it.
 - **Every entry is self-sufficient** (its own `platform`, `viewport`, `renderer`), so the entries of several manifests (a matrix of machines, one file per worker, e2e + component) can be merged.
-- **One file per writer process**, named `visual-regression-manifest[.<label>].json`, rewritten after every comparison, so it is complete even when the run is aborted. `**/*visual-regression-manifest*.json` finds all of them in an artifact.
+- **One file per writer process**, named `visual-regression-manifest[.<label>].json`, rewritten after every comparison, so it is complete even when the run is aborted. `**/visual-regression-manifest{,.*}.json` (`MANIFEST_FILE_GLOB`) finds all of them in an artifact and nothing named merely alike. Merging warns when one run reports the same screenshot identity twice with different results; give such entries a distinct `variant`.
 - **Consumers ignore keys they do not know.** `version` is bumped on breaking changes only.
 - On GitHub `pull_request` events `ci.sha` is the temporary merge commit; use `ci.pullRequest.headSha` / `headRef` to write to the branch. `ci.runId` and `ci.runAttempt` locate the workflow artifact.
 

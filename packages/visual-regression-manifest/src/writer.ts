@@ -8,15 +8,55 @@ import {
 } from './builder';
 import type { Manifest, ManifestEntry } from './types';
 
+let tmpCounter = 0;
+/** Renaming over a file another process has open fails transiently on Windows. */
+const RENAME_RETRYABLE = new Set(['EPERM', 'EBUSY', 'EACCES']);
+const RENAME_ATTEMPTS = 5;
+
+const sleep = (ms: number) =>
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+
+const renameWithRetry = (from: string, to: string) => {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return fs.renameSync(from, to);
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (attempt >= RENAME_ATTEMPTS || !code || !RENAME_RETRYABLE.has(code)) {
+        throw error;
+      }
+      sleep(10 * attempt);
+    }
+  }
+};
+
 /**
- * Writes a manifest atomically (to `<file>.tmp`, then rename), so a consumer
- * never reads a half-written file. Creates the directory when needed.
+ * Writes a manifest atomically (to a uniquely named temporary file next to it,
+ * then rename), so a consumer never reads a half-written file and two writers
+ * on one path never share a temporary file. Creates the directory when needed.
  */
 export const writeManifestFile = (filePath: string, manifest: Manifest) => {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  const tmpPath = `${filePath}.tmp`;
-  fs.writeFileSync(tmpPath, JSON.stringify(manifest, null, 2));
-  fs.renameSync(tmpPath, filePath);
+  const tmpPath = `${filePath}.${process.pid}.${tmpCounter++}.tmp`;
+  try {
+    fs.writeFileSync(tmpPath, JSON.stringify(manifest, null, 2));
+    renameWithRetry(tmpPath, filePath);
+  } catch (error) {
+    fs.rmSync(tmpPath, { force: true });
+    throw error;
+  }
+};
+
+/** Temporary files a killed writer left next to `filePath`. */
+const removeStaleTmpFiles = (filePath: string) => {
+  const dir = path.dirname(filePath);
+  const stale = new RegExp(
+    `^${path.basename(filePath).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\.\\d+\\.\\d+\\.tmp$`,
+  );
+  if (!fs.existsSync(dir)) return;
+  for (const name of fs.readdirSync(dir)) {
+    if (stale.test(name)) fs.rmSync(path.join(dir, name), { force: true });
+  }
 };
 
 /**
@@ -58,5 +98,6 @@ export class ManifestWriter extends ManifestBuilder {
   reset() {
     this.clear();
     if (fs.existsSync(this.filePath)) fs.unlinkSync(this.filePath);
+    removeStaleTmpFiles(this.filePath);
   }
 }

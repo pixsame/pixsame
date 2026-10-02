@@ -102,6 +102,14 @@ const compareMerged = (a: MergedEntry, b: MergedEntry) =>
   a.entry.name.localeCompare(b.entry.name) ||
   platformLabel(a.entry).localeCompare(platformLabel(b.entry));
 
+/** Whether two reports of one screenshot say the same thing (status and files), ignoring when they were recorded. */
+const sameOutcome = (a: ManifestEntry, b: ManifestEntry) =>
+  a.status === b.status &&
+  a.images.baseline.path === b.images.baseline.path &&
+  a.images.actual.path === b.images.actual.path &&
+  a.hashes?.actual === b.hashes?.actual &&
+  a.hashes?.baseline === b.hashes?.baseline;
+
 /**
  * Concatenates the entries of every manifest of a run (several machines,
  * e2e + component, one file per worker, re-run attempts) into one list keyed
@@ -114,6 +122,7 @@ export const mergeManifests = <S extends ManifestSource>(
 ): MergedRun<S> => {
   const warnings: string[] = [];
   const byKey = new Map<string, MergedEntry<S>>();
+  const whereByKey = new Map<string, string>();
 
   sources.forEach((source, index) => {
     const { manifest } = source;
@@ -193,8 +202,21 @@ export const mergeManifests = <S extends ManifestSource>(
         collidesWith: [],
       };
       const existing = byKey.get(key);
-      if (!existing || existing.runAttempt <= runAttempt)
+      // the same attempt reporting one screenshot twice with different
+      // results means the producers gave two baselines one identity
+      if (
+        existing &&
+        existing.runAttempt === runAttempt &&
+        !sameOutcome(existing.entry, entry)
+      ) {
+        warnings.push(
+          `${where}: \`${entry.name}\` (${platformLabel(entry) || 'no platform'}) was also reported by ${whereByKey.get(key)} with a different result; keeping the one from ${where}. Give entries that are not the same baseline a distinct \`variant\`.`,
+        );
+      }
+      if (!existing || existing.runAttempt <= runAttempt) {
         byKey.set(key, merged);
+        whereByKey.set(key, where);
+      }
     }
   });
 

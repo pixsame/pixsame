@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { tmpDir } from '../__tests__/helpers';
 import { parseManifestJson } from './reader';
 import { ManifestWriter, writeManifestFile } from './writer';
@@ -21,6 +21,81 @@ describe('writeManifestFile', () => {
     expect(parseManifestJson(fs.readFileSync(file, 'utf8')).entries).toEqual(
       [],
     );
+  });
+});
+
+describe('writeManifestFile temporary files', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  const setup = async () => {
+    const root = await tmpDir();
+    const file = path.join(root, 'visual-regression-manifest.json');
+    const writer = new ManifestWriter(file, {
+      projectRoot: root,
+      runner,
+      ci: null,
+    });
+    return { root, file, writer };
+  };
+
+  it('uses a different temporary file for every write', async () => {
+    const { file, writer } = await setup();
+    const tmps: string[] = [];
+    const rename = fs.renameSync;
+    vi.spyOn(fs, 'renameSync').mockImplementation((from, to) => {
+      tmps.push(String(from));
+      return rename(from, to);
+    });
+    writeManifestFile(file, writer.toJSON());
+    writeManifestFile(file, writer.toJSON());
+    expect(new Set(tmps).size).toBe(2);
+    expect(tmps.every((t) => t.endsWith('.tmp'))).toBe(true);
+  });
+
+  it('retries a rename that fails transiently', async () => {
+    const { file, writer } = await setup();
+    const rename = fs.renameSync;
+    let failures = 2;
+    vi.spyOn(fs, 'renameSync').mockImplementation((from, to) => {
+      if (failures-- > 0) {
+        throw Object.assign(new Error('busy'), { code: 'EBUSY' });
+      }
+      return rename(from, to);
+    });
+    writeManifestFile(file, writer.toJSON());
+    expect(fs.existsSync(file)).toBe(true);
+  });
+
+  it('removes its temporary file and rethrows when the rename keeps failing', async () => {
+    const { root, file, writer } = await setup();
+    vi.spyOn(fs, 'renameSync').mockImplementation(() => {
+      throw Object.assign(new Error('nope'), { code: 'ENOSPC' });
+    });
+    expect(() => writeManifestFile(file, writer.toJSON())).toThrow('nope');
+    expect(fs.readdirSync(root)).toEqual([]);
+  });
+
+  it('gives up after a bounded number of retries', async () => {
+    const { file, writer } = await setup();
+    const rename = vi.spyOn(fs, 'renameSync').mockImplementation(() => {
+      throw Object.assign(new Error('busy'), { code: 'EPERM' });
+    });
+    expect(() => writeManifestFile(file, writer.toJSON())).toThrow('busy');
+    expect(rename).toHaveBeenCalledTimes(5);
+  });
+
+  it('reset clears temporary files a killed writer left behind', async () => {
+    const { root, file, writer } = await setup();
+    const stale = `${file}.4242.0.tmp`;
+    const unrelated = path.join(
+      root,
+      'visual-regression-manifest.e2e.json.1.0.tmp',
+    );
+    fs.writeFileSync(stale, '{');
+    fs.writeFileSync(unrelated, '{');
+    writer.reset();
+    expect(fs.existsSync(stale)).toBe(false);
+    expect(fs.existsSync(unrelated)).toBe(true);
   });
 });
 
