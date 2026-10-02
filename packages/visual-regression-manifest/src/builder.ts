@@ -141,7 +141,7 @@ const sha256 = (file: string) =>
 /** sha256 of the files that exist; a key is present only when the file is. */
 export const hashesOf = (files: {
   baseline: string;
-  actual: string;
+  actual: string | null;
   diff: string | null;
 }): ManifestHashes => {
   const hashes: ManifestHashes = {};
@@ -202,11 +202,12 @@ export class ManifestBuilder {
     return absolute && fs.existsSync(absolute) ? this.relative(absolute) : null;
   }
 
+  /** `./a.spec.ts` and `a.spec.ts` are one file: identity must not depend on how a runner spells it. */
   private testFile(file: string | undefined) {
     if (!file) return '';
     return path.isAbsolute(file)
       ? this.relative(path.normalize(file))
-      : toPosix(file);
+      : path.posix.normalize(toPosix(file));
   }
 
   /** Records one comparison. A retried test replaces the entries of its earlier attempts. */
@@ -219,6 +220,12 @@ export class ManifestBuilder {
         : input.diffPath === null
           ? null
           : resolveInProject(this.projectRoot, input.diffPath);
+    // a passing comparison leaves no review images behind, so `.actual` and
+    // `.diff` files found next to it are leftovers of an earlier run and must
+    // not show up as part of this entry
+    const passed = input.status === 'passed';
+    const keptActual = passed ? null : actualAbs;
+    const keptDiff = passed ? null : diffAbs;
     const test = {
       file: this.testFile(input.testFile),
       titlePath: input.titlePath ?? [],
@@ -249,8 +256,11 @@ export class ManifestBuilder {
       },
       images: {
         baseline: { path: this.relative(baselineAbs), ...input.baselineSize },
-        actual: { path: this.existingOrNull(actualAbs), ...input.actualSize },
-        diff: { path: this.existingOrNull(diffAbs) },
+        actual: {
+          path: this.existingOrNull(keptActual),
+          ...(keptActual && input.actualSize),
+        },
+        diff: { path: this.existingOrNull(keptDiff) },
       },
       baselineWritten: input.baselineWritten ?? false,
       recordedAt: input.recordedAt ?? now(),
@@ -262,8 +272,8 @@ export class ManifestBuilder {
       renderer: input.renderer ?? nativeRenderer(input.platform),
       hashes: hashesOf({
         baseline: baselineAbs,
-        actual: actualAbs,
-        diff: diffAbs,
+        actual: keptActual,
+        diff: keptDiff,
       }),
       message: input.message ?? '',
     };

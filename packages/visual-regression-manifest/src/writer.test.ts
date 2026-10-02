@@ -141,3 +141,71 @@ describe('ManifestWriter', () => {
     expect(() => writer.reset()).not.toThrow();
   });
 });
+
+describe('ManifestWriter with writeDelayMs', () => {
+  afterEach(() => vi.useRealTimers());
+
+  const setup = async () => {
+    const root = await tmpDir();
+    const file = path.join(root, 'visual-regression-manifest.json');
+    const writer = new ManifestWriter(
+      file,
+      { projectRoot: root, runner, ci: null },
+      { writeDelayMs: 50 },
+    );
+    const record = (name: string) =>
+      writer.record({
+        testFile: 'a.spec.ts',
+        actualPath: `${name}.actual.png`,
+        baselinePath: `${name}.png`,
+        status: 'failed',
+      });
+    return { file, writer, record };
+  };
+
+  it('coalesces changes into one write per delay', async () => {
+    vi.useFakeTimers();
+    const { file, record } = await setup();
+    const write = vi.spyOn(fs, 'writeFileSync');
+    record('a');
+    record('b');
+    record('c');
+    expect(fs.existsSync(file)).toBe(false);
+    vi.advanceTimersByTime(60);
+    expect(write).toHaveBeenCalledTimes(1);
+    expect(
+      parseManifestJson(fs.readFileSync(file, 'utf8')).entries,
+    ).toHaveLength(3);
+    write.mockRestore();
+  });
+
+  it('flush writes pending changes immediately and only once', async () => {
+    vi.useFakeTimers();
+    const { file, writer, record } = await setup();
+    record('a');
+    writer.flush();
+    expect(fs.existsSync(file)).toBe(true);
+    const write = vi.spyOn(fs, 'writeFileSync');
+    writer.flush();
+    vi.advanceTimersByTime(100);
+    expect(write).not.toHaveBeenCalled();
+    write.mockRestore();
+  });
+
+  it('writes pending changes when the process exits', async () => {
+    const { file, record } = await setup();
+    record('a');
+    expect(fs.existsSync(file)).toBe(false);
+    process.emit('exit', 0);
+    expect(fs.existsSync(file)).toBe(true);
+  });
+
+  it('reset drops pending changes', async () => {
+    vi.useFakeTimers();
+    const { file, writer, record } = await setup();
+    record('a');
+    writer.reset();
+    vi.advanceTimersByTime(100);
+    expect(fs.existsSync(file)).toBe(false);
+  });
+});

@@ -59,16 +59,34 @@ const removeStaleTmpFiles = (filePath: string) => {
   }
 };
 
+export type ManifestWriterOptions = {
+  /**
+   * Coalesce rewrites: after a change, write at most once per this many
+   * milliseconds (and always on process exit and `flush()`). `0`, the default,
+   * rewrites the file after every change, so it is complete even if the
+   * process is killed; raise it for runs with thousands of screenshots, where
+   * serialising the whole manifest on every change adds up.
+   */
+  writeDelayMs?: number;
+};
+
 /**
  * A `ManifestBuilder` bound to a file: every change rewrites the file, so the
  * manifest on disk is complete even when the run gets killed halfway.
  */
 export class ManifestWriter extends ManifestBuilder {
+  private readonly writeDelayMs: number;
+  private timer: NodeJS.Timeout | undefined;
+  private dirty = false;
+  private exitHook: (() => void) | undefined;
+
   constructor(
     readonly filePath: string,
     header: ManifestHeaderInput,
+    { writeDelayMs = 0 }: ManifestWriterOptions = {},
   ) {
     super(header);
+    this.writeDelayMs = writeDelayMs;
   }
 
   override record(input: ManifestEntryInput): ManifestEntry {
@@ -89,14 +107,35 @@ export class ManifestWriter extends ManifestBuilder {
     return changed;
   }
 
-  /** Rewrites the file from the current state. */
+  /** Rewrites the file from the current state (deferred when `writeDelayMs` is set; see `flush()`). */
   write() {
+    if (this.writeDelayMs <= 0) return this.writeNow();
+    this.dirty = true;
+    if (!this.exitHook) {
+      this.exitHook = () => this.flush();
+      process.once('exit', this.exitHook);
+    }
+    this.timer ??= setTimeout(() => this.flush(), this.writeDelayMs).unref();
+  }
+
+  /** Writes pending changes now. A no-op when nothing is pending. */
+  flush() {
+    clearTimeout(this.timer);
+    this.timer = undefined;
+    if (this.dirty) this.writeNow();
+  }
+
+  private writeNow() {
+    this.dirty = false;
     writeManifestFile(this.filePath, this.toJSON());
   }
 
   /** Forgets every entry and removes the file, e.g. at the start of a run. */
   reset() {
     this.clear();
+    this.dirty = false;
+    clearTimeout(this.timer);
+    this.timer = undefined;
     if (fs.existsSync(this.filePath)) fs.unlinkSync(this.filePath);
     removeStaleTmpFiles(this.filePath);
   }

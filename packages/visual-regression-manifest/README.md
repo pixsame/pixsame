@@ -191,7 +191,7 @@ Any object with a `manifest` property is a source; extra properties (an artifact
 
 ## Writing manifests
 
-Test-runner integrations use `ManifestWriter`: a builder bound to a file that rewrites it atomically on every change.
+Test-runner integrations use `ManifestWriter`: a builder bound to a file that rewrites it atomically on every change. For runs with thousands of screenshots pass `{ writeDelayMs: 200 }` as the third argument to coalesce the rewrites; pending changes are written on `flush()` and when the process exits (not if it is killed outright, which is why the default is `0`). A `passed` entry never lists `.actual` or `.diff` files, even when leftovers of an earlier run sit next to it, and test files are recorded normalised (`./a.spec.ts` and `a.spec.ts` are one file).
 
 ```ts
 import { ManifestWriter, getManifestFileName } from '@pixsame/manifest';

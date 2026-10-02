@@ -26,7 +26,11 @@ export {
   type ManifestEntryInput,
   type ManifestHeaderInput,
 } from './builder';
-export { ManifestWriter, writeManifestFile } from './writer';
+export {
+  ManifestWriter,
+  writeManifestFile,
+  type ManifestWriterOptions,
+} from './writer';
 export {
   ManifestParseError,
   findManifestFiles,

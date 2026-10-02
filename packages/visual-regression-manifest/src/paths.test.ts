@@ -9,6 +9,26 @@ import {
   toRepoPath,
 } from './paths';
 
+describe('path edge cases', () => {
+  it('only treats a real parent traversal as leaving the checkout', () => {
+    const at = (projectRoot: string) =>
+      projectDirInRepo({
+        projectRoot,
+        ci: { provider: null, workspace: '/w' },
+      });
+    expect(at('/w/..foo')).toBe('..foo');
+    expect(at('/w/app')).toBe('app');
+    expect(at('/x')).toBeNull();
+    expect(at('/')).toBeNull();
+  });
+
+  it('does not re-root absolute paths under the project directory', () => {
+    expect(toRepoPath('app', '/etc/x.png')).toBeNull();
+    expect(toRepoPath('app', 'C:/x.png')).toBeNull();
+    expect(toRepoPath('app', 'a/b.png')).toBe('app/a/b.png');
+  });
+});
+
 describe('paths', () => {
   it('toPosix replaces the given separator only', () => {
     expect(toPosix('a\\b\\c', '\\')).toBe('a/b/c');
