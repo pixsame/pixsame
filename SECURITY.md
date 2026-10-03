@@ -1,6 +1,6 @@
 # Security policy
 
-This policy covers every package in this repository: `@frsource/cypress-plugin-visual-regression-diff`, the run manifest package and the GitHub App.
+This policy covers every package in this repository: `@pixsame/cypress-plugin-visual-regression-diff`, the run manifest package and the GitHub App.
 
 ## Supported versions
 
@@ -17,7 +17,7 @@ After a new major ships on the `latest` (stable) channel, the previous major kee
 
 Please do not open a public issue for a security problem. Use one of these instead:
 
-- [Report a vulnerability](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/security/advisories/new) through GitHub's private reporting on this repository (preferred; it keeps the discussion, the fix and the advisory in one place).
+- [Report a vulnerability](https://github.com/pixsame/cypress-plugin-visual-regression-diff/security/advisories/new) through GitHub's private reporting on this repository (preferred; it keeps the discussion, the fix and the advisory in one place).
 - Email [jakub@frsource.org](mailto:jakub@frsource.org) with "security" in the subject.
 
 Include what you found, how to reproduce it and which version you tested. A proof of concept helps but is not required.
