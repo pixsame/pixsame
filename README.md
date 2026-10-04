@@ -15,7 +15,7 @@
 | --- | --- |
 | [**`@pixsame/cypress-plugin-visual-regression-diff`**](packages/cypress-plugin-visual-regression-diff/README.md) | Visual regression plugin for Cypress, with a diff UI right in the Cypress runner. Works for e2e and component testing. |
 | [**`@pixsame/manifest`**](packages/visual-regression-manifest/README.md) | The runner-agnostic run manifest as a free standard: JSON Schema, types, reader, writer, merger and converters. |
-| **Playwright plugin** (Coming soon!) | The same workflow for Playwright tests. |
+| **Playwright plugin** (Coming soon!) | Visual regression plugin for Playwright. Compares screenshots against baselines kept in your repo and shows a diff when they change. |
 | **GitHub App** (Coming soon!) | Check run and PR comments with image diffs, and approve changed baselines from the pull request. |
 | **pixsame.com** (Coming soon!) | Docs, guides and demos. |
 
