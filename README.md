@@ -5,9 +5,8 @@
 <p align="center"><b>pixsame. to the pixel.</b></p>
 
 <p align="center">
-  pixsame is an ecosystem of tools and products that make working with visual regression testing easy.
-  With pixsame you'll be able to set up whole visual regression testing process right in your repo.
-  And if that's too much of a hassle - use our online service.
+  pixsame is a family of tools and products that take the pain out of visual regression testing.
+  Run the whole process yourself, right in your repo, or let our online service handle it for you.
 </p>
 
 ## Tools and products
