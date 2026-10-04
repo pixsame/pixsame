@@ -5,7 +5,7 @@
 
 Version 1.0.0 of `@pixsame/cypress-plugin-visual-regression-diff` is the code of `@frsource/cypress-plugin-visual-regression-diff` 4.2.1 with no behavior change, so your baseline images, configuration and `cy.*` commands keep working as they are.
 
-The quickest way is the built-in command, which renames the dependency in every `package.json` below the current directory, updates imports and type references in your config and support files, and reinstalls with the package manager it finds:
+The quickest way to migration is the built-in command, which renames the dependency in every `package.json` below the current directory, updates imports and type references in your config and support files, and reinstalls with the package manager it finds:
 
 ```bash
 npx @pixsame/cypress-plugin-visual-regression-diff migrate
