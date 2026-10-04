@@ -1,3 +1,34 @@
+> [!WARNING]
+> **`@frsource/cypress-plugin-visual-regression-diff` is deprecated.** The plugin has moved to the [pixsame](https://github.com/pixsame) organization and is now published as `@pixsame/cypress-plugin-visual-regression-diff`. The old package will not get new features. Migrating is just a rename, see [below](#migrating-from-the-frsource-package).
+
+## Migrating from the `@frsource` package
+
+Version 1.0.0 of `@pixsame/cypress-plugin-visual-regression-diff` is the code of `@frsource/cypress-plugin-visual-regression-diff` 4.2.1 with no behavior change, so your baseline images, configuration and `cy.*` commands keep working as they are.
+
+The quickest way is the built-in command, which renames the dependency in every `package.json` below the current directory, updates imports and type references in your config and support files, and reinstalls with the package manager it finds:
+
+```bash
+npx @pixsame/cypress-plugin-visual-regression-diff migrate
+```
+
+It lists the files it would change and asks before writing anything. Pass `--dry-run` to only see the list, `--yes` to skip the question (required in CI) and `--no-install` to skip the install step.
+
+Prefer to do it by hand? Swap the package and replace the name in your imports:
+
+```bash
+npm uninstall @frsource/cypress-plugin-visual-regression-diff
+npm install --save-dev @pixsame/cypress-plugin-visual-regression-diff
+```
+
+```diff
+-import '@frsource/cypress-plugin-visual-regression-diff';
++import '@pixsame/cypress-plugin-visual-regression-diff';
+-import { initPlugin } from '@frsource/cypress-plugin-visual-regression-diff/plugins';
++import { initPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
+```
+
+If you list the package in `compilerOptions.types` of a `tsconfig.json`, rename it there too.
+
 <p align="center">
   <a href="https://www.npmjs.com/package/@pixsame/cypress-plugin-visual-regression-diff">
     <img src="https://img.shields.io/npm/v/@pixsame/cypress-plugin-visual-regression-diff.svg" alt="NPM version badge">
@@ -27,6 +58,8 @@
 <p align="center">Perform visual regression test with a nice GUI as help. 💅 <i>Only&nbsp;for&nbsp;Cypress!</i> Both e2e and component-testing compatible 💪</p>
 
 <p align="center">
+  <a href="#migrating-from-the-frsource-package">Migrating</a>
+  ·
   <a href="#getting-started">Getting Started</a>
   ·
   <a href="#usage">Usage</a>
@@ -134,34 +167,6 @@ module.exports = function (on, config) {
 ```
 
 That's it - now let's see how to use the library in [usage section](#usage).
-
-### Migrating from `@frsource/cypress-plugin-visual-regression-diff`
-
-The plugin now lives in the [pixsame](https://github.com/pixsame) organization and is published as `@pixsame/cypress-plugin-visual-regression-diff`. It is a rename: version 1.0.0 is the code of `@frsource/cypress-plugin-visual-regression-diff` 4.2.1, with no behavior change, and your baseline images, configuration and `cy.*` commands keep working as they are. The old package is deprecated and will not get new features.
-
-The quickest way is the built-in command, which renames the dependency in every `package.json` below the current directory, updates imports and type references in your config and support files, and reinstalls with the package manager it finds:
-
-```bash
-npx @pixsame/cypress-plugin-visual-regression-diff migrate
-```
-
-It lists the files it would change and asks before writing anything. Pass `--dry-run` to only see the list, `--yes` to skip the question (required in CI) and `--no-install` to skip the install step.
-
-Prefer to do it by hand? Swap the package and replace the name in your imports:
-
-```bash
-npm uninstall @frsource/cypress-plugin-visual-regression-diff
-npm install --save-dev @pixsame/cypress-plugin-visual-regression-diff
-```
-
-```diff
--import '@frsource/cypress-plugin-visual-regression-diff';
-+import '@pixsame/cypress-plugin-visual-regression-diff';
--import { initPlugin } from '@frsource/cypress-plugin-visual-regression-diff/plugins';
-+import { initPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
-```
-
-If you list the package in `compilerOptions.types` of a `tsconfig.json`, rename it there too.
 
 ## Usage
 
