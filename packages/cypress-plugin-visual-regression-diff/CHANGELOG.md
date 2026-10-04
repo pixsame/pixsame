@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.2.1](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/compare/@frsource/cypress-plugin-visual-regression-diff-v4.2.0...@frsource/cypress-plugin-visual-regression-diff-v4.2.1) (2026-10-02)
+
+
+### Bug Fixes
+
+* Remove stale .diff files once the comparison no longer fails ([#426](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/426)) ([0ea0356](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/commit/0ea0356c7ce47f5a674ee4a3d9ea8e154bb27c09))
+* restore screenshot counters correctly on test retry  ([#426](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/426)) ([0ea0356](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/commit/0ea0356c7ce47f5a674ee4a3d9ea8e154bb27c09))
+* declare the Node engine as >=20.9 - sharp dependency has required that since 4.0.2 ([#426](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/426)) ([0ea0356](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/commit/0ea0356c7ce47f5a674ee4a3d9ea8e154bb27c09))
+
 ## [4.2.0](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/compare/@frsource/cypress-plugin-visual-regression-diff-v4.1.1...@frsource/cypress-plugin-visual-regression-diff-v4.2.0) (2026-09-20)
 
 
