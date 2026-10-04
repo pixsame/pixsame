@@ -2,11 +2,12 @@
   <img src="assets/pixsame/pixsame-lockup-adaptive.svg" alt="pixsame" height="90px"/>
 </p>
 
-<p align="center"><b>Visual regression testing that stays in your repo.</b></p>
+<p align="center"><b>pixsame. to the pixel.</b></p>
 
 <p align="center">
-  pixsame is an ecosystem of tools and products that make working with visual regression testing easy:
-  from catching a pixel change in your test run, through reviewing it, to approving it.
+  pixsame is an ecosystem of tools and products that make working with visual regression testing easy.
+  With pixsame you'll be able to set up whole visual regression testing process right in your repo.
+  And if that's too much of a hassle - use our online service.
 </p>
 
 ## Tools and products
