@@ -2,7 +2,7 @@
 
 Hey! It’s really exciting for us to see your interest in contributing to this library. Before taking off with your work, please take a moment to read through these guidelines:
 
-- [Code of Conduct](https://github.com/pixsame/cypress-plugin-visual-regression-diff/blob/master/CODE_OF_CONDUCT.md)
+- [Code of Conduct](https://github.com/pixsame/pixsame/blob/master/CODE_OF_CONDUCT.md)
 - [Questions?](#questions)
 - [Reporting an issue or a feature request](#reporing-an-issue-or-a-feature-request)
 - [Pull Request Guidelines](#pull-request-guidelines)
@@ -10,7 +10,7 @@ Hey! It’s really exciting for us to see your interest in contributing to this 
 
 ## Questions?
 
-Don’t hesitate to ask a question directly on the [discussions board](https://github.com/pixsame/cypress-plugin-visual-regression-diff/discussions)!
+Don’t hesitate to ask a question directly on the [discussions board](https://github.com/pixsame/pixsame/discussions)!
 
 ## Reporting an issue or a feature request
 
@@ -18,7 +18,7 @@ Don’t hesitate to ask a question directly on the [discussions board](https://g
 
 ## Pull Request Guidelines
 
-- Check if there isn’t a similar PR already in the [GitHub Pull requests](https://github.com/pixsame/cypress-plugin-visual-regression-diff/pulls) - maybe somebody already has covered this topic?
+- Check if there isn’t a similar PR already in the [GitHub Pull requests](https://github.com/pixsame/pixsame/pulls) - maybe somebody already has covered this topic?
 
 - Checkout the master branch and (after you do your work) file a PR against it
 
@@ -36,7 +36,7 @@ Don’t hesitate to ask a question directly on the [discussions board](https://g
 - When fixing bug:
   - Try to cover the scenario with tests if possible
   - If an issue for this bug already exists, please reference it via (`Refs: #XYZ` - where `XYZ` is an issue number) at the very bottom of your commit message and PR description as proposed by [conventional commits v1.0.0 style guide](https://www.conventionalcommits.org/en/v1.0.0/#commit-message-with-multi-paragraph-body-and-multiple-footers)
-  - If there is no issue connected with the bug, please provide a detailed description of the problem in the PR. Live demo preferred ([look for the codeine example project in the bug issue template](https://github.com/pixsame/cypress-plugin-visual-regression-diff/blob/master/.github/ISSUE_TEMPLATE/bug_report.md))
+  - If there is no issue connected with the bug, please provide a detailed description of the problem in the PR. Live demo preferred ([look for the codeine example project in the bug issue template](https://github.com/pixsame/pixsame/blob/master/.github/ISSUE_TEMPLATE/bug_report.md))
 
 ## Development Setup
 

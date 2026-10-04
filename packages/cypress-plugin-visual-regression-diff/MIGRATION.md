@@ -95,4 +95,4 @@ export default defineConfig({
 
 - [Cypress `Cypress.env()` migration guide](https://docs.cypress.io/app/references/migration-guide#Migrating-away-from-Cypressenv)
 - [Cypress `expose` API docs](https://on.cypress.io/expose)
-- [Issue #375](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/375)
+- [Issue #375](https://github.com/pixsame/pixsame/issues/375)

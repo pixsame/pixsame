@@ -458,7 +458,7 @@ describe('compareImagesTask', () => {
       expect(getPNGMetadata(actualPng)?.testingType).toBe('component');
     });
 
-    // regression test for https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/322
+    // regression test for https://github.com/pixsame/pixsame/issues/322
     it('does not rewrite a baseline that was created from an approved .actual.png', async () => {
       // approveImageTask derives the .diff path from the .actual suffix, so use real-looking names
       const { path: tmpDir } = await dir();

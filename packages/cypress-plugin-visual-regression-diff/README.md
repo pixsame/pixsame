@@ -45,13 +45,13 @@ If you list the package in `compilerOptions.types` of a `tsconfig.json`, rename 
   <a href="https://github.com/semantic-release/semantic-release">
     <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-relase badge">
   </a>
-  <a href="https://github.com/pixsame/cypress-plugin-visual-regression-diff/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/pixsame/cypress-plugin-visual-regression-diff.svg" alt="license MIT badge">
+  <a href="https://github.com/pixsame/pixsame/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/pixsame/pixsame.svg" alt="license MIT badge">
   </a>
 </p>
 
 <p align="center">
-  <img src="https://github.com/pixsame/cypress-plugin-visual-regression-diff/blob/main/assets/logo.svg" alt="Cypress Plugin Visual Regression Diff logo" height="120px"/>
+  <img src="https://github.com/pixsame/pixsame/blob/main/assets/logo.svg" alt="Cypress Plugin Visual Regression Diff logo" height="120px"/>
 </p>
 
 <h1 align="center">Plugin for Cypress - Visual Regression Diff</h1>
@@ -66,9 +66,9 @@ If you list the package in `compilerOptions.types` of a `tsconfig.json`, rename 
   ·
   <a href="#faq">FAQ</a>
   ·
-  <a href="https://github.com/pixsame/cypress-plugin-visual-regression-diff/issues">File an Issue</a>
+  <a href="https://github.com/pixsame/pixsame/issues">File an Issue</a>
   ·
-  <a href="https://github.com/pixsame/cypress-plugin-visual-regression-diff/discussions">Have a question or an idea?</a>
+  <a href="https://github.com/pixsame/pixsame/discussions">Have a question or an idea?</a>
   <br>
 </p>
 
@@ -301,7 +301,7 @@ When enabled, a floating action button (FAB) appears in the bottom-right corner 
 - Once all tests finish, an error is thrown with the total count of failures.
 - Clicking the FAB opens a carousel where you can review each failing snapshot side-by-side (new vs. old) and either **replace** the baseline or **skip** the change.
 
-![Batch Review Mode demo](https://raw.githubusercontent.com/pixsame/cypress-plugin-visual-regression-diff/main/assets/batch-review-mode.gif)
+![Batch Review Mode demo](https://raw.githubusercontent.com/pixsame/pixsame/main/assets/batch-review-mode.gif)
 
 > Note: Batch mode will become the default in the next major version. To keep an old behaviour, make sure to set configuration property to `false` (see below for more details).
 
@@ -541,15 +541,15 @@ The plugin is free and MIT-licensed, and it stays that way. It's also maintained
 
 Write to [jakub@frsource.org](mailto:jakub@frsource.org) with a sentence about your setup and I'll reply with a quote. If you only want to say thanks, the Sponsor button at the top of this repository does that (GitHub Sponsors, Patreon or Buy Me a Coffee), and every sponsor is listed in the release notes.
 
-Security problems have their own path: see [SECURITY.md](https://github.com/pixsame/cypress-plugin-visual-regression-diff/blob/main/SECURITY.md).
+Security problems have their own path: see [SECURITY.md](https://github.com/pixsame/pixsame/blob/main/SECURITY.md).
 
 ## Questions
 
-Don’t hesitate to ask a question directly on the [discussions board](https://github.com/pixsame/cypress-plugin-visual-regression-diff/discussions)!
+Don’t hesitate to ask a question directly on the [discussions board](https://github.com/pixsame/pixsame/discussions)!
 
 ## Changelog
 
-Changes for every release are documented in the [release notes](https://github.com/pixsame/cypress-plugin-visual-regression-diff/releases) and [CHANGELOG files of every package](https://github.com/pixsame/cypress-plugin-visual-regression-diff/tree/main/packages).
+Changes for every release are documented in the [release notes](https://github.com/pixsame/pixsame/releases) and [CHANGELOG files of every package](https://github.com/pixsame/pixsame/tree/main/packages).
 
 ## License
 
