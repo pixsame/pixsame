@@ -17,8 +17,14 @@ const MANIFEST_FILE_REGEX = new RegExp(
 );
 
 /** `visual-regression-manifest.json`, or `visual-regression-manifest.<label>.json` (e.g. `e2e`, `playwright.w0`). */
-export const getManifestFileName = (label?: string) =>
-  `${MANIFEST_FILE_PREFIX}${label ? `.${label}` : ''}.json`;
+export const getManifestFileName = (label?: string) => {
+  if (label && /[\\/]/.test(label)) {
+    throw new Error(
+      `Manifest label ${JSON.stringify(label)} must not contain path separators`,
+    );
+  }
+  return `${MANIFEST_FILE_PREFIX}${label ? `.${label}` : ''}.json`;
+};
 
 /** Whether a file name (or path) is one a manifest writer would produce. */
 export const isManifestFileName = (file: string) =>

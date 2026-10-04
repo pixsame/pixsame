@@ -1,6 +1,6 @@
 import { createHash } from 'crypto';
 import { MANIFEST_STATUSES, needsHuman } from './constants';
-import { projectDirInRepo, toRepoPath } from './paths';
+import { compareText, projectDirInRepo, toRepoPath } from './paths';
 import type { Manifest, ManifestEntry, ManifestStatus } from './types';
 
 export type ManifestSource = {
@@ -98,9 +98,9 @@ export const countByStatus = (
 };
 
 const compareMerged = (a: MergedEntry, b: MergedEntry) =>
-  a.entry.test.file.localeCompare(b.entry.test.file) ||
-  a.entry.name.localeCompare(b.entry.name) ||
-  platformLabel(a.entry).localeCompare(platformLabel(b.entry));
+  compareText(a.entry.test.file, b.entry.test.file) ||
+  compareText(a.entry.name, b.entry.name) ||
+  compareText(platformLabel(a.entry), platformLabel(b.entry));
 
 /** Whether two reports of one screenshot say the same thing (status and files), ignoring when they were recorded. */
 const sameOutcome = (a: ManifestEntry, b: ManifestEntry) =>

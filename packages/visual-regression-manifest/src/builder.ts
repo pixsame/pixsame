@@ -4,7 +4,12 @@ import os from 'os';
 import path from 'path';
 import { detectCi, type EnvLike } from './ci';
 import { IMAGE_SUFFIX, MANIFEST_VERSION } from './constants';
-import { resolveInProject, toPosix, toProjectRelative } from './paths';
+import {
+  compareText,
+  resolveInProject,
+  toPosix,
+  toProjectRelative,
+} from './paths';
 import type {
   Manifest,
   ManifestCi,
@@ -169,7 +174,7 @@ const sameTitlePath = (a: string[], b: string[]) =>
 
 /** The order entries are written in: by test file, then name. */
 export const compareEntries = (a: ManifestEntry, b: ManifestEntry) =>
-  a.test.file.localeCompare(b.test.file) || a.name.localeCompare(b.name);
+  compareText(a.test.file, b.test.file) || compareText(a.name, b.name);
 
 /**
  * Builds a manifest in memory: one run header plus entries keyed by their
@@ -234,7 +239,9 @@ export class ManifestBuilder {
 
     // a retried test regenerates its screenshots from scratch, so entries
     // left by an earlier attempt of the same test are stale
-    if (test.retry > 0) {
+    // (without a known test identity every entry shares `('', [])`, so
+    // there is nothing to tell attempts of one test from other tests)
+    if (test.retry > 0 && (test.file || test.titlePath.length > 0)) {
       for (const [key, entry] of this.byActualPath) {
         if (
           entry.test.retry < test.retry &&

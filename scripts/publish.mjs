@@ -6,10 +6,12 @@
  * versions committed in `package.json` under `latest`.
  *
  * Beta mode (`--beta <n>`, the manually dispatched "Beta release" workflow)
- * rewrites every public package's version to `X.Y.Z-beta.<n>` in the working
- * tree, without committing anything, and publishes under `beta`. A package
- * still at the `0.0.0` placeholder becomes `1.0.0-beta.<n>`; stable and
- * canary runs skip it.
+ * rewrites the version of every public package that has no stable release on
+ * npm yet to `X.Y.Z-beta.<n>` in the working tree, without committing
+ * anything, and publishes under `beta`. A package still at the `0.0.0`
+ * placeholder becomes `1.0.0-beta.<n>`; stable and canary runs skip it.
+ * Already released packages are left out: their `-beta.<n>` would be a semver
+ * downgrade for anyone on `@beta`.
  *
  * Canary mode (`--canary`, CI on every push to `main` that is not a release)
  * does the same with `X.Y.Z-canary-<YYYYMMDD>-<8 random base36 chars>`, e.g.
@@ -88,27 +90,6 @@ let packages = JSON.parse(
     (pkg.version !== '0.0.0' || beta !== null),
 );
 
-if (prerelease !== null) {
-  const prereleases = packages.filter(({ version }) => version.includes('-'));
-  if (prereleases.length) {
-    console.error(
-      `${canary ? '--canary' : '--beta'} needs stable versions in package.json, but found: ${prereleases
-        .map(({ name, version }) => `${name}@${version}`)
-        .join(', ')}`,
-    );
-    process.exit(1);
-  }
-  // Rewrite every sibling before publishing anything: `pnpm publish` resolves
-  // `workspace:` ranges from the sibling's package.json at publish time.
-  packages = packages.map((pkg) => {
-    const base = pkg.version === '0.0.0' ? '1.0.0' : pkg.version;
-    const version = `${base}-${prerelease}`;
-    console.log(`version ${pkg.name} ${pkg.version} -> ${version}`);
-    run('npm', ['pkg', 'set', `version=${version}`], { cwd: pkg.path });
-    return { ...pkg, version };
-  });
-}
-
 const isPublished = (name, version) => {
   try {
     const args = ['view', `${name}@${version}`, 'version'];
@@ -121,6 +102,36 @@ const isPublished = (name, version) => {
     return false;
   }
 };
+
+if (prerelease !== null) {
+  const prereleases = packages.filter(({ version }) => version.includes('-'));
+  if (prereleases.length) {
+    console.error(
+      `${canary ? '--canary' : '--beta'} needs stable versions in package.json, but found: ${prereleases
+        .map(({ name, version }) => `${name}@${version}`)
+        .join(', ')}`,
+    );
+    process.exit(1);
+  }
+  // A beta of a package whose stable version is already released would be a
+  // semver downgrade for everyone on `@beta`, so only unreleased packages
+  // (the `0.0.0` placeholder, or a version not on npm yet) get one. Canaries
+  // keep rewriting everything: they have a channel of their own.
+  if (beta !== null) {
+    packages = packages.filter(
+      ({ name, version }) => version === '0.0.0' || !isPublished(name, version),
+    );
+  }
+  // Rewrite every sibling before publishing anything: `pnpm publish` resolves
+  // `workspace:` ranges from the sibling's package.json at publish time.
+  packages = packages.map((pkg) => {
+    const base = pkg.version === '0.0.0' ? '1.0.0' : pkg.version;
+    const version = `${base}-${prerelease}`;
+    console.log(`version ${pkg.name} ${pkg.version} -> ${version}`);
+    run('npm', ['pkg', 'set', `version=${version}`], { cwd: pkg.path });
+    return { ...pkg, version };
+  });
+}
 
 const distTag = (version) => {
   if (!version.includes('-')) return 'latest';

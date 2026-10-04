@@ -12,6 +12,8 @@ describe('manifest file names', () => {
     expect(getManifestFileName('e2e')).toBe(
       'visual-regression-manifest.e2e.json',
     );
+    expect(() => getManifestFileName('a/b')).toThrow(/path separators/);
+    expect(() => getManifestFileName('a\\b')).toThrow(/path separators/);
     expect(isManifestFileName('visual-regression-manifest.json')).toBe(true);
     expect(
       isManifestFileName('/a/b/visual-regression-manifest.playwright.w1.json'),

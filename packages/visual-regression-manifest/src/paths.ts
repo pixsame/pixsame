@@ -1,6 +1,10 @@
 import path from 'path';
 import type { Manifest } from './types';
 
+/** Code-point order: unlike `localeCompare`, the same on every host and ICU version. */
+export const compareText = (a: string, b: string) =>
+  a < b ? -1 : a > b ? 1 : 0;
+
 /** `/`-separated form of a path; a no-op on POSIX. */
 export const toPosix = (p: string, sep: string = path.sep) =>
   sep === '/' ? p : p.split(sep).join('/');

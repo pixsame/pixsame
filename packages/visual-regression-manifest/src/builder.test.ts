@@ -251,6 +251,42 @@ describe('ManifestBuilder', () => {
     ]);
   });
 
+  it('keeps entries of other images on retry when the test identity is unknown', async () => {
+    const builder = builderIn(await tmpDir());
+    builder.record({
+      actualPath: 'a.actual.png',
+      baselinePath: 'a.png',
+      status: 'failed',
+    });
+    builder.record({
+      retry: 1,
+      actualPath: 'b.actual.png',
+      baselinePath: 'b.png',
+      status: 'failed',
+    });
+    expect(builder.entries().map((e) => e.name)).toEqual(['a', 'b']);
+  });
+
+  it('sorts by code point, not by host locale', async () => {
+    const builder = builderIn(await tmpDir());
+    for (const name of ['a_b', 'aB', 'ab', 'Ab', 'a-b', 'a b']) {
+      builder.record({
+        name,
+        actualPath: `${name}.actual.png`,
+        baselinePath: `${name}.png`,
+        status: 'passed',
+      });
+    }
+    expect(builder.entries().map((e) => e.name)).toEqual([
+      'Ab',
+      'a b',
+      'a-b',
+      'aB',
+      'a_b',
+      'ab',
+    ]);
+  });
+
   it('sorts entries by test file, then name', async () => {
     const root = await tmpDir();
     const builder = builderIn(root);
