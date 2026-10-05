@@ -8,7 +8,7 @@ Version 1.0.0 of `@pixsame/cypress-plugin-visual-regression-diff` is the code of
 The quickest way to migration is the built-in command, which renames the dependency in every `package.json` below the current directory, updates imports and type references in your config and support files, and reinstalls with the package manager it finds:
 
 ```bash
-npx @pixsame/cypress-plugin-visual-regression-diff migrate
+npx @frsource/cypress-plugin-visual-regression-diff migrate
 ```
 
 It lists the files it would change and asks before writing anything. Pass `--dry-run` to only see the list, `--yes` to skip the question (required in CI) and `--no-install` to skip the install step.
