@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { spawnSync } from 'child_process';
 import readline from 'readline';
+import { detect, resolveCommand } from 'package-manager-detector';
+import type { Agent } from 'package-manager-detector';
 
 export const OLD_PACKAGE_NAME =
   '@frsource/cypress-plugin-visual-regression-diff';
@@ -26,15 +28,7 @@ const SKIPPED_DIRECTORIES = new Set([
   'screenshots',
   'videos',
 ]);
-const LOCKFILES = {
-  'pnpm-lock.yaml': 'pnpm',
-  'yarn.lock': 'yarn',
-  'bun.lock': 'bun',
-  'bun.lockb': 'bun',
-  'package-lock.json': 'npm',
-} as const;
-
-export type PackageManager = 'npm' | 'pnpm' | 'yarn' | 'bun';
+export type PackageManager = Agent;
 
 export interface FileEdit {
   file: string;
@@ -54,16 +48,10 @@ export interface Io {
 const oldNameRegex = () =>
   new RegExp(`${OLD_PACKAGE_NAME.replace(/[/-]/g, '\\$&')}(?![\\w-])`, 'g');
 
-export function detectPackageManager(cwd: string): PackageManager {
-  let dir = path.resolve(cwd);
-  for (;;) {
-    for (const [lockfile, pm] of Object.entries(LOCKFILES)) {
-      if (fs.existsSync(path.join(dir, lockfile))) return pm;
-    }
-    const parent = path.dirname(dir);
-    if (parent === dir) return 'npm';
-    dir = parent;
-  }
+export async function detectPackageManager(
+  cwd: string,
+): Promise<PackageManager> {
+  return (await detect({ cwd }))?.agent ?? 'npm';
 }
 
 function* walk(dir: string): Generator<string> {
@@ -211,7 +199,7 @@ export async function main(argv: string[], io: Io = defaultIo()) {
   io.stdout('\nUpdated. Review with `git diff`.');
 
   if (!install) return 0;
-  const pm = detectPackageManager(cwd);
+  const pm = await detectPackageManager(cwd);
   io.stdout(`Running \`${pm} install\` to refresh the lockfile…`);
   const status = io.install(pm, cwd);
   if (status !== 0) {
@@ -239,12 +227,16 @@ function defaultIo(): Io {
           resolve(/^y(es)?$/i.test(answer.trim()));
         });
       }),
-    install: (pm, cwd) =>
-      spawnSync(pm, ['install'], {
-        cwd,
-        stdio: 'inherit',
-        shell: process.platform === 'win32',
-      }).status ?? 1,
+    install: (pm, cwd) => {
+      const { command, args } = resolveCommand(pm, 'install', [])!;
+      return (
+        spawnSync(command, args, {
+          cwd,
+          stdio: 'inherit',
+          shell: process.platform === 'win32',
+        }).status ?? 1
+      );
+    },
   };
 }
 /* c8 ignore stop */

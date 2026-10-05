@@ -152,18 +152,26 @@ describe('detectPackageManager', () => {
     ['yarn.lock', 'yarn'],
     ['bun.lock', 'bun'],
     ['package-lock.json', 'npm'],
-  ])('maps %s to %s', (lockfile, pm) => {
+  ])('maps %s to %s', async (lockfile, pm) => {
     write(lockfile, '');
-    expect(detectPackageManager(cwd)).toBe(pm);
+    expect(await detectPackageManager(cwd)).toBe(pm);
   });
 
-  it('looks in parent directories and falls back to npm', () => {
+  it('prefers the packageManager field of package.json', async () => {
+    write('package.json', JSON.stringify({ packageManager: 'pnpm@9.0.0' }));
+    write('package-lock.json', '');
+    expect(await detectPackageManager(cwd)).toBe('pnpm');
+  });
+
+  it('looks in parent directories and falls back to npm', async () => {
     write('yarn.lock', '');
     write('apps/web/.keep', '');
-    expect(detectPackageManager(path.join(cwd, 'apps', 'web'))).toBe('yarn');
+    expect(await detectPackageManager(path.join(cwd, 'apps', 'web'))).toBe(
+      'yarn',
+    );
 
     const lonely = fs.mkdtempSync(path.join(os.tmpdir(), 'cpvrd-lonely-'));
-    expect(detectPackageManager(lonely)).toBe('npm');
+    expect(await detectPackageManager(lonely)).toBe('npm');
   });
 });
 
