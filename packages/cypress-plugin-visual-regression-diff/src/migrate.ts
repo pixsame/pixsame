@@ -228,7 +228,9 @@ function defaultIo(): Io {
         });
       }),
     install: (pm, cwd) => {
-      const { command, args } = resolveCommand(pm, 'install', [])!;
+      const resolved = resolveCommand(pm, 'install', []);
+      if (!resolved) return 1;
+      const { command, args } = resolved;
       return (
         spawnSync(command, args, {
           cwd,
