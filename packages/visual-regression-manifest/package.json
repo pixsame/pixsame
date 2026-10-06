@@ -6,7 +6,7 @@
   "homepage": "https://pixsame.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pixsame/cypress-plugin-visual-regression-diff.git",
+    "url": "https://github.com/pixsame/pixsame.git",
     "directory": "packages/visual-regression-manifest"
   },
   "license": "MIT",
