@@ -130,7 +130,6 @@ export function applyMigration(edits: FileEdit[]) {
 const HELP = `Usage: cypress-plugin-visual-regression-diff migrate [options]
 
 Migration tool from ${OLD_PACKAGE_NAME}
-to ${NEW_PACKAGE_NAME}. Moves a project from ${OLD_PACKAGE_NAME}
 to ${NEW_PACKAGE_NAME}: renames the dependency in package.json,
 updates imports and type references, then reinstalls.
 
