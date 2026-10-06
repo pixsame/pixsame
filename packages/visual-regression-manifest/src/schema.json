@@ -1,0 +1,426 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pixsame/cypress-plugin-visual-regression-diff/main/packages/visual-regression-manifest/src/schema.json",
+  "title": "Visual regression run manifest",
+  "description": "A machine-readable record of every screenshot comparison made during a test run, written by a visual regression tool and read by CI tooling (PR comment bots, review dashboards, approval tools). Runner-agnostic: everything specific to the test runner lives in `runner`. Consumers must ignore keys they do not know.",
+  "type": "object",
+  "required": [
+    "version",
+    "createdAt",
+    "updatedAt",
+    "projectRoot",
+    "platform",
+    "ci",
+    "options",
+    "runner",
+    "entries"
+  ],
+  "properties": {
+    "version": {
+      "description": "Format version. Bumped on breaking changes to the format only.",
+      "const": 1
+    },
+    "createdAt": {
+      "description": "When the run started (ISO 8601).",
+      "$ref": "#/$defs/timestamp"
+    },
+    "updatedAt": {
+      "description": "When the file was last written (ISO 8601). Writers rewrite the file after every comparison, so a manifest is complete even when the run was aborted.",
+      "$ref": "#/$defs/timestamp"
+    },
+    "projectRoot": {
+      "description": "Absolute path (on the machine that ran the tests) that every relative path in the manifest resolves against. Not necessarily the repository root: `ci.workspace` is the checkout directory.",
+      "type": "string",
+      "minLength": 1
+    },
+    "platform": { "$ref": "#/$defs/platform" },
+    "ci": {
+      "description": "CI metadata detected from environment variables. `null` outside CI, `{ \"provider\": null }` when only a generic `CI` flag was set.",
+      "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/ci" }]
+    },
+    "options": {
+      "description": "Global tool options as configured, in the writer's vocabulary (for the Cypress plugin: every `pluginVisualRegression*` option with the prefix stripped).",
+      "type": "object"
+    },
+    "runner": { "$ref": "#/$defs/runner" },
+    "upload": { "$ref": "#/$defs/upload" },
+    "entries": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "$defs": {
+    "timestamp": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "minLength": 1
+    },
+    "status": {
+      "description": "`passed`: within threshold. `failed`: above threshold, `.actual` and `.diff` images kept for review. `missing-baseline`: no baseline and the tool was told not to create one. `created`: no baseline, the actual image became the baseline. `updated`: the baseline was overwritten on request. `approved`: the baseline was replaced from a review UI. `failed` and `missing-baseline` are the entries that need a human.",
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed",
+        "missing-baseline",
+        "created",
+        "updated",
+        "approved"
+      ]
+    },
+    "platform": {
+      "description": "The machine that ran the tests (the host), which is not necessarily the device under test: for a mobile or remote-device run see the entries' `target`. `os` is an open string; Node-based writers use `process.platform` names (`linux`, `darwin`, `win32`).",
+      "type": "object",
+      "required": ["os", "arch"],
+      "properties": {
+        "os": { "type": "string" },
+        "arch": { "type": "string" },
+        "osVersion": { "type": "string" }
+      }
+    },
+    "browser": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "family": { "type": "string" },
+        "headless": { "type": "boolean" }
+      }
+    },
+    "target": {
+      "description": "What was captured, for tools that are not a browser: a desktop or mobile application on a device, an emulator or a remote farm. Everything is optional; unknown keys are allowed.",
+      "type": "object",
+      "properties": {
+        "kind": {
+          "description": "Known values: `browser`, `desktop`, `mobile`, `embedded`; free-form otherwise.",
+          "type": "string"
+        },
+        "os": { "type": "string" },
+        "osVersion": { "type": "string" },
+        "arch": { "type": "string" },
+        "device": {
+          "type": "object",
+          "properties": {
+            "model": { "type": "string" },
+            "id": { "type": "string" },
+            "formFactor": { "type": "string" }
+          }
+        },
+        "display": {
+          "type": "object",
+          "properties": {
+            "width": { "type": "number" },
+            "height": { "type": "number" },
+            "density": {
+              "description": "Device pixels per logical pixel (scale factor / dpr).",
+              "type": "number"
+            },
+            "orientation": { "type": "string" }
+          }
+        },
+        "locale": { "type": "string" },
+        "theme": { "type": "string" },
+        "app": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "version": { "type": "string" },
+            "build": { "type": "string" }
+          }
+        },
+        "driver": { "type": "string" },
+        "emulated": { "type": "boolean" }
+      }
+    },
+    "viewport": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "number" },
+        "height": { "type": "number" }
+      }
+    },
+    "ci": {
+      "type": "object",
+      "required": ["provider"],
+      "properties": {
+        "provider": {
+          "description": "Known values: `github`, `gitlab`. Other CI systems are free-form lowercase ids; `null` when only a generic CI flag was set.",
+          "type": ["string", "null"]
+        },
+        "repository": {
+          "description": "`owner/repo` (GitHub) or `group/project` (GitLab).",
+          "type": "string"
+        },
+        "sha": {
+          "description": "On GitHub `pull_request` events this is the synthetic merge commit; tools that write to the PR branch must use `pullRequest.headSha`.",
+          "type": "string"
+        },
+        "ref": { "type": "string" },
+        "branch": { "type": "string" },
+        "pullRequest": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "required": ["number"],
+              "properties": {
+                "number": { "type": "integer", "minimum": 1 },
+                "headSha": { "type": "string" },
+                "headRef": { "type": "string" },
+                "baseRef": { "type": "string" }
+              }
+            }
+          ]
+        },
+        "event": { "type": "string" },
+        "runId": { "type": "string" },
+        "runAttempt": { "type": "string" },
+        "runNumber": { "type": "string" },
+        "job": { "type": "string" },
+        "jobId": { "type": "string" },
+        "workflow": { "type": "string" },
+        "serverUrl": { "type": "string" },
+        "url": {
+          "description": "Link to the run or job page.",
+          "type": "string"
+        },
+        "workspace": {
+          "description": "Absolute path of the checked-out repository on the CI machine.",
+          "type": "string"
+        }
+      }
+    },
+    "runner": {
+      "description": "What ran the tests. Only `name` is required; the remaining keys are runner vocabulary and writers may add their own.",
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string" },
+        "testingType": { "type": "string" },
+        "mode": { "enum": ["run", "open"] },
+        "configFile": {
+          "description": "Relative to `projectRoot`, `/` separators.",
+          "type": "string"
+        },
+        "browser": { "$ref": "#/$defs/browser" },
+        "specs": {
+          "description": "Test files of the run relative to `projectRoot`, when known up front.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "specPattern": {
+          "anyOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "baseUrl": { "type": ["string", "null"] },
+        "viewport": { "$ref": "#/$defs/viewport" },
+        "cloud": {
+          "description": "Hosted runner dashboard details, when recording.",
+          "type": "object",
+          "properties": {
+            "runUrl": { "type": "string" },
+            "group": { "type": "string" },
+            "tag": { "type": "string" },
+            "parallel": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "upload": {
+      "description": "Where the images and snapshots of the run were uploaded to, when an upload service was used.",
+      "type": "object",
+      "required": ["buildId", "url", "level"],
+      "properties": {
+        "buildId": { "type": "string" },
+        "url": { "type": "string" },
+        "level": { "enum": ["images", "images+snapshot"] }
+      }
+    },
+    "image": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": {
+          "description": "Relative to `projectRoot`, `/` separators; `null` when the file does not exist. Baseline, actual and diff of an entry share one extension (PNG for all current writers); `.actual` and `.diff` go before it.",
+          "type": ["string", "null"]
+        },
+        "width": { "type": "integer", "minimum": 0 },
+        "height": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "renderer": {
+      "description": "Where the pixels came from, as opposed to `platform`, which is where the test ran. Entries with different renderers are different baselines.",
+      "type": "object",
+      "required": ["backend"],
+      "properties": {
+        "backend": {
+          "description": "Known values: `native` (the test runner's own capture), `docker`, `cloud`. Writers may add their own, e.g. `device` or `emulator`.",
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "description": "What rendered the pixels: a browser, an app or a device. Absent when `backend` says enough.",
+          "type": "string"
+        },
+        "version": { "type": "string" },
+        "browser": {
+          "description": "Browser name; kept for browser renderers, same as `name`.",
+          "type": "string"
+        },
+        "browserVersion": { "type": "string" },
+        "rendererVersion": {
+          "description": "Version of the renderer image; absent under `native`.",
+          "type": "string"
+        },
+        "imageDigest": {
+          "description": "Content digest of the renderer image; absent under `native`.",
+          "type": "string"
+        },
+        "fallback": {
+          "description": "`true` when an `auto` renderer degraded to `native`.",
+          "type": "boolean"
+        }
+      }
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "entryOptions": {
+      "description": "The comparison options the entry was made with, exactly as configured (`imagesPath` keeps its tokens unexpanded).",
+      "type": "object",
+      "required": [
+        "imagesPath",
+        "maxDiffThreshold",
+        "diffConfig",
+        "createMissingImages",
+        "updateImages"
+      ],
+      "properties": {
+        "imagesPath": { "type": "string" },
+        "title": { "type": "string" },
+        "maxDiffThreshold": { "type": "number" },
+        "diffConfig": { "type": "object" },
+        "createMissingImages": { "type": "boolean" },
+        "updateImages": {
+          "anyOf": [{ "type": "boolean" }, { "const": "failures-only" }]
+        },
+        "forceDeviceScaleFactor": {
+          "description": "Browser runners only.",
+          "type": "boolean"
+        },
+        "matchAgainstPath": { "type": "string" },
+        "screenshotConfig": {
+          "description": "Capture options in the runner's vocabulary (Cypress `screenshot` config); JSON-serialisable keys only.",
+          "type": "object"
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "required": [
+        "name",
+        "test",
+        "status",
+        "comparison",
+        "images",
+        "baselineWritten",
+        "recordedAt",
+        "message"
+      ],
+      "properties": {
+        "name": {
+          "description": "Screenshot name, equal to the baseline file stem. Unique within a run.",
+          "type": "string",
+          "minLength": 1
+        },
+        "test": {
+          "type": "object",
+          "required": ["file", "titlePath", "retry"],
+          "properties": {
+            "file": {
+              "description": "Test file relative to `projectRoot`, `/` separators. Empty when unknown.",
+              "type": "string"
+            },
+            "titlePath": { "type": "array", "items": { "type": "string" } },
+            "retry": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "status": { "$ref": "#/$defs/status" },
+        "comparison": {
+          "type": "object",
+          "required": ["diffRatio", "threshold"],
+          "properties": {
+            "diffRatio": {
+              "description": "Share of differing pixels, 0..1. `0` when no comparison ran.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "threshold": { "type": "number", "minimum": 0 }
+          }
+        },
+        "images": {
+          "type": "object",
+          "required": ["baseline", "actual", "diff"],
+          "properties": {
+            "baseline": {
+              "description": "The baseline path is always known, even when the file does not exist yet (`missing-baseline`).",
+              "allOf": [
+                { "$ref": "#/$defs/image" },
+                { "properties": { "path": { "type": "string" } } }
+              ]
+            },
+            "actual": { "$ref": "#/$defs/image" },
+            "diff": {
+              "type": "object",
+              "required": ["path"],
+              "properties": { "path": { "type": ["string", "null"] } }
+            }
+          }
+        },
+        "baselineWritten": {
+          "description": "`true` whenever the baseline file was (re)written during the run, whatever the status.",
+          "type": "boolean"
+        },
+        "recordedAt": { "$ref": "#/$defs/timestamp" },
+        "platform": {
+          "description": "Where this screenshot was taken; per entry because manifests of several machines get merged.",
+          "type": "object",
+          "required": ["os"],
+          "properties": {
+            "os": { "type": "string" },
+            "osVersion": { "type": "string" },
+            "arch": { "type": "string" },
+            "browser": {
+              "description": "Absent for non-browser targets (desktop and mobile apps).",
+              "$ref": "#/$defs/browser"
+            }
+          }
+        },
+        "target": { "$ref": "#/$defs/target" },
+        "variant": {
+          "description": "Producer-chosen id that tells entries of the same screenshot name apart (device, OS version, density, locale, theme, project, ...). Part of the baseline identity when merging manifests; absent, identity falls back to `platform.os` + `platform.browser.name` + renderer.",
+          "type": "string"
+        },
+        "viewport": { "$ref": "#/$defs/viewport" },
+        "options": { "$ref": "#/$defs/entryOptions" },
+        "renderer": { "$ref": "#/$defs/renderer" },
+        "hashes": {
+          "description": "sha256 of the files listed in `images`; a key is present only when the file exists.",
+          "type": "object",
+          "properties": {
+            "baseline": { "$ref": "#/$defs/sha256" },
+            "actual": { "$ref": "#/$defs/sha256" },
+            "diff": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "message": {
+          "description": "Human-readable summary, informational only.",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

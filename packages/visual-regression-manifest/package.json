@@ -1,0 +1,73 @@
+{
+  "name": "@pixsame/manifest",
+  "description": "Pixsame manifest: the visual regression run manifest as a free standard, JSON Schema, TypeScript types, reader, writer, merger and converters (Playwright JSON report, plain PNG triples) for a runner-agnostic record of screenshot comparisons.",
+  "version": "0.0.0",
+  "author": "Jakub Freisler <jakub.freisler@frsource.org>",
+  "homepage": "https://pixsame.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pixsame/pixsame.git",
+    "directory": "packages/visual-regression-manifest"
+  },
+  "license": "MIT",
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    },
+    "./schema.json": "./dist/schema.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "del-cli dist && microbundle src/index.ts --target node --tsconfig tsconfig.build.json -f cjs,modern && cpy src/schema.json dist --flat",
+    "format": "prettier --write .",
+    "format:ci": "prettier --check .",
+    "test:integration": "vitest run",
+    "test:integration:watch": "vitest",
+    "test:integration:coverage": "vitest run --coverage",
+    "test:integration:ci": "CI=true vitest run --coverage"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "packageManager": "pnpm@12.6.0",
+  "devDependencies": {
+    "@frsource/prettier-config": "^1.11.0",
+    "@types/node": "20.19.43",
+    "@types/tmp": "0.2.6",
+    "@vitest/coverage-v8": "4.1.11",
+    "ajv": "8.17.1",
+    "cpy-cli": "7.0.0",
+    "del-cli": "7.0.0",
+    "microbundle": "0.15.1",
+    "prettier": "3.9.8",
+    "tmp-promise": "3.0.3",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
+  },
+  "keywords": [
+    "pixsame",
+    "visual regression testing",
+    "visual diff",
+    "image diff",
+    "screenshot testing",
+    "run manifest",
+    "JSON schema",
+    "Cypress",
+    "Playwright"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ]
+}

@@ -1,3 +1,4 @@
 {
-  "packages/cypress-plugin-visual-regression-diff": "4.2.1"
+  "packages/cypress-plugin-visual-regression-diff": "4.2.1",
+  "packages/visual-regression-manifest": "0.0.0"
 }
