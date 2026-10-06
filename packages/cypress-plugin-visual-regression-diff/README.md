@@ -1,9 +1,40 @@
+> [!WARNING]
+> **`@frsource/cypress-plugin-visual-regression-diff` is deprecated.** The plugin has moved to the [pixsame](https://github.com/pixsame) organization and is now published as `@pixsame/cypress-plugin-visual-regression-diff`. The old package will not get new features. Migrating is just a rename, see [below](#migrating-from-the-frsource-package).
+
+## Migrating from the `@frsource` package
+
+Version 1.0.0 of `@pixsame/cypress-plugin-visual-regression-diff` is the code of `@frsource/cypress-plugin-visual-regression-diff` 4.2.1 with no behavior change, so your baseline images, configuration and `cy.*` commands keep working as they are.
+
+The quickest way to migration is the built-in command, which renames the dependency in every `package.json` below the current directory, updates imports and type references in your config and support files, and reinstalls with the package manager it finds:
+
+```bash
+npx @frsource/cypress-plugin-visual-regression-diff migrate
+```
+
+It lists the files it would change and asks before writing anything. Pass `--dry-run` to only see the list, `--yes` to skip the question (required in CI) and `--no-install` to skip the install step.
+
+Prefer to do it by hand? Swap the package and replace the name in your imports:
+
+```bash
+npm uninstall @frsource/cypress-plugin-visual-regression-diff
+npm install --save-dev @pixsame/cypress-plugin-visual-regression-diff
+```
+
+```diff
+-import '@frsource/cypress-plugin-visual-regression-diff';
++import '@pixsame/cypress-plugin-visual-regression-diff';
+-import { initPlugin } from '@frsource/cypress-plugin-visual-regression-diff/plugins';
++import { initPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
+```
+
+If you list the package in `compilerOptions.types` of a `tsconfig.json`, rename it there too.
+
 <p align="center">
-  <a href="https://www.npmjs.com/package/@frsource/cypress-plugin-visual-regression-diff">
-    <img src="https://img.shields.io/npm/v/@frsource/cypress-plugin-visual-regression-diff.svg" alt="NPM version badge">
+  <a href="https://www.npmjs.com/package/@pixsame/cypress-plugin-visual-regression-diff">
+    <img src="https://img.shields.io/npm/v/@pixsame/cypress-plugin-visual-regression-diff.svg" alt="NPM version badge">
   </a>
-  <a href="https://www.npmjs.com/package/@frsource/cypress-plugin-visual-regression-diff">
-    <img src="https://img.shields.io/npm/dt/@frsource/cypress-plugin-visual-regression-diff.svg" alt="NPM total downloads badge">
+  <a href="https://www.npmjs.com/package/@pixsame/cypress-plugin-visual-regression-diff">
+    <img src="https://img.shields.io/npm/dt/@pixsame/cypress-plugin-visual-regression-diff.svg" alt="NPM total downloads badge">
   </a>
   <a href="https://qlty.sh/gh/FRSOURCE/projects/cypress-plugin-visual-regression-diff">
     <img src="https://qlty.sh/gh/FRSOURCE/projects/cypress-plugin-visual-regression-diff/maintainability.svg" alt="Qlty maintainability badge">
@@ -14,28 +45,30 @@
   <a href="https://github.com/semantic-release/semantic-release">
     <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-relase badge">
   </a>
-  <a href="https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/FRSOURCE/cypress-plugin-visual-regression-diff.svg" alt="license MIT badge">
+  <a href="https://github.com/pixsame/pixsame/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/pixsame/pixsame.svg" alt="license MIT badge">
   </a>
 </p>
 
 <p align="center">
-  <img src="https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/blob/main/assets/logo.svg" alt="Cypress Plugin Visual Regression Diff logo" height="120px"/>
+  <img src="https://github.com/pixsame/pixsame/blob/main/assets/logo.svg" alt="Cypress Plugin Visual Regression Diff logo" height="120px"/>
 </p>
 
 <h1 align="center">Plugin for Cypress - Visual Regression Diff</h1>
 <p align="center">Perform visual regression test with a nice GUI as help. 💅 <i>Only&nbsp;for&nbsp;Cypress!</i> Both e2e and component-testing compatible 💪</p>
 
 <p align="center">
+  <a href="#migrating-from-the-frsource-package">Migrating</a>
+  ·
   <a href="#getting-started">Getting Started</a>
   ·
   <a href="#usage">Usage</a>
   ·
   <a href="#faq">FAQ</a>
   ·
-  <a href="https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues">File an Issue</a>
+  <a href="https://github.com/pixsame/pixsame/issues">File an Issue</a>
   ·
-  <a href="https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/discussions">Have a question or an idea?</a>
+  <a href="https://github.com/pixsame/pixsame/discussions">Have a question or an idea?</a>
   <br>
 </p>
 
@@ -62,13 +95,13 @@ You can install this library using your favorite package manager:
 
 ```bash
 # npm
-npm install --save-dev @frsource/cypress-plugin-visual-regression-diff
+npm install --save-dev @pixsame/cypress-plugin-visual-regression-diff
 
 # yarn
-yarn add -D @frsource/cypress-plugin-visual-regression-diff
+yarn add -D @pixsame/cypress-plugin-visual-regression-diff
 
 # pnpm
-pnpm add -D @frsource/cypress-plugin-visual-regression-diff
+pnpm add -D @pixsame/cypress-plugin-visual-regression-diff
 ```
 
 Next, you need to import the library:
@@ -77,10 +110,10 @@ Next, you need to import the library:
 
 ```ts
 // typescript / ES6
-import '@frsource/cypress-plugin-visual-regression-diff';
+import '@pixsame/cypress-plugin-visual-regression-diff';
 
 // javascript
-require('@frsource/cypress-plugin-visual-regression-diff');
+require('@pixsame/cypress-plugin-visual-regression-diff');
 ```
 
 - secondly:
@@ -89,7 +122,7 @@ require('@frsource/cypress-plugin-visual-regression-diff');
 ```ts
 // typescript / ES6
 import { defineConfig } from 'cypress';
-import { initPlugin as initVisualRegressionPlugin } from '@frsource/cypress-plugin-visual-regression-diff/plugins';
+import { initPlugin as initVisualRegressionPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
 
 export default defineConfig({
   // initPlugin must be called in the section where it is used: e2e or component
@@ -110,7 +143,7 @@ export default defineConfig({
 
 ```ts
 // typescript / ES6
-import { initPlugin as initVisualRegressionPlugin } from '@frsource/cypress-plugin-visual-regression-diff/plugins';
+import { initPlugin as initVisualRegressionPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
 
 export default function (
   on: Cypress.PluginEvents,
@@ -124,7 +157,7 @@ export default function (
 // javascript
 const {
   initPlugin: initVisualRegressionPlugin,
-} = require('@frsource/cypress-plugin-visual-regression-diff/plugins');
+} = require('@pixsame/cypress-plugin-visual-regression-diff/plugins');
 
 module.exports = function (on, config) {
   initVisualRegressionPlugin(on, config);
@@ -268,9 +301,9 @@ When enabled, a floating action button (FAB) appears in the bottom-right corner 
 - Once all tests finish, an error is thrown with the total count of failures.
 - Clicking the FAB opens a carousel where you can review each failing snapshot side-by-side (new vs. old) and either **replace** the baseline or **skip** the change.
 
-![Batch Review Mode demo](https://raw.githubusercontent.com/FRSOURCE/cypress-plugin-visual-regression-diff/main/assets/batch-review-mode.gif)
+![Batch Review Mode demo](https://raw.githubusercontent.com/pixsame/pixsame/main/assets/batch-review-mode.gif)
 
-> Note: Batch mode will be a new default in version 5 of `@frsource/cypress-plugin-visual-regression-diff`. To keep an old behaviour, make sure to set configuration property to `false` (see below for more details).
+> Note: Batch mode will become the default in the next major version. To keep an old behaviour, make sure to set configuration property to `false` (see below for more details).
 
 ### How to enable
 
@@ -385,7 +418,7 @@ Cypress only supports a single handler per event. If multiple plugins register t
 
 ```ts
 import { defineConfig } from 'cypress';
-import { initPlugin as initVisualRegressionPlugin } from '@frsource/cypress-plugin-visual-regression-diff/plugins';
+import { initPlugin as initVisualRegressionPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
 import fix from 'cypress-on-fix';
 
 export default defineConfig({
@@ -508,15 +541,15 @@ The plugin is free and MIT-licensed, and it stays that way. It's also maintained
 
 Write to [jakub@frsource.org](mailto:jakub@frsource.org) with a sentence about your setup and I'll reply with a quote. If you only want to say thanks, the Sponsor button at the top of this repository does that (GitHub Sponsors, Patreon or Buy Me a Coffee), and every sponsor is listed in the release notes.
 
-Security problems have their own path: see [SECURITY.md](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/blob/main/SECURITY.md).
+Security problems have their own path: see [SECURITY.md](https://github.com/pixsame/pixsame/blob/main/SECURITY.md).
 
 ## Questions
 
-Don’t hesitate to ask a question directly on the [discussions board](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/discussions)!
+Don’t hesitate to ask a question directly on the [discussions board](https://github.com/pixsame/pixsame/discussions)!
 
 ## Changelog
 
-Changes for every release are documented in the [release notes](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/releases) and [CHANGELOG files of every package](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/tree/main/packages).
+Changes for every release are documented in the [release notes](https://github.com/pixsame/pixsame/releases) and [CHANGELOG files of every package](https://github.com/pixsame/pixsame/tree/main/packages).
 
 ## License
 

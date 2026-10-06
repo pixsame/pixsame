@@ -3,8 +3,12 @@
   "description": "Perform visual regression test with a nice GUI as help. 💅 Only for Cypress!",
   "version": "4.2.1",
   "author": "Jakub Freisler <jakub.freisler@frsource.org>",
-  "homepage": "https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff",
-  "repository": "https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff.git",
+  "homepage": "https://github.com/pixsame/pixsame",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pixsame/pixsame.git",
+    "directory": "packages/cypress-plugin-visual-regression-diff"
+  },
   "sideEffects": [
     "./dist/**"
   ],
