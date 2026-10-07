@@ -210,7 +210,9 @@ describe('main', () => {
 
     expect(await main(['migrate', '--dry-run', '--cwd', cwd], io)).toBe(0);
 
-    expect(out.join('\n')).toContain('cypress.config.ts (1)');
+    expect(out.join('\n')).toContain('Migration tool: ');
+    expect(out.join('\n')).toContain(`Found usages of ${OLD} in these files`);
+    expect(out.join('\n')).toContain('• cypress.config.ts (1)');
     expect(read('cypress.config.ts')).toContain(OLD);
     expect(io.install).not.toHaveBeenCalled();
   });

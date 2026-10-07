@@ -129,7 +129,7 @@ export function applyMigration(edits: FileEdit[]) {
 
 const HELP = `Usage: cypress-plugin-visual-regression-diff migrate [options]
 
-Moves a project from ${OLD_PACKAGE_NAME}
+Migration tool from ${OLD_PACKAGE_NAME}
 to ${NEW_PACKAGE_NAME}: renames the dependency in package.json,
 updates imports and type references, then reinstalls.
 
@@ -173,9 +173,16 @@ export async function main(argv: string[], io: Io = defaultIo()) {
     return 0;
   }
 
-  io.stdout(`${OLD_PACKAGE_NAME} → ${NEW_PACKAGE_NAME}\n`);
+  io.stdout(
+    [
+      `Migration tool: ${OLD_PACKAGE_NAME} → ${NEW_PACKAGE_NAME}`,
+      '',
+      `Found usages of ${OLD_PACKAGE_NAME} in these files, they will be updated by the migration (number of occurrences in parentheses):`,
+      '',
+    ].join('\n'),
+  );
   for (const { file, replacements } of edits) {
-    io.stdout(`  ${path.relative(cwd, file)} (${replacements})`);
+    io.stdout(`  • ${path.relative(cwd, file)} (${replacements})`);
   }
   if (dryRun) {
     io.stdout('\nDry run, nothing was written.');
@@ -196,11 +203,13 @@ export async function main(argv: string[], io: Io = defaultIo()) {
   }
 
   applyMigration(edits);
-  io.stdout('\nUpdated. Review with `git diff`.');
+  io.stdout(
+    `\n✔ Updated ${edits.length} file${edits.length === 1 ? '' : 's'}. Review the changes with \`git diff\`.`,
+  );
 
   if (!install) return 0;
   const pm = await detectPackageManager(cwd);
-  io.stdout(`Running \`${pm} install\` to refresh the lockfile…`);
+  io.stdout(`\nRunning \`${pm} install\` to refresh the lockfile…\n`);
   const status = io.install(pm, cwd);
   if (status !== 0) {
     io.stderr(`\`${pm} install\` failed (exit ${status}). Run it yourself.`);

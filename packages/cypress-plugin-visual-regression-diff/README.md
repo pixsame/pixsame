@@ -1,5 +1,7 @@
-> [!WARNING]
-> **`@frsource/cypress-plugin-visual-regression-diff` is deprecated.** The plugin has moved to the [pixsame](https://github.com/pixsame) organization and is now published as `@pixsame/cypress-plugin-visual-regression-diff`. The old package will not get new features. Migrating is just a rename, see [below](#migrating-from-the-frsource-package).
+> ⚠️ **`@frsource/cypress-plugin-visual-regression-diff` is deprecated.**
+>
+> The plugin has moved to the [pixsame](https://github.com/pixsame) organization and is now published as `@pixsame/cypress-plugin-visual-regression-diff`. The old package will not get new features.
+> Migrating is just a rename, see [below](#migrating-from-the-frsource-package).
 
 ## Migrating from the `@frsource` package
 
