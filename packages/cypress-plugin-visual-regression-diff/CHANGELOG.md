@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.3.0](https://github.com/pixsame/pixsame/compare/@frsource/cypress-plugin-visual-regression-diff-v4.2.1...@frsource/cypress-plugin-visual-regression-diff-v4.3.0) (2026-10-07)
+
+
+### Features
+
+* add a migrate command for moving to [@pixsame](https://github.com/pixsame) ([#435](https://github.com/pixsame/pixsame/issues/435)) ([83af00c](https://github.com/pixsame/pixsame/commit/83af00c55d0138f07f88b5ca9999291f28c360fd))
+
 ## [4.2.1](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/compare/@frsource/cypress-plugin-visual-regression-diff-v4.2.0...@frsource/cypress-plugin-visual-regression-diff-v4.2.1) (2026-10-02)
 
 
