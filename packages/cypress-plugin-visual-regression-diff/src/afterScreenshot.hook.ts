@@ -21,7 +21,7 @@ const getConfigVariableOrThrow = <K extends keyof Cypress.PluginConfigOptions>(
   }
 
   /* c8 ignore start */
-  throw `[@frsource/cypress-plugin-visual-regression-diff] CypressConfig.${name} cannot be missing or \`false\`!`;
+  throw `[@pixsame/cypress-plugin-visual-regression-diff] CypressConfig.${name} cannot be missing or \`false\`!`;
 };
 /* c8 ignore stop */
 

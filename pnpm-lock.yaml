@@ -207,7 +207,7 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
-      '@frsource/cypress-plugin-visual-regression-diff':
+      '@pixsame/cypress-plugin-visual-regression-diff':
         specifier: workspace:*
         version: link:../../packages/cypress-plugin-visual-regression-diff
       '@types/node':
@@ -235,7 +235,7 @@ importers:
         specifier: 3.2.45
         version: 3.2.45
     devDependencies:
-      '@frsource/cypress-plugin-visual-regression-diff':
+      '@pixsame/cypress-plugin-visual-regression-diff':
         specifier: workspace:*
         version: link:../../packages/cypress-plugin-visual-regression-diff
       '@vue/compiler-sfc':

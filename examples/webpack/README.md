@@ -1,4 +1,4 @@
-# Example for @frsource/cypress-plugin-visual-regression-diff
+# Example for @pixsame/cypress-plugin-visual-regression-diff
 
 ## Project setup
 
