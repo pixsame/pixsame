@@ -36,7 +36,7 @@
 //   }
 // }
 
-import "@frsource/cypress-plugin-visual-regression-diff/dist/support";
+import "@pixsame/cypress-plugin-visual-regression-diff/dist/support";
 
 // Prevent TypeScript from reading file as legacy script
 export {};

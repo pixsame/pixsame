@@ -1,36 +1,3 @@
-> ⚠️ **`@frsource/cypress-plugin-visual-regression-diff` is deprecated.**
->
-> The plugin has moved to the [pixsame](https://github.com/pixsame) organization and is now published as `@pixsame/cypress-plugin-visual-regression-diff`. The old package will not get new features.
-> Migrating is just a rename, see [below](#migrating-from-the-frsource-package).
-
-## Migrating from the `@frsource` package
-
-Version 1.0.0 of `@pixsame/cypress-plugin-visual-regression-diff` is the code of `@frsource/cypress-plugin-visual-regression-diff` 4.2.1 with no behavior change, so your baseline images, configuration and `cy.*` commands keep working as they are.
-
-The quickest way to migration is the built-in command, which renames the dependency in every `package.json` below the current directory, updates imports and type references in your config and support files, and reinstalls with the package manager it finds:
-
-```bash
-npx @frsource/cypress-plugin-visual-regression-diff migrate
-```
-
-It lists the files it would change and asks before writing anything. Pass `--dry-run` to only see the list, `--yes` to skip the question (required in CI) and `--no-install` to skip the install step.
-
-Prefer to do it by hand? Swap the package and replace the name in your imports:
-
-```bash
-npm uninstall @frsource/cypress-plugin-visual-regression-diff
-npm install --save-dev @pixsame/cypress-plugin-visual-regression-diff
-```
-
-```diff
--import '@frsource/cypress-plugin-visual-regression-diff';
-+import '@pixsame/cypress-plugin-visual-regression-diff';
--import { initPlugin } from '@frsource/cypress-plugin-visual-regression-diff/plugins';
-+import { initPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
-```
-
-If you list the package in `compilerOptions.types` of a `tsconfig.json`, rename it there too.
-
 <p align="center">
   <a href="https://www.npmjs.com/package/@pixsame/cypress-plugin-visual-regression-diff">
     <img src="https://img.shields.io/npm/v/@pixsame/cypress-plugin-visual-regression-diff.svg" alt="NPM version badge">
@@ -59,14 +26,16 @@ If you list the package in `compilerOptions.types` of a `tsconfig.json`, rename 
 <h1 align="center">Plugin for Cypress - Visual Regression Diff</h1>
 <p align="center">Perform visual regression test with a nice GUI as help. 💅 <i>Only&nbsp;for&nbsp;Cypress!</i> Both e2e and component-testing compatible 💪</p>
 
+> 📣 **We've just become pixsame, and our ecosystem is growing!** Read the [official announcement](https://github.com/pixsame/pixsame/issues/437) for more details.
+
 <p align="center">
-  <a href="#migrating-from-the-frsource-package">Migrating</a>
-  ·
   <a href="#getting-started">Getting Started</a>
   ·
   <a href="#usage">Usage</a>
   ·
   <a href="#faq">FAQ</a>
+  ·
+  <a href="#migrating-from-frsourcecypress-plugin-visual-regression-diff">Migrating from @frsource</a>
   ·
   <a href="https://github.com/pixsame/pixsame/issues">File an Issue</a>
   ·
@@ -533,6 +502,34 @@ For CI or sharable HTML reports, integrate with a reporter such as [`cypress-moc
 
 </details>
 
+## Migrating from `@frsource/cypress-plugin-visual-regression-diff`
+
+This plugin used to be published under the `@frsource` npm scope as `@frsource/cypress-plugin-visual-regression-diff`. It now lives in the [pixsame](https://github.com/pixsame) organization and is published as `@pixsame/cypress-plugin-visual-regression-diff`. If you still have the old `@frsource/...` package installed, moving over is just a rename: `@pixsame/cypress-plugin-visual-regression-diff` 1.0.0 is the code of `@frsource/cypress-plugin-visual-regression-diff` 4.2.1 with no behavior change, so your baseline images, configuration and `cy.*` commands keep working as they are. New installs don't need any of this, see [Getting started](#getting-started).
+
+The quickest way is the built-in command, which renames the dependency in every `package.json` below the current directory, updates imports and type references in your config and support files, and reinstalls with the package manager it finds:
+
+```bash
+npx @frsource/cypress-plugin-visual-regression-diff migrate
+```
+
+It lists the files it would change and asks before writing anything. Pass `--dry-run` to only see the list, `--yes` to skip the question (required in CI) and `--no-install` to skip the install step.
+
+Prefer to do it by hand? Swap the package and replace the name in your imports:
+
+```bash
+npm uninstall @frsource/cypress-plugin-visual-regression-diff
+npm install --save-dev @pixsame/cypress-plugin-visual-regression-diff
+```
+
+```diff
+-import '@frsource/cypress-plugin-visual-regression-diff';
++import '@pixsame/cypress-plugin-visual-regression-diff';
+-import { initPlugin } from '@frsource/cypress-plugin-visual-regression-diff/plugins';
++import { initPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
+```
+
+If you list the package in `compilerOptions.types` of a `tsconfig.json`, rename it there too.
+
 ## Commercial support
 
 The plugin is free and MIT-licensed, and it stays that way. It's also maintained by one person in his spare time, so if your team needs more than best-effort answers on the issue tracker, here's what I offer:
@@ -541,7 +538,7 @@ The plugin is free and MIT-licensed, and it stays that way. It's also maintained
 - **Priority support, monthly.** A private channel, a response within one business day, and your issues at the top of the pile. Covers the plugin, the manifest tooling and the GitHub App.
 - **Feature work and consulting, hourly.** A missing option, an adapter for your runner, or just an hour to look at why your screenshots drift.
 
-Write to [jakub@frsource.org](mailto:jakub@frsource.org) with a sentence about your setup and I'll reply with a quote. If you only want to say thanks, the Sponsor button at the top of this repository does that (GitHub Sponsors, Patreon or Buy Me a Coffee), and every sponsor is listed in the release notes.
+Write to [pixsame@frsource.org](mailto:pixsame@frsource.org) with a sentence about your setup and I'll reply with a quote. If you only want to say thanks, the Sponsor button at the top of this repository does that (GitHub Sponsors, Patreon or Buy Me a Coffee), and every sponsor is listed in the release notes.
 
 Security problems have their own path: see [SECURITY.md](https://github.com/pixsame/pixsame/blob/main/SECURITY.md).
 

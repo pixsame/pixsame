@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-import { initPlugin } from "@frsource/cypress-plugin-visual-regression-diff/plugins";
+import { initPlugin } from "@pixsame/cypress-plugin-visual-regression-diff/plugins";
 
 export default defineConfig({
   env: {

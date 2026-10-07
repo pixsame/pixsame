@@ -1,6 +1,6 @@
-# Next.js + Cypress + @frsource/cypress-plugin-visual-regression-diff
+# Next.js + Cypress + @pixsame/cypress-plugin-visual-regression-diff
 
-This example shows how to configure @frsource/cypress-plugin-visual-regression-diff to work with Cypress & Next.js.
+This example shows how to configure @pixsame/cypress-plugin-visual-regression-diff to work with Cypress & Next.js.
 
 ## Project setup
 

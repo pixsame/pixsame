@@ -9,6 +9,8 @@
   Run the whole process yourself, right in your repo, or let our online service handle it for you.
 </p>
 
+> 📣 **We've just become pixsame, and our ecosystem is growing!** Read the [official announcement](https://github.com/pixsame/pixsame/issues/437) for more details.
+
 ## Tools and products
 
 | | |

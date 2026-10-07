@@ -16,7 +16,7 @@
     "vue": "3.2.45"
   },
   "devDependencies": {
-    "@frsource/cypress-plugin-visual-regression-diff": "workspace:*",
+    "@pixsame/cypress-plugin-visual-regression-diff": "workspace:*",
     "@vue/compiler-sfc": "3.2.45",
     "css-loader": "6.11.0",
     "cypress": "15.18.0",
