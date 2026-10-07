@@ -2,49 +2,7 @@
 
 ## 1.0.0 (2026-10-07)
 
-
-### ⚠ BREAKING CHANGES
-
-* `imagesDir` option removed
-
-### Features
-
-* add a migrate command for moving to [@pixsame](https://github.com/pixsame) ([#435](https://github.com/pixsame/pixsame/issues/435)) ([83af00c](https://github.com/pixsame/pixsame/commit/83af00c55d0138f07f88b5ca9999291f28c360fd))
-* add Batch Review Mode (pluginVisualRegressionBatchReviewMode) with batch image review UI ([#374](https://github.com/pixsame/pixsame/issues/374)) ([7d8e975](https://github.com/pixsame/pixsame/commit/7d8e97548e3a3771657d82f667d4721f7f51f7de))
-* migrate plugin options from Cypress.env() to Cypress.expose() for Cypress 16 ([#376](https://github.com/pixsame/pixsame/issues/376)) ([2b71557](https://github.com/pixsame/pixsame/commit/2b7155700bcddbbef92c5c42d0e5fe05beb3fa00)), closes [#375](https://github.com/pixsame/pixsame/issues/375)
-* next example ([#254](https://github.com/pixsame/pixsame/issues/254)) ([247a20a](https://github.com/pixsame/pixsame/commit/247a20ac85d197333a3652ad354319b0fd9501a5))
-* release 4.0.0 ([#315](https://github.com/pixsame/pixsame/issues/315)) ([77dbfdd](https://github.com/pixsame/pixsame/commit/77dbfdd090d37e3d1a69a6545b8f6573e458a10a))
-
-
-### Bug Fixes
-
-* 4.2.1 backports (stale diff, retry counters, Node floor) ([#426](https://github.com/pixsame/pixsame/issues/426)) ([0ea0356](https://github.com/pixsame/pixsame/commit/0ea0356c7ce47f5a674ee4a3d9ea8e154bb27c09))
-* add plugin metadata to .actual.png so approved or renamed baselines are not rewritten ([#404](https://github.com/pixsame/pixsame/issues/404)) ([5ed7ebe](https://github.com/pixsame/pixsame/commit/5ed7ebe2c7dddfc394cbfe4e42bbe67ca9cb1b08))
-* **deps:** update all minor dependency bump ([#256](https://github.com/pixsame/pixsame/issues/256)) ([a30132c](https://github.com/pixsame/pixsame/commit/a30132c18ff9d7f08804ca97166dd3383c1185b5))
-* **deps:** update all non-major dependency bump ([#260](https://github.com/pixsame/pixsame/issues/260)) ([da9f52c](https://github.com/pixsame/pixsame/commit/da9f52c77e9a60379d51e73205ff6a314eb093b3))
-* **deps:** update all non-major dependency bump ([#268](https://github.com/pixsame/pixsame/issues/268)) ([4bc8247](https://github.com/pixsame/pixsame/commit/4bc8247be85176b18aa2cb9cfa819a44692764c8))
-* **deps:** update all non-major dependency bump ([#274](https://github.com/pixsame/pixsame/issues/274)) ([3ff8d88](https://github.com/pixsame/pixsame/commit/3ff8d88f5d5b4256cce23d0544d114e2c0748526))
-* **deps:** update all non-major dependency bump ([#283](https://github.com/pixsame/pixsame/issues/283)) ([a2d7379](https://github.com/pixsame/pixsame/commit/a2d737956fa311b84ec6d96b6986108309c0f43d))
-* **deps:** update all non-major dependency bump ([#285](https://github.com/pixsame/pixsame/issues/285)) ([aea122c](https://github.com/pixsame/pixsame/commit/aea122ceb6232a3c5be6a57edcc962383019d82c))
-* **deps:** update all non-major dependency bump ([#297](https://github.com/pixsame/pixsame/issues/297)) ([6ac55f0](https://github.com/pixsame/pixsame/commit/6ac55f01625aba2b60938492380bbeac4db74bde))
-* **deps:** update all non-major dependency bump ([#298](https://github.com/pixsame/pixsame/issues/298)) ([2181dcf](https://github.com/pixsame/pixsame/commit/2181dcf6b1f0146d20d72ee9f31f7630d5a19538))
-* **deps:** update all non-major dependency bump ([#312](https://github.com/pixsame/pixsame/issues/312)) ([e265d7b](https://github.com/pixsame/pixsame/commit/e265d7b73886824e38362c8054a571702c6728bc))
-* **deps:** update all non-major dependency bump ([#356](https://github.com/pixsame/pixsame/issues/356)) ([a6c31f2](https://github.com/pixsame/pixsame/commit/a6c31f2905be58833c03fcc01b010c23ca3f2265))
-* **deps:** update all non-major dependency bump ([#401](https://github.com/pixsame/pixsame/issues/401)) ([f442275](https://github.com/pixsame/pixsame/commit/f442275bd8409b753798abcda259f0fa3cd424b8))
-* **deps:** update dependency @frsource/base64 to v1.0.17 ([#244](https://github.com/pixsame/pixsame/issues/244)) ([d55c677](https://github.com/pixsame/pixsame/commit/d55c67734d8526172bc1231128eb9faa8e39d51b))
-* **deps:** update dependency @frsource/base64 to v1.0.221 ([#386](https://github.com/pixsame/pixsame/issues/386)) ([3aa16e6](https://github.com/pixsame/pixsame/commit/3aa16e6db761b934c46647229ad45a3571b32749))
-* **deps:** update dependency @frsource/base64 to v1.0.223 ([#389](https://github.com/pixsame/pixsame/issues/389)) ([0ed6003](https://github.com/pixsame/pixsame/commit/0ed600379711cffc79caaf12095e53c88608b0ba))
-* **deps:** update dependency @frsource/base64 to v1.0.226 ([#394](https://github.com/pixsame/pixsame/issues/394)) ([caa95ff](https://github.com/pixsame/pixsame/commit/caa95ffdca080ce6d2e78d8d998f04f2a657094e))
-* **deps:** update dependency @frsource/base64 to v1.0.228 ([#395](https://github.com/pixsame/pixsame/issues/395)) ([df44a6f](https://github.com/pixsame/pixsame/commit/df44a6f8416a1203235767a4f56250a8a2c6bba4))
-* **deps:** update dependency @frsource/base64 to v1.0.237 ([#406](https://github.com/pixsame/pixsame/issues/406)) ([d1029c1](https://github.com/pixsame/pixsame/commit/d1029c1a9f81cec51000d0244bf6d83830aad876))
-* **deps:** update dependency @frsource/base64 to v1.0.26 ([#288](https://github.com/pixsame/pixsame/issues/288)) ([36aafcd](https://github.com/pixsame/pixsame/commit/36aafcd1fac9534981df2069d07c0bc9165afeb2))
-* **deps:** update dependency glob to v13 ([#368](https://github.com/pixsame/pixsame/issues/368)) ([1a40d42](https://github.com/pixsame/pixsame/commit/1a40d42776324817147906b87870a449cf7aeb76))
-* **deps:** update dependency move-file to v4 ([#369](https://github.com/pixsame/pixsame/issues/369)) ([6fdfbb8](https://github.com/pixsame/pixsame/commit/6fdfbb82bcbb0dbac17a69fdae934ef23d7ccec9))
-* **deps:** update dependency pixelmatch to v7 ([#370](https://github.com/pixsame/pixsame/issues/370)) ([19f0d77](https://github.com/pixsame/pixsame/commit/19f0d77686171918dbe7c17b6c0afef697da6790))
-* **deps:** update dependency sharp to v0.35.3 ([#379](https://github.com/pixsame/pixsame/issues/379)) ([42a6d12](https://github.com/pixsame/pixsame/commit/42a6d12b101dc7c3ab120d0d0c86793509c04941))
-* **deps:** update dependency sharp to v0.35.4 [security] ([#399](https://github.com/pixsame/pixsame/issues/399)) ([6ef06d1](https://github.com/pixsame/pixsame/commit/6ef06d137add50bff62e05e34d1a32854d5451dd))
-* example documentation ([c14d935](https://github.com/pixsame/pixsame/commit/c14d935688a3ce248611eb35baec0ebf13ce69e7))
-* README file ([ee60440](https://github.com/pixsame/pixsame/commit/ee60440fd594c4f60aade1d541f10ec302829d82))
+No changes. This release is identical to the last version (`4.3.0`) of `@frsource/cypress-plugin-visual-regression-diff`.
 
 ## [4.3.0](https://github.com/pixsame/pixsame/compare/@frsource/cypress-plugin-visual-regression-diff-v4.2.1...@frsource/cypress-plugin-visual-regression-diff-v4.3.0) (2026-10-07)
 
