@@ -29,8 +29,11 @@ test('follows the system theme until the visitor chooses', async ({ page }) => {
 
 test('language switcher navigates and sets lang, hreflang and canonical', async ({ page }) => {
   await page.goto('/');
-  await page.getByLabel('Language').selectOption('de');
-  await expect(page).toHaveURL(/\/de\/?$/);
+  // the page is prerendered: selecting before hydration attaches the handler does nothing, so retry
+  await expect(async () => {
+    await page.getByLabel('Language').selectOption('de');
+    await expect(page).toHaveURL(/\/de\/?$/, { timeout: 1000 });
+  }).toPass();
   await expect(page.locator('html')).toHaveAttribute('lang', 'de');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Visuelle Regression');
   const hreflangs = await page.locator('link[rel="alternate"][hreflang]').evaluateAll((els) => els.map((e) => e.getAttribute('hreflang')));

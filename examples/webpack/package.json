@@ -13,11 +13,11 @@
     "test:e2e:ci": "start-server-and-test serve http://localhost:8080 \"pnpm test:run --e2e\""
   },
   "dependencies": {
-    "vue": "3.2.45"
+    "vue": "3.5.43"
   },
   "devDependencies": {
     "@pixsame/cypress-plugin-visual-regression-diff": "workspace:*",
-    "@vue/compiler-sfc": "3.2.45",
+    "@vue/compiler-sfc": "3.5.43",
     "css-loader": "6.11.0",
     "cypress": "15.18.0",
     "html-webpack-plugin": "5.6.3",
