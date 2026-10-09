@@ -1,0 +1,226 @@
+{
+  "meta": {
+    "reviewed": false
+  },
+  "seo": {
+    "title": "pixsame — testy regresji wizualnej dla Cypress i Playwright",
+    "description": "Jeden standard manifestu dla obu runnerów, przypięty renderer dla zrzutów identycznych co do bajta, szczegółowa analiza różnic i akceptacja wzorców w pull requeście."
+  },
+  "nav": {
+    "label": "Główna",
+    "menu": "Menu",
+    "home": "Strona główna pixsame",
+    "product": "Produkt",
+    "docs": "Dokumentacja",
+    "pricing": "Cennik",
+    "changelog": "Lista zmian",
+    "signIn": "Zaloguj się",
+    "install": "Zainstaluj wtyczkę"
+  },
+  "a11y": {
+    "skip": "Przejdź do treści",
+    "language": "Język"
+  },
+  "theme": {
+    "toLight": "Przełącz na tryb jasny",
+    "toDark": "Przełącz na tryb ciemny"
+  },
+  "hero": {
+    "eyebrow": "Open source · MIT · Cypress + Playwright",
+    "title": "Regresja wizualna, która zgadza się sama ze sobą.",
+    "tagline": "same same. co do piksela.",
+    "body": "Jeden standard manifestu dla obu runnerów. Przypięty renderer sprawia, że zrzuty lokalne i z CI są identyczne co do bajta. Szczegółowa analiza różnic zamiast czerwonej plamy i akceptacja wzorców w pull requeście.",
+    "copy": "KOPIUJ",
+    "copied": "SKOPIOWANO",
+    "docs": "Czytaj dokumentację"
+  },
+  "detect": {
+    "demo": "Przykładowa ilustracja przebiegu detekcji AI",
+    "label": "Detekcja AI · PR #2841",
+    "live": "Demo",
+    "analysing": "Analiza 2 regionów",
+    "box1": "Przesunięcie układu · +4px y · Δ0,42%",
+    "box2": "Zawijanie tekstu · wiersz z ceną",
+    "row": {
+      "geometry": "Wektor geometrii",
+      "reflow": "Zawijanie tekstu",
+      "aa": "Szum antyaliasingu"
+    },
+    "verdictLabel": "Werdykt · pewność 0,94",
+    "verdict": "Jedna zmiana geometrii, a nie 5 812 znalezisk. Zgadza się z intencją „zwiększ gęstość nawigacji”.",
+    "approve": "Zaakceptuj wzorzec",
+    "hold": "Wstrzymaj"
+  },
+  "runs": {
+    "label": "Działa w"
+  },
+  "features": {
+    "title": "Funkcje",
+    "available": "Dostępne",
+    "manifest": {
+      "title": "Wspólny manifest",
+      "body": "Jeden otwarty format manifestu dla Cypress i Playwright, więc raporty, boty i narzędzia do przeglądu działają z każdym runnerem."
+    },
+    "renderer": {
+      "title": "Przypięty renderer",
+      "body": "Czcionki, antyaliasing i różnice GPU są przypięte, więc zrzuty lokalne i z CI są identyczne co do bajta."
+    },
+    "forensic": {
+      "title": "Analiza różnic",
+      "body": "Każda zmiana jest klasyfikowana jako geometria, zawijanie tekstu lub szum antyaliasingu, zamiast jednej czerwonej plamy."
+    },
+    "approve": {
+      "title": "Akceptacja w PR",
+      "body": "Przejrzyj obrazy i zaakceptuj nowe wzorce w pull requeście, tam gdzie dyskutuje się zmianę."
+    }
+  },
+  "pricing": {
+    "title": "Za darmo tam, gdzie trzeba. Płatnie tam, gdzie rośnie skala.",
+    "body": "Rdzeń jest open source i darmowy. Zespoły dodają renderowanie w chmurze i hostowaną historię wzorców; Enterprise dodaje AI auto-evaluator, SSO i SLA.",
+    "soon": "Wkrótce",
+    "compare": "Porównaj plany",
+    "note": "Plany Team i Enterprise pojawią się wkrótce. Ceny są orientacyjne i mogą się zmienić przed startem.",
+    "tiers": {
+      "core": {
+        "name": "Core",
+        "price": "$0",
+        "unit": "",
+        "desc": "Self-hosted, bez limitów"
+      },
+      "team": {
+        "name": "Team",
+        "price": "$29",
+        "unit": "/dev/mies.",
+        "desc": "Renderowanie w chmurze, hostowana historia"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Kontakt",
+        "unit": "",
+        "desc": "AI auto-evaluator, SSO, SLA"
+      }
+    },
+    "table": {
+      "caption": "Możliwości według planu",
+      "capability": "Możliwość",
+      "rows": {
+        "renderer": {
+          "label": "Przypięty renderer",
+          "core": "Lokalnie",
+          "team": "Lokalnie",
+          "enterprise": "Lokalnie"
+        },
+        "cloud": {
+          "label": "Renderowanie w chmurze",
+          "core": "—",
+          "team": "5 tys. / mies.",
+          "enterprise": "Bez limitu"
+        },
+        "evaluator": {
+          "label": "AI auto-evaluator",
+          "core": "—",
+          "team": "—",
+          "enterprise": "W zestawie"
+        },
+        "history": {
+          "label": "Hostowana historia wzorców",
+          "core": "—",
+          "team": "90 dni",
+          "enterprise": "Bez limitu"
+        }
+      }
+    }
+  },
+  "product": {
+    "crumb": "Przypięty renderer",
+    "title": "Te same piksele na każdej maszynie.",
+    "body": "Przypięty renderer usuwa różnice w czcionkach, antyaliasingu i GPU między laptopem a CI, więc zrzut wykonany gdziekolwiek jest identyczny co do bajta, a różnica zawsze oznacza prawdziwą zmianę.",
+    "status": "Renderer: wkrótce · Wtyczka Cypress: dostępna",
+    "start": "Zainstaluj wtyczkę",
+    "stats": {
+      "manifest": {
+        "value": "v1",
+        "label": "Otwarty format manifestu"
+      },
+      "runners": {
+        "value": "2",
+        "label": "Runnery: dziś Cypress, wkrótce Playwright"
+      },
+      "license": {
+        "value": "MIT",
+        "label": "Licencja open source"
+      }
+    }
+  },
+  "soon": {
+    "status": "Wkrótce",
+    "githubApp": {
+      "title": "Aplikacja GitHub do przeglądu wizualnego.",
+      "body": "Check run i komentarze w pull requeście z różnicami obrazów oraz akceptacja zmienionych wzorców jednym kliknięciem.",
+      "b1": "Różnice obrazów w dyskusji w PR",
+      "b2": "Akceptuj lub odrzucaj wzorce bez wychodzenia z GitHuba",
+      "b3": "Działa ze wspólnym manifestem z dowolnego runnera"
+    },
+    "playwright": {
+      "title": "Regresja wizualna dla Playwright.",
+      "body": "Ten sam silnik porównań i manifest co we wtyczce Cypress, dla projektów Playwright. Wzorce zostają w Twoim repozytorium.",
+      "b1": "Wzorce przechowywane w repozytorium",
+      "b2": "Różnice pokazywane, gdy zrzuty się zmienią",
+      "b3": "Zapisuje wspólny manifest przebiegu"
+    },
+    "platform": {
+      "title": "Platforma pixsame.",
+      "body": "Renderowanie po stronie serwera oraz internetowy podgląd i menedżer obrazów i różnic, żeby cały zespół mógł przeglądać i zarządzać wzorcami.",
+      "b1": "Serwerowy renderer dla zrzutów identycznych co do bajta",
+      "b2": "Internetowy menedżer obrazów, różnic i wzorców",
+      "b3": "AI auto-evaluator dla rutynowych zmian (Enterprise)"
+    }
+  },
+  "waitlist": {
+    "title": "Daj znać, gdy wystartujemy",
+    "emailLabel": "Adres e-mail",
+    "placeholder": "ty{'@'}firma.pl",
+    "submit": "Powiadom mnie",
+    "sending": "Wysyłanie…",
+    "success": "Dziękujemy! Napiszemy raz, gdy będzie gotowe.",
+    "error": "Coś poszło nie tak. Spróbuj ponownie.",
+    "consent": "Używamy adresu tylko, by poinformować o tym starcie. Bez newslettera."
+  },
+  "docs": {
+    "englishOnly": "Dokumentacja jest dostępna tylko po angielsku."
+  },
+  "changelog": {
+    "body": "Notatki o wydaniach wtyczki pixsame dla Cypress.",
+    "source": "Wydania wtyczki Cypress"
+  },
+  "legal": {
+    "privacy": {
+      "title": "Prywatność",
+      "p1": "Ta strona nie używa plików cookie ani śledzenia reklamowego. Korzystamy z Cloudflare Web Analytics, które zlicza odsłony bez cookies i fingerprintingu.",
+      "p2": "Jeśli zapiszesz się na listę oczekujących, przechowujemy Twój adres e-mail, produkt, język i czas zgody. Używamy ich tylko, by poinformować o starcie produktu, i nie udostępniamy ich nikomu.",
+      "p3": "Aby usunąć swój adres, skontaktuj się z nami przez github.com/pixsame."
+    },
+    "terms": {
+      "title": "Regulamin",
+      "p1": "Oprogramowanie pixsame jest open source na licencji MIT. Jedynymi warunkami, które go dotyczą, jest treść licencji w repozytorium.",
+      "p2": "Usługi hostowane (aplikacja GitHub i platforma) nie są jeszcze dostępne. Ich regulaminy opublikujemy tutaj przed startem.",
+      "p3": "Strona jest udostępniana w stanie „tak jak jest”. Strony produktów opisują plany, które mogą się zmienić."
+    }
+  },
+  "notFound": {
+    "title": "Nie znaleziono strony",
+    "body": "Ta strona nie istnieje albo została przeniesiona.",
+    "home": "Wróć na stronę główną"
+  },
+  "footer": {
+    "tagline": "Testy regresji wizualnej, które zgadzają się same ze sobą.",
+    "product": "Produkt",
+    "resources": "Zasoby",
+    "legal": "Prawne",
+    "githubApp": "Aplikacja GitHub",
+    "playwright": "Playwright",
+    "platform": "Platforma",
+    "privacy": "Prywatność",
+    "terms": "Regulamin"
+  }
+}

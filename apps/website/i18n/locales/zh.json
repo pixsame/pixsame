@@ -1,0 +1,226 @@
+{
+  "meta": {
+    "reviewed": false
+  },
+  "seo": {
+    "title": "pixsame — 面向 Cypress 与 Playwright 的视觉回归测试",
+    "description": "两个运行器共用一套清单标准，固定版本的渲染器让截图逐字节一致，取证式差异分析，并在 Pull Request 中完成基线审批。"
+  },
+  "nav": {
+    "label": "主导航",
+    "menu": "菜单",
+    "home": "pixsame 首页",
+    "product": "产品",
+    "docs": "文档",
+    "pricing": "价格",
+    "changelog": "更新日志",
+    "signIn": "登录",
+    "install": "安装插件"
+  },
+  "a11y": {
+    "skip": "跳到正文",
+    "language": "语言"
+  },
+  "theme": {
+    "toLight": "切换到浅色模式",
+    "toDark": "切换到深色模式"
+  },
+  "hero": {
+    "eyebrow": "开源 · MIT · Cypress + Playwright",
+    "title": "始终与自身一致的视觉回归。",
+    "tagline": "same same. 精确到像素。",
+    "body": "两个运行器共用一套清单标准。固定版本的渲染器让本地与 CI 截图逐字节一致。用取证式差异分析取代一团红色色块，基线审批直接在 Pull Request 中完成。",
+    "copy": "复制",
+    "copied": "已复制",
+    "docs": "阅读文档"
+  },
+  "detect": {
+    "demo": "AI 检测流程示意",
+    "label": "AI 检测 · PR #2841",
+    "live": "演示",
+    "analysing": "正在分析 2 个区域",
+    "box1": "布局偏移 · +4px y · Δ0.42%",
+    "box2": "文本重排 · 价格行",
+    "row": {
+      "geometry": "几何向量",
+      "reflow": "文本重排",
+      "aa": "抗锯齿噪点"
+    },
+    "verdictLabel": "结论 · 置信度 0.94",
+    "verdict": "一处几何改动，而不是 5,812 条发现。符合“提高导航密度”的意图。",
+    "approve": "批准基线",
+    "hold": "暂缓"
+  },
+  "runs": {
+    "label": "支持"
+  },
+  "features": {
+    "title": "功能",
+    "available": "已提供",
+    "manifest": {
+      "title": "共享清单",
+      "body": "Cypress 与 Playwright 共用一种开放的清单格式，报告、机器人和审查工具可搭配任一运行器。"
+    },
+    "renderer": {
+      "title": "固定渲染器",
+      "body": "字体、抗锯齿和 GPU 差异都被固定，本地与 CI 截图因此逐字节一致。"
+    },
+    "forensic": {
+      "title": "取证式差异",
+      "body": "每处变化都会被归类为几何、文本重排或抗锯齿噪点，而不是一团红色色块。"
+    },
+    "approve": {
+      "title": "在 PR 中批准",
+      "body": "在讨论变更的 Pull Request 中查看图像并批准新基线。"
+    }
+  },
+  "pricing": {
+    "title": "该免费的免费，该付费的随规模付费。",
+    "body": "核心开源且免费。团队可增加云端渲染和托管的基线历史；企业版另含 AI 自动评估器、SSO 和 SLA。",
+    "soon": "即将推出",
+    "compare": "比较套餐",
+    "note": "团队版和企业版即将推出。价格仅供参考，发布前可能调整。",
+    "tiers": {
+      "core": {
+        "name": "Core",
+        "price": "$0",
+        "unit": "",
+        "desc": "自托管，不限量"
+      },
+      "team": {
+        "name": "Team",
+        "price": "$29",
+        "unit": "/开发者/月",
+        "desc": "云端渲染，托管历史"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "联系我们",
+        "unit": "",
+        "desc": "AI 自动评估器、SSO、SLA"
+      }
+    },
+    "table": {
+      "caption": "各套餐功能",
+      "capability": "功能",
+      "rows": {
+        "renderer": {
+          "label": "固定渲染器",
+          "core": "本地",
+          "team": "本地",
+          "enterprise": "本地"
+        },
+        "cloud": {
+          "label": "云端渲染",
+          "core": "—",
+          "team": "5k / 月",
+          "enterprise": "不限量"
+        },
+        "evaluator": {
+          "label": "AI 自动评估器",
+          "core": "—",
+          "team": "—",
+          "enterprise": "包含"
+        },
+        "history": {
+          "label": "托管基线历史",
+          "core": "—",
+          "team": "90 天",
+          "enterprise": "不限"
+        }
+      }
+    }
+  },
+  "product": {
+    "crumb": "固定渲染器",
+    "title": "每台机器上，像素都一样。",
+    "body": "固定版本的渲染器消除了笔记本与 CI 之间在字体、抗锯齿和 GPU 上的差异，无论在哪里截图都逐字节一致，出现差异就一定是真实变化。",
+    "status": "渲染器：即将推出 · Cypress 插件：已提供",
+    "start": "安装插件",
+    "stats": {
+      "manifest": {
+        "value": "v1",
+        "label": "开放的清单格式"
+      },
+      "runners": {
+        "value": "2",
+        "label": "运行器：现有 Cypress，Playwright 即将支持"
+      },
+      "license": {
+        "value": "MIT",
+        "label": "开源许可证"
+      }
+    }
+  },
+  "soon": {
+    "status": "即将推出",
+    "githubApp": {
+      "title": "用于视觉审查的 GitHub 应用。",
+      "body": "检查运行和带图像差异的 Pull Request 评论，并可一键在 PR 中批准变更的基线。",
+      "b1": "图像差异直接显示在 PR 讨论中",
+      "b2": "无需离开 GitHub 即可批准或拒绝基线",
+      "b3": "兼容任一运行器的共享清单"
+    },
+    "playwright": {
+      "title": "面向 Playwright 的视觉回归。",
+      "body": "与 Cypress 插件相同的比较引擎和清单，用于 Playwright 项目。基线保留在你的仓库中。",
+      "b1": "基线保存在你的仓库",
+      "b2": "截图变化时显示差异",
+      "b3": "写出共享的运行清单"
+    },
+    "platform": {
+      "title": "pixsame 平台。",
+      "body": "服务器端渲染，加上在线图像与差异查看和管理工具，让整个团队都能审查和管理基线。",
+      "b1": "服务器渲染器，截图逐字节一致",
+      "b2": "在线图像、差异与基线管理器",
+      "b3": "用于日常变更的 AI 自动评估器（企业版）"
+    }
+  },
+  "waitlist": {
+    "title": "发布时通知我",
+    "emailLabel": "电子邮箱",
+    "placeholder": "you{'@'}company.com",
+    "submit": "通知我",
+    "sending": "正在发送…",
+    "success": "谢谢！准备好后我们只会发一封邮件通知你。",
+    "error": "出了点问题，请重试。",
+    "consent": "我们仅使用你的邮箱通知此次发布，不会发送订阅邮件。"
+  },
+  "docs": {
+    "englishOnly": "文档目前仅提供英文版。"
+  },
+  "changelog": {
+    "body": "pixsame Cypress 插件的发布说明。",
+    "source": "Cypress 插件版本"
+  },
+  "legal": {
+    "privacy": {
+      "title": "隐私",
+      "p1": "本网站不使用 Cookie，也不做广告追踪。我们使用 Cloudflare Web Analytics，它不依赖 Cookie 或指纹识别来统计页面浏览量。",
+      "p2": "如果你加入候补名单，我们会保存你的邮箱、所选产品、语言和同意时间。这些信息仅用于在该产品发布时通知你，不会与他人共享。",
+      "p3": "如需删除你的邮箱，请通过 github.com/pixsame 联系我们。"
+    },
+    "terms": {
+      "title": "条款",
+      "p1": "pixsame 软件以 MIT 许可证开源，仓库中的许可证文本是适用于它的唯一条款。",
+      "p2": "托管服务（GitHub 应用和平台）尚未上线，其服务条款将在发布前公布于此。",
+      "p3": "本网站按现状提供。产品页面描述的计划可能会变更。"
+    }
+  },
+  "notFound": {
+    "title": "页面未找到",
+    "body": "该页面不存在或已移动。",
+    "home": "返回首页"
+  },
+  "footer": {
+    "tagline": "始终与自身一致的视觉回归测试。",
+    "product": "产品",
+    "resources": "资源",
+    "legal": "法律",
+    "githubApp": "GitHub 应用",
+    "playwright": "Playwright",
+    "platform": "平台",
+    "privacy": "隐私",
+    "terms": "条款"
+  }
+}

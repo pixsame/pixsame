@@ -1,0 +1,35 @@
+{
+  "name": "@pixsame/website",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt generate",
+    "preview": "nuxt preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "nuxt typecheck",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/content": "3.16.1",
+    "@nuxtjs/i18n": "10.6.0",
+    "@nuxtjs/seo": "5.3.16",
+    "@pixsame/ui-layer": "workspace:*",
+    "nuxt": "4.6.0",
+    "vue": "^3.5.0",
+    "vue-router": "^5.0.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@frsource/eslint-config": "1.85.13",
+    "@nuxt/eslint": "1.17.0",
+    "@playwright/test": "1.60.0",
+    "eslint": "10.11.0",
+    "sirv": "^3.0.2",
+    "sirv-cli": "^3.0.1",
+    "typescript": "^5.9.0",
+    "vue-tsc": "^3.0.0"
+  }
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .s { stroke: #101418; }
+    @media (prefers-color-scheme: dark) { .s { stroke: #eceff1; } }
+  </style>
+  <rect x="24" y="24" width="16" height="16" fill="#e0291f"/>
+  <rect class="s" x="6" y="6" width="34" height="34" rx="2" fill="none" stroke-width="5"/>
+  <rect class="s" x="24" y="24" width="34" height="34" rx="2" fill="none" stroke-width="5"/>
+</svg>

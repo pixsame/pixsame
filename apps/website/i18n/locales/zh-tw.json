@@ -1,0 +1,226 @@
+{
+  "meta": {
+    "reviewed": false
+  },
+  "seo": {
+    "title": "pixsame — 適用於 Cypress 與 Playwright 的視覺迴歸測試",
+    "description": "兩個執行器共用一套清單標準，固定版本的渲染器讓截圖逐位元組一致，鑑識式差異分析，並在 Pull Request 中完成基準審批。"
+  },
+  "nav": {
+    "label": "主導覽",
+    "menu": "選單",
+    "home": "pixsame 首頁",
+    "product": "產品",
+    "docs": "文件",
+    "pricing": "價格",
+    "changelog": "更新日誌",
+    "signIn": "登入",
+    "install": "安裝外掛"
+  },
+  "a11y": {
+    "skip": "跳到主要內容",
+    "language": "語言"
+  },
+  "theme": {
+    "toLight": "切換至淺色模式",
+    "toDark": "切換至深色模式"
+  },
+  "hero": {
+    "eyebrow": "開源 · MIT · Cypress + Playwright",
+    "title": "始終與自身一致的視覺迴歸。",
+    "tagline": "same same. 精確到像素。",
+    "body": "兩個執行器共用一套清單標準。固定版本的渲染器讓本機與 CI 截圖逐位元組一致。以鑑識式差異分析取代一團紅色色塊，基準審批直接在 Pull Request 中完成。",
+    "copy": "複製",
+    "copied": "已複製",
+    "docs": "閱讀文件"
+  },
+  "detect": {
+    "demo": "AI 偵測流程示意",
+    "label": "AI 偵測 · PR #2841",
+    "live": "示範",
+    "analysing": "正在分析 2 個區域",
+    "box1": "版面位移 · +4px y · Δ0.42%",
+    "box2": "文字重排 · 價格列",
+    "row": {
+      "geometry": "幾何向量",
+      "reflow": "文字重排",
+      "aa": "反鋸齒雜訊"
+    },
+    "verdictLabel": "結論 · 信賴度 0.94",
+    "verdict": "一處幾何變更，而不是 5,812 項發現。符合「提高導覽密度」的意圖。",
+    "approve": "核准基準",
+    "hold": "暫緩"
+  },
+  "runs": {
+    "label": "支援"
+  },
+  "features": {
+    "title": "功能",
+    "available": "已提供",
+    "manifest": {
+      "title": "共用清單",
+      "body": "Cypress 與 Playwright 共用一種開放的清單格式，報告、機器人與審查工具可搭配任一執行器。"
+    },
+    "renderer": {
+      "title": "固定渲染器",
+      "body": "字型、反鋸齒與 GPU 差異都被固定，本機與 CI 截圖因此逐位元組一致。"
+    },
+    "forensic": {
+      "title": "鑑識式差異",
+      "body": "每處變化都會被歸類為幾何、文字重排或反鋸齒雜訊，而不是一團紅色色塊。"
+    },
+    "approve": {
+      "title": "在 PR 中核准",
+      "body": "在討論變更的 Pull Request 中檢視影像並核准新基準。"
+    }
+  },
+  "pricing": {
+    "title": "該免費的免費，該付費的隨規模付費。",
+    "body": "核心開源且免費。團隊可加入雲端渲染與託管的基準歷史；企業版另含 AI 自動評估器、SSO 與 SLA。",
+    "soon": "即將推出",
+    "compare": "比較方案",
+    "note": "團隊版與企業版即將推出。價格僅供參考，上線前可能調整。",
+    "tiers": {
+      "core": {
+        "name": "Core",
+        "price": "$0",
+        "unit": "",
+        "desc": "自行託管，不限量"
+      },
+      "team": {
+        "name": "Team",
+        "price": "$29",
+        "unit": "/開發者/月",
+        "desc": "雲端渲染，託管歷史"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "洽詢",
+        "unit": "",
+        "desc": "AI 自動評估器、SSO、SLA"
+      }
+    },
+    "table": {
+      "caption": "各方案功能",
+      "capability": "功能",
+      "rows": {
+        "renderer": {
+          "label": "固定渲染器",
+          "core": "本機",
+          "team": "本機",
+          "enterprise": "本機"
+        },
+        "cloud": {
+          "label": "雲端渲染",
+          "core": "—",
+          "team": "5k / 月",
+          "enterprise": "不限量"
+        },
+        "evaluator": {
+          "label": "AI 自動評估器",
+          "core": "—",
+          "team": "—",
+          "enterprise": "包含"
+        },
+        "history": {
+          "label": "託管基準歷史",
+          "core": "—",
+          "team": "90 天",
+          "enterprise": "不限"
+        }
+      }
+    }
+  },
+  "product": {
+    "crumb": "固定渲染器",
+    "title": "每台機器上，像素都一樣。",
+    "body": "固定版本的渲染器消除了筆電與 CI 之間在字型、反鋸齒與 GPU 上的差異，無論在哪裡截圖都逐位元組一致，出現差異就一定是真實變化。",
+    "status": "渲染器：即將推出 · Cypress 外掛：已提供",
+    "start": "安裝外掛",
+    "stats": {
+      "manifest": {
+        "value": "v1",
+        "label": "開放的清單格式"
+      },
+      "runners": {
+        "value": "2",
+        "label": "執行器：現有 Cypress，Playwright 即將支援"
+      },
+      "license": {
+        "value": "MIT",
+        "label": "開源授權"
+      }
+    }
+  },
+  "soon": {
+    "status": "即將推出",
+    "githubApp": {
+      "title": "用於視覺審查的 GitHub 應用程式。",
+      "body": "檢查執行與附影像差異的 Pull Request 留言，並可一鍵在 PR 中核准變更的基準。",
+      "b1": "影像差異直接顯示在 PR 討論中",
+      "b2": "無需離開 GitHub 即可核准或拒絕基準",
+      "b3": "相容任一執行器的共用清單"
+    },
+    "playwright": {
+      "title": "適用於 Playwright 的視覺迴歸。",
+      "body": "與 Cypress 外掛相同的比較引擎與清單，用於 Playwright 專案。基準保留在你的儲存庫中。",
+      "b1": "基準保存在你的儲存庫",
+      "b2": "截圖變化時顯示差異",
+      "b3": "寫出共用的執行清單"
+    },
+    "platform": {
+      "title": "pixsame 平台。",
+      "body": "伺服器端渲染，加上線上影像與差異檢視及管理工具，讓整個團隊都能審查與管理基準。",
+      "b1": "伺服器渲染器，截圖逐位元組一致",
+      "b2": "線上影像、差異與基準管理器",
+      "b3": "用於日常變更的 AI 自動評估器（企業版）"
+    }
+  },
+  "waitlist": {
+    "title": "上線時通知我",
+    "emailLabel": "電子郵件",
+    "placeholder": "you{'@'}company.com",
+    "submit": "通知我",
+    "sending": "傳送中…",
+    "success": "謝謝！準備好後我們只會寄一封信通知你。",
+    "error": "發生錯誤，請再試一次。",
+    "consent": "我們僅使用你的電子郵件通知此次上線，不會寄送電子報。"
+  },
+  "docs": {
+    "englishOnly": "文件目前僅提供英文版。"
+  },
+  "changelog": {
+    "body": "pixsame Cypress 外掛的發行說明。",
+    "source": "Cypress 外掛版本"
+  },
+  "legal": {
+    "privacy": {
+      "title": "隱私",
+      "p1": "本網站不使用 Cookie，也不做廣告追蹤。我們使用 Cloudflare Web Analytics，它不依賴 Cookie 或指紋辨識來統計頁面瀏覽量。",
+      "p2": "如果你加入候補名單，我們會儲存你的電子郵件、所選產品、語言與同意時間。這些資訊僅用於在該產品上線時通知你，不會與他人分享。",
+      "p3": "如需刪除你的電子郵件，請透過 github.com/pixsame 聯絡我們。"
+    },
+    "terms": {
+      "title": "條款",
+      "p1": "pixsame 軟體以 MIT 授權開源，儲存庫中的授權文字是適用於它的唯一條款。",
+      "p2": "託管服務（GitHub 應用程式與平台）尚未上線，其服務條款將在上線前公布於此。",
+      "p3": "本網站依現況提供。產品頁面所述的計畫可能會變更。"
+    }
+  },
+  "notFound": {
+    "title": "找不到頁面",
+    "body": "該頁面不存在或已移動。",
+    "home": "回到首頁"
+  },
+  "footer": {
+    "tagline": "始終與自身一致的視覺迴歸測試。",
+    "product": "產品",
+    "resources": "資源",
+    "legal": "法律",
+    "githubApp": "GitHub 應用程式",
+    "playwright": "Playwright",
+    "platform": "平台",
+    "privacy": "隱私",
+    "terms": "條款"
+  }
+}
