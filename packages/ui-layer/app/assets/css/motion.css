@@ -1,0 +1,48 @@
+/*
+ * One 6.4s loop shared by every demo card (mockup artboards 2a-2c).
+ * The resting state (no animation) is the finished frame, so
+ * prefers-reduced-motion users see the final result, not a blank card.
+ */
+.px-scan { top: 102%; opacity: 0; }
+.px-pop-1, .px-pop-2, .px-row, .px-verdict { opacity: 1; }
+.px-row-1 { --px-row-opacity: 1; }
+.px-bar-fill { transform-origin: left; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .px-scan { animation: px-scan 6.4s cubic-bezier(0.2, 0.6, 0.2, 1) infinite; }
+  .px-pop-1 { animation: px-pop-1 6.4s cubic-bezier(0.2, 0.6, 0.2, 1) infinite; }
+  .px-pop-2 { animation: px-pop-2 6.4s cubic-bezier(0.2, 0.6, 0.2, 1) infinite; }
+  .px-row-1 { animation: px-row-1 6.4s ease infinite; }
+  .px-row-2 { animation: px-row-2 6.4s ease infinite; }
+  .px-row-3 { animation: px-row-3 6.4s ease infinite; }
+  .px-verdict { animation: px-verdict 6.4s cubic-bezier(0.2, 0.6, 0.2, 1) infinite; }
+  .px-bar-fill { animation: px-grow 6.4s cubic-bezier(0.2, 0.6, 0.2, 1) infinite; }
+  .px-pulse { animation: px-pulse 1.1s ease-in-out infinite; }
+}
+
+@keyframes px-scan {
+  0% { top: -6%; opacity: 0; }
+  5% { opacity: 1; }
+  52% { top: 102%; opacity: 1; }
+  60%, 100% { top: 102%; opacity: 0; }
+}
+@keyframes px-pop-1 {
+  0%, 50% { opacity: 0; transform: scale(0.9); }
+  60%, 94% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.9); }
+}
+@keyframes px-pop-2 {
+  0%, 62% { opacity: 0; transform: scale(0.9); }
+  72%, 94% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.9); }
+}
+@keyframes px-row-1 { 0%, 44% { opacity: 0.25; } 54%, 96% { opacity: 1; } 100% { opacity: 0.25; } }
+@keyframes px-row-2 { 0%, 58% { opacity: 0.25; } 68%, 96% { opacity: 1; } 100% { opacity: 0.25; } }
+@keyframes px-row-3 { 0%, 72% { opacity: 0.25; } 80%, 96% { opacity: 1; } 100% { opacity: 0.25; } }
+@keyframes px-verdict {
+  0%, 80% { opacity: 0; transform: translateY(8px); }
+  88%, 96% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(8px); }
+}
+@keyframes px-grow { 0%, 10% { transform: scaleX(0); } 55%, 100% { transform: scaleX(1); } }
+@keyframes px-pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }

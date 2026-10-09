@@ -116,3 +116,8 @@ dist
 # Batch review demo recording temp files
 scripts/.frames/
 scripts/.palette.png
+
+# Nuxt
+.nuxt
+.output
+.data
