@@ -1,0 +1,42 @@
+name: Website
+# Separate workflow with path filters so website-only changes do not run the plugin
+# suites, and plugin-only changes do not run this one (billed minutes).
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'apps/website/**'
+      - 'packages/ui-layer/**'
+      - '.github/workflows/website.yml'
+      - 'pnpm-lock.yaml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/website/**'
+      - 'packages/ui-layer/**'
+
+jobs:
+  website:
+    name: build + e2e + a11y
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - name: Lint (cheapest first)
+        run: pnpm --filter @pixsame/website lint
+      - name: Build (static generate)
+        run: pnpm --filter @pixsame/website build
+      - name: Install Chromium
+        run: pnpm --filter @pixsame/website exec playwright install --with-deps chromium
+      - name: Test (e2e + axe)
+        run: pnpm --filter @pixsame/website exec playwright test
+        env:
+          CI: 'true'
+      - uses: actions/upload-artifact@v7
+        if: ${{ failure() }}
+        with:
+          name: website-test-results
+          path: apps/website/test-results
