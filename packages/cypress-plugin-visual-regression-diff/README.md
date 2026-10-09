@@ -506,15 +506,7 @@ For CI or sharable HTML reports, integrate with a reporter such as [`cypress-moc
 
 This plugin used to be published under the `@frsource` npm scope as `@frsource/cypress-plugin-visual-regression-diff`. It now lives in the [pixsame](https://github.com/pixsame) organization and is published as `@pixsame/cypress-plugin-visual-regression-diff`. If you still have the old `@frsource/...` package installed, moving over is just a rename: `@pixsame/cypress-plugin-visual-regression-diff` 1.0.0 is the code of `@frsource/cypress-plugin-visual-regression-diff` 4.2.1 with no behavior change, so your baseline images, configuration and `cy.*` commands keep working as they are. New installs don't need any of this, see [Getting started](#getting-started).
 
-The quickest way is the built-in command, which renames the dependency in every `package.json` below the current directory, updates imports and type references in your config and support files, and reinstalls with the package manager it finds:
-
-```bash
-npx @frsource/cypress-plugin-visual-regression-diff migrate
-```
-
-It lists the files it would change and asks before writing anything. Pass `--dry-run` to only see the list, `--yes` to skip the question (required in CI) and `--no-install` to skip the install step.
-
-Prefer to do it by hand? Swap the package and replace the name in your imports:
+Swap the package and replace the name in your imports:
 
 ```bash
 npm uninstall @frsource/cypress-plugin-visual-regression-diff

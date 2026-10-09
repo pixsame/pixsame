@@ -50,12 +50,9 @@
       ]
     }
   },
-  "bin": {
-    "cypress-plugin-visual-regression-diff": "bin/cli.js"
-  },
   "license": "MIT",
   "scripts": {
-    "build": "del-cli dist && microbundle src/{support,plugins,constants}.ts --target node --tsconfig tsconfig.build.json -f cjs,modern && microbundle src/migrate.ts --target node --tsconfig tsconfig.build.json -f cjs --external none --no-pkg-main --no-generateTypes -o dist/migrate.js && del-cli \"dist/*.{hook,utils}.d.ts\"",
+    "build": "del-cli dist && microbundle src/{support,plugins,constants}.ts --target node --tsconfig tsconfig.build.json -f cjs,modern && del-cli \"dist/*.{hook,utils}.d.ts\"",
     "format": "prettier --write .",
     "format:ci": "prettier --check .",
     "test:integration": "vitest run",
@@ -82,7 +79,6 @@
     "cypress": "15.21.1",
     "del-cli": "7.0.0",
     "microbundle": "0.15.1",
-    "package-manager-detector": "1.8.0",
     "prettier": "3.9.9",
     "sanitize-filename": "1.6.4",
     "tmp-promise": "3.0.3",
@@ -109,7 +105,6 @@
     "glob": "13.0.6",
     "meta-png": "1.0.6",
     "move-file": "4.1.0",
-    "package-manager-detector": "^1.8.0",
     "pixelmatch": "7.2.0",
     "pngjs": "7.0.0",
     "sharp": "0.35.4"
@@ -119,7 +114,6 @@
   },
   "files": [
     "dist",
-    "bin",
     "package.json",
     "README.md",
     "LICENSE"
