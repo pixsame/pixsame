@@ -1,0 +1,25 @@
+/* Markdown content (docs, changelog). Tokens only. */
+.px-prose { max-width: 72ch; line-height: 1.7; font-size: 16px; color: var(--px-muted); }
+.px-prose h1 { font-size: 2.4rem; line-height: 1.1; color: var(--px-ink); margin-bottom: 1rem; }
+.px-prose h2 { font-size: 1.6rem; line-height: 1.2; color: var(--px-ink); margin: 2.4rem 0 0.8rem; padding-top: 1rem; border-top: 1px solid var(--px-hairline); }
+.px-prose h3 { font-size: 1.2rem; color: var(--px-ink); margin: 1.8rem 0 0.5rem; }
+.px-prose p, .px-prose ul, .px-prose ol { margin: 0.9rem 0; }
+.px-prose ul { list-style: disc; padding-left: 1.3rem; }
+.px-prose ol { list-style: decimal; padding-left: 1.3rem; }
+.px-prose strong { color: var(--px-ink); font-weight: 600; }
+.px-prose a { color: var(--px-coral-text); text-decoration: underline; text-underline-offset: 3px; }
+.px-prose code { font-family: var(--font-mono); font-size: 0.86em; background: var(--px-chip); padding: 0.1em 0.4em; border-radius: var(--px-radius-sm); color: var(--px-ink); }
+.px-prose pre { margin: 1.2rem 0; padding: 16px 18px; overflow-x: auto; font-size: 13px; line-height: 1.6; background: var(--px-glass); border: 1px solid var(--px-glass-border); border-radius: var(--px-radius-lg); }
+.px-prose pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+.px-prose table { width: 100%; margin: 1.2rem 0; border-collapse: collapse; font-size: 14px; display: block; overflow-x: auto; }
+.px-prose th { text-align: left; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--px-faint); }
+.px-prose th, .px-prose td { padding: 10px 14px 10px 0; border-bottom: 1px solid var(--px-hairline); vertical-align: top; }
+.px-prose blockquote { border-left: 2px solid var(--px-coral-fill); padding-left: 1rem; color: var(--px-muted); }
+
+/* shiki dual theme */
+.dark .shiki, .dark .shiki span { color: var(--shiki-dark) !important; background: transparent !important; }
+.shiki { background: transparent !important; }
+
+/* heading anchors rendered by Nuxt Content */
+.px-prose :is(h1, h2, h3, h4) a { color: inherit; text-decoration: none; }
+.px-prose :is(h1, h2, h3, h4) a:hover { text-decoration: underline; text-decoration-color: var(--px-coral-fill); }

@@ -1,0 +1,87 @@
+@import 'tailwindcss';
+@import './tokens.css';
+@import './aurora.css';
+@import './motion.css';
+@import './prose.css';
+
+/* Tailwind only scans the consuming app by default; also scan this layer. */
+@source '../../../app';
+
+/* Tokens -> Tailwind utilities (bg-ground, text-ink, text-coral, ...). */
+@theme inline {
+  --font-heading: 'Bona Nova', Georgia, 'Noto Serif SC', 'Noto Serif TC', serif;
+  --font-sans: 'Signika', system-ui, 'Noto Sans SC', 'Noto Sans TC', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --color-ground: var(--px-ground);
+  --color-ink: var(--px-ink);
+  --color-muted: var(--px-muted);
+  --color-faint: var(--px-faint);
+  --color-glass: var(--px-glass);
+  --color-glass-strong: var(--px-glass-strong);
+  --color-glass-border: var(--px-glass-border);
+  --color-hairline: var(--px-hairline);
+  --color-chip: var(--px-chip);
+  --color-coral: var(--px-coral-fill);
+  --color-coral-text: var(--px-coral-text);
+  --color-on-coral: var(--px-on-coral);
+  --color-blue: var(--px-blue-fill);
+  --color-blue-text: var(--px-blue-text);
+  --color-magenta: var(--px-magenta-fill);
+  --color-magenta-text: var(--px-magenta-text);
+  --color-amber-text: var(--px-amber-text);
+
+  --radius-sm: var(--px-radius-sm);
+  --radius-md: var(--px-radius-md);
+  --radius-lg: var(--px-radius-lg);
+  --radius-xl: var(--px-radius-xl);
+  --shadow-glass: var(--px-glass-shadow);
+}
+
+@layer base {
+  html {
+    background: var(--px-ground);
+    color: var(--px-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 2px solid var(--px-coral-text);
+    outline-offset: 3px;
+    border-radius: var(--px-radius-sm);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+}
+
+@layer components {
+  .px-container {
+    margin-inline: auto;
+    max-width: 1280px;
+    padding-inline: var(--px-gutter);
+  }
+  .px-glass {
+    background: var(--px-glass);
+    border: 1px solid var(--px-glass-border);
+    border-radius: var(--px-radius-xl);
+    box-shadow: var(--px-glass-shadow);
+    -webkit-backdrop-filter: blur(var(--px-blur));
+    backdrop-filter: blur(var(--px-blur));
+  }
+  .px-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--px-coral-text);
+  }
+}

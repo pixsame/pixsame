@@ -1,0 +1,226 @@
+{
+  "meta": {
+    "reviewed": false
+  },
+  "seo": {
+    "title": "pixsame — visuelle Regressionstests für Cypress und Playwright",
+    "description": "Ein Manifest-Standard für beide Runner, ein fixierter Renderer für byte-identische Screenshots, forensische Diff-Analyse und Baseline-Freigabe im Pull Request."
+  },
+  "nav": {
+    "label": "Hauptnavigation",
+    "menu": "Menü",
+    "home": "pixsame Startseite",
+    "product": "Produkt",
+    "docs": "Doku",
+    "pricing": "Preise",
+    "changelog": "Changelog",
+    "signIn": "Anmelden",
+    "install": "Plugin installieren"
+  },
+  "a11y": {
+    "skip": "Zum Inhalt springen",
+    "language": "Sprache"
+  },
+  "theme": {
+    "toLight": "Zum hellen Modus wechseln",
+    "toDark": "Zum dunklen Modus wechseln"
+  },
+  "hero": {
+    "eyebrow": "Open Source · MIT · Cypress + Playwright",
+    "title": "Visuelle Regression, die mit sich selbst übereinstimmt.",
+    "tagline": "same same. auf den Pixel genau.",
+    "body": "Ein Manifest-Standard für beide Runner. Ein fixierter Renderer macht lokale und CI-Screenshots byte-identisch. Forensische Diff-Analyse statt eines roten Flecks und Baseline-Freigabe direkt im Pull Request.",
+    "copy": "KOPIEREN",
+    "copied": "KOPIERT",
+    "docs": "Doku lesen"
+  },
+  "detect": {
+    "demo": "Beispielhafte Darstellung eines KI-Erkennungslaufs",
+    "label": "KI-Erkennung · PR #2841",
+    "live": "Demo",
+    "analysing": "2 Bereiche werden analysiert",
+    "box1": "Layoutverschiebung · +4px y · Δ0,42 %",
+    "box2": "Textumbruch · Preiszeile",
+    "row": {
+      "geometry": "Geometrievektor",
+      "reflow": "Textumbruch",
+      "aa": "Antialiasing-Rauschen"
+    },
+    "verdictLabel": "Urteil · Konfidenz 0,94",
+    "verdict": "Eine Geometrieänderung statt 5.812 Funde. Passt zur Absicht „Navigationsdichte erhöhen“.",
+    "approve": "Baseline freigeben",
+    "hold": "Zurückhalten"
+  },
+  "runs": {
+    "label": "Läuft in"
+  },
+  "features": {
+    "title": "Funktionen",
+    "available": "Verfügbar",
+    "manifest": {
+      "title": "Gemeinsames Manifest",
+      "body": "Ein offenes Manifest-Format für Cypress und Playwright, damit Berichte, Bots und Review-Tools mit jedem Runner funktionieren."
+    },
+    "renderer": {
+      "title": "Fixierter Renderer",
+      "body": "Schriften, Antialiasing und GPU-Unterschiede sind fixiert, damit lokale und CI-Screenshots byte-identisch sind."
+    },
+    "forensic": {
+      "title": "Forensischer Diff",
+      "body": "Jede Änderung wird als Geometrie, Textumbruch oder Antialiasing-Rauschen eingeordnet statt als ein roter Fleck."
+    },
+    "approve": {
+      "title": "Freigabe im PR",
+      "body": "Bilder prüfen und neue Baselines im Pull Request freigeben, dort wo die Änderung besprochen wird."
+    }
+  },
+  "pricing": {
+    "title": "Kostenlos, wo es zählt. Bezahlt, wo es skaliert.",
+    "body": "Der Kern ist Open Source und kostenlos. Teams ergänzen Cloud-Rendering und gehostete Baseline-Historie; Enterprise bringt den KI-Auto-Evaluator, SSO und ein SLA.",
+    "soon": "Demnächst",
+    "compare": "Tarife vergleichen",
+    "note": "Team und Enterprise folgen demnächst. Preise sind unverbindlich und können sich bis zum Start ändern.",
+    "tiers": {
+      "core": {
+        "name": "Core",
+        "price": "$0",
+        "unit": "",
+        "desc": "Selbst gehostet, unbegrenzt"
+      },
+      "team": {
+        "name": "Team",
+        "price": "$29",
+        "unit": "/Entw./Monat",
+        "desc": "Cloud-Rendering, gehostete Historie"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Auf Anfrage",
+        "unit": "",
+        "desc": "KI-Auto-Evaluator, SSO, SLA"
+      }
+    },
+    "table": {
+      "caption": "Funktionen nach Tarif",
+      "capability": "Funktion",
+      "rows": {
+        "renderer": {
+          "label": "Fixierter Renderer",
+          "core": "Lokal",
+          "team": "Lokal",
+          "enterprise": "Lokal"
+        },
+        "cloud": {
+          "label": "Cloud-Rendering",
+          "core": "—",
+          "team": "5.000 / Monat",
+          "enterprise": "Unbegrenzt"
+        },
+        "evaluator": {
+          "label": "KI-Auto-Evaluator",
+          "core": "—",
+          "team": "—",
+          "enterprise": "Enthalten"
+        },
+        "history": {
+          "label": "Gehostete Baseline-Historie",
+          "core": "—",
+          "team": "90 Tage",
+          "enterprise": "Unbegrenzt"
+        }
+      }
+    }
+  },
+  "product": {
+    "crumb": "Fixierter Renderer",
+    "title": "Dieselben Pixel auf jeder Maschine.",
+    "body": "Ein fixierter Renderer beseitigt die Unterschiede bei Schrift, Antialiasing und GPU zwischen Laptop und CI. Ein Screenshot von überall ist byte-identisch, und ein Diff bedeutet immer eine echte Änderung.",
+    "status": "Renderer: demnächst · Cypress-Plugin: verfügbar",
+    "start": "Plugin installieren",
+    "stats": {
+      "manifest": {
+        "value": "v1",
+        "label": "Offenes Manifest-Format"
+      },
+      "runners": {
+        "value": "2",
+        "label": "Runner: heute Cypress, bald Playwright"
+      },
+      "license": {
+        "value": "MIT",
+        "label": "Open-Source-Lizenz"
+      }
+    }
+  },
+  "soon": {
+    "status": "Demnächst",
+    "githubApp": {
+      "title": "Eine GitHub App für visuelles Review.",
+      "body": "Ein Check-Run und Pull-Request-Kommentare mit Bild-Diffs, und geänderte Baselines mit einem Klick im PR freigeben.",
+      "b1": "Bild-Diffs direkt in der PR-Diskussion",
+      "b2": "Baselines freigeben oder ablehnen, ohne GitHub zu verlassen",
+      "b3": "Funktioniert mit dem gemeinsamen Manifest jedes Runners"
+    },
+    "playwright": {
+      "title": "Visuelle Regression für Playwright.",
+      "body": "Dieselbe Vergleichs-Engine und dasselbe Manifest wie das Cypress-Plugin, für Playwright-Projekte. Baselines bleiben in Ihrem Repo.",
+      "b1": "Baselines im eigenen Repository",
+      "b2": "Ein Diff erscheint, wenn sich Screenshots ändern",
+      "b3": "Schreibt das gemeinsame Run-Manifest"
+    },
+    "platform": {
+      "title": "Die pixsame-Plattform.",
+      "body": "Serverseitiges Rendering sowie ein Online-Viewer und -Manager für Bilder und Diffs, damit Ihr ganzes Team Baselines prüfen und verwalten kann.",
+      "b1": "Server-Renderer für byte-identische Screenshots",
+      "b2": "Online-Manager für Bilder, Diffs und Baselines",
+      "b3": "KI-Auto-Evaluator für Routineänderungen (Enterprise)"
+    }
+  },
+  "waitlist": {
+    "title": "Zum Start benachrichtigt werden",
+    "emailLabel": "E-Mail-Adresse",
+    "placeholder": "du{'@'}firma.de",
+    "submit": "Benachrichtigen",
+    "sending": "Wird gesendet…",
+    "success": "Danke! Wir schreiben Ihnen einmal, sobald es soweit ist.",
+    "error": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+    "consent": "Wir verwenden Ihre E-Mail nur, um Sie über diesen Start zu informieren. Kein Newsletter."
+  },
+  "docs": {
+    "englishOnly": "Die Doku ist nur auf Englisch verfügbar."
+  },
+  "changelog": {
+    "body": "Release Notes des pixsame Cypress-Plugins.",
+    "source": "Releases des Cypress-Plugins"
+  },
+  "legal": {
+    "privacy": {
+      "title": "Datenschutz",
+      "p1": "Diese Website verwendet keine Cookies und kein Werbe-Tracking. Wir nutzen Cloudflare Web Analytics, das Seitenaufrufe ohne Cookies und Fingerprinting zählt.",
+      "p2": "Wenn Sie sich in eine Warteliste eintragen, speichern wir Ihre E-Mail-Adresse, das Produkt, Ihre Sprache und den Zeitpunkt der Einwilligung. Wir nutzen sie nur, um Sie über den Start zu informieren, und geben sie nicht weiter.",
+      "p3": "Um Ihre E-Mail löschen zu lassen, kontaktieren Sie uns über github.com/pixsame."
+    },
+    "terms": {
+      "title": "Nutzungsbedingungen",
+      "p1": "Die pixsame-Software ist Open Source unter der MIT-Lizenz. Es gelten ausschließlich die Lizenzbedingungen im Repository.",
+      "p2": "Gehostete Dienste (GitHub App und Plattform) sind noch nicht verfügbar. Ihre Nutzungsbedingungen veröffentlichen wir hier vor dem Start.",
+      "p3": "Diese Website wird wie besehen bereitgestellt. Produktseiten beschreiben Pläne, die sich ändern können."
+    }
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "body": "Diese Seite existiert nicht oder wurde verschoben.",
+    "home": "Zur Startseite"
+  },
+  "footer": {
+    "tagline": "Visuelle Regressionstests, die mit sich selbst übereinstimmen.",
+    "product": "Produkt",
+    "resources": "Ressourcen",
+    "legal": "Rechtliches",
+    "githubApp": "GitHub App",
+    "playwright": "Playwright",
+    "platform": "Plattform",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen"
+  }
+}

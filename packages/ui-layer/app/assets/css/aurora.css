@@ -1,0 +1,106 @@
+/*
+ * Aurora background + Swiss grid, ported from the mockup (artboards 1a / 3a).
+ * <PxAurora /> sits absolutely behind page content. It covers the first ~1400px
+ * and fades out, so long pages return to the plain ground colour.
+ * The page wash (`.px-wash`) is the three/six big radial gradients on the ground.
+ */
+.px-wash {
+  background-color: var(--px-ground);
+  background-image: var(--px-wash);
+}
+
+.px-aurora {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: min(100%, 1480px);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
+  mask-image: linear-gradient(180deg, #000 70%, transparent);
+}
+
+.px-aurora-field {
+  position: absolute;
+  inset: -14% -8%;
+  overflow: hidden;
+}
+
+.px-pool {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+}
+.px-pool-top {
+  top: -18%;
+  height: 56%;
+  background: radial-gradient(60% 100% at 50% 100%, rgb(5 61 179 / var(--px-pool-top)), rgb(5 61 179 / 0) 70%);
+  filter: blur(40px);
+}
+.px-pool-bottom {
+  bottom: -24%;
+  height: 52%;
+  background: radial-gradient(70% 100% at 40% 0%, rgb(5 61 179 / var(--px-pool-bottom)), rgb(5 61 179 / 0) 72%);
+  filter: blur(48px);
+}
+
+.px-ribbon {
+  position: absolute;
+  --k: var(--px-ribbon-scale);
+  background: linear-gradient(
+    90deg,
+    rgb(var(--c) / 0) 0%,
+    rgb(var(--c) / calc(var(--a1) * var(--k))) var(--s1),
+    rgb(var(--c) / calc(var(--a2) * var(--k))) var(--s2),
+    rgb(var(--c) / calc(var(--a3) * var(--k))) var(--s3),
+    rgb(var(--c) / calc(var(--a4) * var(--k))) var(--s4),
+    rgb(var(--c) / 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(180deg, rgb(0 0 0 / 0) var(--m1), #000 var(--m2), rgb(0 0 0 / 0.4) var(--m3), rgb(0 0 0 / 0) var(--m4));
+  mask-image: linear-gradient(180deg, rgb(0 0 0 / 0) var(--m1), #000 var(--m2), rgb(0 0 0 / 0.4) var(--m3), rgb(0 0 0 / 0) var(--m4));
+}
+
+.px-sheen {
+  position: absolute;
+  left: -6%;
+  right: -6%;
+  top: 8%;
+  height: 20%;
+  background: linear-gradient(180deg, rgb(var(--px-aurora-coral) / 0), rgb(var(--px-aurora-coral) / var(--px-sheen)), rgb(var(--px-aurora-coral) / 0));
+  transform: rotate(-4deg);
+  filter: blur(36px);
+}
+
+.px-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(var(--px-scrim) / var(--px-scrim-a)),
+    rgb(var(--px-scrim) / var(--px-scrim-b)) 46%,
+    rgb(var(--px-scrim) / var(--px-scrim-a))
+  );
+}
+
+/* 12-column Swiss grid between the page gutters, plus a faint 96px baseline */
+.px-grid-v {
+  position: absolute;
+  inset: 0 var(--px-gutter);
+  background-image: linear-gradient(90deg, var(--px-grid-line) 0 1px, transparent 1px 100%);
+  background-size: calc(100% / 12) 100%;
+  border-inline: 1px solid var(--px-grid-line);
+}
+.px-grid-h {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(180deg, var(--px-grid-line-h) 0 1px, transparent 1px 100%);
+  background-size: 100% 96px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .px-aurora-field { animation: px-drift 28s ease-in-out infinite; }
+}
+@keyframes px-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(3%, -4%); }
+}

@@ -1,0 +1,226 @@
+{
+  "meta": {
+    "reviewed": true
+  },
+  "seo": {
+    "title": "pixsame — visual regression testing for Cypress and Playwright",
+    "description": "One manifest standard shared by both runners, a pinned renderer for byte-identical screenshots, forensic diff analysis and baseline approval in the pull request."
+  },
+  "nav": {
+    "label": "Main",
+    "menu": "Menu",
+    "home": "pixsame home",
+    "product": "Product",
+    "docs": "Docs",
+    "pricing": "Pricing",
+    "changelog": "Changelog",
+    "signIn": "Sign in",
+    "install": "Install the plugin"
+  },
+  "a11y": {
+    "skip": "Skip to content",
+    "language": "Language"
+  },
+  "theme": {
+    "toLight": "Switch to light mode",
+    "toDark": "Switch to dark mode"
+  },
+  "hero": {
+    "eyebrow": "Open source · MIT · Cypress + Playwright",
+    "title": "Visual regression that agrees with itself.",
+    "tagline": "same same. to the pixel.",
+    "body": "One manifest standard shared by both runners. A pinned renderer that makes local and CI screenshots byte-identical. Forensic diff analysis instead of a red blob, and baseline approval that happens in the pull request.",
+    "copy": "COPY",
+    "copied": "COPIED",
+    "docs": "Read the docs"
+  },
+  "detect": {
+    "demo": "Illustrative example of an AI detection pass",
+    "label": "AI detection pass · PR #2841",
+    "live": "Demo",
+    "analysing": "Analysing 2 regions",
+    "box1": "Layout shift · +4px y · Δ0.42%",
+    "box2": "Text reflow · price row",
+    "row": {
+      "geometry": "Geometry vector",
+      "reflow": "Text reflow",
+      "aa": "Antialias noise"
+    },
+    "verdictLabel": "Verdict · confidence 0.94",
+    "verdict": "One geometry edit, not 5,812 findings. Matches the intent of “increase nav density”.",
+    "approve": "Approve baseline",
+    "hold": "Hold"
+  },
+  "runs": {
+    "label": "Runs in"
+  },
+  "features": {
+    "title": "Features",
+    "available": "Available",
+    "manifest": {
+      "title": "Shared manifest",
+      "body": "One open manifest format for Cypress and Playwright, so reports, bots and review tools work with either runner."
+    },
+    "renderer": {
+      "title": "Pinned renderer",
+      "body": "Fonts, antialiasing and GPU differences are pinned, so local and CI screenshots come out byte-identical."
+    },
+    "forensic": {
+      "title": "Forensic diff",
+      "body": "Each change is classified as geometry, text reflow or antialiasing noise, instead of one red blob."
+    },
+    "approve": {
+      "title": "Approve from the PR",
+      "body": "Review the images and approve new baselines in the pull request, where the change is discussed."
+    }
+  },
+  "pricing": {
+    "title": "Free where it matters. Paid where it scales.",
+    "body": "The core is open source and free. Teams add cloud renders and hosted baseline history; Enterprise adds the AI auto-evaluator, SSO and an SLA.",
+    "soon": "Coming soon",
+    "compare": "Compare tiers",
+    "note": "Team and Enterprise are coming soon. Prices are indicative and may change before launch.",
+    "tiers": {
+      "core": {
+        "name": "Core",
+        "price": "$0",
+        "unit": "",
+        "desc": "Self-hosted, unlimited"
+      },
+      "team": {
+        "name": "Team",
+        "price": "$29",
+        "unit": "/dev/mo",
+        "desc": "Cloud renders, hosted history"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Talk",
+        "unit": "",
+        "desc": "AI auto-evaluator, SSO, SLA"
+      }
+    },
+    "table": {
+      "caption": "Capabilities by tier",
+      "capability": "Capability",
+      "rows": {
+        "renderer": {
+          "label": "Pinned renderer",
+          "core": "Local",
+          "team": "Local",
+          "enterprise": "Local"
+        },
+        "cloud": {
+          "label": "Cloud renders",
+          "core": "—",
+          "team": "5k / month",
+          "enterprise": "Unmetered"
+        },
+        "evaluator": {
+          "label": "AI auto-evaluator",
+          "core": "—",
+          "team": "—",
+          "enterprise": "Included"
+        },
+        "history": {
+          "label": "Hosted baseline history",
+          "core": "—",
+          "team": "90 days",
+          "enterprise": "Unlimited"
+        }
+      }
+    }
+  },
+  "product": {
+    "crumb": "Pinned renderer",
+    "title": "The same pixels, on every machine.",
+    "body": "A pinned renderer removes the font, antialiasing and GPU differences between a laptop and CI, so a screenshot taken anywhere is byte-identical and a diff always means a real change.",
+    "status": "Renderer: coming soon · Cypress plugin: available",
+    "start": "Install the plugin",
+    "stats": {
+      "manifest": {
+        "value": "v1",
+        "label": "Open manifest format"
+      },
+      "runners": {
+        "value": "2",
+        "label": "Runners: Cypress today, Playwright soon"
+      },
+      "license": {
+        "value": "MIT",
+        "label": "Open source license"
+      }
+    }
+  },
+  "soon": {
+    "status": "Coming soon",
+    "githubApp": {
+      "title": "A GitHub App for visual review.",
+      "body": "A check run and pull request comments with image diffs, and one click to approve changed baselines from the PR.",
+      "b1": "Image diffs in the PR conversation",
+      "b2": "Approve or reject baselines without leaving GitHub",
+      "b3": "Works with the shared manifest from any runner"
+    },
+    "playwright": {
+      "title": "Visual regression for Playwright.",
+      "body": "The same comparison engine and manifest as the Cypress plugin, for Playwright projects. Baselines stay in your repo.",
+      "b1": "Baselines kept in your repository",
+      "b2": "A diff is shown when screenshots change",
+      "b3": "Writes the shared run manifest"
+    },
+    "platform": {
+      "title": "The pixsame platform.",
+      "body": "Server-side rendering plus an online image and diff viewer and manager, so your whole team can review and manage baselines.",
+      "b1": "Server renderer for byte-identical screenshots",
+      "b2": "Online image, diff and baseline manager",
+      "b3": "AI auto-evaluator for routine changes (Enterprise)"
+    }
+  },
+  "waitlist": {
+    "title": "Get notified at launch",
+    "emailLabel": "Email address",
+    "placeholder": "you{'@'}company.com",
+    "submit": "Notify me",
+    "sending": "Sending…",
+    "success": "Thanks! We will email you once, when it is ready.",
+    "error": "Something went wrong. Please try again.",
+    "consent": "We use your email only to tell you about this launch. No newsletter."
+  },
+  "docs": {
+    "englishOnly": "Docs are available in English only."
+  },
+  "changelog": {
+    "body": "Release notes for the pixsame Cypress plugin.",
+    "source": "Cypress plugin releases"
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy",
+      "p1": "This website uses no cookies and no ad tracking. We use Cloudflare Web Analytics, which counts page views without cookies or fingerprinting.",
+      "p2": "If you join a waitlist we store your email address, the product you signed up for, your language and the time of your consent. We use it only to tell you when that product launches and we do not share it.",
+      "p3": "To have your email removed, contact us through github.com/pixsame."
+    },
+    "terms": {
+      "title": "Terms",
+      "p1": "The pixsame software is open source under the MIT license. The license text in the repository is the only terms that apply to it.",
+      "p2": "Hosted services (the GitHub App and the platform) are not available yet. Their terms of service will be published here before they launch.",
+      "p3": "This website is provided as is. Product pages describe plans that may change."
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "That page does not exist, or it moved.",
+    "home": "Back to the homepage"
+  },
+  "footer": {
+    "tagline": "Visual regression testing that agrees with itself.",
+    "product": "Product",
+    "resources": "Resources",
+    "legal": "Legal",
+    "githubApp": "GitHub App",
+    "playwright": "Playwright",
+    "platform": "Platform",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  }
+}

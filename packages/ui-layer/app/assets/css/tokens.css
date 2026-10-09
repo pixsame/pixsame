@@ -1,0 +1,104 @@
+/*
+ * pixsame design tokens. Source: "Pixsame UI Mockups" (dark = default look,
+ * light = artboard 3a). Components must only use these variables.
+ * `.dark` / `.light` classes are set on <html> by @nuxtjs/color-mode.
+ */
+:root {
+  color-scheme: light;
+
+  /* surfaces */
+  --px-ground: #f5f7f8;
+  --px-ink: #101418;
+  --px-muted: rgb(16 20 24 / 0.78);
+  --px-faint: rgb(16 20 24 / 0.7);
+  --px-glass: rgb(255 255 255 / 0.74);
+  --px-glass-strong: rgb(255 255 255 / 0.88);
+  --px-glass-border: rgb(16 20 24 / 0.13);
+  --px-hairline: rgb(16 20 24 / 0.12);
+  --px-chip: rgb(16 20 24 / 0.06);
+  --px-glass-shadow: 0 18px 44px -28px rgb(16 20 24 / 0.45);
+
+  /* accents: `-fill` for backgrounds/graphics, `-text` for readable text */
+  --px-coral-fill: #e0291f;
+  --px-coral-text: #c4231a;
+  --px-on-coral: #ffffff;
+  --px-blue-fill: #2e6bff;
+  --px-blue-text: #053db3;
+  --px-magenta-fill: #e8388f;
+  --px-magenta-text: #b01b62;
+  --px-amber-text: #8a5600;
+
+  /* aurora: rgb triplets + strengths; light mode is the dark aurora dimmed */
+  --px-aurora-coral: 224 41 31;
+  --px-aurora-blue: 46 107 255;
+  --px-aurora-magenta: 232 56 143;
+  --px-ribbon-scale: 0.93;
+  --px-pool-top: 0.46;
+  --px-pool-bottom: 0.35;
+  --px-sheen: 0.26;
+  --px-scrim: 245 247 248;
+  --px-scrim-a: 0.3;
+  --px-scrim-b: 0.42;
+  --px-grid-line: rgb(16 20 24 / 0.12);
+  --px-grid-line-h: rgb(16 20 24 / 0.05);
+  --px-wash:
+    radial-gradient(900px 640px at 2% -16%, rgb(224 41 31 / 0.16), transparent 62%),
+    radial-gradient(860px 700px at 99% -8%, rgb(5 61 179 / 0.14), transparent 62%),
+    radial-gradient(760px 560px at 54% 112%, rgb(232 56 143 / 0.1), transparent 62%);
+
+  /* shape */
+  --px-radius-sm: 2px;
+  --px-radius-md: 6px;
+  --px-radius-lg: 14px;
+  --px-radius-xl: 26px;
+  --px-blur: 22px;
+  --px-gutter: 56px;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --px-ground: #0f1316;
+  --px-ink: #eceff1;
+  --px-muted: rgb(236 239 241 / 0.76);
+  --px-faint: rgb(236 239 241 / 0.66);
+  --px-glass: rgb(255 255 255 / 0.06);
+  --px-glass-strong: rgb(255 255 255 / 0.1);
+  --px-glass-border: rgb(255 255 255 / 0.13);
+  --px-hairline: rgb(255 255 255 / 0.1);
+  --px-chip: rgb(255 255 255 / 0.1);
+  --px-glass-shadow: 0 18px 44px -28px rgb(0 0 0 / 0.7);
+
+  --px-coral-fill: #ff4a3d;
+  --px-coral-text: #ff6a5f;
+  --px-on-coral: #2a0703;
+  --px-blue-fill: #2e6bff;
+  --px-blue-text: #7fa6ff;
+  --px-magenta-fill: #e8388f;
+  --px-magenta-text: #ff7ec0;
+  --px-amber-text: #ffc46b;
+
+  --px-aurora-coral: 255 74 61;
+  --px-ribbon-scale: 1;
+  --px-pool-top: 0.85;
+  --px-pool-bottom: 0.6;
+  --px-sheen: 0.28;
+  --px-scrim: 8 9 12;
+  --px-scrim-a: 0.34;
+  --px-scrim-b: 0.46;
+  --px-grid-line: rgb(255 255 255 / 0.13);
+  --px-grid-line-h: rgb(255 255 255 / 0.05);
+  --px-wash:
+    radial-gradient(960px 680px at 2% -18%, rgb(255 74 61 / 0.72), transparent 60%),
+    radial-gradient(860px 720px at 99% -8%, rgb(46 107 255 / 0.9), transparent 62%),
+    radial-gradient(660px 520px at 52% -16%, rgb(5 61 179 / 0.44), transparent 62%),
+    radial-gradient(860px 620px at 10% 106%, rgb(255 74 61 / 0.34), transparent 60%),
+    radial-gradient(780px 560px at 90% 98%, rgb(46 107 255 / 0.34), transparent 62%),
+    radial-gradient(620px 480px at 64% 54%, rgb(232 56 143 / 0.13), transparent 60%);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --px-gutter: 20px;
+  }
+}
