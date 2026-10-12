@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/pixsame/pixsame/compare/@pixsame/cypress-plugin-visual-regression-diff-v1.0.0...@pixsame/cypress-plugin-visual-regression-diff-v1.1.0) (2026-10-12)
+
+
+### Features
+
+* **website:** static pixsame.com site (Nuxt 4, i18n, light/dark) ([#442](https://github.com/pixsame/pixsame/issues/442)) ([30a7c31](https://github.com/pixsame/pixsame/commit/30a7c315d579612a68fe7f54cb3f91c399884a62))
+
 ## 1.0.0 (2026-10-07)
 
 No changes. This release is identical to the last version (`4.3.0`) of `@frsource/cypress-plugin-visual-regression-diff`.
