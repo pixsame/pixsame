@@ -7,6 +7,6 @@ reviewed: false
 
 # GitHub App
 
-Die GitHub App erscheint in Kürze. Sie veröffentlicht den Diff als Check Run und als Kommentare im Pull Request und lässt Sie geänderte Baselines freigeben, ohne das Review zu verlassen.
+Die GitHub App ist noch nicht veröffentlicht. Sobald sie es ist, postet sie den Diff als Check Run und als Kommentare im Pull Request und lässt Sie eine geänderte Baseline direkt aus dem Review heraus freigeben, statt den Branch auszuchecken und die Suite noch einmal laufen zu lassen.
 
-Auf der [GitHub-App-Seite](/github-app) können Sie sich benachrichtigen lassen, sobald sie verfügbar ist.
+Sie möchten eine E-Mail, wenn sie erscheint? Hinterlassen Sie Ihre Adresse auf der [GitHub-App-Seite](/github-app).

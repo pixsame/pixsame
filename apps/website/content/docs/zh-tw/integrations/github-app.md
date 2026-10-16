@@ -7,6 +7,6 @@ reviewed: false
 
 # GitHub App
 
-GitHub App 即將推出。它會把差異以 check run 和 Pull Request 留言的形式發佈，並讓您不必離開 review 畫面就能核准變更後的基準影像。
+GitHub App 還沒發佈。等它推出後，會把差異以 check run 和 Pull Request 留言的形式發佈，讓你直接在 review 畫面裡核准變更後的基準影像，不必把分支拉下來再跑一次測試套件。
 
-請到 [GitHub App 頁面](/github-app)追蹤進度，上線時第一時間收到通知。
+想在它推出時收到一封信？到 [GitHub App 頁面](/github-app)留下你的電子郵件。

@@ -1,47 +1,14 @@
 ---
 title: Manifest 結構
-description: 每一個 pixsame 工具都會讀寫、且不依賴特定 runner 的執行 manifest。
+description: 不依賴特定 runner 的執行 manifest，pixsame 工具都會讀寫它。規格位於 visual-regression.dev。
 order: 2
 reviewed: false
 ---
 
 # Manifest 結構
 
-Manifest 是一份機器可讀的紀錄，記載測試執行期間每一次截圖比對。由視覺回歸工具負責寫入，再由 PR 留言機器人、審閱儀表板、核准工具等 CI 工具讀取。它是測試 runner 與所有下游工具之間的契約，並以開放標準 `@pixsame/manifest` 的形式發佈，內含 JSON Schema、型別、reader、writer 與 merger。
+Manifest 是一份 JSON 檔，記錄一次測試執行中做過的每一回截圖比對：比了什麼、對照哪個基準、結果如何。測試工具負責寫入。之後的所有東西，不管是 PR 留言機器人、審閱儀表板還是核准工具，都讀這個檔案就好，不必去理解 runner 本身。
 
-所有與測試 runner 相關的內容都放在 `runner` 底下，因此同一種檔案格式既能描述 Cypress 的執行，也能描述 Playwright 的執行。讀取端必須忽略它不認識的 key。
+這個格式刻意不做成 pixsame 專屬的東西。它是開放的，不綁定 pixsame，也不綁定任何 runner，放在 [visual-regression](https://github.com/visual-regression/visual-regression) 儲存庫裡的 [visual-regression.dev/manifest](https://visual-regression.dev/manifest)，連同欄位參考、其他 runner 的轉換器和一個檢視器。npm 上的 [`visual-regression-manifest`](https://www.npmjs.com/package/visual-regression-manifest) 則有 JSON Schema、型別，以及 reader、writer 與 merger。
 
-## 頂層欄位
-
-| 欄位                     | 說明                                                                                                                      |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| `version`                | 格式版本，目前為 `1`。只有在破壞性變更時才會遞增。                                                                        |
-| `createdAt`, `updatedAt` | ISO 8601 時間戳記。檔案會在每次比對後重新寫入，因此即使執行中途中止，內容仍然完整。                                       |
-| `projectRoot`            | 絕對路徑，manifest 中所有相對路徑都以此為基準解析。                                                                       |
-| `platform`               | 執行測試的機器：`os`、`arch`，以及選填的 `osVersion`。                                                                    |
-| `ci`                     | 從環境偵測到的 CI 中繼資料（`provider`、`repository`、`sha`、`branch`、`pullRequest`、`url` 等），不在 CI 中時為 `null`。 |
-| `options`                | 寫入端設定的全域工具選項，使用寫入端自己的詞彙。                                                                          |
-| `runner`                 | 執行測試的工具。只有 `name` 為必填。                                                                                      |
-| `upload`                 | 使用上傳服務時，影像上傳的位置。                                                                                          |
-| `entries`                | 每一次截圖比對對應一筆 entry。                                                                                            |
-
-## Entries
-
-每一筆 entry 都會記錄截圖的 `name`、所屬的 `test`、`status`、`comparison` 結果、`images` 中的路徑，以及基準影像是否已被寫入。
-
-| 狀態               | 意義                                           |
-| ------------------ | ---------------------------------------------- |
-| `passed`           | 在門檻範圍內。                                 |
-| `failed`           | 超過門檻。實際影像與差異影像會保留下來供審閱。 |
-| `missing-baseline` | 沒有基準影像，而且工具被設定為不要建立。       |
-| `created`          | 原本沒有基準影像，因此新影像成為基準影像。     |
-| `updated`          | 基準影像依要求被覆寫。                         |
-| `approved`         | 基準影像已從審閱介面中替換。                   |
-
-`failed` 與 `missing-baseline` 是需要人工處理的 entry。
-
-選填的 entry 欄位可提供更多脈絡：`platform`、`target`、`variant`（裝置、主題、語系等）、`viewport`、`renderer`，以及含有每張影像 sha256 的 `hashes`。
-
-## 來源依據
-
-完整的 JSON Schema 位於 [pixsame 儲存庫](https://github.com/pixsame/pixsame/tree/main/packages/visual-regression-manifest)。本頁僅為摘要。
+每一個 pixsame 工具都讀寫它。GitHub App 與託管平台將會接受任何 runner 產出的 manifest，不管是我們的還是別人的。

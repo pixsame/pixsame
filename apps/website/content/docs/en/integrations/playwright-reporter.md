@@ -6,6 +6,6 @@ order: 3
 
 # Playwright plugin
 
-The Playwright plugin is coming soon. It uses the same comparison engine and writes the same [manifest](/docs/reference/manifest) as the Cypress plugin, and keeps baselines in your repository.
+The Playwright plugin isn't out yet. It reuses the Cypress plugin's comparison engine, writes the same [manifest](/docs/reference/manifest), and keeps baselines in your repository next to the tests.
 
-Follow along on the [Playwright page](/playwright) to get notified at launch.
+Want an email when it ships? Leave your address on the [Playwright page](/playwright).

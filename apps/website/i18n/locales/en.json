@@ -4,7 +4,7 @@
   },
   "seo": {
     "title": "pixsame — visual regression testing for Cypress (Playwright soon)",
-    "description": "One manifest standard shared by both runners, a pinned renderer for byte-identical screenshots, forensic diff analysis and baseline approval in the pull request."
+    "description": "One open manifest format shared by both runners, a pinned renderer for byte-identical screenshots, forensic diff analysis and baseline approval in the pull request."
   },
   "nav": {
     "menu": "Menu",
@@ -30,11 +30,11 @@
     "eyebrow": "Open source · MIT · Cypress today, Playwright soon",
     "title": "Visual regression that agrees with itself.",
     "tagline": "same same. to the pixel.",
-    "body": "One manifest standard shared by both runners. A pinned renderer that makes local and CI screenshots byte-identical. Forensic diff analysis instead of a red blob, and baseline approval that happens in the pull request.",
+    "body": "Cypress and Playwright write the same open manifest, so one bot or report reads both. A pinned renderer, so the screenshot from your laptop and the one from CI are the same bytes. When something does change you're told what moved and by how much, not handed a red blob. Then you approve the new baseline from the pull request and get on with your day.",
     "copy": "COPY",
     "copied": "COPIED",
     "docs": "Read the docs",
-    "soonNote": "Available today: the Cypress plugin and the manifest. Coming soon: the pinned renderer, the forensic diff and approval in the pull request."
+    "soonNote": "What you can install today: the Cypress plugin and the manifest. The pinned renderer, the forensic diff and approval in the pull request are still being built."
   },
   "detect": {
     "demo": "Illustrative example of an AI detection pass",
@@ -61,39 +61,39 @@
     "available": "Available",
     "manifest": {
       "title": "Shared manifest",
-      "body": "One open manifest format for Cypress and Playwright, so reports, bots and review tools work with either runner."
+      "body": "Cypress and Playwright write the same JSON file. A PR bot or review tool built against one runner works with the other, no adapter in between."
     },
     "renderer": {
       "title": "Pinned renderer",
-      "body": "Fonts, antialiasing and GPU differences are pinned, so local and CI screenshots come out byte-identical."
+      "body": "Browser build, fonts and GPU path are locked, on your laptop and in CI. Both screenshots come out as the same bytes, so a diff means something changed, never \"fonts look a bit different on Linux\"."
     },
     "forensic": {
       "title": "Forensic diff",
-      "body": "Each change is classified as geometry, text reflow or antialiasing noise, instead of one red blob."
+      "body": "Instead of one red blob, each changed region gets a name: something moved, text reflowed, or it's antialiasing noise you can ignore."
     },
     "approve": {
       "title": "Approve",
-      "body": "Review changes in the pull request or in the pixsame platform, whichever your team prefers. Both flows approve the same baselines."
+      "body": "Approve from the pull request or from the pixsame platform. It's the same baseline either way, so nobody re-reviews the same change in the other place."
     }
   },
   "pricing": {
     "title": "Free where it matters. Paid where it scales.",
-    "body": "The core is open source and free. Teams add cloud renders, 30 days of hosted baseline history and support; Enterprise adds the AI auto-evaluator, SSO and an SLA.",
+    "body": "Everything that runs on your machine or in your CI is MIT licensed and costs nothing. That part won't change. Team is for when you'd rather we run the renders and keep 30 days of baseline history for you. Enterprise is Team plus the AI auto-evaluator, SSO and a contract with an SLA in it.",
     "soon": "Coming soon",
     "compare": "Compare tiers",
-    "note": "Team and Enterprise are coming soon. Prices are indicative and may change before launch.",
+    "note": "Team and Enterprise don't exist yet. The prices are our current best guess and may move before launch.",
     "tiers": {
       "core": {
         "name": "Core",
         "price": "$0",
         "unit": "",
-        "desc": "MIT licensed, possibility to self-host"
+        "desc": "MIT licensed, run it wherever you like"
       },
       "team": {
         "name": "Team",
         "price": "$29",
         "unit": "/dev/mo",
-        "desc": "Cloud renders, 30-day hosted history, support included, AI auto-evaluator on request"
+        "desc": "We run the renders, keep 30 days of history and answer your questions. AI auto-evaluator on request"
       },
       "enterprise": {
         "name": "Enterprise",
@@ -140,26 +140,26 @@
     },
     "oss": {
       "title": "Open source, free forever.",
-      "body": "Everything that runs on your machine and in your CI is MIT licensed. These are the packages you can use today or will be able to use soon, at no cost.",
+      "body": "If it runs on your machine or in your CI, it's MIT licensed. Here's what you can install now and what's still on the bench. None of it will ever cost you anything.",
       "available": "Available",
       "cypress": "Cypress plugin",
-      "cypressBody": "Visual regression for Cypress: matchImage, a diff viewer in the runner and baselines in your repo.",
+      "cypressBody": "matchImage for Cypress. Baselines live in your repo and the diff opens right in the runner when a test fails.",
       "manifest": "Run manifest",
-      "manifestBody": "The open, runner-agnostic JSON standard that describes every screenshot comparison, with a schema, types, a reader and a writer.",
+      "manifestBody": "A JSON file that records every screenshot comparison in a run. Not tied to pixsame or to any runner; the spec lives on visual-regression.dev.",
       "playwright": "Playwright plugin",
-      "playwrightBody": "The same comparison engine and manifest for Playwright projects.",
+      "playwrightBody": "Same comparison engine, same manifest, for Playwright.",
       "renderer": "Pinned renderer",
-      "rendererBody": "A locked browser, font set and GPU path, so local and CI screenshots are byte-identical.",
+      "rendererBody": "A locked browser build, font set and GPU path. Local and CI screenshots come out as the same bytes.",
       "githubApp": "GitHub App",
-      "githubAppBody": "Diffs as a check and approval of new baselines from the pull request.",
+      "githubAppBody": "Posts the diffs as a check run and lets you approve new baselines without leaving the PR.",
       "vitest": "Vitest runner",
-      "vitestBody": "The same comparison engine and manifest for Vitest projects."
+      "vitestBody": "Same comparison engine, same manifest, for Vitest browser mode."
     }
   },
   "product": {
     "crumb": "Pinned renderer",
     "title": "One ecosystem for visual regression.",
-    "body": "pixsame is a growing set of open tools that make visual regression testing trustworthy: a shared manifest, a pinned renderer, review in the pull request. The Cypress plugin is available today, and the rest is on its way.",
+    "body": "pixsame is a set of open tools built around one idea: a screenshot test should only fail when something actually changed. A shared manifest, a renderer that gives you the same bytes everywhere, review from the pull request. Right now the Cypress plugin is the only part you can install. The rest is in progress, and the map below says which is which.",
     "status": "Cypress plugin: available · everything else: coming soon",
     "start": "Install the plugin",
     "stats": {
@@ -179,46 +179,46 @@
     "cypressCta": "See the Cypress plugin",
     "soon": {
       "title": "Coming soon",
-      "body": "Every part of the ecosystem and how the parts fit together. Hover or focus a part to see what it does, and follow the link to its page.",
+      "body": "Every piece and how they plug into each other. Hover or focus one to see what it does, and follow the link for the full page.",
       "eyebrow": "The ecosystem"
     },
     "groups": {
       "runners": "Test runners",
-      "standard": "Shared standard",
+      "standard": "Shared format",
       "review": "Review"
     },
     "map": {
       "cypress": {
         "name": "Cypress plugin",
-        "body": "matchImage for Cypress, with a diff viewer in the runner and batch review. Available today."
+        "body": "matchImage for Cypress, a diff viewer in the runner, and batch review for when forty snapshots change at once. Out now."
       },
       "playwright": {
         "name": "Playwright plugin",
-        "body": "The same comparison engine and manifest, for Playwright projects. Baselines stay in your repo."
+        "body": "Same comparison engine and manifest, for Playwright. Baselines stay in your repo."
       },
       "manifest": {
         "name": "Run manifest",
-        "body": "An open, runner-agnostic JSON standard describing every screenshot comparison. Available today."
+        "body": "A JSON record of every screenshot comparison in a run. Open, and not tied to any runner. Out now."
       },
       "renderer": {
         "name": "Pinned renderer",
-        "body": "Fonts, antialiasing and GPU differences are pinned, so local and CI screenshots are byte-identical."
+        "body": "Locks the browser build, fonts and GPU path, so your laptop and CI produce the same bytes."
       },
       "platform": {
         "name": "Review platform",
-        "body": "Server-side rendering plus an online image, diff and baseline manager for the whole team."
+        "body": "We render on our servers and give the whole team one place to look at images, diffs and baselines."
       },
       "evaluator": {
         "name": "AI auto-evaluator",
-        "body": "Classifies each change and approves the routine ones, so people only look at what matters."
+        "body": "Sorts each change, approves the boring ones, and leaves you the handful worth a human look."
       },
       "githubApp": {
         "name": "GitHub App",
-        "body": "Diffs as a check in the pull request and one-click approval of new baselines."
+        "body": "Diffs show up as a check in the PR. New baselines get approved with one click, without leaving GitHub."
       },
       "vitest": {
         "name": "Vitest runner",
-        "body": "The same comparison engine and manifest, for Vitest browser mode. Baselines stay in your repo."
+        "body": "Same comparison engine and manifest, for Vitest browser mode. Baselines stay in your repo."
       }
     },
     "available": "Available"
@@ -227,30 +227,30 @@
     "status": "Coming soon",
     "githubApp": {
       "title": "A GitHub App for visual review.",
-      "body": "A check run and pull request comments with image diffs, and one click to approve changed baselines from the PR.",
-      "b1": "Image diffs in the PR conversation",
+      "body": "The app posts a check run and PR comments with the image diffs in them. If a change was intended, you approve the new baseline from the PR and that's the whole flow.",
+      "b1": "Image diffs right in the PR conversation",
       "b2": "Approve or reject baselines without leaving GitHub",
-      "b3": "Works with the shared manifest from any runner"
+      "b3": "Reads the shared manifest, so any runner that writes one works"
     },
     "playwright": {
       "title": "Visual regression for Playwright.",
-      "body": "The same comparison engine and manifest as the Cypress plugin, for Playwright projects. Baselines stay in your repo.",
+      "body": "The Cypress plugin's comparison engine and manifest, wired into Playwright. Baselines stay in your repo, next to the tests.",
       "b1": "Baselines kept in your repository",
-      "b2": "A diff is shown when screenshots change",
+      "b2": "Shows you a diff when a screenshot changes",
       "b3": "Writes the shared run manifest"
     },
     "platform": {
       "title": "The pixsame platform.",
-      "body": "Server-side rendering plus an online image and diff viewer and manager, so your whole team can review and manage baselines.",
+      "body": "We render the screenshots on our servers, so nobody's laptop is the source of truth anymore. The whole team gets one place to browse images, compare diffs and manage baselines.",
       "b1": "Server renderer for byte-identical screenshots",
       "b2": "Online image, diff and baseline manager",
       "b3": "AI auto-evaluator for routine changes (Enterprise, limited in Team)"
     },
     "vitest": {
       "title": "Visual regression for Vitest.",
-      "body": "The same comparison engine and manifest as the Cypress plugin, for Vitest browser mode. Baselines stay in your repo.",
+      "body": "The Cypress plugin's comparison engine and manifest, for Vitest browser mode. Baselines stay in your repo, next to the tests.",
       "b1": "Baselines kept in your repository",
-      "b2": "A diff is shown when screenshots change",
+      "b2": "Shows you a diff when a screenshot changes",
       "b3": "Writes the shared run manifest"
     }
   },
@@ -260,8 +260,8 @@
     "placeholder": "you{'@'}company.com",
     "submit": "Notify me",
     "sending": "Sending…",
-    "success": "Thanks! We will email you once, when it is ready.",
-    "error": "Something went wrong. Please try again.",
+    "success": "Thanks! You'll get one email from us when it's ready, and nothing before that.",
+    "error": "That didn't go through. Give it another try.",
     "consent": "I agree to receive an email when this product launches and updates about it afterwards, including related changes to the pixsame ecosystem. I can withdraw my consent at any time. See {privacy}.",
     "consentRequired": "Please tick the box to join the waitlist."
   },
@@ -273,8 +273,8 @@
     },
     "onThisPage": "On this page",
     "menu": "Docs menu",
-    "draft": "This page is a machine translation that has not been reviewed yet. The English version is authoritative.",
-    "fallback": "This page is not translated yet; you are reading the English version."
+    "draft": "This page is a machine translation nobody has reviewed yet. Where it and the English version disagree, the English one is right.",
+    "fallback": "This page isn't translated yet, so you're reading the English one."
   },
   "changelog": {
     "body": "Release notes for the pixsame Cypress plugin.",
@@ -305,7 +305,7 @@
   },
   "notFound": {
     "title": "Page not found",
-    "body": "That page does not exist, or it moved.",
+    "body": "Nothing here. The page either moved or never existed.",
     "home": "Back to the homepage"
   },
   "footer": {
@@ -330,7 +330,7 @@
     "crumb": "Cypress plugin",
     "eyebrow": "Open source · MIT · Cypress",
     "title": "Visual regression for Cypress.",
-    "body": "Take a screenshot in any test, compare it with the baseline and see the difference right in the Cypress runner. Works with e2e and component testing.",
+    "body": "Call matchImage in any test. It takes a screenshot, compares it with the baseline from last time, and when they differ you get the diff right in the Cypress runner. Works with e2e and component testing.",
     "docs": "Read the docs",
     "changelog": "Changelog",
     "npm": "npm",
@@ -344,17 +344,17 @@
   "contact": {
     "title": "Contact",
     "heading": "Get in touch",
-    "intro": "Questions, feedback or a project in mind? Write to us.",
+    "intro": "A question, a bug, a project you'd like a hand with? Write to us.",
     "name": "Name",
     "email": "Email address",
     "message": "Message",
     "submit": "Send message",
     "sending": "Sending…",
-    "success": "Thanks! We will get back to you soon.",
-    "error": "Something went wrong. Please try again or email us directly.",
+    "success": "Thanks! We read everything and will get back to you.",
+    "error": "That didn't send. Try again, or just email us directly.",
     "required": "Please fill in this field.",
     "invalidEmail": "Enter a valid email address.",
-    "unavailable": "The contact form is not available right now. Please email us directly.",
+    "unavailable": "The form is down right now. Email us directly instead.",
     "emailLabel": "Email",
     "company": "Company",
     "taxIds": "Tax IDs",
@@ -368,5 +368,9 @@
     "vat": "PL6783179514",
     "nip": "6783179514",
     "email": "pixsame{'@'}frsource.org"
+  },
+  "translate": {
+    "broken": "Spotted a bad translation? Fix it yourself, it's one file.",
+    "missing": "Not translated yet? Write it yourself and we'll merge it."
   }
 }

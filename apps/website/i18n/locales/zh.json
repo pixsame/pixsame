@@ -4,7 +4,7 @@
   },
   "seo": {
     "title": "pixsame — 面向 Cypress 的视觉回归测试（Playwright 即将推出）",
-    "description": "两个运行器共用一套清单标准，固定版本的渲染器让截图逐字节一致，取证式差异分析，并在 Pull Request 中完成基线审批。"
+    "description": "两个运行器共用一种开放的清单格式，固定版本的渲染器让截图逐字节一致，取证式差异分析，并在 Pull Request 中完成基线审批。"
   },
   "nav": {
     "menu": "菜单",
@@ -30,11 +30,11 @@
     "eyebrow": "开源 · MIT · Cypress 现已可用，Playwright 即将推出",
     "title": "始终与自身一致的视觉回归。",
     "tagline": "same same. 精确到像素。",
-    "body": "两个运行器共用一套清单标准。固定版本的渲染器让本地与 CI 截图逐字节一致。用取证式差异分析取代一团红色色块，基线审批直接在 Pull Request 中完成。",
+    "body": "两个运行器共用一种开放的清单格式。固定版本的渲染器让本地与 CI 截图逐字节一致。用取证式差异分析取代一团红色色块，基线审批直接在 Pull Request 中完成。",
     "copy": "复制",
     "copied": "已复制",
     "docs": "阅读文档",
-    "soonNote": "现已可用：Cypress 插件和清单标准。即将推出：固定渲染器、取证式差异分析和在 Pull Request 中审批。"
+    "soonNote": "现已可用：Cypress 插件和清单格式。即将推出：固定渲染器、取证式差异分析和在 Pull Request 中审批。"
   },
   "detect": {
     "demo": "AI 检测流程示意",
@@ -145,7 +145,7 @@
       "cypress": "Cypress 插件",
       "cypressBody": "面向 Cypress 的视觉回归：matchImage、运行器内的差异查看器，以及保存在你仓库中的基线。",
       "manifest": "运行清单",
-      "manifestBody": "开放的、与运行器无关的 JSON 标准，用于描述每一次截图比较，附带 schema、类型定义、读取器和写入器。",
+      "manifestBody": "开放的、与运行器无关的 JSON 格式，用于描述每一次截图比较，规范位于 visual-regression.dev。",
       "playwright": "Playwright plugin",
       "playwrightBody": "与之相同的比较引擎和清单，用于 Playwright 项目。",
       "renderer": "固定渲染器",
@@ -159,7 +159,7 @@
   "product": {
     "crumb": "固定渲染器",
     "title": "面向视觉回归的统一生态。",
-    "body": "pixsame 是一组不断壮大的开源工具，让视觉回归测试值得信赖：共享的标准、渲染器，以及在 Pull Request 中完成审查。Cypress 插件现已可用，其余部分正在路上。",
+    "body": "pixsame 是一组不断壮大的开源工具，让视觉回归测试值得信赖：共享的格式、渲染器，以及在 Pull Request 中完成审查。Cypress 插件现已可用，其余部分正在路上。",
     "status": "Cypress 插件：已提供 · 其余：即将推出",
     "start": "安装插件",
     "stats": {
@@ -184,7 +184,7 @@
     },
     "groups": {
       "runners": "测试运行器",
-      "standard": "共享标准",
+      "standard": "共享格式",
       "review": "Review"
     },
     "map": {
@@ -198,7 +198,7 @@
       },
       "manifest": {
         "name": "运行清单",
-        "body": "开放的、与运行器无关的 JSON 标准，描述每一次截图比较。现已可用。"
+        "body": "开放的、与运行器无关的 JSON 格式，描述每一次截图比较。现已可用。"
       },
       "renderer": {
         "name": "渲染器",
@@ -293,7 +293,7 @@
       "p2": "数据控制者：{name}，{address1}, {address2}（增值税号 {vat}）。联系方式：{email}。",
       "p3": "候补名单：加入后，我们会保存您的邮箱地址、所选产品、语言和同意时间。法律依据是您的同意（GDPR 第 6 条第 1 款 a 项）。我们仅用这些数据在该产品发布时以及之后的更新（包括与之相关的 pixsame 生态变化）时给您发送邮件，不用于其他用途，也不会共享用于营销。",
       "p4": "联系表单：我们仅使用您的姓名、邮箱和留言来回复您，不再需要时即删除。",
-      "p5": "数据处理方：表单运行于 Google Apps Script 和 Google Sheets（Google），垃圾信息由 Cloudflare Turnstile（Cloudflare）过滤。它们可能依据标准合同条款在欧盟以外处理数据。表单会将您填写的内容作为请求地址的一部分发送给 Google。",
+      "p5": "Processors: the forms are processed and stored by Cloudflare (a serverless function and a database located in the EU), which also filters spam with Cloudflare Turnstile. Your name, email address and message are encrypted before they are stored. Cloudflare may process data outside the EU under the EU-US Data Privacy Framework or standard contractual clauses.",
       "p6": "保存期限与您的权利：候补名单数据保存至您撤回同意或产品终止。您可随时撤回同意，并要求查阅、更正或删除数据，请发邮件至 {email}。您也可以向所在地的数据保护机构投诉。"
     },
     "terms": {
@@ -368,5 +368,9 @@
     "vat": "PL6783179514",
     "nip": "6783179514",
     "email": "pixsame{'@'}frsource.org"
+  },
+  "translate": {
+    "broken": "翻译有问题？帮助我们，自己动手修改。",
+    "missing": "还没有翻译？帮助我们，自己动手翻译。"
   }
 }

@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 3d5b703737db7cd3
+source: 2c9b39af16bde9aa
 ---
 
 ## Erste Schritte
@@ -102,7 +102,7 @@ cy.matchImage({
     blackout: ['.element-to-be-blackouted'],
   },
   // pixelmatch-Optionen, siehe: https://www.npmjs.com/package/pixelmatch#pixelmatchimg1-img2-output-width-height-options
-  // Standard: { includeAA: true }
+  // Standard: { includeAA: true } (2.0 wechselt zu pixelmatchs eigenem includeAA: false, siehe „Reducing cross-OS rendering noise“ unten)
   diffConfig: {
     threshold: 0.01,
   },
@@ -128,8 +128,14 @@ cy.matchImage({
   maxDiffThreshold: 0.1,
   // erzwingt den Skalierungsfaktor "1"
   // hilft gegen 2x skalierte Screenshots auf hochauflösenden Displays wie Mac Retina
+  // gilt für Chrome und Chromium (2.0 erweitert es auf Edge und Firefox, wodurch sich deren Baselines auf hochauflösenden Displays einmalig ändern)
   // Standard: true
   forceDeviceScaleFactor: false,
+  // wendet das Preset für deterministisches Rendering an, siehe „Reducing cross-OS rendering noise“ unten
+  // pro Aufruf steuert es nur das für den Screenshot in die Seite eingefügte CSS (Caret, Animationen, Scrollbars);
+  // die Browser-Schalter gelten prozessweit und folgen der globalen Option pluginVisualRegressionDeterministicRendering
+  // Standard: false (2.0 aktiviert es standardmäßig)
+  deterministicRendering: true,
   // Titel, der für den Dateinamen des Bildes verwendet wird
   // Standard: Cypress.currentTest.titlePath (der Titel Ihres Tests)
   title: `${Cypress.currentTest.titlePath.join(' ')} (${Cypress.browser.displayName})`,
@@ -253,6 +259,96 @@ export default defineConfig({
 
 Das Umschalten der Checkbox im Runner wird im Local Storage des Browsers gespeichert und hat bei späteren Läufen Vorrang vor dem konfigurierten Wert.
 
+## Reducing cross-OS rendering noise
+
+Browser überlassen die Text-Rasterisierung dem Betriebssystem (CoreText unter macOS, DirectWrite unter Windows, FreeType unter Linux). Dieselbe Seite wird daher auf dem Laptop eines Entwicklers und auf einem Linux-CI-Runner nie byte-genau identisch dargestellt. Das Plugin kann das nicht vollständig beseitigen, aber das `deterministicRendering`-Preset entfernt den Teil des Rauschens, der im Browser selbst entsteht.
+
+Das Preset ist unter 1.x optional und standardmäßig deaktiviert. 2.0 aktiviert es standardmäßig. Wenn Sie es jetzt einschalten, erhalten Sie also das Verhalten von 2.0 schon früher, ohne weitere Änderungen.
+
+### How to enable
+
+Die Browser-Schalter gelten prozessweit, daher ist das Preset eine globale Option. Aktivieren Sie es mit dem Schlüssel `pluginVisualRegressionDeterministicRendering`:
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true"
+# Cypress <15.10 (veraltet seit 15.10, entfernt in 16)
+npx cypress run --env "pluginVisualRegressionDeterministicRendering=true"
+```
+
+```ts
+// cypress.config.ts (Cypress 15.10+)
+import { defineConfig } from 'cypress';
+
+export default defineConfig({
+  expose: {
+    pluginVisualRegressionDeterministicRendering: true,
+  },
+});
+```
+
+```ts
+// cypress.config.ts (Cypress <15.10, in neueren Versionen veraltet)
+import { defineConfig } from 'cypress';
+
+export default defineConfig({
+  env: {
+    pluginVisualRegressionDeterministicRendering: true,
+  },
+});
+```
+
+Rechnen Sie beim ersten Lauf mit kleinen Abweichungen gegenüber Baselines, die ohne das Preset erstellt wurden, weil Text ohne Hinting gerastert wird. Führen Sie einmal einen Lauf mit `pluginVisualRegressionUpdateImages=true` (oder `'failures-only'`) aus oder bestätigen Sie die Änderungen im Batch Review Mode und committen Sie das Ergebnis.
+
+### What it does
+
+- **Chrome, Chromium, Edge** werden mit `--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu` gestartet (Text ohne OS-Hinting und Subpixel-Tricks, ohne Farbmanagement, Rasterisierung auf der CPU), im Headless-Modus zusätzlich mit `--hide-scrollbars`. Die Liste wird als `DETERMINISTIC_RENDERING_CHROMIUM_ARGS` aus `@frsource/cypress-plugin-visual-regression-diff/constants` exportiert.
+- **Firefox** erhält die Einstellung `gfx.webrender.software` (Rendering auf der CPU). Firefox hat keinen plattformübergreifenden Schalter für Font-Hinting, daher kann sich Text zwischen Betriebssystemen weiterhin unterscheiden.
+- **Jeder Browser**: Für die Dauer eines `matchImage`-Screenshots wird in die getestete Seite ein `<style>`-Element eingefügt, das den Text-Cursor (Caret) ausblendet, CSS-Transitions, Animationen und sanftes Scrollen deaktiviert und Scrollbars ausblendet. Es wird direkt nach dem Screenshot wieder entfernt.
+
+Was das Preset nicht löst: unterschiedliche Schriftdateien und Fallbacks pro Betriebssystem (der klassische Fall Arial vs. Liberation Sans), Emoji-Schriften, die Text-Rasterisierung in WebKit und Firefox sowie mit WebGL gezeichnete Bilder. Behalten Sie dafür pro Plattform eine eigene Baseline (siehe die Optionen `title` und `imagesPath` sowie den FAQ-Eintrag zu Browsernamen) oder erzeugen Sie Ihre Baselines in derselben Umgebung, die Ihre CI verwendet.
+
+**Electron** ignoriert von Plugins gesetzte Schalter. Mit Electron fügt das Preset daher nur das CSS ein und gibt beim Browserstart einen Hinweis aus. Übergeben Sie die Schalter stattdessen über die Umgebung:
+
+```bash
+ELECTRON_EXTRA_LAUNCH_ARGS="--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu --hide-scrollbars" npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true"
+```
+
+**WebGL**: `--disable-gpu` kann dazu führen, dass Seiten, die auf WebGL angewiesen sind, keinen Rendering-Kontext erhalten. Lassen Sie das Preset entweder aus oder fügen Sie in Ihrem eigenen `before:browser:launch`-Handler `--use-gl=angle --use-angle=swiftshader` hinzu (aktuelles Chrome verlangt zusätzlich `--enable-unsafe-swiftshader`) und kombinieren Sie ihn mit dem Handler des Plugins über [`cypress-on-fix`](https://github.com/bahmutov/cypress-on-fix).
+
+**Screenshot hooks**: Das Plugin übergibt bei jedem von ihm aufgenommenen Screenshot eigene `onBeforeScreenshot`- und `onAfterScreenshot`-Hooks. Über `screenshotConfig` übergebene Hooks werden weiterhin aufgerufen, global mit `Cypress.Screenshot.defaults()` gesetzte Hooks dagegen nicht.
+
+### Anti-aliased pixels: the `includeAA: false` companion
+
+Der Vergleich unter 1.x läuft noch mit `pixelmatch` und `includeAA: true`. Dadurch zählt jedes leicht abweichend gerenderte Kantenpixel mit Anti-Aliasing zum Diff-Verhältnis. Das ist die andere Hälfte des Cross-OS-Rauschens, und das Preset ändert daran nichts. Kombinieren Sie es mit `includeAA: false` (der Standardwert von pixelmatch selbst, Anti-Aliasing-Pixel werden erkannt und übersprungen) – 2.0 macht das zum Standard:
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true,pluginVisualRegressionDiffConfig={\"includeAA\":false}"
+# Cypress <15.10 (veraltet seit 15.10, entfernt in 16)
+npx cypress run --env "pluginVisualRegressionDeterministicRendering=true,pluginVisualRegressionDiffConfig={\"includeAA\":false}"
+```
+
+```ts
+cy.matchImage({ diffConfig: { includeAA: false } });
+```
+
+Damit werden die Diff-Verhältnisse kleiner, sodass manche Vergleiche, die zuvor fehlschlugen, bestehen. Baseline-Bilder sind davon nicht betroffen.
+
+### Per call
+
+Die Option `deterministicRendering` von `matchImage` steuert nur das eingefügte CSS; die Browser-Schalter bleiben so, wie es die globale Option vorgibt. So überspringen Sie das CSS für einen einzelnen Screenshot (z. B. wenn Sie den Endzustand einer Animation erfassen möchten):
+
+```ts
+cy.matchImage({ deterministicRendering: false });
+```
+
+Oder fügen Sie das CSS nur für einen Screenshot ein, ohne das Preset global zu aktivieren:
+
+```ts
+cy.matchImage({ deterministicRendering: true });
+```
+
 ## FAQ
 
 ### Warum entsprechen die Screenshots nicht dem `viewport` aus meiner Cypress-Konfiguration?
@@ -283,16 +379,18 @@ npx cypress run --expose "pluginVisualRegressionForceDeviceScaleFactor=true"
 npx cypress run --env "pluginVisualRegressionForceDeviceScaleFactor=true"
 ```
 
-Bei anhaltenden Unterschieden in der Viewport-Größe sollten Sie die Fenstergröße des Browsers explizit in `setupNodeEvents` festlegen:
+Bei anhaltenden Unterschieden in der Viewport-Größe sollten Sie die Fenstergröße des Browsers explizit in `setupNodeEvents` festlegen (kombinieren Sie das mit dem eigenen `before:browser:launch`-Handler des Plugins über [`cypress-on-fix`](https://github.com/bahmutov/cypress-on-fix)):
 
 ```ts
 on('before:browser:launch', (browser, launchOptions) => {
-  if (browser.name === 'chrome' && browser.isHeadless) {
+  if (browser.family === 'chromium' && browser.isHeadless) {
     launchOptions.args.push('--window-size=1280,720');
   }
   return launchOptions;
 });
 ```
+
+Wenn die beiden Läufe auf unterschiedlichen Betriebssystemen stattfinden (macOS-Laptop vs. Linux-CI-Runner), stammen die verbleibenden Unterschiede vom Font-Rendering. Siehe [Reducing cross-OS rendering noise](#reducing-cross-os-rendering-noise).
 
 ### Wie verwende ich dieses Plugin zusammen mit anderen Cypress-Plugins, die ebenfalls `setupNodeEvents`-Events registrieren?
 

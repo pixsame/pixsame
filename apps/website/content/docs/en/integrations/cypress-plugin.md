@@ -6,8 +6,8 @@ order: 1
 
 # Cypress plugin
 
-The Cypress plugin is available today. It works with e2e and component testing, with every bundler, and is fully typed.
+The Cypress plugin is out and in use. It works in e2e and component tests, doesn't care which bundler you're on, and ships its own types.
 
 - [Install](/docs/getting-started/install) it and take your first snapshot.
-- Look up every option on the [Configuration](/docs/reference/configuration) page.
-- Read the [product page](/products/cypress-plugin) for an overview, or the [changelog](/products/cypress-plugin/changelog) for what changed.
+- Every option, with its default, is on the [Configuration](/docs/reference/configuration) page.
+- The [product page](/products/cypress-plugin) has the overview and the demos. The [changelog](/products/cypress-plugin/changelog) has what changed and when.

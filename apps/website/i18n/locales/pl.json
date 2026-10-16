@@ -4,7 +4,7 @@
   },
   "seo": {
     "title": "pixsame — regresja wizualna dla Cypressa (wkrótce Playwright)",
-    "description": "Jeden standard manifestu dla każdego test frameworku, renderer produkujący zrzuty ekranu identyczne co do bajta, szczegółowa analiza różnic i akceptacja zmian w pull requeście."
+    "description": "Jeden otwarty format manifestu dla każdego test frameworku, renderer produkujący zrzuty ekranu identyczne co do bajta, szczegółowa analiza różnic i akceptacja zmian w pull requeście."
   },
   "nav": {
     "menu": "Menu",
@@ -30,7 +30,7 @@
     "eyebrow": "Open source · MIT · Cypress dziś, Playwright wkrótce",
     "title": "Regresja wizualna, w której wszystko się zgadza.",
     "tagline": "takie same. co do piksela.",
-    "body": "Jeden standard manifestu dla każdego test frameworku. Nasz renderer sprawia, że zrzuty lokalne i z CI są identyczne. Szczegółowa analiza różnic zamiast czerwonej plamy i akceptacja zmian w pull requeście.",
+    "body": "Jeden otwarty format manifestu dla każdego test frameworku. Nasz renderer sprawia, że zrzuty lokalne i z CI są identyczne. Szczegółowa analiza różnic zamiast czerwonej plamy i akceptacja zmian w pull requeście.",
     "copy": "KOPIUJ",
     "copied": "SKOPIOWANO",
     "docs": "Czytaj dokumentację",
@@ -144,8 +144,8 @@
       "available": "Dostępne",
       "cypress": "Wtyczka do Cypressa",
       "cypressBody": "Regresja wizualna dla Cypressa: matchImage, podgląd różnic w runnerze i wzorce w Twoim repozytorium.",
-      "manifest": "Standard manifestu przebiegu testów",
-      "manifestBody": "Otwarty, niezależny od runnera standard JSON opisujący każde porównanie zrzutów ekranu, ze schematem, typami, readerem i writerem.",
+      "manifest": "Format manifestu przebiegu testów",
+      "manifestBody": "Otwarty, niezależny od runnera format JSON opisujący każde porównanie zrzutów ekranu, specyfikacja na visual-regression.dev.",
       "playwright": "Playwright plugin",
       "playwrightBody": "Ten sam silnik porównań i manifest dla projektów Playwright.",
       "renderer": "Przypięty renderer",
@@ -159,7 +159,7 @@
   "product": {
     "crumb": "Przypięty renderer",
     "title": "Jeden ekosystem dla regresji wizualnej.",
-    "body": "pixsame to rosnący zestaw otwartych narzędzi, dzięki którym testy regresji wizualnej można traktować poważnie: wspólny standard, renderer i przegląd w pull requeście. Wtyczka do Cypressa jest dostępna już dziś, reszta jest w drodze.",
+    "body": "pixsame to rosnący zestaw otwartych narzędzi, dzięki którym testy regresji wizualnej można traktować poważnie: wspólny format, renderer i przegląd w pull requeście. Wtyczka do Cypressa jest dostępna już dziś, reszta jest w drodze.",
     "status": "Wtyczka do Cypressa: dostępna · wszystko inne: wkrótce",
     "start": "Zainstaluj wtyczkę",
     "stats": {
@@ -184,7 +184,7 @@
     },
     "groups": {
       "runners": "Runnery testów",
-      "standard": "Wspólny standard",
+      "standard": "Wspólny format",
       "review": "Review"
     },
     "map": {
@@ -197,8 +197,8 @@
         "body": "Ten sam silnik porównań i manifest, dla projektów Playwright. Wzorce zostają w Twoim repozytorium."
       },
       "manifest": {
-        "name": "Standard manifestu przebiegu testów",
-        "body": "Otwarty, niezależny od runnera standard JSON opisujący każde porównanie zrzutów ekranu. Dostępny już dziś."
+        "name": "Format manifestu przebiegu testów",
+        "body": "Otwarty, niezależny od runnera format JSON opisujący każde porównanie zrzutów ekranu. Dostępny już dziś."
       },
       "renderer": {
         "name": "Renderer",
@@ -237,7 +237,7 @@
       "body": "Ten sam silnik porównań i manifest co we wtyczce Cypress, dla projektów Playwright. Wzorce zostają w Twoim repozytorium.",
       "b1": "Wzorce przechowywane w repozytorium",
       "b2": "Różnice pokazywane, gdy zrzuty się zmienią",
-      "b3": "Zapisuje manifest przebiegu testów używając wspólnego standardu"
+      "b3": "Zapisuje manifest przebiegu testów używając wspólnego formatu"
     },
     "platform": {
       "title": "Platforma pixsame.",
@@ -251,7 +251,7 @@
       "body": "Ten sam silnik porównań i manifest co we wtyczce Cypress, dla projektów Vitest. Wzorce zostają w Twoim repozytorium.",
       "b1": "Wzorce przechowywane w repozytorium",
       "b2": "Różnice pokazywane, gdy zrzuty się zmienią",
-      "b3": "Zapisuje manifest przebiegu testów używając wspólnego standardu"
+      "b3": "Zapisuje manifest przebiegu testów używając wspólnego formatu"
     }
   },
   "waitlist": {
@@ -293,7 +293,7 @@
       "p2": "Administrator danych: {name}, {address1}, {address2} (NIP {vat}). Kontakt: {email}.",
       "p3": "Lista oczekujących: po zapisie przechowujemy Twój adres e-mail, produkt, język i czas zgody. Podstawą prawną jest Twoja zgoda (art. 6 ust. 1 lit. a RODO). Używamy tych danych wyłącznie, by napisać do Ciebie o starcie produktu i jego późniejszych aktualizacjach, w tym o powiązanych zmianach w ekosystemie pixsame. Nie wykorzystujemy ich do niczego innego i nie udostępniamy do celów marketingowych.",
       "p4": "Formularz kontaktowy: imię, adres e-mail i wiadomość wykorzystujemy wyłącznie, by Ci odpowiedzieć, i usuwamy, gdy nie są już do tego potrzebne.",
-      "p5": "Podmioty przetwarzające: formularze działają na Google Apps Script i Google Sheets (Google), a spam filtruje Cloudflare Turnstile (Cloudflare). Mogą przetwarzać dane poza UE na podstawie standardowych klauzul umownych. Formularze przesyłają wpisane dane do Google jako część adresu żądania.",
+      "p5": "Processors: the forms are processed and stored by Cloudflare (a serverless function and a database located in the EU), which also filters spam with Cloudflare Turnstile. Your name, email address and message are encrypted before they are stored. Cloudflare may process data outside the EU under the EU-US Data Privacy Framework or standard contractual clauses.",
       "p6": "Przechowywanie i Twoje prawa: dane z listy przechowujemy do wycofania zgody lub zakończenia produktu. W każdej chwili możesz wycofać zgodę oraz żądać dostępu, sprostowania lub usunięcia danych, pisząc na {email}. Możesz też złożyć skargę do UODO."
     },
     "terms": {
@@ -368,5 +368,9 @@
     "vat": "PL6783179514",
     "nip": "6783179514",
     "email": "pixsame{'@'}frsource.org"
+  },
+  "translate": {
+    "broken": "Tłumaczenie kuleje? Pomóż nam i popraw je samodzielnie.",
+    "missing": "Brak tłumaczenia? Pomóż nam i napisz je samodzielnie."
   }
 }

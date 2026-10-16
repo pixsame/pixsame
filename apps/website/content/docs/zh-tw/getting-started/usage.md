@@ -7,7 +7,7 @@ reviewed: false
 
 # 使用方式
 
-這個外掛會為每一個 Cypress 測試加入一個指令：`matchImage`。
+這個外掛只加了一個指令：`matchImage`。在測試這一側，API 就這麼多。
 
 ## 比對某個元素或整個頁面
 
@@ -20,7 +20,7 @@ cy.matchImage();
 
 ## 設定一次比對
 
-每次呼叫 `matchImage` 時都可以傳入選項。所有選項都在[設定](/docs/reference/configuration)頁面中說明：
+選項是每次呼叫時傳進去的。完整清單連同預設值都在[設定](/docs/reference/configuration)頁面。下面這幾個是大家最常先用到的：
 
 ```ts
 cy.matchImage({
@@ -37,14 +37,16 @@ cy.matchImage({
 
 ## 清理未使用的影像
 
-移除已經沒有任何測試在使用的基準影像：
+測試被改名或刪掉之後，基準影像會越積越多。這樣跑一次，就會移除所有沒有任何測試碰過的外掛影像：
 
 ```bash
 npx cypress run --expose "pluginVisualRegressionCleanupUnusedImages=true"
 ```
 
-若 Cypress 版本低於 15.10，請改用 `--env` 傳入同一個 key。
+做這件事時請跑完整個測試套件。如果你只篩出幾個 spec 來跑，被略過的那些 spec 的基準也會被當成未使用。
+
+Cypress 版本低於 15.10 的話還沒有 `--expose`，請改用 `--env` 傳入同一個 key。
 
 ## 更多資訊
 
-所有選項都在[設定](/docs/reference/configuration)頁面。歡迎到 [GitHub discussions](https://github.com/pixsame/pixsame/discussions) 提出問題與想法。
+其他所有東西都在[設定](/docs/reference/configuration)頁面。哪裡看不懂，或是有什麼想法，[GitHub discussions](https://github.com/pixsame/pixsame/discussions) 是我們討論這些事的地方。

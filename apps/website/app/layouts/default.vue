@@ -14,6 +14,7 @@ const { t } = useI18n();
     <SiteHeader />
     <main id="main" class="relative z-10">
       <slot />
+      <div class="px-container pb-12"><TranslationEditLink /></div>
     </main>
     <SiteFooter />
   </div>

@@ -4,7 +4,7 @@
   },
   "seo": {
     "title": "pixsame — 為 Cypress 打造的視覺迴歸測試（Playwright 即將推出）",
-    "description": "兩個執行器共用一套清單標準，固定版本的渲染器讓截圖逐位元組一致，鑑識式差異分析，並在 Pull Request 中完成基準審批。"
+    "description": "兩個執行器共用一種開放的清單格式，固定版本的渲染器讓截圖逐位元組一致，鑑識式差異分析，並在 Pull Request 中完成基準審批。"
   },
   "nav": {
     "menu": "選單",
@@ -30,11 +30,11 @@
     "eyebrow": "開源 · MIT · Cypress 現已可用，Playwright 即將推出",
     "title": "始終與自身一致的視覺迴歸。",
     "tagline": "same same. 精確到像素。",
-    "body": "兩個執行器共用一套清單標準。固定版本的渲染器讓本機與 CI 截圖逐位元組一致。以鑑識式差異分析取代一團紅色色塊，基準審批直接在 Pull Request 中完成。",
+    "body": "兩個執行器共用一種開放的清單格式。固定版本的渲染器讓本機與 CI 截圖逐位元組一致。以鑑識式差異分析取代一團紅色色塊，基準審批直接在 Pull Request 中完成。",
     "copy": "複製",
     "copied": "已複製",
     "docs": "閱讀文件",
-    "soonNote": "現已可用：Cypress 外掛與清單標準。即將推出：固定渲染器、鑑識式差異分析與在 Pull Request 中核准。"
+    "soonNote": "現已可用：Cypress 外掛與清單格式。即將推出：固定渲染器、鑑識式差異分析與在 Pull Request 中核准。"
   },
   "detect": {
     "demo": "AI 偵測流程示意",
@@ -145,7 +145,7 @@
       "cypress": "Cypress 外掛",
       "cypressBody": "為 Cypress 打造的視覺迴歸測試：matchImage、執行器內的差異檢視器，以及存放在你儲存庫中的基準。",
       "manifest": "執行清單",
-      "manifestBody": "開放且與執行器無關的 JSON 標準，描述每一次截圖比對，附有 schema、型別定義、讀取器與寫入器。",
+      "manifestBody": "開放且與執行器無關的 JSON 格式，描述每一次截圖比對，規格位於 visual-regression.dev。",
       "playwright": "Playwright plugin",
       "playwrightBody": "同一套比對引擎與清單，適用於 Playwright 專案。",
       "renderer": "固定渲染器",
@@ -159,7 +159,7 @@
   "product": {
     "crumb": "固定渲染器",
     "title": "視覺迴歸測試的一站式生態系。",
-    "body": "pixsame 是一組持續成長的開放工具，讓視覺迴歸測試值得信賴：共用的標準、渲染器，以及在 Pull Request 中完成審查。Cypress 外掛現已可用，其餘部分即將推出。",
+    "body": "pixsame 是一組持續成長的開放工具，讓視覺迴歸測試值得信賴：共用的格式、渲染器，以及在 Pull Request 中完成審查。Cypress 外掛現已可用，其餘部分即將推出。",
     "status": "Cypress 外掛：已提供 · 其他：即將推出",
     "start": "安裝外掛",
     "stats": {
@@ -184,7 +184,7 @@
     },
     "groups": {
       "runners": "測試執行器",
-      "standard": "共用標準",
+      "standard": "共用格式",
       "review": "Review"
     },
     "map": {
@@ -198,7 +198,7 @@
       },
       "manifest": {
         "name": "執行清單",
-        "body": "開放且與執行器無關的 JSON 標準，描述每一次截圖比對。現已可用。"
+        "body": "開放且與執行器無關的 JSON 格式，描述每一次截圖比對。現已可用。"
       },
       "renderer": {
         "name": "渲染器",
@@ -293,7 +293,7 @@
       "p2": "資料控制者：{name}，{address1}, {address2}（加值稅號 {vat}）。聯絡方式：{email}。",
       "p3": "候補名單：加入後，我們會儲存您的電子郵件、所選產品、語言與同意時間。法律依據為您的同意（GDPR 第 6 條第 1 項 a 款）。我們僅用這些資料在該產品推出時以及之後的更新（包括與之相關的 pixsame 生態變化）時寄信給您，不作其他用途，也不會分享作為行銷。",
       "p4": "聯絡表單：我們僅使用您的姓名、電子郵件與訊息來回覆您，不再需要時即刪除。",
-      "p5": "資料處理者：表單運行於 Google Apps Script 與 Google Sheets（Google），垃圾訊息由 Cloudflare Turnstile（Cloudflare）過濾。它們可能依標準契約條款在歐盟以外處理資料。表單會將您填寫的內容作為請求網址的一部分傳送給 Google。",
+      "p5": "Processors: the forms are processed and stored by Cloudflare (a serverless function and a database located in the EU), which also filters spam with Cloudflare Turnstile. Your name, email address and message are encrypted before they are stored. Cloudflare may process data outside the EU under the EU-US Data Privacy Framework or standard contractual clauses.",
       "p6": "保存期限與您的權利：候補名單資料保存至您撤回同意或產品終止。您可隨時撤回同意，並要求查閱、更正或刪除資料，請寄信至 {email}。您也可以向所在地的資料保護機關投訴。"
     },
     "terms": {
@@ -368,5 +368,9 @@
     "vat": "PL6783179514",
     "nip": "6783179514",
     "email": "pixsame{'@'}frsource.org"
+  },
+  "translate": {
+    "broken": "翻譯有問題？幫助我們，自己動手修改。",
+    "missing": "還沒有翻譯？幫助我們，自己動手翻譯。"
   }
 }

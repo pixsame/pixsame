@@ -7,6 +7,6 @@ reviewed: false
 
 # GitHub App
 
-GitHub App pojawi się wkrótce. Publikuje diff jako check run i jako komentarze w pull requeście, a zmienione baseline'y możesz zatwierdzić bez wychodzenia z review.
+GitHub App nie jest jeszcze wydana. Gdy już będzie, opublikuje diff jako check run i jako komentarze w pull requeście, a zmieniony baseline zatwierdzisz prosto z review, zamiast ściągać branch i odpalać zestaw testów jeszcze raz.
 
-Śledź [stronę GitHub App](/github-app), żeby dostać powiadomienie o premierze.
+Chcesz maila, gdy wyjdzie? Zostaw adres na [stronie GitHub App](/github-app).

@@ -4,6 +4,8 @@
 
 No changes. This release is identical to the last version (`4.3.0`) of `@frsource/cypress-plugin-visual-regression-diff`.
 
+The `4.x` entries below are the release history of the former `@frsource/cypress-plugin-visual-regression-diff` package, kept for reference. `@pixsame/cypress-plugin-visual-regression-diff` continues from `4.3.0` as `1.0.0`.
+
 ## [4.3.0](https://github.com/pixsame/pixsame/compare/@frsource/cypress-plugin-visual-regression-diff-v4.2.1...@frsource/cypress-plugin-visual-regression-diff-v4.3.0) (2026-10-07)
 
 

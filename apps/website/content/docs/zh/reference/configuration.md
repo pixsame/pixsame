@@ -7,11 +7,11 @@ reviewed: false
 
 # 配置
 
-所有选项既可以在每次调用 `matchImage` 时传入，也可以为整个运行全局设置。全局键名与按调用选项同名，只是加上了 `pluginVisualRegression` 前缀。
+每个选项都有两个用法：按每次调用，作为参数传给 `matchImage`；或者为整个运行设置一次。全局键名就是按调用的名字前面加上 `pluginVisualRegression`，所以 `updateImages` 变成 `pluginVisualRegressionUpdateImages`。
 
 ## 选项
 
-- 以参数形式把配置传给 `matchImage` 命令：
+- 按每次调用，作为参数传给 `matchImage`。注释里写着默认值：
 
 ```ts
 cy.matchImage({
@@ -59,7 +59,7 @@ cy.matchImage({
 });
 ```
 
-- 通过[全局 expose 配置](https://on.cypress.io/expose)（Cypress 15.10+）。配置键名与上面配置对象中的键相同，只是加上了 `pluginVisualRegression` 前缀，例如：
+- 为整个运行，通过 Cypress 的 [expose 配置](https://on.cypress.io/expose)（Cypress 15.10+）。键名与上面相同，加上 `pluginVisualRegression` 前缀：
 
 ```bash
 # Cypress 15.10+
@@ -68,7 +68,7 @@ npx cypress run --expose "pluginVisualRegressionUpdateImages=true,pluginVisualRe
 npx cypress run --env "pluginVisualRegressionUpdateImages=true,pluginVisualRegressionDiffConfig={\"threshold\":0.01}"
 ```
 
-多个选项请放在同一个参数中，用逗号分隔。如果重复传入 `--expose`（或 `--env`），Cypress 只会保留最后一次出现的值。
+多个选项放在同一个参数里，用逗号分隔。不要重复传 `--expose`（或 `--env`）：Cypress 只保留最后一个，其余的会被悄无声息地丢掉。
 
 ```ts
 // cypress.config.ts（Cypress 15.10+）
@@ -94,12 +94,11 @@ export default defineConfig({
 });
 ```
 
-设置 expose 变量的更多方式[请参阅这里](https://on.cypress.io/expose)。
+设置 expose 变量的其他方式，Cypress 在[这里](https://on.cypress.io/expose)有文档。
 
 ## 清理未使用的图片
 
-把视觉回归插件生成的、已不再被任何测试使用的截图删掉是个好习惯。
-通过 expose 变量开启此功能，即可释放存储空间 🚀：
+重命名或删除一个测试，它的基线会留在原地。带上这个键运行一次，插件会删掉这次运行中没被任何测试碰过的所有插件图片。这么做时请跑完整个套件，否则被跳过的 spec 的基线也会一起没掉：
 
 ```bash
 # Cypress 15.10+
@@ -110,7 +109,7 @@ npx cypress run --env "pluginVisualRegressionCleanupUnusedImages=true"
 
 ## 批量审查模式
 
-批量审查模式会运行整个测试套件，而不会在遇到第一个视觉差异时就停下来。失败的快照会被收集起来；在有界面（headed）模式下，运行结束后可以在一个轮播视图中逐个审查，对每条基线选择替换或跳过。这是一个全局选项，通过 `pluginVisualRegressionBatchReviewMode` 键开启（另有 `pluginVisualRegressionBatchReviewModeShowPassingImages` 可同时列出通过的图片）：
+正常情况下，快照一超过阈值就会当场在测试里抛错。批量审查模式则让套件一直跑到结束，收集所有失败的快照，最后只抛一次错并给出总数。在有界面（headed）模式下，运行结束后会出现一个轮播视图，您逐个过一遍失败项，对每条基线选择替换或跳过。它是全局选项，所以不能传给 `matchImage`。用 `pluginVisualRegressionBatchReviewMode` 开启；如果您希望通过的图片也出现在轮播里，再加上 `pluginVisualRegressionBatchReviewModeShowPassingImages`：
 
 ```bash
 # Cypress 15.10+
@@ -119,4 +118,4 @@ npx cypress open --expose "pluginVisualRegressionBatchReviewMode=true"
 npx cypress open --env "pluginVisualRegressionBatchReviewMode=true"
 ```
 
-审查界面的使用方式及演示，请参阅 [Cypress 插件页面的批量审查模式一节](/products/cypress-plugin#batch-review-mode)。
+Cypress 插件页面的[批量审查模式一节](/products/cypress-plugin#batch-review-mode)有审查界面的演示。

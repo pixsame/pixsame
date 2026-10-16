@@ -7,11 +7,11 @@ reviewed: false
 
 # 設定
 
-每個選項都可以在呼叫 `matchImage` 時個別傳入，或是為整個執行過程全域設定。全域 key 的名稱與逐次呼叫的選項相同，只是加上 `pluginVisualRegression` 前綴。
+每個選項都有兩個地方可以放：逐次呼叫時當作 `matchImage` 的引數傳入，或是為整個執行過程設定一次。全域 key 就是逐次呼叫的名稱前面加上 `pluginVisualRegression`，所以 `updateImages` 會變成 `pluginVisualRegressionUpdateImages`。
 
 ## 選項
 
-- 以引數的形式把設定傳給 `matchImage` 指令：
+- 逐次呼叫，當作 `matchImage` 的引數。預設值寫在註解裡：
 
 ```ts
 cy.matchImage({
@@ -59,7 +59,7 @@ cy.matchImage({
 });
 ```
 
-- 透過[全域 expose 設定](https://on.cypress.io/expose)（Cypress 15.10+）。設定 key 的名稱與上方設定物件的 key 相同，只是加上 `pluginVisualRegression` 前綴，例如：
+- 整個執行過程，透過 Cypress 的 [expose 設定](https://on.cypress.io/expose)（Cypress 15.10+）。key 與上方相同，只是加上 `pluginVisualRegression` 前綴：
 
 ```bash
 # Cypress 15.10+
@@ -68,7 +68,7 @@ npx cypress run --expose "pluginVisualRegressionUpdateImages=true,pluginVisualRe
 npx cypress run --env "pluginVisualRegressionUpdateImages=true,pluginVisualRegressionDiffConfig={\"threshold\":0.01}"
 ```
 
-多個選項請放在同一個旗標中，以逗號分隔。若重複傳入 `--expose`（或 `--env`），Cypress 只會保留最後一次出現的值。
+多個選項放在同一個旗標裡，以逗號分隔。別重複傳 `--expose`（或 `--env`）：Cypress 只會留下最後一個，其餘的會一聲不響地丟掉。
 
 ```ts
 // cypress.config.ts（Cypress 15.10+）
@@ -94,12 +94,11 @@ export default defineConfig({
 });
 ```
 
-更多設定 expose 變數的方式，[請參考這裡](https://on.cypress.io/expose)。
+設定 expose 變數的其他方式，Cypress 的文件[寫在這裡](https://on.cypress.io/expose)。
 
 ## 清理未使用的影像
 
-把視覺回歸外掛產生、但已經沒有任何測試在使用的截圖移除，會很有幫助。
-透過 expose 變數啟用這項功能，享受釋放出來的儲存空間 🚀：
+測試改名或刪掉之後，它的基準影像會留在原地。帶著這個 key 跑一次，外掛就會刪掉那次執行中沒有任何測試碰過的所有外掛影像。做這件事時請跑完整個測試套件，不然被略過的 spec 的基準也會一起被刪：
 
 ```bash
 # Cypress 15.10+
@@ -110,7 +109,7 @@ npx cypress run --env "pluginVisualRegressionCleanupUnusedImages=true"
 
 ## 批次審閱模式
 
-批次審閱模式（Batch Review Mode）會跑完整個測試套件，而不會在第一個視覺差異處停下。失敗的快照會被收集起來，在 headed 模式下於執行結束後以輪播方式逐一審閱，您可以替換或略過每一張基準影像。這是一個全域選項，透過 `pluginVisualRegressionBatchReviewMode` key 啟用（加上 `pluginVisualRegressionBatchReviewModeShowPassingImages` 可以一併列出通過的影像）：
+平常，快照一超過門檻就會在那個測試裡當場拋出錯誤。批次審閱模式（Batch review mode）改讓測試套件跑到最後，把所有失敗的快照收集起來，再帶著總數拋出一次。在 headed 模式下，執行結束後你會看到一個輪播，逐一檢視失敗的快照，替換或略過每一張基準影像。這是全域選項，所以不能傳給 `matchImage`。用 `pluginVisualRegressionBatchReviewMode` 開啟，想讓通過的影像也出現在輪播裡，再加上 `pluginVisualRegressionBatchReviewModeShowPassingImages`：
 
 ```bash
 # Cypress 15.10+
@@ -119,4 +118,4 @@ npx cypress open --expose "pluginVisualRegressionBatchReviewMode=true"
 npx cypress open --env "pluginVisualRegressionBatchReviewMode=true"
 ```
 
-審閱介面的運作方式與示範，請參閱 [Cypress 外掛頁面的批次審閱模式一節](/products/cypress-plugin#batch-review-mode)。
+Cypress 外掛頁面的[批次審閱模式一節](/products/cypress-plugin#batch-review-mode)有審閱介面的示範。

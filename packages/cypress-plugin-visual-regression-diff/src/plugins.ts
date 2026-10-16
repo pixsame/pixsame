@@ -1,37 +1,22 @@
 import { initTaskHook } from './task.hook';
 import { initAfterScreenshotHook } from './afterScreenshot.hook';
-import { getPluginConfig } from './version.utils';
-
-/* c8 ignore start */
-const initForceDeviceScaleFactor = (on: Cypress.PluginEvents) => {
-  // based on https://github.com/cypress-io/cypress/issues/2102#issuecomment-521299946
-  on('before:browser:launch', (browser, launchOptions) => {
-    if (browser.name === 'chrome' || browser.name === 'chromium') {
-      launchOptions.args.push('--force-device-scale-factor=1');
-      launchOptions.args.push('--high-dpi-support=1');
-      return launchOptions;
-    } else if (browser.name === 'electron' && browser.isHeaded) {
-      // eslint-disable-next-line no-console
-      console.log(
-        "There isn't currently a way of setting the device scale factor in Cypress when running headed electron so we disable the image regression commands.",
-      );
-    }
-  });
-};
-/* c8 ignore stop */
+import {
+  getBrowserLaunchPresets,
+  initBrowserLaunchHook,
+} from './browserLaunch.utils';
 
 export const initPlugin = (
   on: Cypress.PluginEvents,
   config: Cypress.PluginConfigOptions,
 ) => {
-  /* c8 ignore start */
-  if (
-    getPluginConfig(config, 'pluginVisualRegressionForceDeviceScaleFactor') !==
-    false
-  ) {
-    initForceDeviceScaleFactor(on);
+  // one handler serves both presets (forceDeviceScaleFactor, deterministicRendering):
+  // Cypress keeps a single listener per event, so they have to share it.
+  // With both presets off nothing is registered, so a handler the user registered
+  // before initPlugin stays in place (as it did on 1.x with forceDeviceScaleFactor: false)
+  const presets = getBrowserLaunchPresets(config);
+  if (presets.forceDeviceScaleFactor || presets.deterministicRendering) {
+    on('before:browser:launch', initBrowserLaunchHook(config));
   }
-  /* c8 ignore stop */
   on('task', initTaskHook(config));
   on('after:screenshot', initAfterScreenshotHook(config));
 };

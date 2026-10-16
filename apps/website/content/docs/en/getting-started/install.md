@@ -6,7 +6,7 @@ order: 1
 
 # Install
 
-The Cypress plugin is available today. The Playwright plugin and the GitHub App are coming soon.
+This page covers the Cypress plugin, which is the part you can install right now. The Playwright plugin and the GitHub App are still being built.
 
 ## Add the package
 
@@ -29,7 +29,7 @@ Import the commands in your support file (`cypress/support/e2e.ts` by default):
 import '@pixsame/cypress-plugin-visual-regression-diff';
 ```
 
-Then register the plugin in `cypress.config.ts`. Call `initPlugin` in each section you use, `e2e` or `component`:
+Then register the plugin in `cypress.config.ts`. If you use both `e2e` and `component`, call `initPlugin` in each of them. It doesn't carry over from one to the other.
 
 ```ts
 import { defineConfig } from 'cypress';
@@ -53,8 +53,8 @@ cy.get('.an-element-of-your-choice').matchImage();
 cy.matchImage();
 ```
 
-`matchImage` takes a screenshot and compares it with the one from the previous run. When something regresses the test fails and a **See comparison** button opens the diff right in the Cypress runner.
+The first run has nothing to compare against, so `matchImage` just saves the screenshot as the baseline. From then on it compares each new screenshot with that file. When they differ by more than the threshold the test fails, and a **See comparison** button in the Cypress runner opens the diff.
 
 ## Coming from `@frsource`?
 
-The package was renamed, and moving over is a one-line job. See [Migrate from @frsource](/docs/getting-started/migrate-from-frsource).
+The package moved from `@frsource` to `@pixsame`. It's a rename, nothing in the code changed. See [Migrate from @frsource](/docs/getting-started/migrate-from-frsource).

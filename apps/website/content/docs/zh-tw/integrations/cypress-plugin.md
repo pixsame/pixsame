@@ -7,8 +7,8 @@ reviewed: false
 
 # Cypress 外掛
 
-Cypress 外掛現已可用。它同時支援 e2e 與元件測試，相容所有 bundler，並提供完整的型別定義。
+Cypress 外掛已經推出，也有人在用了。它在 e2e 和元件測試裡都能跑，不在乎你用哪個 bundler，而且自帶型別定義。
 
-- [安裝](/docs/getting-started/install)外掛，拍下您的第一張快照。
-- 到[設定](/docs/reference/configuration)頁面查詢所有選項。
-- 想看整體介紹，請閱讀[產品頁面](/products/cypress-plugin)；想知道有哪些變更，請看[變更日誌](/products/cypress-plugin/changelog)。
+- [安裝](/docs/getting-started/install)外掛，拍下你的第一張快照。
+- 每一個選項連同預設值，都在[設定](/docs/reference/configuration)頁面。
+- [產品頁面](/products/cypress-plugin)有整體介紹和示範。[變更日誌](/products/cypress-plugin/changelog)則記錄了改了什麼、什麼時候改的。

@@ -1,6 +1,6 @@
 # Security policy
 
-This policy covers every package in this repository: `@pixsame/cypress-plugin-visual-regression-diff`, the run manifest package and the GitHub App.
+This policy covers every package in this repository: `@pixsame/cypress-plugin-visual-regression-diff` and the GitHub App. The run manifest format is maintained in [visual-regression/visual-regression](https://github.com/visual-regression/visual-regression), which has its own policy.
 
 ## Supported versions
 

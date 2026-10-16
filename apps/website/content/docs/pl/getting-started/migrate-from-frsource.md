@@ -9,21 +9,21 @@ reviewed: false
 
 ## Dlaczego pakiet się przeniósł
 
-Plugin był wcześniej publikowany jako `@frsource/cypress-plugin-visual-regression-diff`. Teraz mieszka w organizacji [pixsame](https://github.com/pixsame), obok standardu manifestu i reszty ekosystemu, i jest publikowany jako `@pixsame/cypress-plugin-visual-regression-diff`. Pakiet `@frsource` nie dostanie już nowych wydań, więc żeby nadal otrzymywać poprawki i nowe funkcje, musisz się przesiąść.
+Plugin zaczynał jako `@frsource/cypress-plugin-visual-regression-diff`. Teraz jest w organizacji [pixsame](https://github.com/pixsame), obok formatu manifestu i pozostałych narzędzi, i publikujemy go jako `@pixsame/cypress-plugin-visual-regression-diff`. Stara nazwa jest zamrożona. Nie pójdą tam już żadne wydania, więc poprawki trafią do ciebie dopiero, gdy się przesiądziesz.
 
-## Jak łatwo to zrobić
+## Co się właściwie zmienia
 
-To tylko zmiana nazwy i nic więcej. Pierwsze wydanie `@pixsame` (1.0.0) to dokładnie ten sam kod co ostatnie wydanie `@frsource` (4.3.0), bez żadnych zmian w działaniu. Twoje obrazy baseline, konfiguracja i każda komenda `cy.*` działają dalej bez zmian.
+Nazwa. `@pixsame` 1.0.0 to dokładnie ten sam kod co `@frsource` 4.3.0, tylko z inną etykietą na pudełku. Obrazy baseline, konfiguracja, każda komenda `cy.*`: wszystko nietknięte.
 
 ## Użyj komendy migrate
 
-Ostatnie wydania `@frsource` zawierają komendę, która zrobi zmianę nazwy za ciebie. Podmienia zależność w każdym `package.json` poniżej bieżącego katalogu, aktualizuje importy i odwołania do typów w plikach konfiguracji i support, a potem ponownie instaluje zależności menedżerem pakietów, który wykryje:
+Ostatnie wydania `@frsource` zawierają komendę, która zrobi zmianę nazwy za ciebie. Przechodzi przez każdy `package.json` poniżej bieżącego katalogu i podmienia zależność, przepisuje importy i odwołania do typów w plikach konfiguracji i support, a potem instaluje ponownie tym menedżerem pakietów, który znajdzie:
 
 ```bash
 npx @frsource/cypress-plugin-visual-regression-diff migrate
 ```
 
-Wypisuje pliki, które zamierza zmienić, i pyta o zgodę, zanim cokolwiek zapisze.
+Zanim cokolwiek zapisze, wypisuje pliki, które zamierza ruszyć, i czeka na twoje „tak”.
 
 | Flaga          | Co robi                                         |
 | -------------- | ----------------------------------------------- |
@@ -33,7 +33,7 @@ Wypisuje pliki, które zamierza zmienić, i pyta o zgodę, zanim cokolwiek zapis
 
 ## Wolisz zrobić to ręcznie?
 
-Podmień pakiet i zamień nazwę w importach:
+Dwa kroki. Podmień pakiet, a potem znajdź i zamień nazwę w importach:
 
 ```bash
 npm uninstall @frsource/cypress-plugin-visual-regression-diff
@@ -47,4 +47,4 @@ npm install --save-dev @pixsame/cypress-plugin-visual-regression-diff
 +import { initPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
 ```
 
-Jeśli masz ten pakiet w `compilerOptions.types` w `tsconfig.json`, zmień nazwę również tam.
+Miejsce, które łatwo przeoczyć: jeśli pakiet jest wpisany w `compilerOptions.types` w `tsconfig.json`, zmień nazwę również tam, bo inaczej `tsc` poskarży się na definicję typów, której nie może znaleźć.

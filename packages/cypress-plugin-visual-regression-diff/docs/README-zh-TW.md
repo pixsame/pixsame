@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 3d5b703737db7cd3
+source: 2c9b39af16bde9aa
 ---
 
 ## 快速開始
@@ -102,7 +102,7 @@ cy.matchImage({
     blackout: ['.element-to-be-blackouted'],
   },
   // pixelmatch 選項，請參考：https://www.npmjs.com/package/pixelmatch#pixelmatchimg1-img2-output-width-height-options
-  // 預設值：{ includeAA: true }
+  // 預設值：{ includeAA: true }（2.0 改用 pixelmatch 本身的預設值 includeAA: false，請見下方「降低跨作業系統的算繪雜訊」）
   diffConfig: {
     threshold: 0.01,
   },
@@ -128,8 +128,14 @@ cy.matchImage({
   maxDiffThreshold: 0.1,
   // 強制將縮放比例設為 "1"
   // 可解決在 Mac Retina 等高解析度螢幕上截圖被放大 2 倍的問題
+  // 適用於 Chrome 與 Chromium（2.0 擴及 Edge 與 Firefox，這會讓它們在高解析度螢幕上的基準影像更新一次）
   // 預設值：true
   forceDeviceScaleFactor: false,
+  // 套用確定性算繪預設組合，請見下方「降低跨作業系統的算繪雜訊」
+  // 在單次呼叫中，它只控制為截圖注入頁面的 CSS（游標、動畫、捲軸）；
+  // 瀏覽器的啟動參數是整個程序共用的，由全域的 pluginVisualRegressionDeterministicRendering 選項決定
+  // 預設值：false（2.0 起預設開啟）
+  deterministicRendering: true,
   // 用來命名影像檔案的標題
   // 預設值：Cypress.currentTest.titlePath（您的測試標題）
   title: `${Cypress.currentTest.titlePath.join(' ')} (${Cypress.browser.displayName})`,
@@ -253,6 +259,96 @@ export default defineConfig({
 
 在執行器中切換這個核取方塊的狀態會記錄在瀏覽器的 local storage 中，之後的執行會以它為準，優先於設定檔中的值。
 
+## 降低跨作業系統的算繪雜訊
+
+瀏覽器會把文字的點陣化交給作業系統處理（macOS 用 CoreText、Windows 用 DirectWrite、Linux 用 FreeType），因此同一個頁面在開發者的筆電與 Linux CI 執行器上，永遠不會算繪出逐位元組完全相同的結果。外掛無法完全消除這個問題，但 `deterministicRendering` 預設組合可以去除發生在瀏覽器內部的那一部分雜訊。
+
+這個預設組合在 1.x 為選用功能，預設關閉。2.0 起預設開啟，所以現在就啟用，等於提前取得 2.0 的行為，不需要其他任何變更。
+
+### 如何啟用
+
+瀏覽器的啟動參數是整個程序共用的，因此這個預設組合是全域選項。請用 `pluginVisualRegressionDeterministicRendering` 這個鍵來啟用：
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true"
+# Cypress <15.10（15.10 起棄用，16 已移除）
+npx cypress run --env "pluginVisualRegressionDeterministicRendering=true"
+```
+
+```ts
+// cypress.config.ts (Cypress 15.10+)
+import { defineConfig } from 'cypress';
+
+export default defineConfig({
+  expose: {
+    pluginVisualRegressionDeterministicRendering: true,
+  },
+});
+```
+
+```ts
+// cypress.config.ts（Cypress <15.10，新版已棄用）
+import { defineConfig } from 'cypress';
+
+export default defineConfig({
+  env: {
+    pluginVisualRegressionDeterministicRendering: true,
+  },
+});
+```
+
+第一次執行時，與未使用預設組合所建立的基準影像相比，預期會有些微差異，因為文字是在不使用 hinting 的情況下點陣化的。請執行一次 `pluginVisualRegressionUpdateImages=true`（或 `'failures-only'`），或在批次審閱模式中核准這些變更，然後 commit 結果。
+
+### 它做了什麼
+
+- **Chrome、Chromium、Edge** 會以 `--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu` 啟動（文字不使用作業系統的 hinting 與次像素技巧、不做色彩管理、以 CPU 點陣化），無頭模式下另外加上 `--hide-scrollbars`。這份清單以 `DETERMINISTIC_RENDERING_CHROMIUM_ARGS` 的名稱從 `@frsource/cypress-plugin-visual-regression-diff/constants` 匯出。
+- **Firefox** 會設定 `gfx.webrender.software` 偏好設定（CPU 算繪）。Firefox 沒有跨平台的字型 hinting 開關，因此文字在不同作業系統之間仍可能有差異。
+- **所有瀏覽器**：在 `matchImage` 截圖期間，會在受測頁面注入一個 `<style>` 元素，用來隱藏文字游標、停用 CSS transition、動畫與平滑捲動，並隱藏捲軸。截圖一結束就會移除。
+
+這個預設組合無法解決的問題：各作業系統使用不同的字型檔與備用字型（經典的 Arial 對 Liberation Sans 情況）、emoji 字型、WebKit 與 Firefox 的文字點陣化，以及 WebGL 繪製的影像。對於這些情況，請為每個平台各保留一份基準影像（請參考 `title` 與 `imagesPath` 選項，以及常見問題中關於瀏覽器名稱的條目），或是在與 CI 相同的環境中產生基準影像。
+
+**Electron** 會忽略外掛設定的啟動參數，所以在 Electron 上，這個預設組合只會注入 CSS，並在瀏覽器啟動時印出提醒。請改用環境變數傳入這些參數：
+
+```bash
+ELECTRON_EXTRA_LAUNCH_ARGS="--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu --hide-scrollbars" npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true"
+```
+
+**WebGL**：`--disable-gpu` 可能讓依賴 WebGL 的頁面無法取得算繪環境。您可以不啟用預設組合，或是在自己的 `before:browser:launch` 處理常式中加入 `--use-gl=angle --use-angle=swiftshader`（較新的 Chrome 還需要 `--enable-unsafe-swiftshader`），並透過 [`cypress-on-fix`](https://github.com/bahmutov/cypress-on-fix) 與外掛本身的處理常式組合使用。
+
+**截圖 hook**：外掛會為它拍攝的每一張截圖傳入自己的 `onBeforeScreenshot` 與 `onAfterScreenshot`。透過 `screenshotConfig` 傳入的 hook 仍會被呼叫；以 `Cypress.Screenshot.defaults()` 全域設定的 hook 則不會。
+
+### 抗鋸齒像素：搭配 `includeAA: false`
+
+1.x 的比對仍以 `includeAA: true` 執行 `pixelmatch`，因此每個算繪結果略有不同的抗鋸齒邊緣像素，都會計入差異比例。這是跨作業系統雜訊的另一半，而預設組合並不處理它。請搭配 `includeAA: false`（pixelmatch 本身的預設值，會偵測並略過抗鋸齒像素）使用，2.0 會把它設為預設值：
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true,pluginVisualRegressionDiffConfig={\"includeAA\":false}"
+# Cypress <15.10（15.10 起棄用，16 已移除）
+npx cypress run --env "pluginVisualRegressionDeterministicRendering=true,pluginVisualRegressionDiffConfig={\"includeAA\":false}"
+```
+
+```ts
+cy.matchImage({ diffConfig: { includeAA: false } });
+```
+
+啟用後差異比例會變小，所以有些先前失敗的比對會通過。基準影像不受影響。
+
+### 單次呼叫
+
+`matchImage` 的 `deterministicRendering` 選項只控制注入的 CSS；瀏覽器的啟動參數仍由全域選項決定。若要在單張截圖中略過這段 CSS（例如您想擷取動畫結束時的狀態）：
+
+```ts
+cy.matchImage({ deterministicRendering: false });
+```
+
+或者，不在全域啟用預設組合，只為單張截圖注入 CSS：
+
+```ts
+cy.matchImage({ deterministicRendering: true });
+```
+
 ## 常見問題
 
 ### 為什麼截圖不符合我在 Cypress 設定中指定的 `viewport`？
@@ -283,16 +379,18 @@ npx cypress run --expose "pluginVisualRegressionForceDeviceScaleFactor=true"
 npx cypress run --env "pluginVisualRegressionForceDeviceScaleFactor=true"
 ```
 
-若 viewport 大小的差異持續存在，可以考慮在 `setupNodeEvents` 中明確指定瀏覽器視窗大小：
+若 viewport 大小的差異持續存在，可以考慮在 `setupNodeEvents` 中明確指定瀏覽器視窗大小（請透過 [`cypress-on-fix`](https://github.com/bahmutov/cypress-on-fix) 與外掛本身的 `before:browser:launch` 處理常式組合使用）：
 
 ```ts
 on('before:browser:launch', (browser, launchOptions) => {
-  if (browser.name === 'chrome' && browser.isHeadless) {
+  if (browser.family === 'chromium' && browser.isHeadless) {
     launchOptions.args.push('--window-size=1280,720');
   }
   return launchOptions;
 });
 ```
+
+若兩次執行是在不同的作業系統上（macOS 筆電對 Linux CI 執行器），剩下的差異來自字型算繪。請參考[降低跨作業系統的算繪雜訊](#reducing-cross-os-rendering-noise)。
 
 ### 如何讓這個外掛與其他同樣在 `setupNodeEvents` 註冊事件的 Cypress 外掛並用？
 

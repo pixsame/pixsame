@@ -7,6 +7,6 @@ reviewed: false
 
 # Playwright-Plugin
 
-Das Playwright-Plugin erscheint in Kürze. Es nutzt dieselbe Vergleichs-Engine und schreibt dasselbe [Manifest](/docs/reference/manifest) wie das Cypress-Plugin, und es hält Baselines in Ihrem Repository.
+Das Playwright-Plugin ist noch nicht draußen. Es verwendet die Vergleichs-Engine des Cypress-Plugins wieder, schreibt dasselbe [Manifest](/docs/reference/manifest) und hält Baselines in Ihrem Repository, direkt neben den Tests.
 
-Auf der [Playwright-Seite](/playwright) können Sie sich benachrichtigen lassen, sobald es verfügbar ist.
+Sie möchten eine E-Mail, wenn es erscheint? Hinterlassen Sie Ihre Adresse auf der [Playwright-Seite](/playwright).

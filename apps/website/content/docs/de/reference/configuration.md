@@ -7,11 +7,11 @@ reviewed: false
 
 # Konfiguration
 
-Jede Option kann pro Aufruf an `matchImage` übergeben oder global für den gesamten Lauf gesetzt werden. Die globalen Schlüssel heißen wie die Optionen pro Aufruf, mit dem Präfix `pluginVisualRegression`.
+Jede Option funktioniert an zwei Stellen: pro Aufruf, als Argument an `matchImage`, oder einmal für den ganzen Lauf. Die globalen Schlüssel sind die Namen pro Aufruf mit `pluginVisualRegression` davor, aus `updateImages` wird also `pluginVisualRegressionUpdateImages`.
 
 ## Optionen
 
-- indem Sie die Konfiguration als Argument an den `matchImage`-Command übergeben:
+- pro Aufruf, als Argument an `matchImage`. Die Kommentare nennen die Standardwerte:
 
 ```ts
 cy.matchImage({
@@ -59,7 +59,7 @@ cy.matchImage({
 });
 ```
 
-- über die [globale Expose-Konfiguration](https://on.cypress.io/expose) (Cypress 15.10+). Die Konfigurationsschlüssel heißen wie die Schlüssel des Konfigurationsobjekts oben, ergänzt um das Präfix `pluginVisualRegression`, z. B.:
+- für den ganzen Lauf, über die [Expose-Konfiguration](https://on.cypress.io/expose) von Cypress (Cypress 15.10+). Dieselben Schlüssel wie oben, mit dem Präfix `pluginVisualRegression`:
 
 ```bash
 # Cypress 15.10+
@@ -68,7 +68,7 @@ npx cypress run --expose "pluginVisualRegressionUpdateImages=true,pluginVisualRe
 npx cypress run --env "pluginVisualRegressionUpdateImages=true,pluginVisualRegressionDiffConfig={\"threshold\":0.01}"
 ```
 
-Übergeben Sie mehrere Optionen in einem Flag, durch Kommas getrennt. Wird `--expose` (oder `--env`) mehrfach angegeben, berücksichtigt Cypress nur das letzte Vorkommen.
+Mehrere Optionen kommen in ein Flag, durch Kommas getrennt. Wiederholen Sie `--expose` (oder `--env`) nicht: Cypress behält nur das letzte und lässt den Rest kommentarlos fallen.
 
 ```ts
 // cypress.config.ts (Cypress 15.10+)
@@ -94,12 +94,11 @@ export default defineConfig({
 });
 ```
 
-Weitere Möglichkeiten, Expose-Variablen zu setzen, [finden Sie hier](https://on.cypress.io/expose).
+Die übrigen Wege, Expose-Variablen zu setzen, dokumentiert Cypress [hier](https://on.cypress.io/expose).
 
 ## Ungenutzte Bilder aufräumen
 
-Es lohnt sich, vom Visual-Regression-Plugin erzeugte Screenshots zu entfernen, die kein Test mehr verwendet.
-Aktivieren Sie diese Funktion über eine Expose-Variable und freuen Sie sich über den freigewordenen Speicherplatz 🚀:
+Benennen Sie einen Test um oder löschen ihn, bleibt seine Baseline liegen. Lassen Sie einmal mit diesem Schlüssel laufen, und das Plugin löscht jedes seiner Bilder, das in diesem Lauf kein Test angefasst hat. Lassen Sie dabei die komplette Suite laufen, sonst sind die Baselines der übersprungenen Specs auch weg:
 
 ```bash
 # Cypress 15.10+
@@ -108,9 +107,9 @@ npx cypress run --expose "pluginVisualRegressionCleanupUnusedImages=true"
 npx cypress run --env "pluginVisualRegressionCleanupUnusedImages=true"
 ```
 
-## Batch Review Mode
+## Batch-Review-Modus
 
-Der Batch Review Mode führt die gesamte Suite aus, ohne beim ersten visuellen Diff anzuhalten. Fehlgeschlagene Snapshots werden gesammelt und im Headed-Modus nach dem Lauf in einem Karussell durchgesehen, in dem Sie jede Baseline ersetzen oder überspringen. Es handelt sich um eine globale Option, die über den Schlüssel `pluginVisualRegressionBatchReviewMode` aktiviert wird (und `pluginVisualRegressionBatchReviewModeShowPassingImages`, um auch bestandene Bilder aufzulisten):
+Normalerweise wirft ein Snapshot über dem Schwellenwert sofort im Test einen Fehler. Im Batch-Review-Modus läuft die Suite stattdessen bis zum Ende durch, sammelt jeden fehlgeschlagenen Snapshot und wirft am Schluss einmal mit der Gesamtzahl. Im Headed-Modus bekommen Sie nach dem Lauf ein Karussell und gehen die Fehlschläge einen nach dem anderen durch, wobei Sie jede Baseline ersetzen oder überspringen. Es ist eine globale Option, sie lässt sich also nicht an `matchImage` übergeben. Einschalten mit `pluginVisualRegressionBatchReviewMode`, und dazu `pluginVisualRegressionBatchReviewModeShowPassingImages`, wenn Sie die bestandenen Bilder auch im Karussell haben möchten:
 
 ```bash
 # Cypress 15.10+
@@ -119,4 +118,4 @@ npx cypress open --expose "pluginVisualRegressionBatchReviewMode=true"
 npx cypress open --env "pluginVisualRegressionBatchReviewMode=true"
 ```
 
-Wie die Review-Oberfläche funktioniert, ist samt Demo im [Abschnitt Batch Review Mode auf der Cypress-Plugin-Seite](/products/cypress-plugin#batch-review-mode) beschrieben.
+Eine Demo der Review-Oberfläche gibt es im [Abschnitt zum Batch-Review-Modus](/products/cypress-plugin#batch-review-mode) auf der Cypress-Plugin-Seite.

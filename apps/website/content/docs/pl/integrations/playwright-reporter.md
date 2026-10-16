@@ -7,6 +7,6 @@ reviewed: false
 
 # Plugin dla Playwright
 
-Plugin dla Playwright pojawi się wkrótce. Korzysta z tego samego silnika porównywania i zapisuje ten sam [manifest](/docs/reference/manifest) co plugin dla Cypress, a baseline'y trzyma w twoim repozytorium.
+Pluginu dla Playwright jeszcze nie ma. Korzysta z silnika porównywania pluginu dla Cypress, zapisuje ten sam [manifest](/docs/reference/manifest) i trzyma baseline'y w twoim repozytorium, tuż obok testów.
 
-Śledź [stronę Playwright](/playwright), żeby dostać powiadomienie o premierze.
+Chcesz maila, gdy wyjdzie? Zostaw adres na [stronie Playwright](/playwright).

@@ -7,6 +7,6 @@ reviewed: false
 
 # GitHub App
 
-GitHub App 即将推出。它会把差异以 check run 和 Pull Request 评论的形式发布出来，让您无需离开代码审查页面即可批准变更后的基线。
+GitHub App 还没有发布。发布后，它会把差异以 check run 和 Pull Request 评论的形式发出来，让您直接在审查页面里批准变更后的基线，而不用拉下分支再把测试套件跑一遍。
 
-请关注 [GitHub App 页面](/github-app)，以便在发布时收到通知。
+想在它发布时收到一封邮件？请在 [GitHub App 页面](/github-app)留下您的地址。

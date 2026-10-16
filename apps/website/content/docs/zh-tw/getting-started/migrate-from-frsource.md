@@ -9,21 +9,21 @@ reviewed: false
 
 ## 套件為什麼搬家
 
-這個外掛過去以 `@frsource/cypress-plugin-visual-regression-diff` 的名稱發佈。現在它和 manifest 標準以及整個生態系的其他部分一起放在 [pixsame](https://github.com/pixsame) 組織底下，並以 `@pixsame/cypress-plugin-visual-regression-diff` 發佈。`@frsource` 套件不會再有新版本，若要持續取得修正與新功能，您需要切換過來。
+這個外掛一開始叫 `@frsource/cypress-plugin-visual-regression-diff`。現在它搬進了 [pixsame](https://github.com/pixsame) 組織，和 manifest 格式以及其他工具放在一起，以 `@pixsame/cypress-plugin-visual-regression-diff` 的名稱發佈。舊名稱已經凍結，不會再有新版本發到那裡，所以你得切換過來才拿得到修正。
 
-## 有多簡單
+## 實際上改了什麼
 
-就只是改個名字，其他什麼都沒變。第一個 `@pixsame` 版本（1.0.0）與最後一個 `@frsource` 版本（4.3.0）是同一份程式碼，行為完全相同。您的基準影像、設定以及每一個 `cy.*` 指令都可以原封不動地繼續使用。
+名字。`@pixsame` 1.0.0 就是 `@frsource` 4.3.0 一模一樣的程式碼，只是盒子上換了標籤。基準影像、設定、每一個 `cy.*` 指令：全都沒動。
 
 ## 使用 migrate 指令
 
-最後幾個 `@frsource` 版本內建了一個指令，可以替您完成更名。它會把目前目錄下所有 `package.json` 中的相依套件改名、更新您 config 與 support 檔案中的 import 與型別參照，然後用它偵測到的套件管理工具重新安裝：
+最後幾個 `@frsource` 版本內建了一個指令，可以替你完成更名。它會走過目前目錄底下所有的 `package.json` 並換掉相依套件，改寫你 config 與 support 檔案中的 import 與型別參照，然後用它找到的套件管理工具重新安裝：
 
 ```bash
 npx @frsource/cypress-plugin-visual-regression-diff migrate
 ```
 
-它會先列出將要修改的檔案，並在寫入任何內容前先詢問您。
+在寫入任何東西之前，它會先印出準備動到的檔案，等你說好。
 
 | 旗標           | 作用                       |
 | -------------- | -------------------------- |
@@ -33,7 +33,7 @@ npx @frsource/cypress-plugin-visual-regression-diff migrate
 
 ## 想自己手動處理？
 
-更換套件，並把 import 中的名稱替換掉：
+兩步。先換掉套件，再把 import 裡的名稱搜尋取代：
 
 ```bash
 npm uninstall @frsource/cypress-plugin-visual-regression-diff
@@ -47,4 +47,4 @@ npm install --save-dev @pixsame/cypress-plugin-visual-regression-diff
 +import { initPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
 ```
 
-如果您在某個 `tsconfig.json` 的 `compilerOptions.types` 中列出了這個套件，也請一併改名。
+有一個地方常被漏掉：如果你在某個 `tsconfig.json` 的 `compilerOptions.types` 裡列了這個套件，那裡也要改名，不然 `tsc` 會抱怨找不到型別定義。

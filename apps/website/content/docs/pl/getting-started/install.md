@@ -7,7 +7,7 @@ reviewed: false
 
 # Instalacja
 
-Plugin dla Cypress jest dostępny już dziś. Plugin dla Playwright i GitHub App pojawią się wkrótce.
+Ta strona dotyczy pluginu dla Cypress, czyli tej części, którą możesz zainstalować już teraz. Plugin dla Playwright i GitHub App wciąż powstają.
 
 ## Dodaj pakiet
 
@@ -30,7 +30,7 @@ Zaimportuj komendy w pliku support (domyślnie `cypress/support/e2e.ts`):
 import '@pixsame/cypress-plugin-visual-regression-diff';
 ```
 
-Następnie zarejestruj plugin w `cypress.config.ts`. Wywołaj `initPlugin` w każdej sekcji, z której korzystasz: `e2e` lub `component`:
+Następnie zarejestruj plugin w `cypress.config.ts`. Jeśli używasz zarówno `e2e`, jak i `component`, wywołaj `initPlugin` w każdej z tych sekcji. Z jednej na drugą się nie przenosi.
 
 ```ts
 import { defineConfig } from 'cypress';
@@ -54,8 +54,8 @@ cy.get('.an-element-of-your-choice').matchImage();
 cy.matchImage();
 ```
 
-`matchImage` robi zrzut ekranu i porównuje go z tym z poprzedniego uruchomienia. Gdy coś się zepsuje, test kończy się niepowodzeniem, a przycisk **See comparison** otwiera diff bezpośrednio w runnerze Cypress.
+Przy pierwszym uruchomieniu nie ma z czym porównywać, więc `matchImage` po prostu zapisuje zrzut jako baseline. Od tej pory każdy nowy zrzut porównuje z tym plikiem. Gdy różnią się bardziej niż próg, test pada, a przycisk **See comparison** w runnerze Cypress otwiera diff.
 
 ## Przechodzisz z `@frsource`?
 
-Pakiet zmienił nazwę, a przejście sprowadza się do jednej linijki. Zobacz [Migracja z @frsource](/docs/getting-started/migrate-from-frsource).
+Pakiet przeniósł się z `@frsource` do `@pixsame`. To zmiana nazwy, w kodzie nic się nie zmieniło. Zobacz [Migracja z @frsource](/docs/getting-started/migrate-from-frsource).

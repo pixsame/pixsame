@@ -1,6 +1,6 @@
 # pixsame
 
-> Visual regression testing for Cypress and Playwright. One manifest standard shared by both runners, a pinned renderer for byte-identical screenshots, forensic diff analysis and baseline approval in the pull request. Open source, MIT.
+> Visual regression testing for Cypress and Playwright. One open manifest format shared by both runners, a pinned renderer for byte-identical screenshots, forensic diff analysis and baseline approval in the pull request. Open source, MIT.
 
 ## Docs
 
@@ -9,7 +9,7 @@
 - [Configuration](https://pixsame.com/docs/reference/configuration): every option of the Cypress plugin
 - [Migrate from @frsource](https://pixsame.com/docs/getting-started/migrate-from-frsource): move to the @pixsame package
 - [Cypress plugin](https://pixsame.com/products/cypress-plugin): overview and changelog
-- [Manifest schema](https://pixsame.com/docs/reference/manifest): the runner-agnostic run manifest (`@pixsame/manifest`)
+- [Manifest](https://visual-regression.dev/manifest): the runner-agnostic run manifest, specified on visual-regression.dev (`visual-regression-manifest` on npm); pixsame summary: https://pixsame.com/docs/reference/manifest
 
 ## Product
 
@@ -19,7 +19,7 @@
 
 ## Status
 
-- Available: Cypress plugin (`@pixsame/cypress-plugin-visual-regression-diff`), run manifest standard (`@pixsame/manifest`)
+- Available: Cypress plugin (`@pixsame/cypress-plugin-visual-regression-diff`), open run manifest format (`visual-regression-manifest`, https://visual-regression.dev)
 - Coming soon: Playwright plugin, Vitest plugin, GitHub App, hosted platform (server renderer, image and diff viewer, AI auto-evaluator)
 
 ## Contact

@@ -1,6 +1,10 @@
-import { it, expect, describe, vi, beforeEach } from 'vitest';
+import { it, expect, describe, vi } from 'vitest';
 import { initTaskHook } from './task.hook';
 import { initAfterScreenshotHook } from './afterScreenshot.hook';
+import {
+  getBrowserLaunchPresets,
+  initBrowserLaunchHook,
+} from './browserLaunch.utils';
 import { initPlugin } from './plugins';
 
 vi.mock('./task.hook.ts', () => ({
@@ -9,36 +13,82 @@ vi.mock('./task.hook.ts', () => ({
 vi.mock('./afterScreenshot.hook.ts', () => ({
   initAfterScreenshotHook: vi.fn().mockReturnValue('after:screenshot'),
 }));
+vi.mock('./browserLaunch.utils.ts', () => ({
+  getBrowserLaunchPresets: vi.fn(() => ({
+    forceDeviceScaleFactor: true,
+    deterministicRendering: false,
+  })),
+  initBrowserLaunchHook: vi.fn().mockReturnValue('before:browser:launch'),
+}));
 
 describe('initPlugin', () => {
-  beforeEach(() => {
+  it.each([
+    {
+      api: 'env (Cypress <15.10)',
+      config: {
+        version: '13.17.0',
+        env: { pluginVisualRegressionForceDeviceScaleFactor: false },
+      },
+    },
+    {
+      api: 'expose (Cypress 15.10+)',
+      config: {
+        version: '15.10.0',
+        expose: { pluginVisualRegressionForceDeviceScaleFactor: false },
+        env: {},
+      },
+    },
+  ])('registers every hook exactly once with the $api config', ({ config }) => {
     vi.clearAllMocks();
-  });
-
-  it('inits hooks (Cypress <15.10, env API)', () => {
     const onMock = vi.fn();
-    initPlugin(onMock, {
-      version: '13.17.0',
-      env: { pluginVisualRegressionForceDeviceScaleFactor: false },
-    } as unknown as Cypress.PluginConfigOptions);
+    const pluginConfig = config as unknown as Cypress.PluginConfigOptions;
 
+    initPlugin(onMock, pluginConfig);
+
+    expect(onMock).toBeCalledTimes(3);
+    expect(onMock).toBeCalledWith(
+      'before:browser:launch',
+      'before:browser:launch',
+    );
     expect(onMock).toBeCalledWith('task', 'task');
     expect(onMock).toBeCalledWith('after:screenshot', 'after:screenshot');
-    expect(initTaskHook).toBeCalledTimes(1);
-    expect(initAfterScreenshotHook).toBeCalledTimes(1);
+    expect(getBrowserLaunchPresets).toBeCalledWith(pluginConfig);
+    expect(initBrowserLaunchHook).toBeCalledWith(pluginConfig);
+    expect(initTaskHook).toBeCalledWith(pluginConfig);
+    expect(initAfterScreenshotHook).toBeCalledWith(pluginConfig);
   });
 
-  it('inits hooks (Cypress 15.10+, expose API)', () => {
+  it('leaves before:browser:launch alone when both launch presets are off', () => {
+    vi.clearAllMocks();
+    vi.mocked(getBrowserLaunchPresets).mockReturnValueOnce({
+      forceDeviceScaleFactor: false,
+      deterministicRendering: false,
+    });
     const onMock = vi.fn();
-    initPlugin(onMock, {
-      version: '15.10.0',
-      expose: { pluginVisualRegressionForceDeviceScaleFactor: false },
-      env: {},
-    } as unknown as Cypress.PluginConfigOptions);
 
-    expect(onMock).toBeCalledWith('task', 'task');
-    expect(onMock).toBeCalledWith('after:screenshot', 'after:screenshot');
-    expect(initTaskHook).toBeCalledTimes(1);
-    expect(initAfterScreenshotHook).toBeCalledTimes(1);
+    initPlugin(onMock, {} as Cypress.PluginConfigOptions);
+
+    expect(onMock).toBeCalledTimes(2);
+    expect(onMock).not.toBeCalledWith(
+      'before:browser:launch',
+      expect.anything(),
+    );
+    expect(initBrowserLaunchHook).not.toBeCalled();
+  });
+
+  it('registers before:browser:launch when only deterministic rendering is on', () => {
+    vi.clearAllMocks();
+    vi.mocked(getBrowserLaunchPresets).mockReturnValueOnce({
+      forceDeviceScaleFactor: false,
+      deterministicRendering: true,
+    });
+    const onMock = vi.fn();
+
+    initPlugin(onMock, {} as Cypress.PluginConfigOptions);
+
+    expect(onMock).toBeCalledWith(
+      'before:browser:launch',
+      'before:browser:launch',
+    );
   });
 });

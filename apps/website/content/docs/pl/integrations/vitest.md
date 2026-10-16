@@ -7,6 +7,6 @@ reviewed: false
 
 # Plugin dla Vitest
 
-Plugin dla Vitest pojawi się wkrótce. Jest przeznaczony dla trybu przeglądarkowego Vitest, korzysta z tego samego silnika porównywania i zapisuje ten sam [manifest](/docs/reference/manifest) co [plugin dla Cypress](/docs/integrations/cypress-plugin), a baseline'y trzyma w twoim repozytorium.
+Pluginu dla Vitest jeszcze nie ma. Celuje w tryb przeglądarkowy Vitest, korzysta z silnika porównywania i [manifestu](/docs/reference/manifest) [pluginu dla Cypress](/docs/integrations/cypress-plugin) i trzyma baseline'y w twoim repozytorium, tuż obok testów.
 
-Śledź [stronę Vitest](/vitest), żeby dostać powiadomienie o premierze.
+Chcesz maila, gdy wyjdzie? Zostaw adres na [stronie Vitest](/vitest).

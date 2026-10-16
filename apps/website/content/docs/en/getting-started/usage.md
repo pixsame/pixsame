@@ -6,7 +6,7 @@ order: 2
 
 # Usage
 
-The plugin adds one command, `matchImage`, to every Cypress test.
+The plugin adds a single command, `matchImage`. That's the whole API on the test side.
 
 ## Compare an element or the page
 
@@ -19,7 +19,7 @@ cy.matchImage();
 
 ## Configure a comparison
 
-Pass options to `matchImage` per call. Every option is described on the [Configuration](/docs/reference/configuration) page:
+Options go in per call. The full list, with defaults, is on the [Configuration](/docs/reference/configuration) page. These are the ones people reach for first:
 
 ```ts
 cy.matchImage({
@@ -36,14 +36,16 @@ cy.matchImage({
 
 ## Clean up unused images
 
-Remove baselines that no test uses anymore:
+Baselines pile up when tests get renamed or deleted. This run removes every plugin image that no test touched:
 
 ```bash
 npx cypress run --expose "pluginVisualRegressionCleanupUnusedImages=true"
 ```
 
-On Cypress older than 15.10 pass the same key with `--env` instead.
+Run the full suite when you do this. If you filter to a few specs, the baselines of the specs you skipped count as unused too.
+
+On Cypress older than 15.10 there is no `--expose` yet. Pass the same key with `--env` instead.
 
 ## More
 
-Every option is on the [Configuration](/docs/reference/configuration) page. Questions and ideas are welcome in [GitHub discussions](https://github.com/pixsame/pixsame/discussions).
+Everything else is on the [Configuration](/docs/reference/configuration) page. If something is unclear or you've got an idea, [GitHub discussions](https://github.com/pixsame/pixsame/discussions) is where we talk about it.

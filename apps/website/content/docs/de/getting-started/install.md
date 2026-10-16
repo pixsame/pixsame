@@ -7,7 +7,7 @@ reviewed: false
 
 # Installation
 
-Das Cypress-Plugin ist bereits verfügbar. Das Playwright-Plugin und die GitHub App folgen in Kürze.
+Diese Seite behandelt das Cypress-Plugin, also den Teil, den Sie jetzt gerade installieren können. Das Playwright-Plugin und die GitHub App sind noch im Bau.
 
 ## Paket hinzufügen
 
@@ -30,7 +30,7 @@ Importieren Sie die Commands in Ihrer Support-Datei (standardmäßig `cypress/su
 import '@pixsame/cypress-plugin-visual-regression-diff';
 ```
 
-Registrieren Sie das Plugin anschließend in `cypress.config.ts`. Rufen Sie `initPlugin` in jedem Abschnitt auf, den Sie verwenden, also `e2e` oder `component`:
+Registrieren Sie das Plugin anschließend in `cypress.config.ts`. Wenn Sie sowohl `e2e` als auch `component` verwenden, rufen Sie `initPlugin` in beiden auf. Es überträgt sich nicht von einem auf das andere.
 
 ```ts
 import { defineConfig } from 'cypress';
@@ -54,8 +54,8 @@ cy.get('.an-element-of-your-choice').matchImage();
 cy.matchImage();
 ```
 
-`matchImage` nimmt einen Screenshot auf und vergleicht ihn mit dem aus dem vorherigen Lauf. Bei einer Regression schlägt der Test fehl, und ein Button **See comparison** öffnet den Diff direkt im Cypress-Runner.
+Beim ersten Lauf gibt es nichts zum Vergleichen, also speichert `matchImage` den Screenshot einfach als Baseline. Ab dann vergleicht es jeden neuen Screenshot mit dieser Datei. Weichen beide um mehr als den Schwellenwert voneinander ab, schlägt der Test fehl, und ein Button **See comparison** im Cypress-Runner öffnet den Diff.
 
 ## Sie kommen von `@frsource`?
 
-Das Paket wurde umbenannt, der Umstieg ist eine Sache von einer Zeile. Siehe [Migration von @frsource](/docs/getting-started/migrate-from-frsource).
+Das Paket ist von `@frsource` zu `@pixsame` umgezogen. Es ist eine Umbenennung, am Code hat sich nichts geändert. Siehe [Migration von @frsource](/docs/getting-started/migrate-from-frsource).

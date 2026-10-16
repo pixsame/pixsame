@@ -4,7 +4,7 @@
   },
   "seo": {
     "title": "pixsame — visuelle Regressionstests für Cypress (Playwright bald)",
-    "description": "Ein Manifest-Standard für beide Runner, ein fixierter Renderer für byte-identische Screenshots, forensische Diff-Analyse und Baseline-Freigabe im Pull Request."
+    "description": "Ein offenes Manifest-Format für beide Runner, ein fixierter Renderer für byte-identische Screenshots, forensische Diff-Analyse und Baseline-Freigabe im Pull Request."
   },
   "nav": {
     "menu": "Menü",
@@ -30,7 +30,7 @@
     "eyebrow": "Open Source · MIT · Cypress heute, Playwright bald",
     "title": "Visuelle Regression, die mit sich selbst übereinstimmt.",
     "tagline": "same same. auf den Pixel genau.",
-    "body": "Ein Manifest-Standard für beide Runner. Ein fixierter Renderer macht lokale und CI-Screenshots byte-identisch. Forensische Diff-Analyse statt eines roten Flecks und Baseline-Freigabe direkt im Pull Request.",
+    "body": "Ein offenes Manifest-Format für beide Runner. Ein fixierter Renderer macht lokale und CI-Screenshots byte-identisch. Forensische Diff-Analyse statt eines roten Flecks und Baseline-Freigabe direkt im Pull Request.",
     "copy": "KOPIEREN",
     "copied": "KOPIERT",
     "docs": "Doku lesen",
@@ -145,7 +145,7 @@
       "cypress": "Cypress-Plugin",
       "cypressBody": "Visuelle Regression für Cypress: matchImage, ein Diff-Viewer im Runner und Baselines in Ihrem Repo.",
       "manifest": "Run-Manifest",
-      "manifestBody": "Der offene, runnerunabhängige JSON-Standard, der jeden Screenshot-Vergleich beschreibt, mit Schema, Typen, Reader und Writer.",
+      "manifestBody": "Das offene, runnerunabhängige JSON-Format, das jeden Screenshot-Vergleich beschreibt, spezifiziert auf visual-regression.dev.",
       "playwright": "Playwright plugin",
       "playwrightBody": "Dieselbe Vergleichs-Engine und dasselbe Manifest für Playwright-Projekte.",
       "renderer": "Fixierter Renderer",
@@ -159,7 +159,7 @@
   "product": {
     "crumb": "Fixierter Renderer",
     "title": "Ein Ökosystem für visuelle Regression.",
-    "body": "pixsame ist eine wachsende Sammlung offener Tools, die visuelle Regressionstests verlässlich machen: ein gemeinsamer Standard, ein Renderer, Review im Pull Request. Das Cypress-Plugin ist heute verfügbar, der Rest folgt.",
+    "body": "pixsame ist eine wachsende Sammlung offener Tools, die visuelle Regressionstests verlässlich machen: ein gemeinsames Format, ein Renderer, Review im Pull Request. Das Cypress-Plugin ist heute verfügbar, der Rest folgt.",
     "status": "Cypress-Plugin: verfügbar · alles andere: demnächst",
     "start": "Plugin installieren",
     "stats": {
@@ -184,7 +184,7 @@
     },
     "groups": {
       "runners": "Test-Runner",
-      "standard": "Gemeinsamer Standard",
+      "standard": "Gemeinsames Format",
       "review": "Review"
     },
     "map": {
@@ -198,7 +198,7 @@
       },
       "manifest": {
         "name": "Run-Manifest",
-        "body": "Ein offener, runnerunabhängiger JSON-Standard, der jeden Screenshot-Vergleich beschreibt. Heute verfügbar."
+        "body": "Ein offenes, runnerunabhängiges JSON-Format, das jeden Screenshot-Vergleich beschreibt. Heute verfügbar."
       },
       "renderer": {
         "name": "Renderer",
@@ -293,7 +293,7 @@
       "p2": "Verantwortlicher: {name}, {address1}, {address2} (USt-IdNr. {vat}). Kontakt: {email}.",
       "p3": "Warteliste: Bei der Anmeldung speichern wir Ihre E-Mail-Adresse, das Produkt, Ihre Sprache und den Zeitpunkt Ihrer Einwilligung. Rechtsgrundlage ist Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Wir verwenden die Daten nur, um Ihnen den Start dieses Produkts und spätere Neuigkeiten dazu mitzuteilen, einschließlich damit verbundener Änderungen am pixsame-Ökosystem. Eine andere Nutzung oder Weitergabe zu Werbezwecken findet nicht statt.",
       "p4": "Kontaktformular: Name, E-Mail-Adresse und Nachricht verwenden wir nur, um Ihnen zu antworten, und löschen sie, sobald sie dafür nicht mehr nötig sind.",
-      "p5": "Auftragsverarbeiter: Die Formulare laufen über Google Apps Script und Google Sheets (Google); Spam wird mit Cloudflare Turnstile (Cloudflare) gefiltert. Dabei können Daten außerhalb der EU auf Grundlage von Standardvertragsklauseln verarbeitet werden. Die Formulare übermitteln Ihre Eingaben als Teil der Anfrage-Adresse an Google.",
+      "p5": "Processors: the forms are processed and stored by Cloudflare (a serverless function and a database located in the EU), which also filters spam with Cloudflare Turnstile. Your name, email address and message are encrypted before they are stored. Cloudflare may process data outside the EU under the EU-US Data Privacy Framework or standard contractual clauses.",
       "p6": "Speicherdauer und Ihre Rechte: Wartelistendaten bleiben bis zum Widerruf der Einwilligung oder bis zur Einstellung des Produkts gespeichert. Sie können jederzeit widerrufen sowie Auskunft, Berichtigung oder Löschung verlangen, per E-Mail an {email}. Sie können sich außerdem bei Ihrer Datenschutzbehörde beschweren."
     },
     "terms": {
@@ -368,5 +368,9 @@
     "vat": "PL6783179514",
     "nip": "6783179514",
     "email": "pixsame{'@'}frsource.org"
+  },
+  "translate": {
+    "broken": "Übersetzung fehlerhaft? Hilf uns und bearbeite sie selbst.",
+    "missing": "Noch nicht übersetzt? Hilf uns und schreibe die Übersetzung selbst."
   }
 }

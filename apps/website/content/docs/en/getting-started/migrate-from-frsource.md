@@ -8,21 +8,21 @@ order: 3
 
 ## Why the package moved
 
-The plugin used to be published as `@frsource/cypress-plugin-visual-regression-diff`. It now lives in the [pixsame](https://github.com/pixsame) organization, next to the manifest standard and the rest of the ecosystem, and is published as `@pixsame/cypress-plugin-visual-regression-diff`. The `@frsource` package will not get new releases, so to keep receiving fixes and new features you need to switch.
+The plugin started life as `@frsource/cypress-plugin-visual-regression-diff`. It's now in the [pixsame](https://github.com/pixsame) organization, next to the manifest format and the other tools, and is published as `@pixsame/cypress-plugin-visual-regression-diff`. The old name is frozen. No more releases go there, so fixes only reach you once you switch.
 
-## How easy it is
+## What actually changes
 
-It is a rename and nothing else. The first `@pixsame` release (1.0.0) is the same code as the last `@frsource` release (4.3.0), with no change in behavior. Your baseline images, your configuration and every `cy.*` command keep working as they are.
+The name. `@pixsame` 1.0.0 is the exact code of `@frsource` 4.3.0 with a different label on the box. Baseline images, configuration, every `cy.*` command: all untouched.
 
 ## Use the migrate command
 
-The last `@frsource` releases ship a command that does the rename for you. It renames the dependency in every `package.json` below the current directory, updates imports and type references in your config and support files, and reinstalls with the package manager it finds:
+The last `@frsource` releases ship a command that does the rename for you. It walks every `package.json` below the current directory and swaps the dependency, rewrites imports and type references in your config and support files, then reinstalls with whichever package manager it finds:
 
 ```bash
 npx @frsource/cypress-plugin-visual-regression-diff migrate
 ```
 
-It lists the files it would change and asks before writing anything.
+Before it writes anything it prints the files it's about to touch and waits for a yes.
 
 | Flag           | What it does                          |
 | -------------- | ------------------------------------- |
@@ -32,7 +32,7 @@ It lists the files it would change and asks before writing anything.
 
 ## Prefer to do it by hand?
 
-Swap the package and replace the name in your imports:
+Two steps. Swap the package, then search and replace the name in your imports:
 
 ```bash
 npm uninstall @frsource/cypress-plugin-visual-regression-diff
@@ -46,4 +46,4 @@ npm install --save-dev @pixsame/cypress-plugin-visual-regression-diff
 +import { initPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
 ```
 
-If you list the package in `compilerOptions.types` of a `tsconfig.json`, rename it there too.
+One spot people miss: if the package is listed in `compilerOptions.types` of a `tsconfig.json`, rename it there too, or `tsc` will complain about a type definition it can't find.

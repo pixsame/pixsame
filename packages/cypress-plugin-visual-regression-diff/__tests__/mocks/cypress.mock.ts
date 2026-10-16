@@ -7,6 +7,7 @@ export const Cypress = {
   version: cypressVersion,
   expose: vi.fn(),
   env: vi.fn(),
+  Commands: { add: vi.fn() },
 };
 vi.stubGlobal('Cypress', Cypress);
 

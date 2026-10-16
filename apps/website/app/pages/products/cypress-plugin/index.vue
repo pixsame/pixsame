@@ -32,6 +32,10 @@ const { data: page } = await useAsyncData(
 const toc = computed(
   () => page.value?.body?.toc?.links?.filter((l) => l.depth === 2) ?? [],
 );
+const editSource = computed(() => ({
+  path: `packages/cypress-plugin-visual-regression-diff/docs/README-${(README_LOCALES as Record<string, string>)[locale.value]}.md`,
+  create: !!page.value?.fallback,
+}));
 useSeoMeta({
   robots: () => (page.value?.fallback ? 'noindex, follow' : undefined),
 });
@@ -95,6 +99,7 @@ useSeoMeta({
           {{ t('docs.draft') }}
         </p>
         <ContentRenderer v-if="page" :value="page" />
+        <TranslationEditLink :source="editSource" />
       </article>
       <aside
         v-if="toc.length"

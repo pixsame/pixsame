@@ -7,11 +7,11 @@ reviewed: false
 
 # Konfiguracja
 
-Każdą opcję możesz przekazać przy pojedynczym wywołaniu `matchImage` albo ustawić globalnie dla całego uruchomienia. Klucze globalne mają te same nazwy co opcje per wywołanie, tylko z prefiksem `pluginVisualRegression`.
+Każda opcja działa w dwóch miejscach: per wywołanie, jako argument `matchImage`, albo raz dla całego uruchomienia. Klucze globalne to nazwy per wywołanie z `pluginVisualRegression` z przodu, więc `updateImages` staje się `pluginVisualRegressionUpdateImages`.
 
 ## Opcje
 
-- przekazując konfigurację jako argument komendy `matchImage`:
+- per wywołanie, jako argument `matchImage`. Wartości domyślne są w komentarzach:
 
 ```ts
 cy.matchImage({
@@ -59,7 +59,7 @@ cy.matchImage({
 });
 ```
 
-- przez [globalną konfigurację expose](https://on.cypress.io/expose) (Cypress 15.10+). Nazwy kluczy konfiguracji są takie same jak klucze obiektu konfiguracji powyżej, tylko z dodanym prefiksem `pluginVisualRegression`, np.:
+- dla całego uruchomienia, przez [konfigurację expose](https://on.cypress.io/expose) Cypressa (Cypress 15.10+). Te same klucze co wyżej, z prefiksem `pluginVisualRegression`:
 
 ```bash
 # Cypress 15.10+
@@ -68,7 +68,7 @@ npx cypress run --expose "pluginVisualRegressionUpdateImages=true,pluginVisualRe
 npx cypress run --env "pluginVisualRegressionUpdateImages=true,pluginVisualRegressionDiffConfig={\"threshold\":0.01}"
 ```
 
-Kilka opcji przekazuj w jednej fladze, rozdzielone przecinkami. Gdy `--expose` (albo `--env`) powtórzysz, Cypress weźmie pod uwagę tylko ostatnie wystąpienie.
+Kilka opcji wrzucasz do jednej flagi, po przecinku. Nie powtarzaj `--expose` (ani `--env`): Cypress bierze tylko ostatnią flagę, a resztę po cichu gubi.
 
 ```ts
 // cypress.config.ts (Cypress 15.10+)
@@ -94,12 +94,11 @@ export default defineConfig({
 });
 ```
 
-Inne sposoby ustawiania zmiennych expose [znajdziesz tutaj](https://on.cypress.io/expose).
+Pozostałe sposoby ustawiania zmiennych expose Cypress opisuje [tutaj](https://on.cypress.io/expose).
 
 ## Usuń nieużywane obrazy
 
-Warto usuwać zrzuty ekranu wygenerowane przez plugin regresji wizualnej, z których nie korzysta już żaden test.
-Włącz tę funkcję przez zmienną expose i ciesz się odzyskanym miejscem na dysku 🚀:
+Zmienisz nazwę testu albo go usuniesz, a jego baseline zostaje. Uruchom raz z tym kluczem, a plugin skasuje każdy swój obraz, którego żaden test nie dotknął w tym uruchomieniu. Odpal wtedy cały zestaw testów, bo inaczej polecą też baseline'y pominiętych speców:
 
 ```bash
 # Cypress 15.10+
@@ -108,9 +107,9 @@ npx cypress run --expose "pluginVisualRegressionCleanupUnusedImages=true"
 npx cypress run --env "pluginVisualRegressionCleanupUnusedImages=true"
 ```
 
-## Tryb Batch Review
+## Tryb batch review
 
-Tryb Batch Review uruchamia cały zestaw testów bez zatrzymywania się na pierwszym diffie. Niepowodzenia snapshotów są zbierane i, w trybie headed, przeglądane po zakończeniu uruchomienia w karuzeli, w której każdy baseline możesz podmienić albo pominąć. To opcja globalna, włączana kluczem `pluginVisualRegressionBatchReviewMode` (a `pluginVisualRegressionBatchReviewModeShowPassingImages` dodatkowo pokazuje obrazy, które przeszły):
+Normalnie snapshot powyżej progu rzuca błędem od razu, w środku testu. Tryb batch review pozwala zestawowi dojechać do końca, zbiera po drodze każdy niepowodzony snapshot i rzuca raz, z łączną liczbą. W trybie headed po uruchomieniu dostajesz karuzelę i przechodzisz przez niepowodzenia jedno po drugim, podmieniając albo pomijając każdy baseline. To opcja globalna, więc nie da się jej przekazać do `matchImage`. Włączasz ją kluczem `pluginVisualRegressionBatchReviewMode`, a jeśli chcesz mieć w karuzeli także obrazy, które przeszły, dodaj `pluginVisualRegressionBatchReviewModeShowPassingImages`:
 
 ```bash
 # Cypress 15.10+
@@ -119,4 +118,4 @@ npx cypress open --expose "pluginVisualRegressionBatchReviewMode=true"
 npx cypress open --env "pluginVisualRegressionBatchReviewMode=true"
 ```
 
-Jak działa interfejs review, razem z demo, opisuje [sekcja Batch review mode na stronie pluginu dla Cypress](/products/cypress-plugin#batch-review-mode).
+Demo interfejsu review znajdziesz w [sekcji o trybie batch review](/products/cypress-plugin#batch-review-mode) na stronie pluginu dla Cypress.

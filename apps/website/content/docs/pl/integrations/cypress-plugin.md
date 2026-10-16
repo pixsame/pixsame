@@ -7,8 +7,8 @@ reviewed: false
 
 # Plugin dla Cypress
 
-Plugin dla Cypress jest dostępny już dziś. Działa z testami e2e i komponentowymi, z każdym bundlerem, i ma pełne typowanie.
+Plugin dla Cypress jest wydany i w użyciu. Działa w testach e2e i komponentowych, nie obchodzi go, jakiego bundlera używasz, i ma własne typy w pakiecie.
 
 - [Zainstaluj](/docs/getting-started/install) go i zrób pierwszy snapshot.
-- Sprawdź wszystkie opcje na stronie [Konfiguracja](/docs/reference/configuration).
-- Przeczytaj [stronę produktu](/products/cypress-plugin), żeby poznać ogólny zarys, albo [changelog](/products/cypress-plugin/changelog), żeby zobaczyć, co się zmieniło.
+- Każda opcja, z wartością domyślną, jest na stronie [Konfiguracja](/docs/reference/configuration).
+- [Strona produktu](/products/cypress-plugin) ma ogólny zarys i dema. [Changelog](/products/cypress-plugin/changelog) ma to, co się zmieniło i kiedy.

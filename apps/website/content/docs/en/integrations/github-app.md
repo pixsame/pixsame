@@ -6,6 +6,6 @@ order: 2
 
 # GitHub App
 
-The GitHub App is coming soon. It posts the diff as a check run and as pull request comments, and lets you approve changed baselines without leaving the review.
+The GitHub App isn't released yet. When it is, it will post the diff as a check run and as pull request comments, and let you approve a changed baseline from the review itself instead of pulling the branch and running the suite again.
 
-Follow along on the [GitHub App page](/github-app) to get notified at launch.
+Want an email when it ships? Leave your address on the [GitHub App page](/github-app).

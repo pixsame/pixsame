@@ -87,6 +87,11 @@ onMounted(() => {
 watch(toc, () => nextTick(update));
 onBeforeUnmount(() => window.removeEventListener('scroll', update));
 
+const editSource = computed(() => ({
+  path: `apps/website/content/docs/${locale.value}/${slug.value}.md`,
+  create: !!page.value?.fallback,
+}));
+
 useSeoMeta({
   title: () => page.value?.title,
   description: () => page.value?.description,
@@ -150,6 +155,7 @@ useSeoMeta({
           {{ t('docs.draft') }}
         </p>
         <ContentRenderer v-if="page" :value="page" />
+        <TranslationEditLink :source="editSource" />
       </article>
 
       <aside

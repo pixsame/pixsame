@@ -6,6 +6,6 @@ order: 4
 
 # Vitest plugin
 
-The Vitest plugin is coming soon. It targets Vitest browser mode, uses the same comparison engine and writes the same [manifest](/docs/reference/manifest) as the [Cypress plugin](/docs/integrations/cypress-plugin), and keeps baselines in your repository.
+The Vitest plugin isn't out yet. It targets Vitest browser mode, reuses the comparison engine and [manifest](/docs/reference/manifest) of the [Cypress plugin](/docs/integrations/cypress-plugin), and keeps baselines in your repository next to the tests.
 
-Follow along on the [Vitest page](/vitest) to get notified at launch.
+Want an email when it ships? Leave your address on the [Vitest page](/vitest).

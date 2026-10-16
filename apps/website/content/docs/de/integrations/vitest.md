@@ -7,6 +7,6 @@ reviewed: false
 
 # Vitest-Plugin
 
-Das Vitest-Plugin erscheint in Kürze. Es richtet sich an den Vitest Browser Mode, nutzt dieselbe Vergleichs-Engine und schreibt dasselbe [Manifest](/docs/reference/manifest) wie das [Cypress-Plugin](/docs/integrations/cypress-plugin), und es hält Baselines in Ihrem Repository.
+Das Vitest-Plugin ist noch nicht draußen. Es zielt auf den Vitest Browser Mode, verwendet Vergleichs-Engine und [Manifest](/docs/reference/manifest) des [Cypress-Plugins](/docs/integrations/cypress-plugin) wieder und hält Baselines in Ihrem Repository, direkt neben den Tests.
 
-Auf der [Vitest-Seite](/vitest) können Sie sich benachrichtigen lassen, sobald es verfügbar ist.
+Sie möchten eine E-Mail, wenn es erscheint? Hinterlassen Sie Ihre Adresse auf der [Vitest-Seite](/vitest).
