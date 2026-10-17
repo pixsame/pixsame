@@ -15,6 +15,9 @@
     "format": "prettier --write . ../../packages/ui-layer",
     "format:ci": "prettier --check . ../../packages/ui-layer",
     "readme:check": "node scripts/readme-translations.mjs --check",
+    "translations:lint": "node scripts/translation-lint.mjs",
+    "translations:test": "node --test scripts/translation-checks.test.mjs scripts/translation-review-lib.test.mjs",
+    "translations:review": "node scripts/translation-review.mjs",
     "typecheck": "nuxt typecheck",
     "postinstall": "nuxt prepare"
   },

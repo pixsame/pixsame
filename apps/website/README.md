@@ -32,6 +32,22 @@ not redone; to redo one, translate the current slice again and set `source` to t
 Every non-English file is flagged until a native speaker signs it off: `meta.reviewed: false` in the JSON, `reviewed: false` in the
 markdown frontmatter (which shows a "machine translation" notice on the page).
 
+### Translation quality
+
+Terminology is in `i18n/glossary.json`, register and rules in `i18n/STYLE.md` (German: Sie; Polish: neutral/impersonal;
+"pixsame" stays Latin everywhere; zh-TW is translated from English, not converted from zh-CN). CI runs two checks:
+
+- `pnpm --filter @pixsame/website translations:lint` compares every locale with English (UI strings, docs, plugin README
+  translations). **Errors fail CI**: a missing, added or altered code block, inline code span, variable placeholder
+  (`{count}`, `@:key`, `%s`), link target, heading or key. Only `//` and `#` comments inside code may be translated.
+  Warnings (glossary terms, Sie/impersonal register, English left in Chinese text) are printed; `--strict` makes them fail.
+- `pnpm --filter @pixsame/website translations:test` runs the unit tests of those checks.
+
+For an independent second opinion (free API keys, not needed in CI): `DEEPL_API_KEY=... pnpm --filter @pixsame/website
+translations:review --locale=pl` (pl, de: DeepL reference translation, divergent paragraphs flagged) or
+`GEMINI_API_KEY=... ... --locale=zh` (zh, zh-tw: MQM-style critic). Reports land in the gitignored `.translation-review/`.
+The `site-translations` skill (`.claude/skills/site-translations`) describes the whole draft, review, lint, sign-off flow.
+
 ## Deploy (Cloudflare Pages)
 
 Deployed by `.github/workflows/website.yml` on every push to `main` that touches the site (after lint, build and tests), to the

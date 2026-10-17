@@ -1,0 +1,68 @@
+{
+  "doNotTranslate": [
+    "pixsame",
+    "Cypress",
+    "Playwright",
+    "Vitest",
+    "GitHub",
+    "Pull Request"
+  ],
+  "terms": [
+    {
+      "en": "baselines?",
+      "pl": ["baseline", "wzorc", "wzorz"],
+      "de": "Baseline",
+      "zh": "基线",
+      "zh-tw": "基準"
+    },
+    {
+      "en": "diffs?",
+      "pl": ["diff", "różnic", "różnice"],
+      "de": "Diff",
+      "zh": "差异",
+      "zh-tw": "差異"
+    },
+    {
+      "en": "thresholds?",
+      "pl": ["próg", "progu", "progi"],
+      "de": ["Schwellenwert", "Schwelle"],
+      "zh": "阈值",
+      "zh-tw": "門檻"
+    },
+    {
+      "en": "screenshots?",
+      "pl": "zrzut",
+      "de": "Screenshot",
+      "zh": "截图",
+      "zh-tw": "截圖"
+    },
+    {
+      "en": "snapshots?",
+      "pl": "snapshot",
+      "de": "Snapshot",
+      "zh": "快照",
+      "zh-tw": "快照"
+    },
+    {
+      "en": "manifests?",
+      "pl": "manifest",
+      "de": "Manifest",
+      "zh": ["清单", "manifest"],
+      "zh-tw": ["清單", "manifest"]
+    },
+    {
+      "en": "runners?",
+      "pl": "runner",
+      "de": "Runner",
+      "zh": "运行器",
+      "zh-tw": ["runner", "執行器"]
+    },
+    {
+      "en": "regression",
+      "pl": "regresj",
+      "de": "Regression",
+      "zh": "回归",
+      "zh-tw": "迴歸"
+    }
+  ]
+}

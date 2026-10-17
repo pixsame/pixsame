@@ -54,6 +54,10 @@ jobs:
         run: pnpm --filter @pixsame/website format:ci
       - name: Translated READMEs match the English README
         run: pnpm --filter @pixsame/website readme:check
+      - name: Translations keep code blocks and placeholders
+        run: |
+          pnpm --filter @pixsame/website translations:test
+          pnpm --filter @pixsame/website translations:lint
       - name: Build (static generate)
         run: pnpm --filter @pixsame/website build
         env:

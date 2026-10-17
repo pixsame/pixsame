@@ -1,2 +1,5 @@
 test-results
 playwright-report
+
+# Output of apps/website translations:review
+.translation-review
