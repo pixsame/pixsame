@@ -37,7 +37,7 @@
     "@nuxt/eslint": "1.17.0",
     "@playwright/test": "1.60.0",
     "eslint": "10.11.0",
-    "prettier": "3.9.9",
+    "prettier": "3.9.10",
     "sirv": "^3.0.2",
     "sirv-cli": "^3.0.1",
     "typescript": "^5.9.0",
