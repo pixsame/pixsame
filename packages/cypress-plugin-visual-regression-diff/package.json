@@ -102,6 +102,7 @@
   ],
   "dependencies": {
     "@frsource/base64": "1.0.237",
+    "visual-regression-manifest": "1.0.0-beta.1",
     "glob": "13.0.6",
     "meta-png": "1.0.6",
     "move-file": "4.1.0",

@@ -70,12 +70,14 @@ jobs:
       - name: Test component-testing
         run: pnpm test:ct:ci
       - uses: actions/upload-artifact@v7
+        if: always()
         with:
           name: test
           path: |
             examples/next/**/*.png
             examples/next/**/*.jpg
             examples/next/**/*.jpeg
+            examples/next/cypress/screenshots/visual-regression-manifest.*.json
 
   test-integration-coverage:
     name: test-integration-coverage
