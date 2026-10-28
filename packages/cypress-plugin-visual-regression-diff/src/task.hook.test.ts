@@ -17,6 +17,12 @@ import {
 import { generateScreenshotPath } from './screenshotPath.utils';
 import { getPNGMetadata, isImageGeneratedByPlugin } from './image.utils';
 import { IMAGE_SNAPSHOT_PREFIX } from './constants';
+import {
+  getManifestEntries,
+  getManifestPath,
+  resetManifest,
+} from './manifest.utils';
+import type { Manifest } from './types';
 
 setGracefulCleanup();
 
@@ -303,7 +309,7 @@ describe('approveImageTask', () => {
   });
 
   it('removes diff image and replaces old with new', async () => {
-    await approveImageTask({ img: newImgPath });
+    await approveImageTask({}, { img: newImgPath });
 
     expect((await fs.readFile(oldImgPath)).toString()).toBe(newFileContent);
     expect(existsSync(newImgPath)).toBe(false);
@@ -312,7 +318,7 @@ describe('approveImageTask', () => {
 
   it('writes to imgOld path when provided', async () => {
     const { path: customOldPath } = await file();
-    await approveImageTask({ img: newImgPath, imgOld: customOldPath });
+    await approveImageTask({}, { img: newImgPath, imgOld: customOldPath });
 
     expect((await fs.readFile(customOldPath)).toString()).toBe(newFileContent);
     expect(existsSync(newImgPath)).toBe(false);
@@ -480,7 +486,7 @@ describe('compareImagesTask', () => {
         await compareImagesTask({ testingType: 'e2e' }, cfg),
       ).toMatchObject({ error: true });
       // 2. user approves it (GUI "Replace image" button or manual rename)
-      await approveImageTask({ img: cfg.imgNew, imgOld: cfg.imgOld });
+      await approveImageTask({}, { img: cfg.imgNew, imgOld: cfg.imgOld });
       const baselineAfterApprove = readFileSync(cfg.imgOld);
       expect(isImageGeneratedByPlugin(baselineAfterApprove)).toBe(true);
 
@@ -582,6 +588,283 @@ describe('compareImagesTask', () => {
       expect(existsSync(stale)).toBe(true);
       expect(readFileSync(stale).toString()).not.toBe('stale');
     });
+  });
+});
+
+describe('run manifest', () => {
+  const manifestConfig = async () => {
+    const { path: projectRoot } = await dir();
+    return {
+      projectRoot,
+      screenshotsFolder: path.join(projectRoot, 'cypress', 'screenshots'),
+      testingType: 'e2e',
+      version: '16.1.0',
+      expose: {},
+      env: {},
+    } as Cypress.PluginConfigOptions;
+  };
+  const readEntries = (config: Cypress.PluginConfigOptions) =>
+    (
+      JSON.parse(
+        readFileSync(getManifestPath(config) as string, 'utf8'),
+      ) as Manifest
+    ).entries;
+  const entryOptions = {
+    imagesPath: '{spec_path}/shots',
+    maxDiffThreshold: 0.5,
+    diffConfig: {},
+    createMissingImages: true,
+    updateImages: false as const,
+    forceDeviceScaleFactor: true,
+    screenshotConfig: {},
+  };
+  // pixelmatch with the 4.x default includeAA: true (5.0 flips it to false)
+  const failingDiffRatio = expect.closeTo(0.7104, 3);
+  // real-looking names, so `.diff.png` siblings are derived like in production
+  const shotConfig = async (
+    config: Cypress.PluginConfigOptions,
+    overrides: Partial<CompareImagesCfg> = {},
+    { sameImage = false, stampedBaseline = true } = {},
+  ) => {
+    const shots = path.join(config.projectRoot, 'cypress', 'e2e', 'shots');
+    const imgNew = path.join(shots, 'home renders_#0.actual.png');
+    const imgOld = path.join(shots, 'home renders_#0.png');
+    await writeTmpFixture(imgNew, sameImage ? oldImgFixture : newImgFixture);
+    if (stampedBaseline) await writeTmpFixture(imgOld, oldImgFixture);
+    else await writeUnstampedFixture(imgOld, oldImgFixture);
+    return generateConfig({
+      imgNew,
+      imgOld,
+      specPath: 'cypress/e2e/home.cy.ts',
+      testTitlePath: ['home', 'renders'],
+      currentRetryNumber: 0,
+      platform: {
+        os: 'linux',
+        arch: 'x64',
+        browser: { name: 'electron', version: '130' },
+      },
+      viewport: { width: 1000, height: 660 },
+      options: entryOptions,
+      ...overrides,
+    });
+  };
+
+  beforeEach(() => resetManifest({}, undefined, {}));
+
+  it('does not write anything when the config has no projectRoot', async () => {
+    const cfg = await generateConfig({});
+    await compareImagesTask({ testingType: 'e2e' }, cfg);
+    expect(getManifestEntries()).toHaveLength(0);
+  });
+
+  it.each([
+    {
+      name: 'passed',
+      overrides: {},
+      files: { sameImage: true },
+      removeBaseline: false,
+      expected: {
+        status: 'passed',
+        actualPath: null,
+        diffPath: null,
+        baselineWritten: false,
+        diffRatio: 0,
+        baselineSize: { width: 125, height: 125 },
+      },
+    },
+    {
+      name: 'failed',
+      overrides: {},
+      files: {},
+      removeBaseline: false,
+      expected: {
+        status: 'failed',
+        actualPath: 'cypress/e2e/shots/home renders_#0.actual.png',
+        diffPath: 'cypress/e2e/shots/home renders_#0.diff.png',
+        baselineWritten: false,
+        diffRatio: failingDiffRatio,
+        baselineSize: { width: 125, height: 125 },
+      },
+    },
+    {
+      name: "updated via 'failures-only'",
+      overrides: {
+        updateImages: 'failures-only' as const,
+        maxDiffThreshold: 0,
+      },
+      files: {},
+      removeBaseline: false,
+      expected: {
+        status: 'updated',
+        actualPath: null,
+        diffPath: null,
+        baselineWritten: true,
+        diffRatio: failingDiffRatio,
+        baselineSize: { width: 125, height: 125 },
+      },
+    },
+    {
+      name: 'updated via updateImages: true',
+      overrides: { updateImages: true as const },
+      files: {},
+      removeBaseline: false,
+      expected: {
+        status: 'updated',
+        actualPath: null,
+        diffPath: null,
+        baselineWritten: true,
+        diffRatio: 0,
+        baselineSize: {},
+      },
+    },
+    {
+      name: 'created',
+      overrides: {},
+      files: {},
+      removeBaseline: true,
+      expected: {
+        status: 'created',
+        actualPath: null,
+        diffPath: null,
+        baselineWritten: true,
+        diffRatio: 0,
+        baselineSize: {},
+      },
+    },
+    {
+      name: 'missing-baseline',
+      overrides: { createMissingImages: false },
+      files: {},
+      removeBaseline: true,
+      expected: {
+        status: 'missing-baseline',
+        actualPath: 'cypress/e2e/shots/home renders_#0.actual.png',
+        diffPath: null,
+        baselineWritten: false,
+        diffRatio: 0,
+        baselineSize: {},
+      },
+    },
+  ])(
+    'records a $name entry',
+    async ({ overrides, files, removeBaseline, expected }) => {
+      const config = await manifestConfig();
+      const cfg = await shotConfig(config, overrides, files);
+      if (removeBaseline) await fs.unlink(cfg.imgOld);
+
+      const result = await compareImagesTask(config, cfg);
+
+      const entries = readEntries(config);
+      expect(entries).toHaveLength(1);
+      expect(entries[0]).toEqual({
+        name: 'home renders_#0',
+        test: {
+          file: 'cypress/e2e/home.cy.ts',
+          titlePath: ['home', 'renders'],
+          retry: 0,
+        },
+        status: expected.status,
+        comparison: {
+          diffRatio: expected.diffRatio,
+          threshold: overrides.maxDiffThreshold ?? 0.5,
+        },
+        images: {
+          baseline: {
+            path: 'cypress/e2e/shots/home renders_#0.png',
+            ...expected.baselineSize,
+          },
+          actual: {
+            path: expected.actualPath,
+            ...(files.sameImage
+              ? { width: 125, height: 125 }
+              : { width: 250, height: 181 }),
+          },
+          diff: { path: expected.diffPath },
+        },
+        baselineWritten: expected.baselineWritten,
+        recordedAt: expect.any(String),
+        platform: {
+          os: 'linux',
+          arch: 'x64',
+          browser: { name: 'electron', version: '130' },
+        },
+        viewport: { width: 1000, height: 660 },
+        options: entryOptions,
+        // derived by the manifest builder from `platform.browser`
+        renderer: {
+          backend: 'native',
+          browser: 'electron',
+          browserVersion: '130',
+        },
+        // hashed exactly when the file is on disk after the comparison
+        hashes: {
+          ...(existsSync(cfg.imgOld) && { baseline: expect.any(String) }),
+          ...(expected.actualPath && { actual: expect.any(String) }),
+          ...(expected.diffPath && { diff: expect.any(String) }),
+        },
+        message: result?.message,
+      });
+      // the manifest mirrors the disk
+      expect(existsSync(cfg.imgNew)).toBe(expected.actualPath !== null);
+      expect(existsSync(cfg.imgNew.replace('.actual.png', '.diff.png'))).toBe(
+        expected.diffPath !== null,
+      );
+    },
+  );
+
+  it('reports a silently refreshed outdated baseline as passed + baselineWritten', async () => {
+    const config = await manifestConfig();
+    const cfg = await shotConfig(
+      config,
+      {},
+      { sameImage: true, stampedBaseline: false },
+    );
+
+    await compareImagesTask(config, cfg);
+
+    expect(readEntries(config)[0]).toMatchObject({
+      status: 'passed',
+      baselineWritten: true,
+    });
+    expect(isImageGeneratedByPlugin(readFileSync(cfg.imgOld))).toBe(true);
+  });
+
+  it('marks an entry approved after approveImageTask', async () => {
+    const config = await manifestConfig();
+    const cfg = await shotConfig(config);
+    expect(await compareImagesTask(config, cfg)).toMatchObject({ error: true });
+
+    await approveImageTask(config, {
+      img: cfg.imgNew,
+      imgOld: cfg.imgOld,
+      specPath: 'cypress/e2e/home.cy.ts',
+    });
+
+    expect(readEntries(config)[0]).toMatchObject({
+      name: 'home renders_#0',
+      status: 'approved',
+      baselineWritten: true,
+      images: {
+        baseline: { path: 'cypress/e2e/shots/home renders_#0.png' },
+        actual: { path: null, width: 250, height: 181 },
+        diff: { path: null },
+      },
+      platform: { os: 'linux', browser: { name: 'electron' } },
+      viewport: { width: 1000, height: 660 },
+      options: entryOptions,
+    });
+    expect(existsSync(cfg.imgNew)).toBe(false);
+  });
+
+  it('drops the entries of a spec when cleanupImagesTask runs for it', async () => {
+    const config = await manifestConfig();
+    await compareImagesTask(config, await shotConfig(config));
+
+    cleanupImagesTask(config, { specPath: 'cypress/e2e/other.cy.ts' });
+    expect(readEntries(config)).toHaveLength(1);
+
+    cleanupImagesTask(config, { specPath: 'cypress/e2e/home.cy.ts' });
+    expect(readEntries(config)).toHaveLength(0);
   });
 });
 
