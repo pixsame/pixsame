@@ -37,16 +37,16 @@
   "engines": {
     "node": ">=20.9.0"
   },
-  "packageManager": "pnpm@12.5.1",
+  "packageManager": "pnpm@12.6.0",
   "peerDependencies": {
     "@playwright/test": ">=1.40.0"
   },
   "dependencies": {
-    "@pixsame/manifest": "workspace:^",
     "meta-png": "1.0.6",
     "pixelmatch": "7.2.0",
     "sanitize-filename": "1.6.4",
-    "sharp": "0.35.4"
+    "sharp": "0.35.4",
+    "visual-regression-manifest": "1.0.0-beta.1"
   },
   "devDependencies": {
     "@frsource/prettier-config": "^1.11.0",

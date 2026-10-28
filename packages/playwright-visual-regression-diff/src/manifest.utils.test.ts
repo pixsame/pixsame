@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { dir, setGracefulCleanup } from 'tmp-promise';
 import {
+  MANIFEST_SPEC_VERSION,
   ManifestWriter,
   isManifestFileName,
   mergeManifests,
@@ -10,9 +11,10 @@ import {
   readManifestFile,
   readManifestFiles,
   validateManifest,
-} from '@pixsame/manifest';
+} from 'visual-regression-manifest';
 import { REMOTE_INFO_ENV_KEY } from './constants';
 import {
+  PACKAGE_NAME,
   createManifestWriter,
   manifestFileNameFor,
   manifestPathFor,
@@ -250,7 +252,7 @@ describe('createManifestWriter', () => {
       actualSize: { width: 2, height: 2 },
       baselineSize: { width: 1, height: 1 },
       platform: {
-        os: 'linux',
+        osPlatform: 'linux',
         arch: 'x64',
         browser: { name: 'chromium', version: '131.0.0.0', headless: true },
       },
@@ -283,9 +285,15 @@ describe('createManifestWriter', () => {
       parseManifestJson(fs.readFileSync(manifestPath, 'utf8'), manifestPath),
     ).not.toThrow();
     expect(manifest).toMatchObject({
-      version: 1,
+      reportFormat: 'visual-regression-manifest',
+      specVersion: MANIFEST_SPEC_VERSION,
       projectRoot: root,
-      ci: { provider: 'github', repository: 'o/r', pullRequest: { number: 7 } },
+      tool: { name: PACKAGE_NAME, version: expect.any(String) },
+      ci: {
+        provider: 'github',
+        repositoryName: 'o/r',
+        pullRequest: { number: 7 },
+      },
       options: { maxDiffThreshold: 0.02 },
       runner: { name: 'playwright', parallelIndex: 0, workerIndex: 0 },
     });
@@ -294,7 +302,7 @@ describe('createManifestWriter', () => {
       ['nav_#0', 'created'],
     ]);
     expect(manifest.entries[0]).toMatchObject({
-      test: { file: 'tests/home.spec.ts', titlePath: ['home', 'renders'] },
+      test: { filePath: 'tests/home.spec.ts', titlePath: ['home', 'renders'] },
       images: {
         baseline: { path: 'tests/__image_snapshots__/home_#0.png', width: 1 },
         actual: { path: 'tests/__image_snapshots__/home_#0.actual.png' },
@@ -305,7 +313,7 @@ describe('createManifestWriter', () => {
     });
   });
 
-  it('merges the files of several worker processes into one run without warnings', async () => {
+  it('merges the files of several worker processes into one run, the retried worker winning', async () => {
     const { path: root } = await dir();
     const outputDir = path.join(root, 'test-results');
     const env = {
@@ -330,7 +338,7 @@ describe('createManifestWriter', () => {
       titlePath: ['home', name],
       retry,
       status,
-      platform: { os: 'linux', browser: { name: 'chromium' } },
+      platform: { osPlatform: 'linux', browser: { name: 'chromium' } },
     });
 
     // worker 0 ran two tests and failed on the second; Playwright then
@@ -358,15 +366,22 @@ describe('createManifestWriter', () => {
       'visual-regression-manifest.playwright.w2.json',
     ]);
     // the same identity in every file: one run, one commit
-    expect(new Set(files.map((f) => f.manifest.ci?.runId))).toEqual(
+    expect(new Set(files.map((f) => f.manifest.ci?.buildId))).toEqual(
       new Set(['9']),
     );
 
     const run = mergeManifests(
       files.map((f) => ({ manifest: f.manifest, label: f.file })),
-      { runId: '9', repository: 'o/r' },
+      { buildId: '9', repositoryName: 'o/r' },
     );
-    expect(run.warnings).toEqual([]);
+    // the merger cannot tell a Playwright retry in a fresh worker from two
+    // baselines sharing one identity, so it flags the repeated entry; the
+    // later file still wins below
+    expect(run.warnings).toEqual([
+      expect.stringMatching(
+        /^.*w2\.json: `nav_#0` \(linux \/ chromium\) was also reported by .*w0\.json with a different result/,
+      ),
+    ]);
     expect(
       run.entries.map((e) => [
         e.entry.name,

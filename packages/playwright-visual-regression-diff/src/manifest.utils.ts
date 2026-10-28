@@ -7,13 +7,13 @@ import {
   type ManifestEntryOptions,
   type ManifestRenderer,
   type ManifestRunner,
-} from '@pixsame/manifest';
+} from 'visual-regression-manifest';
 import { toPosix } from './fs.utils';
 import { readRemoteInfo } from './remote';
 
 /**
  * The Playwright side of the run manifest: maps a worker's config onto
- * `ManifestWriter` from `@pixsame/manifest`, which owns
+ * `ManifestWriter` from `visual-regression-manifest`, which owns
  * the format and the file. Nothing here knows the manifest shape itself.
  */
 
@@ -55,19 +55,25 @@ export const manifestPathFor = (
   return path.join(outputDir, manifestFileNameFor(workerIndex));
 };
 
+/** `tool.name` of the manifests this package writes. */
+export const PACKAGE_NAME = '@pixsame/playwright';
+
 /* c8 ignore start */
-export const playwrightVersion = (): string | undefined => {
+const versionOf = (packageJson: string): string | undefined => {
   try {
-    return (
-      createRequire(__filename)('@playwright/test/package.json') as {
-        version?: string;
-      }
-    ).version;
+    return (createRequire(__filename)(packageJson) as { version?: string })
+      .version;
   } catch {
     return undefined;
   }
 };
 /* c8 ignore stop */
+
+export const playwrightVersion = () =>
+  versionOf('@playwright/test/package.json');
+
+/** This package's own version, for the manifest's `tool` block. */
+export const packageVersion = () => versionOf('../package.json');
 
 const relativeToRoot = (rootDir: string, p: string | undefined) =>
   p ? toPosix(path.relative(rootDir, p)) || '.' : undefined;
@@ -178,6 +184,7 @@ export const createManifestWriter = (
 ) =>
   new ManifestWriter(manifestPath, {
     projectRoot: input.config.rootDir,
+    tool: { name: PACKAGE_NAME, version: packageVersion() },
     options: input.options,
     runner: runnerFor(input),
     ...(input.env && { env: input.env }),
