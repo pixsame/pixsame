@@ -1,6 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { readManifestFile, validateManifest } from '@pixsame/manifest';
+import {
+  MANIFEST_SPEC_VERSION,
+  readManifestFile,
+  validateManifest,
+} from 'visual-regression-manifest';
 import { test, expect } from '../src';
 import { manifestFileNameFor } from '../src/manifest.utils';
 
@@ -100,14 +104,16 @@ test.describe('matchImage', () => {
     const manifest = readManifestFile(manifestPath);
     expect(validateManifest(manifest)).toEqual([]);
     expect(manifest).toMatchObject({
-      version: 1,
+      reportFormat: 'visual-regression-manifest',
+      specVersion: MANIFEST_SPEC_VERSION,
+      tool: { name: '@pixsame/playwright' },
       runner: { name: 'playwright', browser: { name: 'chromium' } },
     });
     const entry = manifest.entries.find((e) =>
       e.test.titlePath.join(' ').endsWith('validates against the standard'),
     );
     expect(entry).toMatchObject({
-      test: { file: 'smoke.spec.ts' },
+      test: { filePath: 'smoke.spec.ts' },
       renderer: { browser: 'chromium' },
       platform: { browser: { name: 'chromium' } },
       viewport: { width: 640, height: 400 },

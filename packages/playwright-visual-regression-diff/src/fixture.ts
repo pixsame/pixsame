@@ -12,7 +12,7 @@ import {
   type PlaywrightWorkerOptions,
   type TestInfo,
 } from '@playwright/test';
-import type { ManifestWriter } from '@pixsame/manifest';
+import type { ManifestWriter } from 'visual-regression-manifest';
 import {
   compareImages,
   type CompareStatus,
@@ -94,7 +94,7 @@ export type VisualRegressionWorkerFixtures = {
    * @default '<outputDir>/visual-regression-manifest.playwright.w<workerIndex>.json'
    */
   visualRegressionManifestPath: string | false | undefined;
-  /** The worker's manifest writer from `@pixsame/manifest`; `null` when disabled. */
+  /** The worker's manifest writer from `visual-regression-manifest`; `null` when disabled. */
   visualRegressionManifest: ManifestWriter | null;
 };
 
@@ -227,7 +227,7 @@ export const visualRegressionFixtures: Fixtures<
         baselineSize: result.imgOldSize,
         message: result.message,
         platform: {
-          os: process.platform,
+          osPlatform: process.platform,
           arch: process.arch,
           browser: { name: browserName, version: browser.version(), headless },
         },
