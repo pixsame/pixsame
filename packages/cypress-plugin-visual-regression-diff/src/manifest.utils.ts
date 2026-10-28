@@ -1,3 +1,4 @@
+import { createRequire } from 'module';
 import os from 'os';
 import path from 'path';
 import {
@@ -13,11 +14,7 @@ import {
 import fs from 'fs';
 import { FILE_SUFFIX } from './constants';
 import type { ImageInfo } from './image.utils';
-import {
-  getPluginConfig,
-  getPluginVersion,
-  supportsExpose,
-} from './version.utils';
+import { getPluginConfig, supportsExpose } from './version.utils';
 import type {
   ManifestBrowser,
   ManifestEntry,
@@ -102,6 +99,22 @@ let builder: ManifestBuilder | null = null;
 
 /** `tool.name` of the manifests this plugin writes. */
 export const PLUGIN_NAME = '@pixsame/cypress-plugin-visual-regression-diff';
+/**
+ * This package's own version, for the manifest's `tool` block. Read from the
+ * published `package.json` next to `dist`; `undefined` when it cannot be
+ * resolved (e.g. from an ESM bundle without `__filename`). Lives here, on the
+ * Node side, so the browser bundle (`support.js`) never imports `module`.
+ */
+const getPluginVersion = (): string | undefined => {
+  try {
+    return (
+      createRequire(__filename)('../package.json') as { version?: string }
+    ).version;
+  } catch {
+    /* c8 ignore next */
+    return undefined;
+  }
+};
 const version = getPluginVersion();
 
 const OPTION_KEY = 'pluginVisualRegressionManifestPath';
