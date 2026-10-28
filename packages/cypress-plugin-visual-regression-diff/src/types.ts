@@ -20,7 +20,7 @@ export type PendingDiffRecord = {
   deferred?: boolean;
 };
 
-// the run manifest contract lives in @frsource/visual-regression-manifest;
+// the run manifest contract lives in visual-regression-manifest;
 // re-exported so the plugin's own modules keep importing it from here
 export type {
   Manifest,
@@ -36,4 +36,4 @@ export type {
   ManifestRunner,
   ManifestStatus,
   ManifestUpload,
-} from '@frsource/visual-regression-manifest';
+} from 'visual-regression-manifest';

@@ -145,25 +145,31 @@ npx cypress run --env "pluginVisualRegressionCleanupUnusedImages=true"
 
 ## Run manifest (CI integration)
 
-From 4.3 on, every run writes a JSON manifest listing each `matchImage` comparison: which test it came from, whether it passed, failed, created or updated its baseline, the diff ratio, and the project-relative paths of the baseline, `.actual.png` and `.diff.png` files. Next to the entries it records where the run happened (CI provider, repository, commit, pull request, run id) and what it ran with (browser, specs, config file, plugin options), so a tool reading the file can report on the right PR, download the right artifact, or re-run the same comparisons. It is meant for CI tooling (PR comments, review dashboards, approval bots) that runs after Cypress is done.
+From 1.1 on, every run writes a JSON manifest listing each `matchImage` comparison: which test it came from, whether it passed, failed, created or updated its baseline, the diff ratio, and the project-relative paths of the baseline, `.actual.png` and `.diff.png` files. Next to the entries it records where the run happened (CI provider, repository, commit, pull request, run id) and what it ran with (browser, specs, config file, plugin options), so a tool reading the file can report on the right PR, download the right artifact, or re-run the same comparisons. It is meant for CI tooling (PR comments, review dashboards, approval bots) that runs after Cypress is done.
 
-The format is a runner-agnostic standard maintained in [`@frsource/visual-regression-manifest`](https://www.npmjs.com/package/@frsource/visual-regression-manifest), which ships the JSON Schema, the TypeScript types, a validating reader, a merger for the manifests of a whole run and converters for tools that write no manifest of their own (Playwright's `toHaveScreenshot`, plain image files). Build your tooling on that package rather than on this plugin.
+The format is an open, runner-agnostic standard built upon [CTRF](https://ctrf.io) and documented at [visual-regression.dev/manifest](https://visual-regression.dev/manifest). The npm package [`visual-regression-manifest`](https://www.npmjs.com/package/visual-regression-manifest) ships the JSON Schema, the TypeScript types, a validating reader, a merger for the manifests of a whole run and converters for tools that write no manifest of their own (Playwright's `toHaveScreenshot`, Vitest, jest-image-snapshot, BackstopJS, CTRF reports, plain image files). Build your tooling on that package rather than on this plugin.
 
 By default the file lands next to your other Cypress artifacts, at `<screenshotsFolder>/visual-regression-manifest.<testingType>.json` (e.g. `cypress/screenshots/visual-regression-manifest.e2e.json`). Upload it together with your snapshots directory as a CI artifact.
 
 ```jsonc
 {
-  "version": 1,
+  "reportFormat": "visual-regression-manifest",
+  "specVersion": "1.0.0-beta.1",
   "createdAt": "2026-09-22T10:00:00.000Z",
   "updatedAt": "2026-09-22T10:03:12.481Z",
   "projectRoot": "/home/runner/work/app/app",
-  "platform": { "os": "linux", "arch": "x64", "osVersion": "6.8.0-1021-azure" },
+  "platform": {
+    "osPlatform": "linux",
+    "arch": "x64",
+    "osRelease": "6.8.0-1021-azure",
+  },
   "ci": {
     "provider": "github",
-    "repository": "acme/app",
-    "sha": "0f1e2d…", // on pull_request events: the merge commit
+    "repositoryName": "acme/app",
+    "repositoryUrl": "https://github.com/acme/app",
+    "commit": "0f1e2d…", // on pull_request events: the merge commit
     "ref": "refs/pull/42/merge",
-    "branch": "feat/new-header",
+    "branchName": "feat/new-header",
     "pullRequest": {
       "number": 42,
       "headSha": "9a8b7c…",
@@ -171,13 +177,17 @@ By default the file lands next to your other Cypress artifacts, at `<screenshots
       "baseRef": "main",
     },
     "event": "pull_request",
-    "runId": "1234567890",
+    "buildId": "1234567890",
+    "buildName": "CI",
+    "buildUrl": "https://github.com/acme/app/actions/runs/1234567890/attempts/1",
     "runAttempt": "1",
-    "workflow": "CI",
     "job": "e2e",
-    "url": "https://github.com/acme/app/actions/runs/1234567890/attempts/1",
     "workspace": "/home/runner/work/app/app",
   },
+  "tool": {
+    "name": "@pixsame/cypress-plugin-visual-regression-diff",
+    "version": "1.1.0",
+  }, // what wrote the file
   "options": { "updateImages": "failures-only" }, // global pluginVisualRegression* options, prefix stripped
   "runner": {
     "name": "cypress",
@@ -196,11 +206,21 @@ By default the file lands next to your other Cypress artifacts, at `<screenshots
     "baseUrl": "http://localhost:3000",
     "viewport": { "width": 1280, "height": 720 },
   },
+  "summary": {
+    "entries": 1,
+    "passed": 0,
+    "failed": 1,
+    "missingBaseline": 0,
+    "created": 0,
+    "updated": 0,
+    "approved": 0,
+    "needsHuman": 1,
+  },
   "entries": [
     {
       "name": "home page renders_#0",
       "test": {
-        "file": "cypress/e2e/home.cy.ts",
+        "filePath": "cypress/e2e/home.cy.ts",
         "titlePath": ["home page", "renders"],
         "retry": 0,
       },
@@ -224,7 +244,7 @@ By default the file lands next to your other Cypress artifacts, at `<screenshots
       "baselineWritten": false,
       "recordedAt": "2026-09-22T10:03:12.480Z",
       "platform": {
-        "os": "linux",
+        "osPlatform": "linux",
         "arch": "x64",
         "browser": {
           "name": "chrome",
@@ -273,10 +293,12 @@ Run-level fields:
 | field                    | meaning                                                                                                                                                                                                                                             |
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `createdAt`, `updatedAt` | when the run started and when the file was last rewritten (ISO 8601)                                                                                                                                                                                |
-| `platform`               | `os` (`linux`, `darwin`, `win32`), `arch` and, when known, the OS version of the machine that ran the tests                                                                                                                                         |
+| `platform`               | `osPlatform` (`linux`, `darwin`, `win32`), `arch`, the kernel `osRelease` and, in run mode, the human-readable `osVersion` of the machine that ran the tests                                                                                        |
+| `tool`                   | what wrote the file: this plugin and its version                                                                                                                                                                                                    |
 | `ci`                     | detected from environment variables on GitHub Actions and GitLab CI; `{ "provider": null }` on other CI systems (only `CI` is set), `null` when not on CI. Only the listed keys are ever copied from the environment                                |
 | `options`                | every `pluginVisualRegression*` option from `expose`/`env`, prefix stripped, values as configured (CLI values stay strings)                                                                                                                         |
 | `runner`                 | what ran the tests. `mode` is `run` or `open`; `browser` is the launched browser; `specs` is only known in run mode; `configFile` and `specs` are relative to `projectRoot`. Cypress Cloud runs also get `cloud.runUrl`, `group`, `tag`, `parallel` |
+| `summary`                | counts of the entries per status; `needsHuman` is `failed` + `missingBaseline`, so a consumer can decide without reading the entries                                                                                                                |
 
 Notes for consumers:
 
@@ -286,11 +308,11 @@ Notes for consumers:
 - Every entry carries its own `platform` and `viewport`, so entries from a matrix of machines can be told apart after concatenating several manifests. `options` on an entry is the exact `matchImage` input (`imagesPath` keeps its tokens unexpanded); `comparison` is the result.
 - `platform` is where the test ran, `renderer` is where the pixels came from. Today every screenshot is taken by the browser Cypress drives, so `renderer.backend` is `native` and `renderer.browser` repeats `platform.browser.name`. The field exists so that a renderer other than the local browser (a pinned Docker image, a hosted renderer) can identify itself with `rendererVersion` and `imageDigest`, and so that a run that had to fall back to the local browser can be flagged with `renderer.fallback: true`. Treat entries with different renderers as different baselines.
 - `hashes` holds the sha256 of each file in `images` that exists on disk. Use it to skip re-uploading unchanged baselines, to check that an artifact matches the manifest, or to spot two entries that produced identical pixels.
-- Mapping to a pull request: use `ci.repository` and `ci.pullRequest.number`. On GitHub `pull_request` events `ci.sha` is the temporary merge commit, so anything that pushes to the PR branch must use `ci.pullRequest.headSha` / `headRef`. The workflow artifact is found via `ci.runId` and `ci.runAttempt`.
+- Mapping to a pull request: use `ci.repositoryName` and `ci.pullRequest.number`. On GitHub `pull_request` events `ci.commit` is the temporary merge commit, so anything that pushes to the PR branch must use `ci.pullRequest.headSha` / `headRef`. The workflow artifact is found via `ci.buildId` and `ci.runAttempt`.
 - Reproducing a run: `npx cypress run --<runner.testingType> --browser <runner.browser.name> --config-file <runner.configFile> --spec <runner.specs joined with ,>`, plus one `--expose "pluginVisualRegression<Key>=<value>"` per entry of `options`. The manifest stores these as parts rather than a command string, so shell quoting and the package manager stay your choice.
-- The file is rewritten after every comparison, so it is complete even when the run is aborted. When specs run in parallel on several machines, each machine writes its own manifest; `**/*visual-regression-manifest*.json` finds all of them in an artifact, and `readManifestFiles` + `mergeManifests` from `@frsource/visual-regression-manifest` turn them into one list with a later CI attempt winning over an earlier one.
-- Only the `runner` block is Cypress-specific; the rest of the format is shared with every other writer. `version` is bumped on breaking changes to the format only; consumers ignore keys they do not know.
-- The `Manifest*` types are re-exported from `@frsource/cypress-plugin-visual-regression-diff/plugins` for convenience; they are the ones from `@frsource/visual-regression-manifest`.
+- The file is rewritten after every comparison, so it is complete even when the run is aborted. When specs run in parallel on several machines, each machine writes its own manifest; `**/visual-regression-manifest{,.*}.json` (`MANIFEST_FILE_GLOB` in the package) finds all of them in an artifact, and `readManifestFiles` + `mergeManifests` from `visual-regression-manifest` turn them into one list with a later CI attempt winning over an earlier one.
+- Only the `runner` block and the keys of `options` are Cypress-specific; the rest of the format is shared with every other writer. `specVersion` follows semver and its major is bumped on breaking changes to the format only; consumers ignore keys they do not know. Because the field names follow CTRF, `toCtrf` from the package turns a manifest into a [CTRF](https://ctrf.io) report for tooling that reads that format.
+- The `Manifest*` types are re-exported from `@pixsame/cypress-plugin-visual-regression-diff/plugins` for convenience; they are the ones from `visual-regression-manifest`.
 
 The manifest is on by default. To write it somewhere else (paths are resolved against the project root) or to turn it off, use the `pluginVisualRegressionManifestPath` key (`false` disables it, nothing else changes):
 

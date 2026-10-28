@@ -9,11 +9,15 @@ import {
   type ManifestEntryPlatform,
   type ManifestHeader,
   type ManifestViewport,
-} from '@frsource/visual-regression-manifest';
+} from 'visual-regression-manifest';
 import fs from 'fs';
 import { FILE_SUFFIX } from './constants';
 import type { ImageInfo } from './image.utils';
-import { getPluginConfig, supportsExpose } from './version.utils';
+import {
+  getPluginConfig,
+  getPluginVersion,
+  supportsExpose,
+} from './version.utils';
 import type {
   ManifestBrowser,
   ManifestEntry,
@@ -27,7 +31,7 @@ export { toPosix };
 
 /**
  * The plugin's side of the run manifest: maps the Cypress config and events
- * onto `ManifestBuilder` from `@frsource/visual-regression-manifest`, which
+ * onto `ManifestBuilder` from `visual-regression-manifest`, which
  * owns the format, and writes the file where the config says.
  */
 
@@ -95,6 +99,10 @@ export type ManifestRecordInput = {
 
 // one manifest per process: Cypress runs the plugin file once per run
 let builder: ManifestBuilder | null = null;
+
+/** `tool.name` of the manifests this plugin writes. */
+export const PLUGIN_NAME = '@pixsame/cypress-plugin-visual-regression-diff';
+const version = getPluginVersion();
 
 const OPTION_KEY = 'pluginVisualRegressionManifestPath';
 const OPTION_PREFIX = 'pluginVisualRegression';
@@ -199,11 +207,15 @@ export const initManifestRun = (
   builder = new ManifestBuilder({
     projectRoot: config.projectRoot as string,
     platform: {
-      os: config.platform ?? process.platform,
+      osPlatform: config.platform ?? process.platform,
       arch: config.arch ?? process.arch,
-      osVersion: details?.system?.osVersion ?? os.release(),
+      osRelease: os.release(),
+      ...(details?.system?.osVersion && {
+        osVersion: details.system.osVersion,
+      }),
     },
     env,
+    tool: { name: PLUGIN_NAME, ...(version && { version }) },
     options: getPluginOptions(config),
     runner,
   });

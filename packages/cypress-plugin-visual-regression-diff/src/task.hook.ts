@@ -5,7 +5,7 @@ import pixelmatch from 'pixelmatch';
 type PixelmatchOptions = NonNullable<Parameters<typeof pixelmatch>[5]>;
 import { moveFile } from 'move-file';
 import path from 'path';
-import { readPngSize } from '@frsource/visual-regression-manifest';
+import { readPngSize } from 'visual-regression-manifest';
 import { FILE_SUFFIX, TASK } from './constants';
 import { getPluginConfig } from './version.utils';
 import {

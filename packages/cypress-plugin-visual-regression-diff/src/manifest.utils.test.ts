@@ -3,7 +3,10 @@ import path from 'path';
 import { createHash } from 'crypto';
 import { existsSync, promises as fs, readFileSync } from 'fs';
 import { dir, setGracefulCleanup } from 'tmp-promise';
+import { MANIFEST_SPEC_VERSION } from 'visual-regression-manifest';
+import pkg from '../package.json';
 import {
+  PLUGIN_NAME,
   dropSpecEntries,
   getManifestEntries,
   getManifestPath,
@@ -47,7 +50,7 @@ const config = async (
 const startRun = (cfg: ManifestConfig) => initManifestRun(cfg, undefined, {});
 
 const platform = {
-  os: 'linux',
+  osPlatform: 'linux',
   arch: 'x64',
   browser: { name: 'chrome', version: '130' },
 };
@@ -188,7 +191,7 @@ describe('recordManifestEntry', () => {
     expect(entry).toEqual({
       name: 'home_#0',
       test: {
-        file: 'cypress/e2e/home.cy.ts',
+        filePath: 'cypress/e2e/home.cy.ts',
         titlePath: ['home', 'renders'],
         retry: 0,
       },
@@ -210,16 +213,18 @@ describe('recordManifestEntry', () => {
       message: 'differs',
     });
     expect(readManifest(cfg)).toEqual({
-      version: 1,
+      reportFormat: 'visual-regression-manifest',
+      specVersion: MANIFEST_SPEC_VERSION,
       createdAt: expect.any(String),
       updatedAt: expect.any(String),
       projectRoot: cfg.projectRoot,
       platform: {
-        os: process.platform,
+        osPlatform: process.platform,
         arch: process.arch,
-        osVersion: expect.any(String),
+        osRelease: expect.any(String),
       },
       ci: null,
+      tool: { name: PLUGIN_NAME, version: pkg.version },
       options: {},
       runner: {
         name: 'cypress',
@@ -229,6 +234,16 @@ describe('recordManifestEntry', () => {
         configFile: 'cypress.config.ts',
         baseUrl: 'http://localhost:3000',
         viewport: { width: 1000, height: 660 },
+      },
+      summary: {
+        entries: 1,
+        passed: 0,
+        failed: 1,
+        missingBaseline: 0,
+        created: 0,
+        updated: 0,
+        approved: 0,
+        needsHuman: 1,
       },
       entries: [entry],
     });
@@ -266,7 +281,10 @@ describe('recordManifestEntry', () => {
       recordManifestEntry(
         cfg,
         input(cfg, {
-          platform: { os: 'linux', browser: { name: 'electron', version: '' } },
+          platform: {
+            osPlatform: 'linux',
+            browser: { name: 'electron', version: '' },
+          },
         }),
       )?.renderer,
     ).toEqual({ backend: 'native', browser: 'electron' });
@@ -359,7 +377,7 @@ describe('recordManifestEntry', () => {
     );
 
     expect(
-      readManifest(cfg).entries.map((e) => `${e.test.file}:${e.name}`),
+      readManifest(cfg).entries.map((e) => `${e.test.filePath}:${e.name}`),
     ).toEqual(['a.cy.ts:b_#0', 'z.cy.ts:a_#0']);
   });
 
@@ -398,7 +416,10 @@ describe('markManifestEntryApproved', () => {
 
     expect(entry).toMatchObject({
       name: 'home_#0',
-      test: { file: 'cypress/e2e/home.cy.ts', titlePath: ['home', 'renders'] },
+      test: {
+        filePath: 'cypress/e2e/home.cy.ts',
+        titlePath: ['home', 'renders'],
+      },
       status: 'approved',
       comparison: { diffRatio: 0.3, threshold: 0.01 },
       images: {
@@ -427,7 +448,7 @@ describe('markManifestEntryApproved', () => {
 
     expect(entry).toEqual({
       name: 'fresh_#0',
-      test: { file: 'cypress/e2e/fresh.cy.ts', titlePath: [], retry: 0 },
+      test: { filePath: 'cypress/e2e/fresh.cy.ts', titlePath: [], retry: 0 },
       status: 'approved',
       comparison: { diffRatio: 0, threshold: 0 },
       images: {
@@ -560,7 +581,7 @@ describe('run-level data', () => {
     recordManifestEntry(cfg, input(cfg));
 
     expect(readManifest(cfg)).toMatchObject({
-      ci: { provider: 'github', repository: 'o/r' },
+      ci: { provider: 'github', repositoryName: 'o/r' },
       options: { updateImages: true },
       runner: {
         mode: 'open',

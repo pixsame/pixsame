@@ -639,7 +639,7 @@ describe('run manifest', () => {
       testTitlePath: ['home', 'renders'],
       currentRetryNumber: 0,
       platform: {
-        os: 'linux',
+        osPlatform: 'linux',
         arch: 'x64',
         browser: { name: 'electron', version: '130' },
       },
@@ -759,7 +759,7 @@ describe('run manifest', () => {
       expect(entries[0]).toEqual({
         name: 'home renders_#0',
         test: {
-          file: 'cypress/e2e/home.cy.ts',
+          filePath: 'cypress/e2e/home.cy.ts',
           titlePath: ['home', 'renders'],
           retry: 0,
         },
@@ -775,16 +775,18 @@ describe('run manifest', () => {
           },
           actual: {
             path: expected.actualPath,
-            ...(files.sameImage
-              ? { width: 125, height: 125 }
-              : { width: 250, height: 181 }),
+            // a passed comparison discards the actual image and its size with it
+            ...(expected.status !== 'passed' &&
+              (files.sameImage
+                ? { width: 125, height: 125 }
+                : { width: 250, height: 181 })),
           },
           diff: { path: expected.diffPath },
         },
         baselineWritten: expected.baselineWritten,
         recordedAt: expect.any(String),
         platform: {
-          os: 'linux',
+          osPlatform: 'linux',
           arch: 'x64',
           browser: { name: 'electron', version: '130' },
         },
@@ -849,7 +851,7 @@ describe('run manifest', () => {
         actual: { path: null, width: 250, height: 181 },
         diff: { path: null },
       },
-      platform: { os: 'linux', browser: { name: 'electron' } },
+      platform: { osPlatform: 'linux', browser: { name: 'electron' } },
       viewport: { width: 1000, height: 660 },
       options: entryOptions,
     });

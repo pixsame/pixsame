@@ -270,7 +270,7 @@ Cypress.Commands.add(
               testTitlePath: Cypress.currentTest.titlePath,
               currentRetryNumber,
               platform: {
-                os: Cypress.platform,
+                osPlatform: Cypress.platform,
                 arch: Cypress.arch,
                 browser: {
                   name: Cypress.browser.name,
