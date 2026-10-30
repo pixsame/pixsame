@@ -1,4 +1,10 @@
-import { FAB_BADGE_CLASS, FILE_SUFFIX, LINK_PREFIX, TASK } from './constants';
+import {
+  FAB_BADGE_CLASS,
+  FILE_SUFFIX,
+  LINK_PREFIX,
+  TASK,
+  type PathVariables,
+} from './constants';
 import { supportsExpose } from './version.utils';
 import {
   injectDeterministicStyle,
@@ -107,6 +113,14 @@ const optionWithDefaults = <K extends keyof Cypress.MatchImageOptions>(
 const getImagesPath = (options: Cypress.MatchImageOptions) =>
   optionWithDefaults(options, 'imagesPath', '{spec_path}/__image_snapshots__');
 
+// what the `{platform}`, `{os}` and `{browser}` tokens of `imagesPath` expand
+// to; `cy.screenshot` renders in the browser Cypress drives (Electron unless
+// `--browser` says otherwise), so that is the browser
+export const getPathVariables = (): PathVariables => ({
+  os: Cypress.platform,
+  browser: Cypress.browser.name,
+});
+
 // opt-in on 1.x (2.0 turns it on by default); `--expose key=true` on the CLI arrives as the string 'true'
 const isEnabled = (value: unknown) => value === true || value === 'true';
 
@@ -208,6 +222,7 @@ Cypress.Commands.add(
               options.title || Cypress.currentTest.titlePath.join(' '),
             imagesPath,
             specPath: Cypress.spec.relative,
+            pathVariables: getPathVariables(),
             currentRetryNumber,
             testId,
           },

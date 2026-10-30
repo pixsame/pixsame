@@ -4,6 +4,7 @@ import {
   IMAGE_SNAPSHOT_PREFIX,
   PATH_VARIABLES,
   WINDOWS_LIKE_DRIVE_REGEX,
+  type PathVariables,
 } from './constants';
 import sanitize from 'sanitize-filename';
 
@@ -20,11 +21,43 @@ const resetMap = (map: Record<string, unknown>) => {
   for (const key in map) delete map[key];
 };
 
+// a token value becomes a directory name (or part of one), so it must be safe
+// as a file name; only custom browser names can be anything unusual. The
+// values cross the `cy.task` JSON bridge, so a missing one must not throw here
+const toPathToken = (value: string | undefined) =>
+  sanitize(String(value ?? '')) || 'unknown';
+
+// every occurrence, without needing the es2021 lib for `replaceAll`
+const replaceToken = (text: string, token: string, value: string) =>
+  text.split(token).join(value);
+
+/**
+ * Expands `{platform}`, `{os}` and `{browser}` anywhere inside a path
+ * segment (`shots-{platform}` works too). Unknown `{...}` stay literal.
+ */
+export const expandPathVariables = (
+  pathPart: string,
+  { os, browser }: PathVariables,
+) => {
+  const osToken = toPathToken(os);
+  const browserToken = toPathToken(browser);
+  return [
+    [PATH_VARIABLES.platform, `${osToken}-${browserToken}`],
+    [PATH_VARIABLES.os, osToken],
+    [PATH_VARIABLES.browser, browserToken],
+  ].reduce(
+    (result, [token, value]) => replaceToken(result, token, value),
+    pathPart,
+  );
+};
+
 const parsePathPartVariables = (
   specPath: string,
+  pathVariables: PathVariables,
   pathPart: string,
   i: number,
 ) => {
+  // `{spec_path}` expands to several segments, so it has to be a whole one
   if (pathPart === PATH_VARIABLES.specPath) {
     return path.dirname(specPath);
   } else if (i === 0 && !pathPart) {
@@ -35,7 +68,7 @@ const parsePathPartVariables = (
     return path.join(PATH_VARIABLES.winSystemRootPath, pathPart[0]);
   }
 
-  return pathPart;
+  return expandPathVariables(pathPart, pathVariables);
 };
 
 const startAttempt = (testId: string, retry: number) => {
@@ -55,18 +88,23 @@ export const generateScreenshotPath = ({
   titleFromOptions,
   imagesPath,
   specPath,
+  pathVariables,
   currentRetryNumber,
   testId,
 }: {
   titleFromOptions: string;
   imagesPath: string;
   specPath: string;
+  /** What `{platform}`, `{os}` and `{browser}` in `imagesPath` expand to. */
+  pathVariables: PathVariables;
   currentRetryNumber: number;
   /** Stable id of the test being run; used to tell a retry from the next test. */
   testId: string;
 }) => {
   const screenshotPath = path.join(
-    ...imagesPath.split('/').map(parsePathPartVariables.bind(void 0, specPath)),
+    ...imagesPath
+      .split('/')
+      .map(parsePathPartVariables.bind(void 0, specPath, pathVariables)),
     sanitize(titleFromOptions),
   );
 

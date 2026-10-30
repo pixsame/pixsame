@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 5e965a234415c102
+source: 7b717d4be16dd7ad
 ---
 
 ## 快速开始
@@ -302,8 +302,13 @@ cy.matchImage({
   // 相对路径以项目根目录为基准解析
   // 支持绝对路径（unix 和 windows 系统均可）
   // 插件会根据操作系统对路径分隔符做规范化，请始终使用 / 作为分隔符，例如 windows 盘符写法：C:/my-directory/nested
-  // 路径中可以使用一个特殊变量：
-  // - {spec_path} - 从项目根目录到当前 spec 文件所在目录的相对路径（例如 `/src/components/my-tested-component`）
+  // 路径中可以使用以下变量：
+  // - {spec_path} - 从项目根目录到当前 spec 文件所在目录的相对路径（例如 `/src/components/my-tested-component`）；必须单独占据一个完整的路径段
+  // - {platform} - `{os}-{browser}`，例如 `linux-chrome`、`darwin-electron`、`win32-firefox`
+  // - {os} - Cypress.platform：`linux`、`darwin` 或 `win32`
+  // - {browser} - Cypress 运行该 spec 所用的浏览器（Cypress.browser.name）：未指定 `--browser` 时为 `electron`，否则为 `chrome`、`firefox`、`edge` 等
+  // {platform}、{os} 和 {browser} 也可以作为路径段的一部分（`shots-{platform}`）；`matchAgainstPath` 永远不会被展开
+  // 可用它们将不同操作系统/浏览器的基线分开存放，参见下文 "Per-platform baselines"
   // 默认值：'{spec_path}/__image_snapshots__'
   imagesPath: 'this-might-be-your-custom/maybe-nested-directory',
   // 差异超过该阈值时测试失败
@@ -365,6 +370,63 @@ export default defineConfig({
 ```
 
 更多设置 expose 变量的方式[请参考这里](https://on.cypress.io/expose)。
+
+## 按平台区分基线
+
+Chrome 会把文字光栅化交给操作系统处理，因此同一个页面在 macOS、Linux 和 Windows 上永远不会渲染出逐字节完全一致的结果，而不同浏览器之间又存在额外的差异。因此，在开发者的 Mac 上录制的基线很少能与 Linux CI 任务对同一页面截取的截图相匹配。`imagesPath` 支持三个令牌（token），用于将不同平台的基线分开存放，而不是让它们互相覆盖：
+
+| 令牌         | 展开为                                                                                                                                 |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `{os}`       | `Cypress.platform`：`linux`、`darwin` 或 `win32`                                                                                       |
+| `{browser}`  | `Cypress.browser.name`，即 Cypress 运行该 spec 所用的浏览器：未传入 `--browser` 时为 `electron`，否则为 `chrome`、`firefox`、`edge` 等 |
+| `{platform}` | `{os}-{browser}`，例如 `linux-chrome`、`darwin-electron`                                                                               |
+
+每张截图都由 Cypress 驱动的浏览器截取，因此 `{browser}` 就是那个浏览器；不带 `--browser` 的 `cypress run` 使用 Electron，这就是为什么目录名是 `darwin-electron` 而不是 `darwin-chrome`——除非 CI 传入了 `--browser chrome`。
+
+这些令牌是可选启用的：默认的 `imagesPath` 仍为 `{spec_path}/__image_snapshots__`，即所有人共用一套基线。当每次运行都在相同的操作系统和浏览器上进行（例如在容器内，参见 FAQ），或者剩余的差异仍低于您的 `maxDiffThreshold` 时，这就是正确的布局。要按平台拆分，请全局添加该令牌：
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{platform}"
+# Cypress <15.10（在 15.10 中已废弃，16 中移除）
+npx cypress run --env "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{platform}"
+```
+
+```ts
+// cypress.config.ts（Cypress 15.10+；在 Cypress <15.10 上请使用 `env` 而不是 `expose`）
+export default defineConfig({
+  expose: {
+    pluginVisualRegressionImagesPath:
+      '{spec_path}/__image_snapshots__/{platform}',
+  },
+});
+```
+
+```
+cypress/e2e/__image_snapshots__/
+├── darwin-electron/   # 在 Mac 上运行 `cypress open` 时写入的内容
+│   └── home page renders_#0.png
+└── linux-chrome/      # 您的 CI 任务写入的内容
+    └── home page renders_#0.png
+```
+
+拆分之后需要决定的事项：
+
+- **提交哪些基线。** 大多数团队只提交 CI 平台的基线，并将本地基线排除在 git 之外，这样每位开发者都有自己的一套基线，又不会污染仓库：
+
+  ```gitignore
+  # 忽略除 CI 生成的平台目录之外的所有平台目录
+  **/__image_snapshots__/*/
+  !**/__image_snapshots__/linux-chrome/
+  ```
+
+  此后，新的 CI 基线需要在 CI 上生成并从那里提交（或从 PR 中批准，参见[运行清单](#run-manifest-ci-integration)）。
+
+- **只按浏览器或只按操作系统拆分。** 单独使用 `{browser}` 或 `{os}`，例如 `{spec_path}/__image_snapshots__/{browser}`。
+
+- **清理功能会删除其他平台的基线。** `pluginVisualRegressionCleanupUnusedImages` 会在整个项目中查找插件生成的 PNG 文件，它对平台一无所知：在 `darwin-electron` 上运行时，会把 `linux-chrome/` 下的每个文件都视为未使用并删除。在存放了多个平台目录的机器上（开发者的 checkout 加上已提交的 CI 基线正是这种情况）请保持它关闭，只在仅存放单一平台基线的地方启用它，通常就是生成这些基线的 CI 任务。如果不小心触发了，可以用 `git checkout -- <folder>` 恢复被删除的目录。
+
+未来的方向：[#212](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/212) 的计划是一个渲染器，无论 Cypress 在哪里运行，都在一个固定版本的 Docker 镜像中生成像素，从而从根本上消除本地与 CI 图片之间的漂移。届时 `{browser}` 指的是渲染器的浏览器，而不是 Cypress 驱动的浏览器；`{platform}` 仍然有用，但用途是区分多个被渲染的浏览器，而不是处理本地与 CI 之间的漂移。清单已经同时记录了这两方面：`platform` 是测试运行的位置，`renderer` 是像素的来源。
 
 ## 批量审查模式
 
@@ -489,7 +551,7 @@ export default defineConfig({
 - **Firefox** 会设置 `gfx.webrender.software` 偏好项（CPU 渲染）。Firefox 没有跨平台的字体 hinting 开关，因此不同操作系统之间的文字仍可能存在差异。
 - **所有浏览器**：在 `matchImage` 截图期间，会向被测页面注入一个 `<style>` 元素，用于隐藏文本光标、禁用 CSS 过渡、动画和平滑滚动，并隐藏滚动条。截图完成后立即移除。
 
-该预设无法解决的问题：各操作系统上字体文件和回退字体不同（典型的 Arial 与 Liberation Sans 问题）、emoji 字体、WebKit 和 Firefox 的文字光栅化，以及 WebGL 绘制的图像。对于这些情况，请为每个平台各保留一份基线（参见 `title` 和 `imagesPath` 选项，以及关于浏览器名称的 FAQ 条目），或者在与 CI 相同的环境中生成基线。
+该预设无法解决的问题：各操作系统上字体文件和回退字体不同（典型的 Arial 与 Liberation Sans 问题）、emoji 字体、WebKit 和 Firefox 的文字光栅化，以及 WebGL 绘制的图像。对于这些情况，请为每个平台各保留一份基线（参见[按平台区分基线](#per-platform-baselines)），或者在与 CI 相同的环境中生成基线。
 
 **Electron** 会忽略插件设置的开关，因此在 Electron 中该预设只会注入 CSS，并在浏览器启动时打印一条提示。请改为通过环境变量传入这些开关：
 
@@ -661,18 +723,22 @@ Cypress.Commands.overwrite('matchImage', (originalFn, subject, options = {}) =>
 
 ### 如何在图片文件名中包含浏览器名称（用于跨浏览器测试）？
 
-不同浏览器对字体和元素的渲染可能略有差异。要为每个浏览器单独保存基线图片，可以在 support 文件（`cypress/support/commands.ts`）中覆盖 `matchImage`，设置一个与浏览器相关的 `imagesPath`：
+在 `imagesPath` 中使用 `{browser}` 令牌；它会展开为渲染该截图的浏览器名称（`chrome`、`firefox`、`electron` 等）：
 
 ```ts
-Cypress.Commands.overwrite('matchImage', (originalFn, subject, options = {}) =>
-  originalFn(subject, {
-    imagesPath: `{spec_path}/__image_snapshots__/${Cypress.browser.name}`,
-    ...options,
-  }),
-);
+cy.matchImage({ imagesPath: '{spec_path}/__image_snapshots__/{browser}' });
 ```
 
-这样每个浏览器都会有独立的图片目录（例如 `__image_snapshots__/chrome/`、`__image_snapshots__/firefox/`）。
+或者全局设置：
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{browser}"
+# Cypress <15.10（在 15.10 中已废弃，16 中移除）
+npx cypress run --env "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{browser}"
+```
+
+这样每个浏览器都会有独立的图片目录（`__image_snapshots__/chrome/`、`__image_snapshots__/firefox/`）。关于同时按操作系统拆分的 `{platform}` 和 `{os}`、应提交哪些目录，以及为什么在存放了多个浏览器目录的机器上必须保持 `pluginVisualRegressionCleanupUnusedImages` 关闭（它会删除其他浏览器的基线），请参见[按平台区分基线](#per-platform-baselines)。
 
 ### 如何生成一份同时展示基线、差异和实际截图的 HTML 报告？
 

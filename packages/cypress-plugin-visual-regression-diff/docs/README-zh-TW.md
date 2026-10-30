@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 5e965a234415c102
+source: 7b717d4be16dd7ad
 ---
 
 ## 快速開始
@@ -302,8 +302,13 @@ cy.matchImage({
   // 相對路徑會以專案根目錄為基準解析
   // 支援絕對路徑（unix 與 windows 作業系統皆可）
   // 外掛會依作業系統正規化路徑分隔符號，您應一律使用 / 作為分隔符號，例如：C:/my-directory/nested 表示 windows 風格的磁碟機路徑
-  // 路徑中可使用一個特殊變數：
-  // - {spec_path}：從專案根目錄到目前 spec 檔案所在目錄的相對路徑（例如 `/src/components/my-tested-component`）
+  // 路徑中可使用下列變數：
+  // - {spec_path}：從專案根目錄到目前 spec 檔案所在目錄的相對路徑（例如 `/src/components/my-tested-component`）；必須自成一個完整的路徑片段
+  // - {platform}：`{os}-{browser}`，例如 `linux-chrome`、`darwin-electron`、`win32-firefox`
+  // - {os}：Cypress.platform，即 `linux`、`darwin` 或 `win32`
+  // - {browser}：Cypress 執行該 spec 所用的瀏覽器（Cypress.browser.name）：未以 `--browser` 指定時為 `electron`，否則為 `chrome`、`firefox`、`edge` 等
+  // {platform}、{os} 與 {browser} 也可以只是片段的一部分（`shots-{platform}`）；`matchAgainstPath` 永遠不會被展開
+  // 可用它們把不同作業系統／瀏覽器的基準影像分開存放，請見下方「依平台區分的基準影像」
   // 預設值：'{spec_path}/__image_snapshots__'
   imagesPath: 'this-might-be-your-custom/maybe-nested-directory',
   // 測試失敗的最大門檻值，差異超過此值即失敗
@@ -365,6 +370,63 @@ export default defineConfig({
 ```
 
 更多設定 expose 變數的方式[請參考這裡](https://on.cypress.io/expose)。
+
+## 依平台區分的基準影像
+
+Chrome 會把文字點陣化交給作業系統處理，因此同一個頁面在 macOS、Linux 與 Windows 上永遠不會算繪出逐位元組完全相同的結果，而各瀏覽器之間又還有各自的差異。所以在開發者的 Mac 上錄製的基準影像，很少能和 Linux CI 工作對同一個頁面拍下的截圖吻合。`imagesPath` 支援三個 token，可以把不同平台的基準影像分開存放，而不是讓它們互相覆蓋：
+
+| token        | 展開為                                                                                                                                 |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `{os}`       | `Cypress.platform`：`linux`、`darwin` 或 `win32`                                                                                       |
+| `{browser}`  | `Cypress.browser.name`，即 Cypress 執行該 spec 所用的瀏覽器：未傳入 `--browser` 時為 `electron`，否則為 `chrome`、`firefox`、`edge` 等 |
+| `{platform}` | `{os}-{browser}`，例如 `linux-chrome`、`darwin-electron`                                                                               |
+
+每張截圖都是由 Cypress 驅動的瀏覽器拍攝的，所以 `{browser}` 就是那個瀏覽器；`cypress run` 未加 `--browser` 時使用 Electron，這就是為什麼除非 CI 傳入 `--browser chrome`，否則資料夾會是 `darwin-electron` 而不是 `darwin-chrome`。
+
+這些 token 是選用的：預設的 `imagesPath` 仍然是 `{spec_path}/__image_snapshots__`，也就是所有人共用一組基準影像。當每次執行都在同一個作業系統與瀏覽器上進行（例如在容器內，請見常見問題），或是剩餘的差異仍低於您的 `maxDiffThreshold` 時，這就是正確的配置。若要依平台拆分，請全域加入這個 token：
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{platform}"
+# Cypress <15.10（15.10 起棄用，16 已移除）
+npx cypress run --env "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{platform}"
+```
+
+```ts
+// cypress.config.ts（Cypress 15.10+；Cypress <15.10 請改用 `env` 取代 `expose`）
+export default defineConfig({
+  expose: {
+    pluginVisualRegressionImagesPath:
+      '{spec_path}/__image_snapshots__/{platform}',
+  },
+});
+```
+
+```
+cypress/e2e/__image_snapshots__/
+├── darwin-electron/   # 在 Mac 上執行 `cypress open` 所寫入的內容
+│   └── home page renders_#0.png
+└── linux-chrome/      # 您的 CI 工作所寫入的內容
+    └── home page renders_#0.png
+```
+
+拆分之後需要決定的事項：
+
+- **要提交哪些基準影像。** 多數團隊只提交 CI 平台的基準影像，本機的則不納入 git，這樣每位開發者都有自己的一組，又不會污染儲存庫：
+
+  ```gitignore
+  # 忽略所有平台資料夾，只保留 CI 產生的那一個
+  **/__image_snapshots__/*/
+  !**/__image_snapshots__/linux-chrome/
+  ```
+
+  如此一來，新的 CI 基準影像就必須在 CI 上產生並從那裡提交（或從 PR 核准，請見[執行清單](#run-manifest-ci-integration)）。
+
+- **只依瀏覽器或只依作業系統拆分。** 單獨使用 `{browser}` 或 `{os}`，例如 `{spec_path}/__image_snapshots__/{browser}`。
+
+- **清理功能會刪除其他平台的基準影像。** `pluginVisualRegressionCleanupUnusedImages` 會在整個專案中搜尋外掛產生的 PNG，而且完全不知道平台的存在：在 `darwin-electron` 上執行時，會把 `linux-chrome/` 底下的每個檔案都視為未使用並刪除。在存有多個平台資料夾的機器上（開發者的本機檢出加上已提交的 CI 基準影像正是這種情況）請保持關閉，只在單一平台基準影像所在之處啟用，通常就是產生這些影像的 CI 工作。萬一真的誤刪了，用 `git checkout -- <folder>` 就能把被刪除的資料夾找回來。
+
+未來的方向：[#212](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/212) 的計畫是一個算繪器，不論 Cypress 在哪裡執行，都在固定版本的 Docker 映像中產生像素，讓本機與 CI 的影像從根本上不再漂移。屆時 `{browser}` 指的會是算繪器的瀏覽器，而不是 Cypress 驅動的那個；`{platform}` 則仍可用來區分多個被算繪的瀏覽器，而不再是為了處理本機與 CI 之間的漂移。清單已經同時記錄了這兩邊：`platform` 是測試執行的位置，`renderer` 是像素的來源。
 
 ## 批次審閱模式
 
@@ -489,7 +551,7 @@ export default defineConfig({
 - **Firefox** 會設定 `gfx.webrender.software` 偏好設定（CPU 算繪）。Firefox 沒有跨平台的字型 hinting 開關，因此文字在不同作業系統之間仍可能有差異。
 - **所有瀏覽器**：在 `matchImage` 截圖期間，會在受測頁面注入一個 `<style>` 元素，用來隱藏文字游標、停用 CSS transition、動畫與平滑捲動，並隱藏捲軸。截圖一結束就會移除。
 
-這個預設組合無法解決的問題：各作業系統使用不同的字型檔與備用字型（經典的 Arial 對 Liberation Sans 情況）、emoji 字型、WebKit 與 Firefox 的文字點陣化，以及 WebGL 繪製的影像。對於這些情況，請為每個平台各保留一份基準影像（請參考 `title` 與 `imagesPath` 選項，以及常見問題中關於瀏覽器名稱的條目），或是在與 CI 相同的環境中產生基準影像。
+這個預設組合無法解決的問題：各作業系統使用不同的字型檔與備用字型（經典的 Arial 對 Liberation Sans 情況）、emoji 字型、WebKit 與 Firefox 的文字點陣化，以及 WebGL 繪製的影像。對於這些情況，請為每個平台各保留一份基準影像（請見[依平台區分的基準影像](#per-platform-baselines)），或是在與 CI 相同的環境中產生基準影像。
 
 **Electron** 會忽略外掛設定的啟動參數，所以在 Electron 上，這個預設組合只會注入 CSS，並在瀏覽器啟動時印出提醒。請改用環境變數傳入這些參數：
 
@@ -661,18 +723,22 @@ Cypress.Commands.overwrite('matchImage', (originalFn, subject, options = {}) =>
 
 ### 如何在影像檔名中加入瀏覽器名稱（用於跨瀏覽器測試）？
 
-不同瀏覽器渲染字型與元素的方式可能略有差異。若要為每個瀏覽器分別保留基準影像，請在 support 檔案（`cypress/support/commands.ts`）中覆寫 `matchImage`，設定依瀏覽器區分的 `imagesPath`：
+請在 `imagesPath` 中使用 `{browser}` token；它會展開為拍攝該截圖的瀏覽器名稱（`chrome`、`firefox`、`electron` 等）：
 
 ```ts
-Cypress.Commands.overwrite('matchImage', (originalFn, subject, options = {}) =>
-  originalFn(subject, {
-    imagesPath: `{spec_path}/__image_snapshots__/${Cypress.browser.name}`,
-    ...options,
-  }),
-);
+cy.matchImage({ imagesPath: '{spec_path}/__image_snapshots__/{browser}' });
 ```
 
-這樣會為每個瀏覽器建立各自的影像目錄（例如 `__image_snapshots__/chrome/`、`__image_snapshots__/firefox/`）。
+或是全域設定：
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{browser}"
+# Cypress <15.10（15.10 起棄用，16 已移除）
+npx cypress run --env "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{browser}"
+```
+
+這樣會為每個瀏覽器建立各自的影像目錄（`__image_snapshots__/chrome/`、`__image_snapshots__/firefox/`）。關於同時也依作業系統拆分的 `{platform}` 與 `{os}`、該提交哪些資料夾，以及為什麼在存有多個瀏覽器資料夾的機器上必須保持關閉 `pluginVisualRegressionCleanupUnusedImages`（它會刪除其他瀏覽器的基準影像），請見[依平台區分的基準影像](#per-platform-baselines)。
 
 ### 如何產生同時顯示基準、差異與實際影像的 HTML 報告？
 

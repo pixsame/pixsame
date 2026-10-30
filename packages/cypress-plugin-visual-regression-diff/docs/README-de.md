@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 5e965a234415c102
+source: 7b717d4be16dd7ad
 ---
 
 ## Erste Schritte
@@ -302,8 +302,13 @@ cy.matchImage({
   // relative Pfade werden relativ zum Projektstamm aufgelöst
   // absolute Pfade (sowohl unter Unix als auch unter Windows) werden unterstützt
   // Pfadtrenner werden vom Plugin je nach Betriebssystem normalisiert; verwenden Sie immer / als Pfadtrenner, z. B.: C:/my-directory/nested für Windows-Laufwerksnotation
-  // Im Pfad steht eine spezielle Variable zur Verfügung:
-  // - {spec_path} – relativer Pfad vom Projektstamm zum Verzeichnis der aktuellen Spec-Datei (z. B. `/src/components/my-tested-component`)
+  // Diese Variablen können im Pfad verwendet werden:
+  // - {spec_path} – relativer Pfad vom Projektstamm zum Verzeichnis der aktuellen Spec-Datei (z. B. `/src/components/my-tested-component`); muss ein ganzes Pfadsegment sein
+  // - {platform} – `{os}-{browser}`, z. B. `linux-chrome`, `darwin-electron`, `win32-firefox`
+  // - {os} – Cypress.platform: `linux`, `darwin` oder `win32`
+  // - {browser} – der Browser, in dem Cypress die Spec ausführt (Cypress.browser.name): `electron`, sofern `--browser` nichts anderes vorgibt, `chrome`, `firefox`, `edge`, ...
+  // {platform}, {os} und {browser} können auch Teil eines Segments sein (`shots-{platform}`); `matchAgainstPath` wird nie expandiert
+  // Damit halten Sie die Baselines verschiedener Betriebssysteme/Browser auseinander, siehe „Baselines pro Plattform“ weiter unten
   // Standard: '{spec_path}/__image_snapshots__'
   imagesPath: 'this-might-be-your-custom/maybe-nested-directory',
   // maximaler Schwellenwert, ab dem der Test fehlschlagen soll
@@ -365,6 +370,63 @@ export default defineConfig({
 ```
 
 Weitere Möglichkeiten, Expose-Variablen zu setzen, [finden Sie hier](https://on.cypress.io/expose).
+
+## Baselines pro Plattform
+
+Chrome überlässt die Text-Rasterisierung dem Betriebssystem, daher wird dieselbe Seite unter macOS, Linux und Windows nie Byte für Byte identisch gerendert, und die Browser unterscheiden sich obendrein noch voneinander. Eine auf dem Mac eines Entwicklers aufgenommene Baseline passt deshalb selten zu dem Screenshot, den ein Linux-CI-Job von derselben Seite macht. `imagesPath` versteht drei Platzhalter, die die Baselines verschiedener Plattformen auseinanderhalten, statt sie sich gegenseitig überschreiben zu lassen:
+
+| Platzhalter  | wird ersetzt durch                                                                                                                                               |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{os}`       | `Cypress.platform`: `linux`, `darwin` oder `win32`                                                                                                               |
+| `{browser}`  | `Cypress.browser.name`, der Browser, in dem Cypress die Spec ausführt: `electron`, sofern Sie kein `--browser` übergeben, sonst `chrome`, `firefox`, `edge`, ... |
+| `{platform}` | `{os}-{browser}`, z. B. `linux-chrome`, `darwin-electron`                                                                                                        |
+
+Jeder Screenshot wird von dem Browser aufgenommen, den Cypress steuert, also ist `{browser}` genau dieser Browser; `cypress run` ohne `--browser` verwendet Electron, weshalb der Ordner `darwin-electron` heißt und nicht `darwin-chrome`, sofern die CI nicht `--browser chrome` übergibt.
+
+Die Platzhalter sind opt-in: Der Standard-`imagesPath` bleibt `{spec_path}/__image_snapshots__`, ein einziger Satz Baselines für alle. Das ist die richtige Struktur, wenn jeder Lauf auf demselben Betriebssystem und Browser stattfindet (etwa in einem Container, siehe FAQ) oder wenn die verbleibende Abweichung unter Ihrem `maxDiffThreshold` bleibt. Um nach Plattform aufzuteilen, fügen Sie den Platzhalter global hinzu:
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{platform}"
+# Cypress <15.10 (veraltet seit 15.10, entfernt in 16)
+npx cypress run --env "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{platform}"
+```
+
+```ts
+// cypress.config.ts (Cypress 15.10+; unter Cypress <15.10 `env` statt `expose` verwenden)
+export default defineConfig({
+  expose: {
+    pluginVisualRegressionImagesPath:
+      '{spec_path}/__image_snapshots__/{platform}',
+  },
+});
+```
+
+```
+cypress/e2e/__image_snapshots__/
+├── darwin-electron/   # was `cypress open` auf einem Mac schreibt
+│   └── home page renders_#0.png
+└── linux-chrome/      # was Ihr CI-Job schreibt
+    └── home page renders_#0.png
+```
+
+Nach der Aufteilung gibt es ein paar Dinge zu entscheiden:
+
+- **Welche Baselines committet werden.** Die meisten Teams committen nur die CI-Plattform und halten die lokalen Baselines aus Git heraus, sodass jeder Entwickler seinen eigenen Satz bekommt, ohne das Repository zu verunreinigen:
+
+  ```gitignore
+  # alle Plattform-Ordner ignorieren, außer dem, den die CI erzeugt
+  **/__image_snapshots__/*/
+  !**/__image_snapshots__/linux-chrome/
+  ```
+
+  Neue CI-Baselines müssen dann in der CI erzeugt und von dort committet werden (oder aus einem PR heraus freigegeben, siehe [Run-Manifest](#run-manifest-ci-integration)).
+
+- **Nur nach Browser oder nur nach Betriebssystem aufteilen.** Verwenden Sie `{browser}` oder `{os}` allein, z. B. `{spec_path}/__image_snapshots__/{browser}`.
+
+- **Das Aufräumen löscht die Baselines der anderen Plattformen.** `pluginVisualRegressionCleanupUnusedImages` durchsucht das gesamte Projekt nach vom Plugin erzeugten PNGs und weiß nichts von Plattformen: Ein Lauf auf `darwin-electron` behandelt jede Datei unter `linux-chrome/` als ungenutzt und löscht sie. Lassen Sie die Option auf Maschinen deaktiviert, die die Ordner mehrerer Plattformen enthalten (ein Entwickler-Checkout mit committeten CI-Baselines ist genau so ein Fall), und aktivieren Sie sie nur dort, wo die Baselines einer einzigen Plattform liegen – typischerweise in dem CI-Job, der sie erzeugt. Falls es doch einmal passiert, holen Sie die gelöschten Ordner mit `git checkout -- <folder>` zurück.
+
+Wohin die Reise geht: Für [#212](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/212) ist ein Renderer geplant, der die Pixel in einem festgelegten Docker-Image erzeugt, egal wo Cypress läuft, sodass lokale und CI-Bilder konstruktionsbedingt nicht mehr auseinanderdriften. `{browser}` bezeichnet dann den Browser des Renderers statt des von Cypress gesteuerten Browsers, und `{platform}` bleibt nützlich, um mehrere gerenderte Browser auseinanderzuhalten – nicht mehr für die Abweichung zwischen lokal und CI. Das Manifest hält bereits beide Seiten fest: `platform` ist, wo der Test gelaufen ist, `renderer` ist, woher die Pixel stammen.
 
 ## Batch Review Mode
 
@@ -489,7 +551,7 @@ Rechnen Sie beim ersten Lauf mit kleinen Abweichungen gegenüber Baselines, die 
 - **Firefox** erhält die Einstellung `gfx.webrender.software` (Rendering auf der CPU). Firefox hat keinen plattformübergreifenden Schalter für Font-Hinting, daher kann sich Text zwischen Betriebssystemen weiterhin unterscheiden.
 - **Jeder Browser**: Für die Dauer eines `matchImage`-Screenshots wird in die getestete Seite ein `<style>`-Element eingefügt, das den Text-Cursor (Caret) ausblendet, CSS-Transitions, Animationen und sanftes Scrollen deaktiviert und Scrollbars ausblendet. Es wird direkt nach dem Screenshot wieder entfernt.
 
-Was das Preset nicht löst: unterschiedliche Schriftdateien und Fallbacks pro Betriebssystem (der klassische Fall Arial vs. Liberation Sans), Emoji-Schriften, die Text-Rasterisierung in WebKit und Firefox sowie mit WebGL gezeichnete Bilder. Behalten Sie dafür pro Plattform eine eigene Baseline (siehe die Optionen `title` und `imagesPath` sowie den FAQ-Eintrag zu Browsernamen) oder erzeugen Sie Ihre Baselines in derselben Umgebung, die Ihre CI verwendet.
+Was das Preset nicht löst: unterschiedliche Schriftdateien und Fallbacks pro Betriebssystem (der klassische Fall Arial vs. Liberation Sans), Emoji-Schriften, die Text-Rasterisierung in WebKit und Firefox sowie mit WebGL gezeichnete Bilder. Behalten Sie dafür pro Plattform eine eigene Baseline (siehe [Baselines pro Plattform](#per-platform-baselines)) oder erzeugen Sie Ihre Baselines in derselben Umgebung, die Ihre CI verwendet.
 
 **Electron** ignoriert von Plugins gesetzte Schalter. Mit Electron fügt das Preset daher nur das CSS ein und gibt beim Browserstart einen Hinweis aus. Übergeben Sie die Schalter stattdessen über die Umgebung:
 
@@ -661,18 +723,22 @@ Cypress.Commands.overwrite('matchImage', (originalFn, subject, options = {}) =>
 
 ### Wie nehme ich den Browsernamen in die Bilddateinamen auf (für Cross-Browser-Tests)?
 
-Verschiedene Browser rendern Schriften und Elemente mitunter leicht unterschiedlich. Um pro Browser separate Baseline-Bilder zu führen, überschreiben Sie `matchImage` in Ihrer Support-Datei (`cypress/support/commands.ts`) und setzen einen browserspezifischen `imagesPath`:
+Verwenden Sie den Platzhalter `{browser}` in `imagesPath`; er wird durch den Namen des Browsers ersetzt, der den Screenshot gerendert hat (`chrome`, `firefox`, `electron`, ...):
 
 ```ts
-Cypress.Commands.overwrite('matchImage', (originalFn, subject, options = {}) =>
-  originalFn(subject, {
-    imagesPath: `{spec_path}/__image_snapshots__/${Cypress.browser.name}`,
-    ...options,
-  }),
-);
+cy.matchImage({ imagesPath: '{spec_path}/__image_snapshots__/{browser}' });
 ```
 
-So entstehen separate Bildverzeichnisse pro Browser (z. B. `__image_snapshots__/chrome/`, `__image_snapshots__/firefox/`).
+Oder global:
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{browser}"
+# Cypress <15.10 (veraltet seit 15.10, entfernt in 16)
+npx cypress run --env "pluginVisualRegressionImagesPath={spec_path}/__image_snapshots__/{browser}"
+```
+
+So entstehen separate Bildverzeichnisse pro Browser (`__image_snapshots__/chrome/`, `__image_snapshots__/firefox/`). Unter [Baselines pro Plattform](#per-platform-baselines) finden Sie `{platform}` und `{os}`, die zusätzlich nach Betriebssystem aufteilen, welche Ordner committet werden sollten und warum `pluginVisualRegressionCleanupUnusedImages` auf einer Maschine, die die Ordner mehrerer Browser enthält, deaktiviert bleiben muss (sie würde die Baselines der anderen Browser löschen).
 
 ### Wie erzeuge ich einen HTML-Report mit Baseline-, Diff- und aktuellem Bild?
 

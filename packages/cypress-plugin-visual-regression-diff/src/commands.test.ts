@@ -1,6 +1,6 @@
 import { it, expect, describe, vi, beforeEach, afterEach } from 'vitest';
 import { Cypress } from '@mocks/cypress.mock';
-import { getConfig } from './commands';
+import { getConfig, getPathVariables } from './commands';
 
 const installedCypressVersion = Cypress.version;
 const KEY = 'pluginVisualRegressionDeterministicRendering';
@@ -73,5 +73,11 @@ describe('getConfig deterministicRendering (browser side)', () => {
     expect(
       getConfig({ deterministicRendering: false }).deterministicRendering,
     ).toBe(false);
+  });
+});
+
+describe('getPathVariables', () => {
+  it('names the OS and the browser Cypress drives', () => {
+    expect(getPathVariables()).toEqual({ os: 'darwin', browser: 'electron' });
   });
 });

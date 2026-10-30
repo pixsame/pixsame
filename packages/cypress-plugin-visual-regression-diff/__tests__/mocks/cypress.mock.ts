@@ -5,6 +5,8 @@ import { version as cypressVersion } from 'cypress/package.json';
 export const Cypress = {
   Promise,
   version: cypressVersion,
+  platform: 'darwin',
+  browser: { name: 'electron' },
   expose: vi.fn(),
   env: vi.fn(),
   Commands: { add: vi.fn() },
