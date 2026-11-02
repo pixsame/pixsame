@@ -77,7 +77,7 @@
     "@vitest/coverage-v8": "5.0.5",
     "cpy-cli": "7.0.0",
     "cypress": "15.21.1",
-    "del-cli": "7.0.0",
+    "del-cli": "8.0.1",
     "microbundle": "0.15.1",
     "prettier": "3.9.10",
     "sanitize-filename": "1.6.4",
