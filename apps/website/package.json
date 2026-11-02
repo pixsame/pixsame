@@ -22,11 +22,11 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@nuxt/content": "3.16.1",
+    "@nuxt/content": "3.16.2",
     "@nuxtjs/i18n": "10.6.0",
     "@nuxtjs/seo": "5.3.16",
     "@pixsame/ui-layer": "workspace:*",
-    "nuxt": "4.6.2",
+    "nuxt": "4.6.3",
     "vue": "^3.5.0",
     "vue-router": "^5.0.0"
   },
