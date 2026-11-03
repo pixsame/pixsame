@@ -26,7 +26,7 @@ jobs:
       # On push the filter diffs commits locally; on pull_request it uses the API.
       - uses: actions/checkout@v7
         if: github.event_name != 'pull_request'
-      - uses: dorny/paths-filter@v3
+      - uses: dorny/paths-filter@v4
         id: filter
         with:
           predicate-quantifier: every
