@@ -80,7 +80,7 @@
     "del-cli": "8.0.1",
     "microbundle": "0.15.1",
     "prettier": "3.9.10",
-    "sanitize-filename": "1.6.4",
+    "sanitize-filename": "1.6.5",
     "tmp-promise": "3.0.3",
     "typescript": "6.0.3",
     "vite-tsconfig-paths": "6.1.1",
@@ -101,8 +101,8 @@
     "Cypress image snapshot"
   ],
   "dependencies": {
-    "@frsource/base64": "1.0.247",
-    "glob": "14.0.2",
+    "@frsource/base64": "1.0.250",
+    "glob": "14.0.4",
     "meta-png": "1.0.6",
     "move-file": "4.1.0",
     "pixelmatch": "7.2.0",
