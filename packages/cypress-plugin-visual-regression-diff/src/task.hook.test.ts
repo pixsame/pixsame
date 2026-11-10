@@ -766,7 +766,7 @@ describe('run manifest', () => {
         status: expected.status,
         comparison: {
           diffRatio: expected.diffRatio,
-          threshold: overrides.maxDiffThreshold ?? 0.5,
+          maxDiffRatio: overrides.maxDiffThreshold ?? 0.5,
         },
         images: {
           baseline: {
