@@ -144,7 +144,7 @@ describe('toManifestOptions', () => {
       }),
     ).toEqual({
       imagesPath: '{spec_path}/__image_snapshots__',
-      maxDiffThreshold: 0.01,
+      maxDiffRatio: 0.01,
       diffConfig: { threshold: 0.1 },
       createMissingImages: true,
       updateImages: 'failures-only',

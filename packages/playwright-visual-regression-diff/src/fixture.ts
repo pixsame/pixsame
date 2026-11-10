@@ -221,7 +221,11 @@ export const visualRegressionFixtures: Fixtures<
         retry: testInfo.retry,
         status: result.status,
         diffRatio: result.diffRatio,
-        threshold: result.threshold,
+        maxDiffRatio: result.threshold,
+        ...(typeof cfg.diffConfig.threshold === 'number' && {
+          colorThreshold: cfg.diffConfig.threshold,
+          colorMetric: 'yiq',
+        }),
         baselineWritten: result.baselineWritten,
         actualSize: result.imgNewSize,
         baselineSize: result.imgOldSize,
