@@ -353,6 +353,9 @@ importers:
       sharp:
         specifier: 0.35.5
         version: 0.35.5(@types/node@26.6.5)
+      visual-regression-manifest:
+        specifier: 1.0.0-beta.2
+        version: 1.0.0-beta.2
     devDependencies:
       '@frsource/prettier-config':
         specifier: ^1.11.0
@@ -9921,6 +9924,11 @@ packages:
 
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
+
+  visual-regression-manifest@1.0.0-beta.2:
+    resolution: {integrity: sha512-BE5VtO35YP2omGghIg2Z2FocKxEA8IfNWdKytXEuqZ1SUKsKeRE6mz4VYCUPQDd9+QEdJGiMFhHNxjX3pSpaBw==}
+    engines: {node: '>=20.9.0'}
+    hasBin: true
 
   vite-dev-rpc@2.0.0:
     resolution: {integrity: sha512-yKwbTwdHKSD2k/aGqyWpPHepo45OQc8lH3/6IfT4ZqeKE26ooKvi4WIEKzqWav8v+9Is8u1k8q54hvOmqASazA==}
@@ -22540,6 +22548,8 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
+
+  visual-regression-manifest@1.0.0-beta.2: {}
 
   vite-dev-rpc@2.0.0(vite@8.3.5(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.1)):
     dependencies:

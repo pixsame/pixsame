@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 2c9b39af16bde9aa
+source: 5e965a234415c102
 ---
 
 ## Erste Schritte
@@ -87,6 +87,189 @@ npx cypress run --expose "pluginVisualRegressionCleanupUnusedImages=true"
 # Cypress <15.10 (veraltet seit 15.10, entfernt in 16)
 npx cypress run --env "pluginVisualRegressionCleanupUnusedImages=true"
 ```
+
+## Run-Manifest (CI-Integration)
+
+Ab 1.1 schreibt jeder Lauf ein JSON-Manifest, das jeden `matchImage`-Vergleich auflistet: aus welchem Test er stammt, ob er bestanden hat, fehlgeschlagen ist, seine Baseline erstellt oder aktualisiert hat, das Diff-Verhältnis sowie die projektrelativen Pfade der Baseline-, `.actual.png`- und `.diff.png`-Dateien. Neben den Einträgen hält es fest, wo der Lauf stattgefunden hat (CI-Anbieter, Repository, Commit, Pull Request, Run-ID) und womit er ausgeführt wurde (Browser, Specs, Konfigurationsdatei, Plugin-Optionen), sodass ein Tool, das die Datei liest, zum richtigen PR berichten, das richtige Artefakt herunterladen oder dieselben Vergleiche erneut ausführen kann. Es ist für CI-Tooling gedacht (PR-Kommentare, Review-Dashboards, Approval-Bots), das läuft, nachdem Cypress fertig ist.
+
+Das Format ist ein offener, Runner-unabhängiger Standard, der auf [CTRF](https://ctrf.io) aufbaut und unter [visual-regression.dev/manifest](https://visual-regression.dev/manifest) dokumentiert ist. Das npm-Paket [`visual-regression-manifest`](https://www.npmjs.com/package/visual-regression-manifest) enthält das JSON-Schema, die TypeScript-Typen, einen validierenden Reader, einen Merger für die Manifeste eines ganzen Laufs sowie Konverter für Tools, die kein eigenes Manifest schreiben (Playwrights `toHaveScreenshot`, Vitest, jest-image-snapshot, BackstopJS, CTRF-Reports, einfache Bilddateien). Bauen Sie Ihr Tooling auf diesem Paket auf und nicht auf diesem Plugin.
+
+Standardmäßig landet die Datei neben Ihren anderen Cypress-Artefakten unter `<screenshotsFolder>/visual-regression-manifest.<testingType>.json` (z. B. `cypress/screenshots/visual-regression-manifest.e2e.json`). Laden Sie sie zusammen mit Ihrem Snapshot-Verzeichnis als CI-Artefakt hoch.
+
+```jsonc
+{
+  "reportFormat": "visual-regression-manifest",
+  "specVersion": "1.0.0-beta.1",
+  "createdAt": "2026-09-22T10:00:00.000Z",
+  "updatedAt": "2026-09-22T10:03:12.481Z",
+  "projectRoot": "/home/runner/work/app/app",
+  "platform": {
+    "osPlatform": "linux",
+    "arch": "x64",
+    "osRelease": "6.8.0-1021-azure",
+  },
+  "ci": {
+    "provider": "github",
+    "repositoryName": "acme/app",
+    "repositoryUrl": "https://github.com/acme/app",
+    "commit": "0f1e2d…", // bei pull_request-Events: der Merge-Commit
+    "ref": "refs/pull/42/merge",
+    "branchName": "feat/new-header",
+    "pullRequest": {
+      "number": 42,
+      "headSha": "9a8b7c…",
+      "headRef": "feat/new-header",
+      "baseRef": "main",
+    },
+    "event": "pull_request",
+    "buildId": "1234567890",
+    "buildName": "CI",
+    "buildUrl": "https://github.com/acme/app/actions/runs/1234567890/attempts/1",
+    "runAttempt": "1",
+    "job": "e2e",
+    "workspace": "/home/runner/work/app/app",
+  },
+  "tool": {
+    "name": "@pixsame/cypress-plugin-visual-regression-diff",
+    "version": "1.1.0",
+  }, // was die Datei geschrieben hat
+  "options": { "updateImages": "failures-only" }, // globale pluginVisualRegression*-Optionen, ohne Präfix
+  "runner": {
+    "name": "cypress",
+    "version": "16.1.0",
+    "testingType": "e2e",
+    "mode": "run",
+    "configFile": "cypress.config.ts",
+    "browser": {
+      "name": "chrome",
+      "version": "130.0.0.0",
+      "family": "chromium",
+      "headless": true,
+    },
+    "specs": ["cypress/e2e/home.cy.ts"],
+    "specPattern": "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+    "baseUrl": "http://localhost:3000",
+    "viewport": { "width": 1280, "height": 720 },
+  },
+  "summary": {
+    "entries": 1,
+    "passed": 0,
+    "failed": 1,
+    "missingBaseline": 0,
+    "created": 0,
+    "updated": 0,
+    "approved": 0,
+    "needsHuman": 1,
+  },
+  "entries": [
+    {
+      "name": "home page renders_#0",
+      "test": {
+        "filePath": "cypress/e2e/home.cy.ts",
+        "titlePath": ["home page", "renders"],
+        "retry": 0,
+      },
+      "status": "failed",
+      "comparison": { "diffRatio": 0.0231, "threshold": 0.01 },
+      "images": {
+        "baseline": {
+          "path": "cypress/e2e/__image_snapshots__/home page renders_#0.png",
+          "width": 1280,
+          "height": 720,
+        },
+        "actual": {
+          "path": "cypress/e2e/__image_snapshots__/home page renders_#0.actual.png",
+          "width": 1280,
+          "height": 720,
+        },
+        "diff": {
+          "path": "cypress/e2e/__image_snapshots__/home page renders_#0.diff.png",
+        },
+      },
+      "baselineWritten": false,
+      "recordedAt": "2026-09-22T10:03:12.480Z",
+      "platform": {
+        "osPlatform": "linux",
+        "arch": "x64",
+        "browser": {
+          "name": "chrome",
+          "version": "130.0.0.0",
+          "family": "chromium",
+          "headless": true,
+        },
+      },
+      "viewport": { "width": 1280, "height": 720 },
+      "options": {
+        "imagesPath": "{spec_path}/__image_snapshots__",
+        "maxDiffThreshold": 0.01,
+        "diffConfig": {},
+        "createMissingImages": true,
+        "updateImages": false,
+        "forceDeviceScaleFactor": true,
+        "screenshotConfig": {},
+      },
+      "renderer": {
+        "backend": "native",
+        "browser": "chrome",
+        "browserVersion": "130.0.0.0",
+      },
+      "hashes": {
+        "baseline": "3b7e…", // sha256 der unter `images` aufgeführten Dateien, nur für vorhandene Dateien
+        "actual": "9d21…",
+        "diff": "c0ff…",
+      },
+      "message": "Image diff factor (2.31%) is bigger than maximum threshold option 1%.",
+    },
+  ],
+}
+```
+
+| `status`           | Bedeutung                                                                          | `images.actual.path` | `images.diff.path` |
+| ------------------ | ---------------------------------------------------------------------------------- | -------------------- | ------------------ |
+| `passed`           | innerhalb des Schwellenwerts                                                       | `null`               | `null`             |
+| `failed`           | über dem Schwellenwert, `.actual.png` und `.diff.png` bleiben zur Prüfung erhalten | Pfad                 | Pfad               |
+| `missing-baseline` | keine Baseline und `createMissingImages: false`                                    | Pfad                 | `null`             |
+| `created`          | keine Baseline, `.actual.png` wurde zur Baseline                                   | `null`               | `null`             |
+| `updated`          | Baseline überschrieben (`updateImages: true` oder `'failures-only'`)               | `null`               | `null`             |
+| `approved`         | Baseline aus der Review-Oberfläche im Headed-Modus ersetzt („Replace image“)       | `null`               | `null`             |
+
+Felder auf Lauf-Ebene:
+
+| Feld                     | Bedeutung                                                                                                                                                                                                                                                                          |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `createdAt`, `updatedAt` | wann der Lauf gestartet ist und wann die Datei zuletzt neu geschrieben wurde (ISO 8601)                                                                                                                                                                                            |
+| `platform`               | `osPlatform` (`linux`, `darwin`, `win32`), `arch`, das Kernel-`osRelease` und im Run-Modus die menschenlesbare `osVersion` der Maschine, die die Tests ausgeführt hat                                                                                                              |
+| `tool`                   | was die Datei geschrieben hat: dieses Plugin und seine Version                                                                                                                                                                                                                     |
+| `ci`                     | wird auf GitHub Actions und GitLab CI aus Umgebungsvariablen erkannt; `{ "provider": null }` auf anderen CI-Systemen (nur `CI` ist gesetzt), `null` außerhalb der CI. Es werden ausschließlich die aufgeführten Schlüssel aus der Umgebung übernommen                              |
+| `options`                | jede `pluginVisualRegression*`-Option aus `expose`/`env`, ohne Präfix, Werte wie konfiguriert (CLI-Werte bleiben Strings)                                                                                                                                                          |
+| `runner`                 | was die Tests ausgeführt hat. `mode` ist `run` oder `open`; `browser` ist der gestartete Browser; `specs` ist nur im Run-Modus bekannt; `configFile` und `specs` sind relativ zu `projectRoot`. Cypress-Cloud-Läufe erhalten zusätzlich `cloud.runUrl`, `group`, `tag`, `parallel` |
+| `summary`                | Anzahl der Einträge pro Status; `needsHuman` ist `failed` + `missingBaseline`, sodass ein Consumer entscheiden kann, ohne die Einträge zu lesen                                                                                                                                    |
+
+Hinweise für Consumer:
+
+- Alle Pfade sind relativ zu `projectRoot` und verwenden `/` als Trenner; sie können aus dem Projekt hinausführen (`../…`), wenn `imagesPath` absolut ist. `projectRoot` ist das Cypress-Projekt, nicht zwingend der Repository-Stamm: `ci.workspace` ist das Checkout-Verzeichnis, `relative(ci.workspace, projectRoot)` ergibt also das Pfadpräfix innerhalb des Repositorys.
+- `failed` und `missing-baseline` sind die Einträge, die einen Menschen brauchen: Wer `images.actual.path` über `images.baseline.path` kopiert, gibt sie frei.
+- `baselineWritten` gibt an, ob sich der Arbeitsbaum für diesen Screenshot geändert hat, unabhängig vom `status`.
+- Jeder Eintrag trägt sein eigenes `platform` und `viewport`, sodass sich Einträge aus einer Matrix von Maschinen auch nach dem Zusammenführen mehrerer Manifeste auseinanderhalten lassen. `options` an einem Eintrag ist die exakte `matchImage`-Eingabe (`imagesPath` behält seine Platzhalter unaufgelöst); `comparison` ist das Ergebnis.
+- `platform` ist, wo der Test gelaufen ist, `renderer` ist, woher die Pixel stammen. Derzeit wird jeder Screenshot von dem Browser aufgenommen, den Cypress steuert, daher ist `renderer.backend` `native` und `renderer.browser` wiederholt `platform.browser.name`. Das Feld existiert, damit sich ein anderer Renderer als der lokale Browser (ein gepinntes Docker-Image, ein gehosteter Renderer) über `rendererVersion` und `imageDigest` identifizieren kann und damit ein Lauf, der auf den lokalen Browser zurückfallen musste, mit `renderer.fallback: true` markiert werden kann. Behandeln Sie Einträge mit unterschiedlichen Renderern als unterschiedliche Baselines.
+- `hashes` enthält den sha256 jeder Datei aus `images`, die auf der Festplatte existiert. Nutzen Sie ihn, um das erneute Hochladen unveränderter Baselines zu überspringen, um zu prüfen, ob ein Artefakt zum Manifest passt, oder um zwei Einträge zu erkennen, die identische Pixel erzeugt haben.
+- Zuordnung zu einem Pull Request: Verwenden Sie `ci.repositoryName` und `ci.pullRequest.number`. Bei GitHub-`pull_request`-Events ist `ci.commit` der temporäre Merge-Commit; alles, was auf den PR-Branch pusht, muss daher `ci.pullRequest.headSha` / `headRef` verwenden. Das Workflow-Artefakt finden Sie über `ci.buildId` und `ci.runAttempt`.
+- Einen Lauf reproduzieren: `npx cypress run --<runner.testingType> --browser <runner.browser.name> --config-file <runner.configFile> --spec <runner.specs joined with ,>` plus ein `--expose "pluginVisualRegression<Key>=<value>"` pro Eintrag von `options`. Das Manifest speichert diese Angaben als Einzelteile statt als Befehlszeile; Shell-Quoting und Paketmanager bleiben also Ihnen überlassen.
+- Die Datei wird nach jedem Vergleich neu geschrieben, sie ist also auch dann vollständig, wenn der Lauf abgebrochen wird. Laufen Specs parallel auf mehreren Maschinen, schreibt jede Maschine ihr eigenes Manifest; `**/visual-regression-manifest{,.*}.json` (`MANIFEST_FILE_GLOB` im Paket) findet sie alle in einem Artefakt, und `readManifestFiles` + `mergeManifests` aus `visual-regression-manifest` machen daraus eine einzige Liste, in der ein späterer CI-Versuch einen früheren überstimmt.
+- Nur der `runner`-Block und die Schlüssel von `options` sind Cypress-spezifisch; den Rest des Formats teilen sich alle anderen Writer. `specVersion` folgt semver, und die Major-Version wird nur bei Breaking Changes am Format erhöht; Consumer ignorieren Schlüssel, die sie nicht kennen. Da die Feldnamen CTRF folgen, verwandelt `toCtrf` aus dem Paket ein Manifest in einen [CTRF](https://ctrf.io)-Report für Tooling, das dieses Format liest.
+- Die `Manifest*`-Typen werden der Einfachheit halber aus `@pixsame/cypress-plugin-visual-regression-diff/plugins` re-exportiert; es sind dieselben wie in `visual-regression-manifest`.
+
+Das Manifest ist standardmäßig aktiviert. Um es an einem anderen Ort zu schreiben (Pfade werden relativ zum Projektstamm aufgelöst) oder es abzuschalten, verwenden Sie den Schlüssel `pluginVisualRegressionManifestPath` (`false` deaktiviert es, sonst ändert sich nichts):
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionManifestPath=reports/visual-regression.json"
+npx cypress run --expose "pluginVisualRegressionManifestPath=false"
+# Cypress <15.10 (veraltet seit 15.10, entfernt in 16)
+npx cypress run --env "pluginVisualRegressionManifestPath=false"
+```
+
+Wenn Sie E2E- und Component-Tests mit einem eigenen Pfad ausführen, nehmen Sie den Testing-Type selbst in den Pfad auf; andernfalls würden sich die Läufe gegenseitig die Datei überschreiben.
 
 ## Konfiguration
 

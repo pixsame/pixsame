@@ -22,6 +22,8 @@ type PluginMetadataConfig = {
   testingType?: string;
 };
 
+export type ImageInfo = { width: number; height: number };
+
 export const addPNGMetadata = (config: PluginMetadataConfig, png: Buffer) =>
   addMetadata(
     new Uint8Array(png),

@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 2c9b39af16bde9aa
+source: 5e965a234415c102
 ---
 
 ## 快速開始
@@ -87,6 +87,189 @@ npx cypress run --expose "pluginVisualRegressionCleanupUnusedImages=true"
 # Cypress <15.10（15.10 起棄用，16 已移除）
 npx cypress run --env "pluginVisualRegressionCleanupUnusedImages=true"
 ```
+
+## 執行清單（CI 整合）
+
+從 1.1 起，每次執行都會寫出一份 JSON 清單（manifest），列出每一次 `matchImage` 比對：來自哪個測試、是通過、失敗、建立還是更新了基準影像、差異比例，以及基準影像、`.actual.png` 與 `.diff.png` 檔案相對於專案的路徑。在這些條目旁邊，它也會記錄這次執行發生的位置（CI 供應商、repository、commit、pull request、run id）與執行所用的環境（瀏覽器、spec、設定檔、外掛選項），因此讀取這個檔案的工具可以回報到正確的 PR、下載正確的 artifact，或重新執行同樣的比對。它是為了在 Cypress 跑完之後才執行的 CI 工具（PR 留言、審閱儀表板、核准機器人）而設計的。
+
+這個格式是以 [CTRF](https://ctrf.io) 為基礎、與執行器無關的開放標準，文件位於 [visual-regression.dev/manifest](https://visual-regression.dev/manifest)。npm 套件 [`visual-regression-manifest`](https://www.npmjs.com/package/visual-regression-manifest) 提供 JSON Schema、TypeScript 型別、會驗證的讀取器、能合併整次執行所有清單的合併器，以及給本身不會寫出清單的工具使用的轉換器（Playwright 的 `toHaveScreenshot`、Vitest、jest-image-snapshot、BackstopJS、CTRF 報告、單純的影像檔案）。請以該套件而非這個外掛為基礎來建構您的工具。
+
+預設情況下，這個檔案會和您其他的 Cypress artifact 放在一起，位於 `<screenshotsFolder>/visual-regression-manifest.<testingType>.json`（例如 `cypress/screenshots/visual-regression-manifest.e2e.json`）。請把它和您的快照目錄一起上傳為 CI artifact。
+
+```jsonc
+{
+  "reportFormat": "visual-regression-manifest",
+  "specVersion": "1.0.0-beta.1",
+  "createdAt": "2026-09-22T10:00:00.000Z",
+  "updatedAt": "2026-09-22T10:03:12.481Z",
+  "projectRoot": "/home/runner/work/app/app",
+  "platform": {
+    "osPlatform": "linux",
+    "arch": "x64",
+    "osRelease": "6.8.0-1021-azure",
+  },
+  "ci": {
+    "provider": "github",
+    "repositoryName": "acme/app",
+    "repositoryUrl": "https://github.com/acme/app",
+    "commit": "0f1e2d…", // 在 pull_request 事件中：合併 commit
+    "ref": "refs/pull/42/merge",
+    "branchName": "feat/new-header",
+    "pullRequest": {
+      "number": 42,
+      "headSha": "9a8b7c…",
+      "headRef": "feat/new-header",
+      "baseRef": "main",
+    },
+    "event": "pull_request",
+    "buildId": "1234567890",
+    "buildName": "CI",
+    "buildUrl": "https://github.com/acme/app/actions/runs/1234567890/attempts/1",
+    "runAttempt": "1",
+    "job": "e2e",
+    "workspace": "/home/runner/work/app/app",
+  },
+  "tool": {
+    "name": "@pixsame/cypress-plugin-visual-regression-diff",
+    "version": "1.1.0",
+  }, // 寫出這個檔案的工具
+  "options": { "updateImages": "failures-only" }, // 全域的 pluginVisualRegression* 選項，已去除前綴
+  "runner": {
+    "name": "cypress",
+    "version": "16.1.0",
+    "testingType": "e2e",
+    "mode": "run",
+    "configFile": "cypress.config.ts",
+    "browser": {
+      "name": "chrome",
+      "version": "130.0.0.0",
+      "family": "chromium",
+      "headless": true,
+    },
+    "specs": ["cypress/e2e/home.cy.ts"],
+    "specPattern": "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+    "baseUrl": "http://localhost:3000",
+    "viewport": { "width": 1280, "height": 720 },
+  },
+  "summary": {
+    "entries": 1,
+    "passed": 0,
+    "failed": 1,
+    "missingBaseline": 0,
+    "created": 0,
+    "updated": 0,
+    "approved": 0,
+    "needsHuman": 1,
+  },
+  "entries": [
+    {
+      "name": "home page renders_#0",
+      "test": {
+        "filePath": "cypress/e2e/home.cy.ts",
+        "titlePath": ["home page", "renders"],
+        "retry": 0,
+      },
+      "status": "failed",
+      "comparison": { "diffRatio": 0.0231, "threshold": 0.01 },
+      "images": {
+        "baseline": {
+          "path": "cypress/e2e/__image_snapshots__/home page renders_#0.png",
+          "width": 1280,
+          "height": 720,
+        },
+        "actual": {
+          "path": "cypress/e2e/__image_snapshots__/home page renders_#0.actual.png",
+          "width": 1280,
+          "height": 720,
+        },
+        "diff": {
+          "path": "cypress/e2e/__image_snapshots__/home page renders_#0.diff.png",
+        },
+      },
+      "baselineWritten": false,
+      "recordedAt": "2026-09-22T10:03:12.480Z",
+      "platform": {
+        "osPlatform": "linux",
+        "arch": "x64",
+        "browser": {
+          "name": "chrome",
+          "version": "130.0.0.0",
+          "family": "chromium",
+          "headless": true,
+        },
+      },
+      "viewport": { "width": 1280, "height": 720 },
+      "options": {
+        "imagesPath": "{spec_path}/__image_snapshots__",
+        "maxDiffThreshold": 0.01,
+        "diffConfig": {},
+        "createMissingImages": true,
+        "updateImages": false,
+        "forceDeviceScaleFactor": true,
+        "screenshotConfig": {},
+      },
+      "renderer": {
+        "backend": "native",
+        "browser": "chrome",
+        "browserVersion": "130.0.0.0",
+      },
+      "hashes": {
+        "baseline": "3b7e…", // `images` 中所列檔案的 sha256，只有實際存在的檔案才會有
+        "actual": "9d21…",
+        "diff": "c0ff…",
+      },
+      "message": "Image diff factor (2.31%) is bigger than maximum threshold option 1%.",
+    },
+  ],
+}
+```
+
+| `status`           | 意義                                                          | `images.actual.path` | `images.diff.path` |
+| ------------------ | ------------------------------------------------------------- | -------------------- | ------------------ |
+| `passed`           | 在門檻值範圍內                                                | `null`               | `null`             |
+| `failed`           | 超過門檻值，保留 `.actual.png` 與 `.diff.png` 供審閱          | 路徑                 | 路徑               |
+| `missing-baseline` | 沒有基準影像，且 `createMissingImages: false`                 | 路徑                 | `null`             |
+| `created`          | 沒有基準影像，`.actual.png` 成為基準影像                      | `null`               | `null`             |
+| `updated`          | 基準影像已被覆寫（`updateImages: true` 或 `'failures-only'`） | `null`               | `null`             |
+| `approved`         | 基準影像已從有頭模式的審閱介面取代（「Replace image」）       | `null`               | `null`             |
+
+執行層級的欄位：
+
+| 欄位                     | 意義                                                                                                                                                                                                                    |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `createdAt`、`updatedAt` | 執行開始的時間，以及檔案最後一次被重寫的時間（ISO 8601）                                                                                                                                                                |
+| `platform`               | `osPlatform`（`linux`、`darwin`、`win32`）、`arch`、核心的 `osRelease`，以及在 run 模式下，執行測試的機器可讀性較高的 `osVersion`                                                                                       |
+| `tool`                   | 寫出這個檔案的工具：這個外掛及其版本                                                                                                                                                                                    |
+| `ci`                     | 在 GitHub Actions 與 GitLab CI 上由環境變數偵測；在其他 CI 系統上為 `{ "provider": null }`（只有 `CI` 被設定），不在 CI 上時為 `null`。只有列出的這些鍵會從環境變數複製                                                 |
+| `options`                | 來自 `expose`/`env` 的每個 `pluginVisualRegression*` 選項，已去除前綴，值與設定時相同（CLI 傳入的值維持字串）                                                                                                           |
+| `runner`                 | 執行測試的工具。`mode` 為 `run` 或 `open`；`browser` 是啟動的瀏覽器；`specs` 只在 run 模式下才知道；`configFile` 與 `specs` 相對於 `projectRoot`。Cypress Cloud 的執行還會有 `cloud.runUrl`、`group`、`tag`、`parallel` |
+| `summary`                | 各狀態的條目數量；`needsHuman` 是 `failed` + `missingBaseline`，讓消費端不必讀取條目就能做決定                                                                                                                          |
+
+給消費端的注意事項：
+
+- 所有路徑都相對於 `projectRoot`，並使用 `/` 作為分隔符號；當 `imagesPath` 是絕對路徑時，路徑可能指向專案之外（`../…`）。`projectRoot` 是 Cypress 專案，不一定是 repository 的根目錄：`ci.workspace` 是 checkout 目錄，所以 `relative(ci.workspace, projectRoot)` 就是 repository 內的路徑前綴。
+- `failed` 與 `missing-baseline` 是需要人工處理的條目：把 `images.actual.path` 複製到 `images.baseline.path` 即可核准它們。
+- `baselineWritten` 表示該張截圖的工作樹是否有變更，與 `status` 無關。
+- 每個條目都帶有自己的 `platform` 與 `viewport`，因此把多份清單串接後，仍能分辨來自不同機器矩陣的條目。條目上的 `options` 是 `matchImage` 確切的輸入（`imagesPath` 保留未展開的 token）；`comparison` 則是結果。
+- `platform` 是測試執行的位置，`renderer` 是像素的來源。目前每張截圖都是由 Cypress 驅動的瀏覽器拍攝的，所以 `renderer.backend` 是 `native`，而 `renderer.browser` 會重複 `platform.browser.name`。這個欄位的存在，是為了讓本機瀏覽器以外的算繪器（固定版本的 Docker 映像、託管的算繪器）能以 `rendererVersion` 與 `imageDigest` 表明身分，也讓不得不退回本機瀏覽器的執行能以 `renderer.fallback: true` 標記。請把算繪器不同的條目視為不同的基準影像。
+- `hashes` 保存 `images` 中每個實際存在於磁碟上的檔案的 sha256。可以用來略過重新上傳未變更的基準影像、檢查 artifact 是否與清單相符，或找出產生完全相同像素的兩個條目。
+- 對應到 pull request：請使用 `ci.repositoryName` 與 `ci.pullRequest.number`。在 GitHub 的 `pull_request` 事件中，`ci.commit` 是暫時性的合併 commit，所以任何要推送到 PR 分支的操作都必須使用 `ci.pullRequest.headSha` / `headRef`。工作流程的 artifact 可透過 `ci.buildId` 與 `ci.runAttempt` 找到。
+- 重現一次執行：`npx cypress run --<runner.testingType> --browser <runner.browser.name> --config-file <runner.configFile> --spec <runner.specs joined with ,>`，再為 `options` 的每個條目加上一個 `--expose "pluginVisualRegression<Key>=<value>"`。清單以各個部分而非一整串指令字串的形式儲存這些資訊，因此 shell 的引號處理與套件管理工具仍由您決定。
+- 這個檔案會在每次比對後重寫，所以即使執行中途中止，它仍是完整的。當 spec 在多台機器上平行執行時，每台機器會寫出自己的清單；`**/visual-regression-manifest{,.*}.json`（套件中的 `MANIFEST_FILE_GLOB`）可以在 artifact 中找出所有清單，而 `visual-regression-manifest` 的 `readManifestFiles` + `mergeManifests` 會把它們合併成一份清單，較晚的 CI attempt 會覆蓋較早的。
+- 只有 `runner` 區塊與 `options` 的鍵是 Cypress 專屬的；格式的其餘部分與所有其他寫入者共用。`specVersion` 遵循 semver，只有在格式發生破壞性變更時才會提高主版號；消費端會忽略不認識的鍵。由於欄位名稱遵循 CTRF，套件中的 `toCtrf` 可以把清單轉成 [CTRF](https://ctrf.io) 報告，供讀取該格式的工具使用。
+- 為了方便起見，`Manifest*` 型別也從 `@pixsame/cypress-plugin-visual-regression-diff/plugins` 重新匯出；它們就是 `visual-regression-manifest` 的型別。
+
+清單預設為開啟。若要把它寫到其他位置（路徑會以專案根目錄為基準解析）或關閉它，請使用 `pluginVisualRegressionManifestPath` 鍵（`false` 會停用它，其他行為不變）：
+
+```bash
+# Cypress 15.10+
+npx cypress run --expose "pluginVisualRegressionManifestPath=reports/visual-regression.json"
+npx cypress run --expose "pluginVisualRegressionManifestPath=false"
+# Cypress <15.10（15.10 起棄用，16 已移除）
+npx cypress run --env "pluginVisualRegressionManifestPath=false"
+```
+
+當您以自訂路徑同時執行 e2e 與元件測試時，請自行把測試類型加進路徑中；否則兩次執行會互相覆寫對方的檔案。
 
 ## 設定
 
