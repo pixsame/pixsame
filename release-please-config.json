@@ -14,7 +14,7 @@
     },
     "packages/playwright-visual-regression-diff": {
       "path": "packages/playwright-visual-regression-diff",
-      "component": "@pixsame/playwright",
+      "component": "@pixsame/playwright-visual-regression-diff",
       "release-as": "0.1.0"
     }
   }

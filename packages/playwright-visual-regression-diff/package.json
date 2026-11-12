@@ -1,5 +1,5 @@
 {
-  "name": "@pixsame/playwright",
+  "name": "@pixsame/playwright-visual-regression-diff",
   "description": "Pixsame for Playwright: visual regression testing for Playwright with the matchImage flow, baseline layout, run manifest and CI tooling of @frsource/cypress-plugin-visual-regression-diff, plus a pinned remote browser in Docker for drift-free pixels.",
   "version": "0.0.0",
   "author": "Jakub Freisler <jakub.freisler@frsource.org>",
@@ -37,7 +37,6 @@
   "engines": {
     "node": ">=20.9.0"
   },
-  "packageManager": "pnpm@12.6.0",
   "peerDependencies": {
     "@playwright/test": ">=1.40.0"
   },

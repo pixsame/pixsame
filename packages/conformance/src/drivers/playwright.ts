@@ -37,7 +37,7 @@ export const playwrightDriver: Driver = {
     };
     fs.writeFileSync(
       path.join(ws.dir, 'conformance.spec.mjs'),
-      `import { test } from '@pixsame/playwright';
+      `import { test } from '@pixsame/playwright-visual-regression-diff';
 
 test('shot', async ({ page, matchImage }) => {
   await page.goto('/?v=${fixture}');

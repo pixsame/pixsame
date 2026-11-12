@@ -56,7 +56,7 @@ export const manifestPathFor = (
 };
 
 /** `tool.name` of the manifests this package writes. */
-export const PACKAGE_NAME = '@pixsame/playwright';
+export const PACKAGE_NAME = '@pixsame/playwright-visual-regression-diff';
 
 /* c8 ignore start */
 const versionOf = (packageJson: string): string | undefined => {

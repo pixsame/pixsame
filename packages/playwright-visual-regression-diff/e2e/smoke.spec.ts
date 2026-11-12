@@ -106,7 +106,7 @@ test.describe('matchImage', () => {
     expect(manifest).toMatchObject({
       reportFormat: 'visual-regression-manifest',
       specVersion: MANIFEST_SPEC_VERSION,
-      tool: { name: '@pixsame/playwright' },
+      tool: { name: '@pixsame/playwright-visual-regression-diff' },
       runner: { name: 'playwright', browser: { name: 'chromium' } },
     });
     const entry = manifest.entries.find((e) =>

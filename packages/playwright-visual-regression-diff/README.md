@@ -1,6 +1,6 @@
 # pixsame for Playwright
 
-Published as `@pixsame/playwright`. Visual regression testing for [Playwright](https://playwright.dev) with the same `matchImage` flow, baseline layout, run manifest and CI tooling as [`@frsource/cypress-plugin-visual-regression-diff`](../cypress-plugin-visual-regression-diff/README.md), plus an optional **remote browser in Docker** so that the pixels you approve locally are the pixels CI produces.
+Published as `@pixsame/playwright-visual-regression-diff`. Visual regression testing for [Playwright](https://playwright.dev) with the same `matchImage` flow, baseline layout, run manifest and CI tooling as [`@frsource/cypress-plugin-visual-regression-diff`](../cypress-plugin-visual-regression-diff/README.md), plus an optional **remote browser in Docker** so that the pixels you approve locally are the pixels CI produces.
 
 > Status: 0.x, published on the `next` dist-tag: options may still change. The API below is small on purpose and may still move before 1.0.
 
@@ -15,16 +15,16 @@ Playwright ships `toHaveScreenshot()`, and it is good. This package exists for t
 ## Install
 
 ```bash
-npm i -D @pixsame/playwright
+npm i -D @pixsame/playwright-visual-regression-diff
 ```
 
-`@playwright/test` >= 1.40 is a peer dependency. Node.js >= 20.9. Pre-releases are published on the `next` dist-tag: `npm i -D @pixsame/playwright@next`.
+`@playwright/test` >= 1.40 is a peer dependency. Node.js >= 20.9. Pre-releases are published on the `next` dist-tag: `npm i -D @pixsame/playwright-visual-regression-diff@next`.
 
 ## Use
 
 ```ts
 // tests/home.spec.ts
-import { test, expect } from '@pixsame/playwright';
+import { test, expect } from '@pixsame/playwright-visual-regression-diff';
 
 test('home page', async ({ page, matchImage }) => {
   await page.goto('/');
@@ -37,7 +37,7 @@ test('home page', async ({ page, matchImage }) => {
 
 ```ts
 import { test as base } from '@playwright/test';
-import { visualRegressionFixtures } from '@pixsame/playwright';
+import { visualRegressionFixtures } from '@pixsame/playwright-visual-regression-diff';
 
 export const test = base.extend(visualRegressionFixtures);
 ```
@@ -101,7 +101,7 @@ Chrome hands text rasterisation to the OS, so a macOS screenshot never matches a
 ```ts
 // playwright.config.ts
 import { defineConfig } from '@playwright/test';
-import { remoteBrowser } from '@pixsame/playwright/remote';
+import { remoteBrowser } from '@pixsame/playwright-visual-regression-diff/remote';
 
 const remote = remoteBrowser({ keepAlive: true });
 
@@ -160,10 +160,10 @@ This package is the Playwright adapter from the renderer design that drives v5 o
 ## Development
 
 ```bash
-pnpm --filter @pixsame/playwright build
-pnpm --filter @pixsame/playwright test:integration     # unit tests, no browser needed
-pnpm --filter @pixsame/playwright test:smoke           # needs `npx playwright install chromium`
-pnpm --filter @pixsame/playwright test:smoke:remote    # needs Docker; pulls the Playwright image
+pnpm --filter @pixsame/playwright-visual-regression-diff build
+pnpm --filter @pixsame/playwright-visual-regression-diff test:integration     # unit tests, no browser needed
+pnpm --filter @pixsame/playwright-visual-regression-diff test:smoke           # needs `npx playwright install chromium`
+pnpm --filter @pixsame/playwright-visual-regression-diff test:smoke:remote    # needs Docker; pulls the Playwright image
 ```
 
 The smoke tests write their baselines to `e2e/__image_snapshots__` (gitignored): the first run creates them, the second compares.

@@ -99,7 +99,7 @@ const isUnstamped = ({ input }: CompareContext) =>
  *   so the file is rewritten once instead of by whoever runs the test next.
  */
 const matchImagePlugin = (pixelmatch: typeof pixelmatchType): Plugin => ({
-  name: '@pixsame/playwright',
+  name: '@pixsame/playwright-visual-regression-diff',
   setup: (api) => {
     api.on('beforeWrite', (ctx, { write }) => ({
       write: [
