@@ -18,6 +18,7 @@
     "test:ct:ci": "pnpm -r --workspace-concurrency=1 test:ct:ci",
     "test:e2e": "pnpm -r test:e2e",
     "test:e2e:ci": "pnpm -r --workspace-concurrency=1 test:e2e:ci",
+    "test:conformance": "pnpm --filter @pixsame/conformance test:conformance",
     "record-demo": "node scripts/record-batch-demo.mjs"
   },
   "engines": {
