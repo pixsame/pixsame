@@ -157,7 +157,7 @@ export const toManifestOptions = (
 ): ManifestEntryOptions => ({
   imagesPath: config.imagesPath,
   title: options.title,
-  maxDiffThreshold: config.maxDiffThreshold,
+  maxDiffRatio: config.maxDiffThreshold,
   diffConfig: config.diffConfig as Record<string, unknown>,
   createMissingImages: config.createMissingImages,
   updateImages: config.updateImages,

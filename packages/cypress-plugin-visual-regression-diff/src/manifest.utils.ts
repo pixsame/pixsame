@@ -279,7 +279,11 @@ export const recordManifestEntry = (
     retry: input.currentRetryNumber,
     status: input.status,
     diffRatio: input.imgDiff,
-    threshold: input.maxDiffThreshold,
+    maxDiffRatio: input.maxDiffThreshold,
+    ...(typeof input.options?.diffConfig.threshold === 'number' && {
+      colorThreshold: input.options.diffConfig.threshold,
+      colorMetric: 'yiq',
+    }),
     baselineWritten: input.baselineWritten,
     actualSize: input.imgNewSize,
     baselineSize: input.imgOldSize,

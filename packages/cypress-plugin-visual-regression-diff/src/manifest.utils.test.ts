@@ -196,7 +196,7 @@ describe('recordManifestEntry', () => {
         retry: 0,
       },
       status: 'failed',
-      comparison: { diffRatio: 0.25, threshold: 0.01 },
+      comparison: { diffRatio: 0.25, maxDiffRatio: 0.01 },
       images: {
         baseline: { path: 'shots/home_#0.png', width: 125, height: 125 },
         actual: { path: 'shots/home_#0.actual.png', width: 250, height: 181 },
@@ -421,7 +421,7 @@ describe('markManifestEntryApproved', () => {
         titlePath: ['home', 'renders'],
       },
       status: 'approved',
-      comparison: { diffRatio: 0.3, threshold: 0.01 },
+      comparison: { diffRatio: 0.3, maxDiffRatio: 0.01 },
       images: {
         baseline: { path: 'shots/home_#0.png' },
         actual: { path: null, width: 10, height: 10 },
@@ -450,7 +450,7 @@ describe('markManifestEntryApproved', () => {
       name: 'fresh_#0',
       test: { filePath: 'cypress/e2e/fresh.cy.ts', titlePath: [], retry: 0 },
       status: 'approved',
-      comparison: { diffRatio: 0, threshold: 0 },
+      comparison: { diffRatio: 0 },
       images: {
         baseline: { path: 'shots/fresh_#0.png' },
         actual: { path: null },
