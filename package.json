@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@frsource/eslint-config": "1.86.4",
+    "cypress": "16.1.0",
     "eslint": "10.14.0",
     "eslint-plugin-cypress": "^7.0.0",
     "ffmpeg-static": "^5.2.0",

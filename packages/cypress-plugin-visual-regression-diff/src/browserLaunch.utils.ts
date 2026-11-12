@@ -3,6 +3,7 @@ import {
   DETERMINISTIC_RENDERING_FIREFOX_PREFERENCES,
   DETERMINISTIC_RENDERING_HEADLESS_CHROMIUM_ARGS,
   FORCE_DEVICE_SCALE_FACTOR_CHROMIUM_ARGS,
+  FORCE_DEVICE_SCALE_FACTOR_FIREFOX_PREFERENCES,
 } from './constants';
 import { getPluginConfig } from './version.utils';
 
@@ -14,7 +15,7 @@ export type BrowserLaunchPresets = {
 export const HEADED_ELECTRON_SCALE_FACTOR_MESSAGE =
   "There isn't currently a way of setting the device scale factor in Cypress when running headed electron so we disable the image regression commands.";
 export const ELECTRON_DETERMINISTIC_RENDERING_MESSAGE =
-  '[@frsource/cypress-plugin-visual-regression-diff] Electron does not accept browser switches from plugins, so the deterministic rendering preset only injects CSS there. Pass the switches via ELECTRON_EXTRA_LAUNCH_ARGS (see "Reducing cross-OS rendering noise" in the README) or use Chrome for CI screenshots.';
+  '[@pixsame/cypress-plugin-visual-regression-diff] Electron does not accept browser switches from plugins, so the deterministic rendering preset only injects CSS there. Pass the switches via ELECTRON_EXTRA_LAUNCH_ARGS (see "Reducing cross-OS rendering noise" in the README) or use Chrome for CI screenshots.';
 
 /**
  * A boolean plugin option is disabled by `false` or by the string `'false'`
@@ -27,19 +28,6 @@ export const isOptionDisabled = (
 ) => {
   const value = getPluginConfig(config, key);
   return value === false || value === 'false';
-};
-
-/**
- * An opt-in plugin option is enabled by `true` or by the string `'true'`
- * (which is what `--expose key=true` on the CLI delivers). Anything else,
- * including "not set", keeps the default (disabled).
- */
-export const isOptionEnabled = (
-  config: Cypress.PluginConfigOptions,
-  key: string,
-) => {
-  const value = getPluginConfig(config, key);
-  return value === true || value === 'true';
 };
 
 const pushUnique = (args: string[], toAdd: readonly string[]) => {
@@ -61,16 +49,10 @@ export const getBrowserLaunchOptions = (
   const preferences = { ...launchOptions.preferences };
   const messages: string[] = [];
   const isElectron = browser.name === 'electron';
-  // 1.x: the scale factor switches go to Chrome and Chromium only, as they
-  // always did on this line. 2.0 widens them to the whole chromium family
-  // (Edge) and to Firefox; that changes HiDPI baselines there, so it waits
-  // for the major.
-  const isChromeOrChromium =
-    browser.name === 'chrome' || browser.name === 'chromium';
 
   if (browser.family === 'chromium' && !isElectron) {
     // based on https://github.com/cypress-io/cypress/issues/2102#issuecomment-521299946
-    if (presets.forceDeviceScaleFactor && isChromeOrChromium) {
+    if (presets.forceDeviceScaleFactor) {
       pushUnique(args, FORCE_DEVICE_SCALE_FACTOR_CHROMIUM_ARGS);
     }
     if (presets.deterministicRendering) {
@@ -80,7 +62,9 @@ export const getBrowserLaunchOptions = (
       }
     }
   } else if (browser.family === 'firefox') {
-    // no scale factor preference on 1.x (2.0 sets layout.css.devPixelsPerPx)
+    if (presets.forceDeviceScaleFactor) {
+      Object.assign(preferences, FORCE_DEVICE_SCALE_FACTOR_FIREFOX_PREFERENCES);
+    }
     if (presets.deterministicRendering) {
       Object.assign(preferences, DETERMINISTIC_RENDERING_FIREFOX_PREFERENCES);
     }
@@ -108,8 +92,7 @@ export const getBrowserLaunchPresets = (
     config,
     'pluginVisualRegressionForceDeviceScaleFactor',
   ),
-  // opt-in on 1.x; 2.0 turns it on by default
-  deterministicRendering: isOptionEnabled(
+  deterministicRendering: !isOptionDisabled(
     config,
     'pluginVisualRegressionDeterministicRendering',
   ),

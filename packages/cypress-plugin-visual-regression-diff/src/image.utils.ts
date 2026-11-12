@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs';
-import { PNG, PNGWithMetadata } from 'pngjs';
 import sharp from 'sharp';
 import metaPngPkg from 'meta-png';
 const { addMetadata, getMetadata } = metaPngPkg;
@@ -22,10 +21,8 @@ type PluginMetadataConfig = {
   testingType?: string;
 };
 
-export type ImageInfo = { width: number; height: number };
-
-export const addPNGMetadata = (config: PluginMetadataConfig, png: Buffer) =>
-  addMetadata(
+export const addPNGMetadata = (config: PluginMetadataConfig, png: Buffer) => {
+  const stamped = addMetadata(
     new Uint8Array(png),
     METADATA_KEY,
     JSON.stringify({
@@ -33,6 +30,9 @@ export const addPNGMetadata = (config: PluginMetadataConfig, png: Buffer) =>
       testingType: config.testingType || 'e2e',
     } as PluginMetadata) /* c8 ignore next */,
   );
+  // view over the same memory, no copy
+  return Buffer.from(stamped.buffer, stamped.byteOffset, stamped.byteLength);
+};
 export const getPNGMetadata = (png: Buffer): PluginMetadata | undefined => {
   const metadataString = getMetadata(
     new Uint8Array(png),
@@ -53,93 +53,53 @@ export const isImageOfTestType = (
   png: Buffer,
   testingType?: PluginMetadataConfig['testingType'],
 ) => {
-  if (!isImageGeneratedByPlugin(png)) return false;
-  const imageTestingType = getPNGMetadata(
-    png /* c8 ignore next */,
-  )?.testingType;
-  return imageTestingType === testingType || testingType === undefined;
+  const metadata = getPNGMetadata(png /* c8 ignore next */);
+  return (
+    !!metadata &&
+    (testingType === undefined || metadata.testingType === testingType)
+  );
 };
 
-export const writePNG = (
-  config: PluginMetadataConfig,
-  name: string,
-  png: PNG | Buffer,
+export type ImageInfo = { width: number; height: number };
+
+// reads the dimensions from the PNG header, without decoding pixels
+export const getImageSize = async (png: Buffer): Promise<ImageInfo> => {
+  const { width, height } = await sharp(png).metadata();
+  return { width, height };
+};
+
+// decodes a PNG to 8-bit RGBA pixels (what pixelmatch expects); when `size` is
+// larger than the image, the canvas is extended (anchored top-left) and the
+// added area is filled with translucent black
+export const decodePNG = (
+  png: Buffer,
+  imageSize: ImageInfo,
+  size: ImageInfo = imageSize,
 ) =>
-  fs.writeFileSync(
-    name,
-    addPNGMetadata(config, png instanceof PNG ? PNG.sync.write(png) : png),
-  );
+  sharp(png)
+    .ensureAlpha()
+    .extend({
+      right: size.width - imageSize.width,
+      bottom: size.height - imageSize.height,
+      background: { r: 0, g: 0, b: 0, alpha: 64 / 255 },
+    })
+    .raw()
+    .toBuffer();
 
-const inArea = (x: number, y: number, height: number, width: number) =>
-  y > height || x > width;
+// encodes 8-bit RGBA pixels to PNG
+export const encodePNG = (raw: Buffer, { width, height }: ImageInfo) =>
+  sharp(raw, { raw: { width, height, channels: 4 } })
+    .png()
+    .toBuffer();
 
-export const fillSizeDifference = (
-  image: PNG,
-  width: number,
-  height: number,
-) => {
-  for (let y = 0; y < image.height; y++) {
-    for (let x = 0; x < image.width; x++) {
-      if (inArea(x, y, height, width)) {
-        const idx = (image.width * y + x) << 2;
-        image.data[idx] = 0;
-        image.data[idx + 1] = 0;
-        image.data[idx + 2] = 0;
-        image.data[idx + 3] = 64;
-      }
-    }
-  }
-  return image;
-  /* c8 ignore next */
-};
+export const scaleImage = async (png: Buffer, scaleFactor: number) => {
+  if (scaleFactor === 1) return png;
 
-export const createImageResizer =
-  (width: number, height: number) => (source: PNG) => {
-    const resized = new PNG({ width, height, fill: true });
-    PNG.bitblt(source, resized, 0, 0, source.width, source.height, 0, 0);
-    return resized;
-    /* c8 ignore next */
-  };
-
-export const scaleImageAndWrite = async ({
-  scaleFactor,
-  path,
-}: {
-  scaleFactor: number;
-  path: string;
-}) => {
-  const imgBuffer = fs.readFileSync(path);
-  if (scaleFactor === 1) return imgBuffer;
-
-  const rawImgNew = PNG.sync.read(imgBuffer);
-  const newImageWidth = Math.ceil(rawImgNew.width * scaleFactor);
-  const newImageHeight = Math.ceil(rawImgNew.height * scaleFactor);
-  await sharp(imgBuffer).resize(newImageWidth, newImageHeight).toFile(path);
-
-  return fs.readFileSync(path);
-};
-
-export const alignImagesToSameSize = (
-  firstImage: PNGWithMetadata,
-  secondImage: PNGWithMetadata,
-) => {
-  const firstImageWidth = firstImage.width;
-  const firstImageHeight = firstImage.height;
-  const secondImageWidth = secondImage.width;
-  const secondImageHeight = secondImage.height;
-
-  const resizeToSameSize = createImageResizer(
-    Math.max(firstImageWidth, secondImageWidth),
-    Math.max(firstImageHeight, secondImageHeight),
-  );
-
-  const resizedFirst = resizeToSameSize(firstImage);
-  const resizedSecond = resizeToSameSize(secondImage);
-
-  return [
-    fillSizeDifference(resizedFirst, firstImageWidth, firstImageHeight),
-    fillSizeDifference(resizedSecond, secondImageWidth, secondImageHeight),
-  ];
+  const image = sharp(png);
+  const { width, height } = await image.metadata();
+  return image
+    .resize(Math.ceil(width * scaleFactor), Math.ceil(height * scaleFactor))
+    .toBuffer();
 };
 
 export const cleanupUnused = (

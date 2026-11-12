@@ -60,7 +60,6 @@ export const FORCE_DEVICE_SCALE_FACTOR_CHROMIUM_ARGS = [
   '--force-device-scale-factor=1',
   '--high-dpi-support=1',
 ] as const;
-/** Not applied on 1.x; 2.0 sets it under `forceDeviceScaleFactor`. */
 export const FORCE_DEVICE_SCALE_FACTOR_FIREFOX_PREFERENCES = {
   'layout.css.devPixelsPerPx': '1',
 } as const;

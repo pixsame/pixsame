@@ -6,7 +6,6 @@ import {
   getBrowserLaunchPresets,
   initBrowserLaunchHook,
   isOptionDisabled,
-  isOptionEnabled,
 } from './browserLaunch.utils';
 import {
   DETERMINISTIC_RENDERING_CHROMIUM_ARGS,
@@ -78,27 +77,14 @@ describe('getBrowserLaunchOptions', () => {
     );
   });
 
-  it('treats chromium like chrome', () => {
+  it.each(['chromium', 'edge'])('treats %s like chrome', (name) => {
     const { launchOptions: result } = getBrowserLaunchOptions(
-      browser({ name: 'chromium' }),
+      browser({ name: name as Cypress.BrowserName }),
       launchOptions(),
       both,
     );
     expect(result.args).toContain('--force-device-scale-factor=1');
     expect(result.args).toContain('--font-render-hinting=none');
-  });
-
-  it('gives edge the rendering switches but not the scale factor (1.x keeps that to chrome and chromium)', () => {
-    const { launchOptions: result } = getBrowserLaunchOptions(
-      browser({ name: 'edge' }),
-      launchOptions(),
-      both,
-    );
-    expect(result.args).not.toContain('--force-device-scale-factor=1');
-    expect(result.args).toEqual([
-      ...DETERMINISTIC_RENDERING_CHROMIUM_ARGS,
-      '--hide-scrollbars',
-    ]);
   });
 
   it('does not duplicate switches that are already there', () => {
@@ -166,21 +152,13 @@ describe('getBrowserLaunchOptions', () => {
     expect(result.args).toEqual([]);
     expect(result.preferences).toEqual({
       existing: true,
+      'layout.css.devPixelsPerPx': '1',
       'gfx.webrender.software': true,
     });
     expect(messages).toEqual([]);
   });
 
-  it('never sets a firefox scale factor preference on 1.x (2.0 does)', () => {
-    const { launchOptions: result } = getBrowserLaunchOptions(
-      browser({ name: 'firefox', family: 'firefox' }),
-      launchOptions(),
-      { forceDeviceScaleFactor: true, deterministicRendering: false },
-    );
-    expect(result.preferences).toEqual({});
-  });
-
-  it('applies only the rendering preference when the scale factor preset is off', () => {
+  it('skips the firefox scale factor preference when that preset is off', () => {
     const { launchOptions: result } = getBrowserLaunchOptions(
       browser({ name: 'firefox', family: 'firefox' }),
       launchOptions(),
@@ -282,55 +260,12 @@ describe('isOptionDisabled', () => {
   });
 });
 
-describe('isOptionEnabled', () => {
-  it.each([
-    { value: true, enabled: true },
-    { value: 'true', enabled: true },
-    { value: false, enabled: false },
-    { value: 'false', enabled: false },
-    { value: undefined, enabled: false },
-    { value: 1, enabled: false },
-    { value: 'yes', enabled: false },
-  ])('treats $value as enabled: $enabled', ({ value, enabled }) => {
-    expect(
-      isOptionEnabled(
-        config({ version: '16.1.0', expose: { key: value }, env: {} }),
-        'key',
-      ),
-    ).toBe(enabled);
-  });
-
-  it('reads env on Cypress <15.10 and expose on 15.10+', () => {
-    const cfg = { env: { key: true }, expose: { key: false } };
-    expect(isOptionEnabled(config({ version: '13.17.0', ...cfg }), 'key')).toBe(
-      true,
-    );
-    expect(isOptionEnabled(config({ version: '15.10.0', ...cfg }), 'key')).toBe(
-      false,
-    );
-  });
-});
-
 describe('getBrowserLaunchPresets', () => {
-  it('enables only the scale factor preset by default (deterministic rendering is opt-in on 1.x)', () => {
+  it('enables both presets by default', () => {
     expect(
       getBrowserLaunchPresets(config({ version: '16.1.0', expose: {} })),
-    ).toEqual({ forceDeviceScaleFactor: true, deterministicRendering: false });
+    ).toEqual(both);
   });
-
-  it.each([true, 'true'])(
-    'enables deterministic rendering when the option is %j',
-    (value) => {
-      expect(
-        getBrowserLaunchPresets(
-          config({
-            version: '16.1.0',
-            expose: { pluginVisualRegressionDeterministicRendering: value },
-          }),
-        ),
-      ).toEqual(both);
-    },
-  );
 
   it('maps the exposed options onto the presets', () => {
     expect(
@@ -345,54 +280,13 @@ describe('getBrowserLaunchPresets', () => {
       ),
     ).toEqual({ forceDeviceScaleFactor: false, deterministicRendering: false });
   });
-
-  it('keeps the scale factor preset on unless it is set to false', () => {
-    expect(
-      getBrowserLaunchPresets(
-        config({
-          version: '13.17.0',
-          env: { pluginVisualRegressionForceDeviceScaleFactor: 'true' },
-        }),
-      ).forceDeviceScaleFactor,
-    ).toBe(true);
-    expect(
-      getBrowserLaunchPresets(
-        config({
-          version: '13.17.0',
-          env: { pluginVisualRegressionForceDeviceScaleFactor: false },
-        }),
-      ).forceDeviceScaleFactor,
-    ).toBe(false);
-  });
 });
 
 describe('initBrowserLaunchHook', () => {
-  it('applies only the scale factor switches by default', () => {
-    const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
-    const hook = initBrowserLaunchHook(
-      config({ version: '16.1.0', expose: {}, env: {} }),
-    );
-
-    const result = hook(browser({ name: 'chrome' }), launchOptions());
-    expect(result.args).toEqual([...FORCE_DEVICE_SCALE_FACTOR_CHROMIUM_ARGS]);
-    expect(log).not.toBeCalled();
-
-    hook(
-      browser({ name: 'electron', isHeaded: true, isHeadless: false }),
-      launchOptions(),
-    );
-    expect(log).toBeCalledWith(HEADED_ELECTRON_SCALE_FACTOR_MESSAGE);
-    expect(log).not.toBeCalledWith(ELECTRON_DETERMINISTIC_RENDERING_MESSAGE);
-  });
-
   it('applies the presets from the config and logs the messages', () => {
     const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
     const hook = initBrowserLaunchHook(
-      config({
-        version: '16.1.0',
-        expose: { pluginVisualRegressionDeterministicRendering: 'true' },
-        env: {},
-      }),
+      config({ version: '16.1.0', expose: {}, env: {} }),
     );
 
     const result = hook(browser({ name: 'chrome' }), launchOptions());
