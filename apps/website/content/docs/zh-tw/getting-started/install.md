@@ -7,7 +7,7 @@ reviewed: false
 
 # 安裝
 
-這一頁講的是 Cypress 外掛，也就是你現在就能安裝的那部分。Playwright 外掛與 GitHub App 還在開發中。
+這一頁講的是 Cypress 外掛。Playwright 請參考 [Playwright 外掛](/docs/integrations/playwright-reporter)頁面。GitHub App 還在開發中。
 
 ## 加入套件
 

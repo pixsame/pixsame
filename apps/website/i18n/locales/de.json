@@ -3,7 +3,7 @@
     "reviewed": false
   },
   "seo": {
-    "title": "pixsame — visuelle Regressionstests für Cypress (Playwright bald)",
+    "title": "pixsame: visuelle Regressionstests für Cypress und Playwright",
     "description": "Ein offenes Manifest-Format für beide Runner, ein fixierter Renderer für byte-identische Screenshots, forensische Diff-Analyse und Baseline-Freigabe im Pull Request."
   },
   "nav": {
@@ -27,14 +27,14 @@
     "toDark": "Zum dunklen Modus wechseln"
   },
   "hero": {
-    "eyebrow": "Open Source · MIT · Cypress heute, Playwright bald",
+    "eyebrow": "Open Source · MIT · Cypress und Playwright",
     "title": "Visuelle Regression, die mit sich selbst übereinstimmt.",
     "tagline": "same same. auf den Pixel genau.",
     "body": "Ein offenes Manifest-Format für beide Runner. Ein fixierter Renderer macht lokale und CI-Screenshots byte-identisch. Forensische Diff-Analyse statt eines roten Flecks und Baseline-Freigabe direkt im Pull Request.",
     "copy": "KOPIEREN",
     "copied": "KOPIERT",
     "docs": "Doku lesen",
-    "soonNote": "Heute verfügbar: das Cypress-Plugin und das Manifest. Bald: der fixierte Renderer, die forensische Diff-Analyse und die Freigabe im Pull Request."
+    "soonNote": "Heute verfügbar: das Cypress-Plugin, das Playwright-Plugin und das Manifest. Bald: der fixierte Renderer, die forensische Diff-Analyse und die Freigabe im Pull Request."
   },
   "detect": {
     "demo": "Beispielhafte Darstellung eines KI-Erkennungslaufs",
@@ -159,8 +159,8 @@
   "product": {
     "crumb": "Fixierter Renderer",
     "title": "Ein Ökosystem für visuelle Regression.",
-    "body": "pixsame ist eine wachsende Sammlung offener Tools, die visuelle Regressionstests verlässlich machen: ein gemeinsames Format, ein Renderer, Review im Pull Request. Das Cypress-Plugin ist heute verfügbar, der Rest folgt.",
-    "status": "Cypress-Plugin: verfügbar · alles andere: demnächst",
+    "body": "pixsame ist eine wachsende Sammlung offener Tools, die visuelle Regressionstests verlässlich machen: ein gemeinsames Format, ein Renderer, Review im Pull Request. Das Cypress-Plugin, das Playwright-Plugin und das Manifest sind heute verfügbar, der Rest folgt.",
+    "status": "Cypress- und Playwright-Plugin: verfügbar · der Rest: demnächst",
     "start": "Plugin installieren",
     "stats": {
       "manifest": {
@@ -169,7 +169,7 @@
       },
       "runners": {
         "value": "3",
-        "label": "Runner: heute Cypress, bald Playwright"
+        "label": "Runner: heute Cypress und Playwright, bald Vitest"
       },
       "license": {
         "value": "MIT",
@@ -194,7 +194,7 @@
       },
       "playwright": {
         "name": "Playwright plugin",
-        "body": "Dieselbe Vergleichs-Engine und dasselbe Manifest für Playwright-Projekte. Baselines bleiben in Ihrem Repo."
+        "body": "Dieselbe Vergleichs-Engine und dasselbe Manifest für Playwright-Projekte. Baselines bleiben in Ihrem Repo. Heute verfügbar."
       },
       "manifest": {
         "name": "Run-Manifest",

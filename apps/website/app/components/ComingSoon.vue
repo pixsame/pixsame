@@ -1,8 +1,10 @@
 <script setup lang="ts">
-// Template for the unreleased-product pages: github-app, playwright, vitest, platform.
+// Template for the short product pages: github-app, playwright, vitest, platform.
+// A released product passes `docs` and gets a docs link in place of the waitlist form.
 const props = defineProps<{
   page: 'githubApp' | 'playwright' | 'vitest' | 'platform';
   product: string;
+  docs?: string;
 }>();
 const { t } = useI18n();
 const localePath = useLocalePath();
@@ -20,7 +22,9 @@ useSeoMeta({
     ]"
   >
     <div class="max-w-[720px]">
-      <p class="px-eyebrow">{{ t('soon.status') }}</p>
+      <p class="px-eyebrow">
+        {{ docs ? t('product.available') : t('soon.status') }}
+      </p>
       <h1 class="mt-5 text-[clamp(2.2rem,5vw,3.4rem)] leading-[1.06]">
         {{ t(`soon.${props.page}.title`) }}
       </h1>
@@ -62,7 +66,12 @@ useSeoMeta({
       </li>
     </ul>
 
-    <div class="mt-10"><WaitlistForm :product="product" /></div>
+    <div class="mt-10">
+      <PxButton v-if="docs" :to="localePath(docs)">{{
+        t('hero.docs')
+      }}</PxButton>
+      <WaitlistForm v-else :product="product" />
+    </div>
     <p class="mt-6">
       <PxButton variant="ghost" :to="localePath('/products')"
         >← {{ t('nav.product') }}</PxButton

@@ -3,7 +3,7 @@
     "reviewed": true
   },
   "seo": {
-    "title": "pixsame — visual regression testing for Cypress (Playwright soon)",
+    "title": "pixsame: visual regression testing for Cypress and Playwright",
     "description": "One open manifest format shared by both runners, a pinned renderer for byte-identical screenshots, forensic diff analysis and baseline approval in the pull request."
   },
   "nav": {
@@ -27,14 +27,14 @@
     "toDark": "Switch to dark mode"
   },
   "hero": {
-    "eyebrow": "Open source · MIT · Cypress today, Playwright soon",
+    "eyebrow": "Open source · MIT · Cypress and Playwright",
     "title": "Visual regression that agrees with itself.",
     "tagline": "same same. to the pixel.",
-    "body": "Cypress and Playwright write the same open manifest, so one bot or report reads both. A pinned renderer, so the screenshot from your laptop and the one from CI are the same bytes. When something does change you're told what moved and by how much, not handed a red blob. Then you approve the new baseline from the pull request and get on with your day.",
+    "body": "Cypress and Playwright write the same open manifest, so one bot or report reads both. With a pinned renderer, the screenshot from your laptop and the one from CI are byte-for-byte identical. When something does change, you're told what moved and by how much. Then you approve the new baseline from the pull request.",
     "copy": "COPY",
     "copied": "COPIED",
     "docs": "Read the docs",
-    "soonNote": "What you can install today: the Cypress plugin and the manifest. The pinned renderer, the forensic diff and approval in the pull request are still being built."
+    "soonNote": "What you can install today: the Cypress plugin, the Playwright plugin and the manifest. The pinned renderer, the forensic diff and approval in the pull request are still being built."
   },
   "detect": {
     "demo": "Illustrative example of an AI detection pass",
@@ -61,11 +61,11 @@
     "available": "Available",
     "manifest": {
       "title": "Shared manifest",
-      "body": "Cypress and Playwright write the same JSON file. A PR bot or review tool built against one runner works with the other, no adapter in between."
+      "body": "Cypress and Playwright write the same JSON file. A PR bot or review tool built against one runner works with the other without an adapter in between."
     },
     "renderer": {
       "title": "Pinned renderer",
-      "body": "Browser build, fonts and GPU path are locked, on your laptop and in CI. Both screenshots come out as the same bytes, so a diff means something changed, never \"fonts look a bit different on Linux\"."
+      "body": "Browser build, fonts and GPU path are locked, on your laptop and in CI. Both screenshots come out as the same bytes, so when you get a diff, something changed. Fonts that look a bit different on Linux no longer cause one."
     },
     "forensic": {
       "title": "Forensic diff",
@@ -159,8 +159,8 @@
   "product": {
     "crumb": "Pinned renderer",
     "title": "One ecosystem for visual regression.",
-    "body": "pixsame is a set of open tools built around one idea: a screenshot test should only fail when something actually changed. A shared manifest, a renderer that gives you the same bytes everywhere, review from the pull request. Right now the Cypress plugin is the only part you can install. The rest is in progress, and the map below says which is which.",
-    "status": "Cypress plugin: available · everything else: coming soon",
+    "body": "pixsame is a set of open tools built around one idea: a screenshot test should only fail when something changed. It has a shared manifest, a renderer that gives you the same bytes everywhere, and review from the pull request. The Cypress plugin, the Playwright plugin and the manifest are out. The rest is in progress, and the map below says which is which.",
+    "status": "Cypress and Playwright plugins: available · the rest: coming soon",
     "start": "Install the plugin",
     "stats": {
       "manifest": {
@@ -169,7 +169,7 @@
       },
       "runners": {
         "value": "3",
-        "label": "Runners: Cypress today, Playwright and Vitest soon"
+        "label": "Runners: Cypress and Playwright today, Vitest soon"
       },
       "license": {
         "value": "MIT",
@@ -194,7 +194,7 @@
       },
       "playwright": {
         "name": "Playwright plugin",
-        "body": "Same comparison engine and manifest, for Playwright. Baselines stay in your repo."
+        "body": "Same comparison engine and manifest, for Playwright. Baselines stay in your repo. Out now."
       },
       "manifest": {
         "name": "Run manifest",

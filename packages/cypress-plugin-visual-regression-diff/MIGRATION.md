@@ -122,8 +122,8 @@ to `sharp`, which is many times faster and produces smaller files. Consequences:
 Cypress 16 removes `Cypress.env()` in favor of the new `Cypress.expose()` API (introduced in Cypress 15.10.0).
 This plugin supports both APIs automatically based on the detected Cypress version:
 
-- **Cypress ≥ 15.10** – reads plugin options via `Cypress.expose()` / `config.expose`
-- **Cypress < 15.10** – reads plugin options via `Cypress.env()` / `config.env` (legacy)
+- **Cypress ≥ 15.10** reads plugin options via `Cypress.expose()` / `config.expose`
+- **Cypress < 15.10** reads plugin options via `Cypress.env()` / `config.env` (legacy)
 
 No code change is required inside your tests. You only need to update **how you supply plugin options**.
 
@@ -137,7 +137,7 @@ No code change is required inside your tests. You only need to update **how you 
 
 ### Plugin option names
 
-All option names stay the same — they are prefixed with `pluginVisualRegression`:
+All option names stay the same, prefixed with `pluginVisualRegression`:
 
 | Option                   | Config key                                     |
 | ------------------------ | ---------------------------------------------- |
@@ -183,7 +183,7 @@ export default defineConfig({
 Migrate any plugin options from `cypress.env.json` into the `expose` block of `cypress.config.ts`.
 
 ```jsonc
-// cypress.env.json — REMOVE these plugin keys:
+// cypress.env.json: REMOVE these plugin keys
 {
   // "pluginVisualRegressionUpdateImages": true,  ← move to cypress.config.ts expose block
 }
@@ -192,7 +192,7 @@ Migrate any plugin options from `cypress.env.json` into the `expose` block of `c
 ### Supporting both Cypress 15.x and 16.x simultaneously
 
 If you need your config to work on both Cypress 15.9 and below **and** 15.10+, you can supply the
-option in both places — the plugin will prefer `expose` on newer Cypress and fall back to `env` on
+option in both places. The plugin prefers `expose` on newer Cypress and falls back to `env` on
 older ones:
 
 ```ts

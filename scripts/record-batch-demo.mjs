@@ -20,7 +20,7 @@
  *
  * Requires: pnpm install && pnpm build (cypress, playwright + ffmpeg-static must be in the root devDependencies).
  * Playwright drives the Chrome that Cypress launches (via CDP) and launches the
- * installed Google Chrome headlessly for the editor pane — no browser download
+ * installed Google Chrome headlessly for the editor pane, so no browser download
  * is needed.
  */
 
@@ -427,7 +427,7 @@ function restoreWorkspace() {
 async function shutdown() {
   try { await editorBrowser?.close(); } catch {}
   killAll(processes);
-  // The Cypress desktop app outlives its CLI's process group — stop it explicitly.
+  // The Cypress desktop app outlives its CLI's process group, so stop it explicitly.
   try { execSync(`pkill -f 'Cypress.app/Contents/MacOS/Cypress.*--config-file ${DEMO_CONFIG}'`); } catch {}
 }
 
@@ -494,7 +494,7 @@ async function main() {
   log(`Connected to page: ${runnerPage.url()}`);
   await runnerPage.setViewportSize(RUNNER_VIEWPORT);
 
-  // ── 4. First (green) run — not recorded ──────────────────────────────────
+  // ── 4. First (green) run, not recorded ───────────────────────────────────
   log('Opening spec list…');
   await runnerPage.goto(`http://localhost:${CYPRESS_PORT}/__/#/specs`);
   await runnerPage.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});

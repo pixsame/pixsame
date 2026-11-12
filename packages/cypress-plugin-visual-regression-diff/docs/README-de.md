@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 7d61b3f46c00cd48
+source: f5234ae1e249d64a
 ---
 
 ## Erste Schritte
@@ -429,7 +429,7 @@ Wohin die Reise geht: Für [#212](https://github.com/FRSOURCE/cypress-plugin-vis
 
 ## Batch Review Mode
 
-Der Batch Review Mode ist **standardmäßig aktiviert**. Er ermöglicht es Ihnen, eine komplette Test-Suite auszuführen, ohne beim ersten fehlgeschlagenen visuellen Diff anzuhalten. Stattdessen werden alle fehlgeschlagenen Snapshots gesammelt und nach Abschluss der Tests in einer interaktiven Review-Oberfläche angezeigt – so können Sie Änderungen gesammelt übernehmen oder überspringen.
+Der Batch Review Mode ist **standardmäßig aktiviert**. Er ermöglicht es Ihnen, eine komplette Test-Suite auszuführen, ohne beim ersten fehlgeschlagenen visuellen Diff anzuhalten. Stattdessen werden alle fehlgeschlagenen Snapshots gesammelt und nach Abschluss der Tests in einer interaktiven Review-Oberfläche angezeigt, sodass Sie Änderungen gesammelt übernehmen oder überspringen können.
 
 ### Zusätzliche Funktionen im Headed-Modus (außerhalb der CI)
 
@@ -697,6 +697,6 @@ So entstehen separate Bildverzeichnisse pro Browser (`__image_snapshots__/chrome
 
 ### Wie erzeuge ich einen HTML-Report mit Baseline-, Diff- und aktuellem Bild?
 
-Das Plugin bringt ein integriertes Vergleichs-Overlay in der Cypress-Oberfläche mit – ein Klick auf „See comparison“ bei einem fehlgeschlagenen Test zeigt Baseline, Diff und aktuelles Bild nebeneinander.
+Das Plugin bringt ein integriertes Vergleichs-Overlay in der Cypress-Oberfläche mit: Ein Klick auf „See comparison“ bei einem fehlgeschlagenen Test zeigt Baseline, Diff und aktuelles Bild nebeneinander.
 
 Für die CI oder teilbare HTML-Reports integrieren Sie einen Reporter wie [`cypress-mochawesome-reporter`](https://www.npmjs.com/package/cypress-mochawesome-reporter). Details zur Einrichtung finden Sie unter [Wie integriere ich mochawesome oder andere Reporter, die Screenshots einbetten?](#how-do-i-integrate-with-mochawesome-or-other-reporters-that-embed-screenshot-images).

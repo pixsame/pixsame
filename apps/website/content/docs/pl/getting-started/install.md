@@ -7,7 +7,7 @@ reviewed: false
 
 # Instalacja
 
-Ta strona dotyczy pluginu dla Cypress, czyli tej części, którą możesz zainstalować już teraz. Plugin dla Playwright i GitHub App wciąż powstają.
+Ta strona dotyczy pluginu dla Cypress. Informacje o Playwright znajdują się na stronie [Plugin dla Playwright](/docs/integrations/playwright-reporter). GitHub App wciąż powstaje.
 
 ## Dodaj pakiet
 

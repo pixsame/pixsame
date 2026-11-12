@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 7d61b3f46c00cd48
+source: f5234ae1e249d64a
 ---
 
 ## 快速开始
@@ -429,7 +429,7 @@ cypress/e2e/__image_snapshots__/
 
 ## 批量审查模式
 
-批量审查模式（Batch Review Mode）**默认启用**。它让您可以完整跑完整个测试套件，而不会在第一个视觉差异失败处停下。所有失败的快照会被收集起来，在测试结束后通过一个交互式审查界面展示——您可以批量通过或跳过这些变更。
+批量审查模式（Batch Review Mode）**默认启用**。它让您可以完整跑完整个测试套件，而不会在第一个视觉差异失败处停下。所有失败的快照会被收集起来，在测试结束后通过一个交互式审查界面展示，让您可以批量通过或跳过这些变更。
 
 ### 有头模式（非 CI 环境）下的额外功能
 
@@ -697,6 +697,6 @@ npx cypress run --env "pluginVisualRegressionImagesPath={spec_path}/__image_snap
 
 ### 如何生成一份同时展示基线、差异和实际截图的 HTML 报告？
 
-本插件在 Cypress 界面中内置了视觉比对浮层——在失败的测试上点击「See comparison」，即可并排查看基线、差异和实际截图。
+本插件在 Cypress 界面中内置了视觉比对浮层：在失败的测试上点击「See comparison」，即可并排查看基线、差异和实际截图。
 
 如需用于 CI 或便于分享的 HTML 报告，可以与 [`cypress-mochawesome-reporter`](https://www.npmjs.com/package/cypress-mochawesome-reporter) 之类的报告工具集成。配置细节参见[如何与 mochawesome 或其他会内嵌截图的报告工具集成？](#how-do-i-integrate-with-mochawesome-or-other-reporters-that-embed-screenshot-images)。

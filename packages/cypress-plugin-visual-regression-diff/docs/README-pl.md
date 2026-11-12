@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 7d61b3f46c00cd48
+source: f5234ae1e249d64a
 ---
 
 ## Pierwsze kroki
@@ -429,7 +429,7 @@ Dokąd to zmierza: plan dla [#212](https://github.com/FRSOURCE/cypress-plugin-vi
 
 ## Tryb Batch Review
 
-Tryb Batch Review jest **domyślnie włączony**. Pozwala uruchomić cały zestaw testów bez zatrzymywania się na pierwszym nieudanym porównaniu wizualnym. Zamiast tego wszystkie nieudane snapshoty są zbierane i po zakończeniu testów prezentowane w interaktywnym UI do przeglądu - dzięki czemu zmiany możesz zatwierdzać lub pomijać hurtowo.
+Tryb Batch Review jest **domyślnie włączony**. Pozwala uruchomić cały zestaw testów bez zatrzymywania się na pierwszym nieudanym porównaniu wizualnym. Zamiast tego wszystkie nieudane snapshoty są zbierane i po zakończeniu testów prezentowane w interaktywnym UI do przeglądu, dzięki czemu zmiany możesz zatwierdzać lub pomijać hurtowo.
 
 ### Dodatki w trybie headed (środowiska poza CI)
 
@@ -697,6 +697,6 @@ W ten sposób powstają osobne katalogi obrazów dla każdej przeglądarki (`__i
 
 ### Jak wygenerować raport HTML z obrazami baseline, diff i aktualnym?
 
-Plugin ma wbudowaną nakładkę porównania wizualnego w UI Cypress - kliknięcie "See comparison" przy nieudanym teście pokazuje obok siebie obraz baseline, diff i aktualny.
+Plugin ma wbudowaną nakładkę porównania wizualnego w UI Cypress: kliknięcie "See comparison" przy nieudanym teście pokazuje obok siebie obraz baseline, diff i aktualny.
 
 Na CI albo do raportów HTML, którymi chcesz się dzielić, zintegruj plugin z reporterem takim jak [`cypress-mochawesome-reporter`](https://www.npmjs.com/package/cypress-mochawesome-reporter). Szczegóły konfiguracji znajdziesz w [Jak zintegrować plugin z mochawesome lub innymi reporterami, które osadzają zrzuty ekranu?](#how-do-i-integrate-with-mochawesome-or-other-reporters-that-embed-screenshot-images).

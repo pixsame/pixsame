@@ -10,9 +10,9 @@ order: 3
 
 The plugin started life as `@frsource/cypress-plugin-visual-regression-diff`. It's now in the [pixsame](https://github.com/pixsame) organization, next to the manifest format and the other tools, and is published as `@pixsame/cypress-plugin-visual-regression-diff`. The old name is frozen. No more releases go there, so fixes only reach you once you switch.
 
-## What actually changes
+## What changes
 
-The name. `@pixsame` 1.0.0 is the exact code of `@frsource` 4.3.0 with a different label on the box. Baseline images, configuration, every `cy.*` command: all untouched.
+Only the name. `@pixsame` 1.0.0 is the exact code of `@frsource` 4.3.0, so your baseline images, configuration and `cy.*` commands keep working as they are.
 
 ## Use the migrate command
 
@@ -32,7 +32,7 @@ Before it writes anything it prints the files it's about to touch and waits for 
 
 ## Prefer to do it by hand?
 
-Two steps. Swap the package, then search and replace the name in your imports:
+Swap the package, then search and replace the name in your imports:
 
 ```bash
 npm uninstall @frsource/cypress-plugin-visual-regression-diff
@@ -46,4 +46,4 @@ npm install --save-dev @pixsame/cypress-plugin-visual-regression-diff
 +import { initPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
 ```
 
-One spot people miss: if the package is listed in `compilerOptions.types` of a `tsconfig.json`, rename it there too, or `tsc` will complain about a type definition it can't find.
+If the package is listed in `compilerOptions.types` of a `tsconfig.json`, rename it there too, or `tsc` will complain about a type definition it can't find.

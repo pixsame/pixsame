@@ -8,7 +8,7 @@ useSeoMeta({
 const integrations = [
   { key: 'cypress', to: '/products/cypress-plugin/changelog', available: true },
   { key: 'manifest', to: '/docs/reference/manifest', available: true },
-  { key: 'playwright', available: false },
+  { key: 'playwright', available: true },
   { key: 'vitest', available: false },
   { key: 'renderer', available: false },
   { key: 'githubApp', available: false },
