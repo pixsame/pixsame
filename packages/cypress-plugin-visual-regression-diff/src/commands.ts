@@ -1,5 +1,5 @@
 import { FAB_BADGE_CLASS, FILE_SUFFIX, LINK_PREFIX, TASK } from './constants';
-import { supportsExpose } from './version.utils';
+import { getBatchReviewMode, getExposedOption } from './config.utils';
 import {
   injectDeterministicStyle,
   removeDeterministicStyle,
@@ -79,14 +79,9 @@ const constructCypressError = (log: Cypress.Log, err: Error) => {
 const capitalize = (text: string) =>
   text.charAt(0).toUpperCase() + text.slice(1);
 
-const getPluginEnv = <K extends keyof Cypress.MatchImageOptions>(key: K) => {
-  const envKey = `pluginVisualRegression${capitalize(key)}`;
-  if (supportsExpose(Cypress.version)) {
-    return Cypress.expose(envKey) as Cypress.MatchImageOptions[K] | undefined;
-  }
-
-  return Cypress.env(envKey) as Cypress.MatchImageOptions[K] | undefined;
-};
+const getPluginEnv = <K extends keyof Cypress.MatchImageOptions>(key: K) =>
+  getExposedOption(`pluginVisualRegression${capitalize(key)}`) as
+    Cypress.MatchImageOptions[K] | undefined;
 
 const booleanOption = <K extends keyof Cypress.MatchImageOptions, Return>(
   options: Cypress.MatchImageOptions,
@@ -107,12 +102,12 @@ const optionWithDefaults = <K extends keyof Cypress.MatchImageOptions>(
 const getImagesPath = (options: Cypress.MatchImageOptions) =>
   optionWithDefaults(options, 'imagesPath', '{spec_path}/__image_snapshots__');
 
-// opt-in on 1.x (2.0 turns it on by default); `--expose key=true` on the CLI arrives as the string 'true'
-const isEnabled = (value: unknown) => value === true || value === 'true';
+// `--expose key=false` on the CLI arrives as the string 'false'
+const isEnabled = (value: unknown) => value !== false && value !== 'false';
 
 export const getConfig = (options: Cypress.MatchImageOptions) => ({
   deterministicRendering: isEnabled(
-    optionWithDefaults(options, 'deterministicRendering', false),
+    optionWithDefaults(options, 'deterministicRendering', true),
   ),
   scaleFactor: booleanOption(
     options,
@@ -353,9 +348,7 @@ Cypress.Commands.add(
         if (res.error) {
           log.set('consoleProps', () => res);
 
-          const deferred = supportsExpose(Cypress.version)
-            ? !!Cypress.expose('pluginVisualRegressionBatchReviewMode')
-            : !!Cypress.env('pluginVisualRegressionBatchReviewMode');
+          const deferred = getBatchReviewMode();
           const record: PendingDiffRecord = {
             title,
             imgPath,

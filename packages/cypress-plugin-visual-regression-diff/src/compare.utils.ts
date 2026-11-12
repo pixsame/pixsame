@@ -73,7 +73,8 @@ const matchImagePlugin = (
           diff,
           width,
           height,
-          { includeAA: true, ...(options as PixelmatchOptions) },
+          // pixelmatch's own default (includeAA: false): anti-aliased edge pixels are not counted
+          { ...(options as PixelmatchOptions) },
         );
         return {
           diffPixels,

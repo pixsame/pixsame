@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "webpack serve --mode development",
     "build": "webpack --mode production",
-    "test:open": "cypress open --env \"pluginVisualRegressionImagesPath={spec_path}/__image_snapshots_local__\"",
+    "test:open": "cypress open --expose \"pluginVisualRegressionImagesPath={spec_path}/__image_snapshots_local__\"",
     "test:run": "cypress run",
     "test:ct": "pnpm test:open --component",
     "test:ct:ci": "pnpm test:run --component",
@@ -19,7 +19,7 @@
     "@pixsame/cypress-plugin-visual-regression-diff": "workspace:*",
     "@vue/compiler-sfc": "3.5.43",
     "css-loader": "6.11.0",
-    "cypress": "15.18.0",
+    "cypress": "16.1.0",
     "html-webpack-plugin": "5.6.3",
     "start-server-and-test": "2.0.10",
     "typescript": "5.0.4",

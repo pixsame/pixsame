@@ -7,11 +7,7 @@ import path from 'path';
 import { FILE_SUFFIX, TASK } from './constants';
 import { getPluginConfig } from './version.utils';
 import { getComparer } from './compare.utils';
-import {
-  cleanupUnused,
-  scaleImageAndWrite,
-  addPNGMetadata,
-} from './image.utils';
+import { cleanupUnused, scaleImage, addPNGMetadata } from './image.utils';
 import {
   dropSpecEntries,
   getManifestWriter,
@@ -121,10 +117,7 @@ export const compareImagesTask = async (
   // FRSOURCE_CPVRD_V and won't be silently rewritten on the next run.
   const stampedImgNew = addPNGMetadata(
     cypressConfig,
-    await scaleImageAndWrite({
-      scaleFactor: cfg.scaleFactor,
-      path: cfg.imgNew,
-    }),
+    await scaleImage(fs.readFileSync(cfg.imgNew), cfg.scaleFactor),
   );
   const comparer = await getComparer(
     getManifestWriter(cypressConfig),
