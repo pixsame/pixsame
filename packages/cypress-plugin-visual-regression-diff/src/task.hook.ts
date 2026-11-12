@@ -4,7 +4,7 @@ import type pixelmatch from 'pixelmatch';
 type PixelmatchOptions = NonNullable<Parameters<typeof pixelmatch>[5]>;
 import { moveFile } from 'move-file';
 import path from 'path';
-import { FILE_SUFFIX, TASK } from './constants';
+import { FILE_SUFFIX, TASK, type PathVariables } from './constants';
 import { getPluginConfig } from './version.utils';
 import { getComparer } from './compare.utils';
 import { cleanupUnused, scaleImage, addPNGMetadata } from './image.utils';
@@ -62,6 +62,7 @@ export const getScreenshotPathInfoTask = (cfg: {
   titleFromOptions: string;
   imagesPath: string;
   specPath: string;
+  pathVariables: PathVariables;
   currentRetryNumber: number;
   testId: string;
 }) => {

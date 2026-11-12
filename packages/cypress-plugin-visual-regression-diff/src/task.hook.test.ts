@@ -84,12 +84,31 @@ describe('getScreenshotPathInfoTask', () => {
         specPath,
         currentRetryNumber: 0,
         testId: 'r1',
+        pathVariables: { os: 'linux', browser: 'electron' },
       }),
     ).toEqual({
       screenshotPath:
         '__cp-visual-regression-diff_snapshots__/nested/images/dir/some-title-withśpęćiał人物_#0.actual.png',
       title: 'some-title-withśpęćiał人物_#0.actual',
     });
+  });
+
+  it('supports the {spec_path}/.../{platform} layout', () => {
+    expect(
+      getScreenshotPathInfoTask({
+        titleFromOptions: 'some-title',
+        imagesPath: '{spec_path}/__image_snapshots__/{platform}',
+        specPath,
+        currentRetryNumber: 0,
+        testId: 'r1',
+        pathVariables: { os: 'darwin', browser: 'firefox' },
+      }).screenshotPath,
+    ).toBe(
+      path.join(
+        IMAGE_SNAPSHOT_PREFIX,
+        'some/nested/spec-path/__image_snapshots__/darwin-firefox/some-title_#0.actual.png',
+      ),
+    );
   });
 
   it('supports {spec_path} variable', () => {
@@ -100,6 +119,7 @@ describe('getScreenshotPathInfoTask', () => {
         specPath,
         currentRetryNumber: 0,
         testId: 'r1',
+        pathVariables: { os: 'linux', browser: 'electron' },
       }),
     ).toEqual({
       screenshotPath:
@@ -116,6 +136,7 @@ describe('getScreenshotPathInfoTask', () => {
         specPath,
         currentRetryNumber: 0,
         testId: 'r1',
+        pathVariables: { os: 'linux', browser: 'electron' },
       }),
     ).toEqual({
       screenshotPath:
@@ -130,6 +151,7 @@ describe('getScreenshotPathInfoTask', () => {
         specPath,
         currentRetryNumber: 0,
         testId: 'r1',
+        pathVariables: { os: 'linux', browser: 'electron' },
       }),
     ).toEqual({
       screenshotPath:
@@ -148,6 +170,7 @@ describe('cleanupImagesTask', () => {
         specPath: 'some/spec/path',
         currentRetryNumber: 0,
         testId: 'r1',
+        pathVariables: { os: 'linux', browser: 'electron' },
       });
       return path.join(
         projectRoot,
