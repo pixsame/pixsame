@@ -273,7 +273,7 @@ By default the file lands next to your other Cypress artifacts, at `<screenshots
         "actual": "9d21…",
         "diff": "c0ff…",
       },
-      "message": "Image diff factor (2.31%) is bigger than maximum threshold option 1%.",
+      "message": "2310 pixels (2.31%) differ; the limit is 1%.",
     },
   ],
 }

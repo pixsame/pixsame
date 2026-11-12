@@ -336,8 +336,7 @@ describe('compareImagesTask', () => {
           ),
         ).resolves.toEqual({
           error: false,
-          message:
-            'Image diff factor (0%) is within boundaries of maximum threshold option 50%.',
+          message: 'Baseline image was replaced with the actual screenshot.',
           imgDiff: 0,
           imgDiffBase64: '',
           imgNewBase64: '',
@@ -358,7 +357,9 @@ describe('compareImagesTask', () => {
 
         expect(result).toMatchObject({
           error: false,
-          message: expect.stringContaining('was bigger than maximum threshold'),
+          message: expect.stringContaining(
+            'Baseline image was replaced with the actual screenshot.',
+          ),
         });
         expect(existsSync(cfg.imgOld)).toBe(true);
         expect(existsSync(cfg.imgNew)).toBe(false);
@@ -390,8 +391,7 @@ describe('compareImagesTask', () => {
           compareImagesTask({ testingType: 'e2e' }, cfg),
         ).resolves.toEqual({
           error: false,
-          message:
-            'Image diff factor (0%) is within boundaries of maximum threshold option 50%.',
+          message: 'Baseline image was created from the actual screenshot.',
           imgDiff: 0,
           imgDiffBase64: '',
           imgNewBase64: '',
@@ -412,7 +412,13 @@ describe('compareImagesTask', () => {
             compareImagesTask({ testingType: 'e2e' }, cfg),
           ).resolves.toEqual({
             error: true,
-            message: `Baseline image is missing at path: "${cfg.imgOld}". Provide a baseline image or enable "createMissingImages" option in plugin configuration.`,
+            // relative to the project root, which is the working directory here
+            message: `Baseline image is missing at path: "${path
+              .relative(process.cwd(), cfg.imgOld)
+              .split(path.sep)
+              .join(
+                '/',
+              )}". Provide a baseline image or enable "createMissingImages" option in plugin configuration.`,
             imgDiff: 0,
             imgDiffBase64: '',
             imgNewBase64: '',
@@ -651,10 +657,13 @@ describe('run manifest', () => {
 
   beforeEach(() => resetManifest({}, undefined, {}));
 
-  it('does not write anything when the config has no projectRoot', async () => {
+  it('keeps the entries in memory and writes no file when the config has no projectRoot', async () => {
     const cfg = await generateConfig({});
     await compareImagesTask({ testingType: 'e2e' }, cfg);
-    expect(getManifestEntries()).toHaveLength(0);
+    expect(getManifestEntries()).toHaveLength(1);
+    expect(existsSync(path.join(process.cwd(), 'cypress', 'screenshots'))).toBe(
+      false,
+    );
   });
 
   it.each([
@@ -665,6 +674,7 @@ describe('run manifest', () => {
       removeBaseline: false,
       expected: {
         status: 'passed',
+        reason: 'identical',
         actualPath: null,
         diffPath: null,
         baselineWritten: false,
@@ -679,6 +689,7 @@ describe('run manifest', () => {
       removeBaseline: false,
       expected: {
         status: 'failed',
+        reason: 'above-limit',
         actualPath: 'cypress/e2e/shots/home renders_#0.actual.png',
         diffPath: 'cypress/e2e/shots/home renders_#0.diff.png',
         baselineWritten: false,
@@ -696,6 +707,7 @@ describe('run manifest', () => {
       removeBaseline: false,
       expected: {
         status: 'updated',
+        reason: 'updated',
         actualPath: null,
         diffPath: null,
         baselineWritten: true,
@@ -710,6 +722,7 @@ describe('run manifest', () => {
       removeBaseline: false,
       expected: {
         status: 'updated',
+        reason: 'updated',
         actualPath: null,
         diffPath: null,
         baselineWritten: true,
@@ -724,6 +737,7 @@ describe('run manifest', () => {
       removeBaseline: true,
       expected: {
         status: 'created',
+        reason: 'created',
         actualPath: null,
         diffPath: null,
         baselineWritten: true,
@@ -738,6 +752,7 @@ describe('run manifest', () => {
       removeBaseline: true,
       expected: {
         status: 'missing-baseline',
+        reason: 'missing-baseline',
         actualPath: 'cypress/e2e/shots/home renders_#0.actual.png',
         diffPath: null,
         baselineWritten: false,
@@ -767,6 +782,8 @@ describe('run manifest', () => {
         comparison: {
           diffRatio: expected.diffRatio,
           maxDiffRatio: overrides.maxDiffThreshold ?? 0.5,
+          colorThreshold: 0.1,
+          colorMetric: 'yiq',
         },
         images: {
           baseline: {
@@ -805,6 +822,14 @@ describe('run manifest', () => {
           ...(expected.diffPath && { diff: expect.any(String) }),
         },
         message: result?.message,
+        duration: expect.any(Number),
+        // why the entry got its status, from the comparer
+        extra: {
+          visualRegressionCompare: expect.objectContaining({
+            engine: 'pixelmatch',
+            reason: expect.objectContaining({ code: expected.reason }),
+          }),
+        },
       });
       // the manifest mirrors the disk
       expect(existsSync(cfg.imgNew)).toBe(expected.actualPath !== null);

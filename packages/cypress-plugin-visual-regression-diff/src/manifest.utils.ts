@@ -2,33 +2,22 @@ import { createRequire } from 'module';
 import os from 'os';
 import path from 'path';
 import {
-  ManifestBuilder,
+  ManifestWriter,
   getManifestFileName,
   toPosix,
-  writeManifestFile,
   type EnvLike,
-  type ManifestEntryPlatform,
   type ManifestHeader,
-  type ManifestViewport,
 } from 'visual-regression-manifest';
 import fs from 'fs';
 import { FILE_SUFFIX } from './constants';
-import type { ImageInfo } from './image.utils';
 import { getPluginConfig, supportsExpose } from './version.utils';
-import type {
-  ManifestBrowser,
-  ManifestEntry,
-  ManifestEntryOptions,
-  ManifestRenderer,
-  ManifestRunner,
-  ManifestStatus,
-} from './types';
+import type { ManifestBrowser, ManifestEntry, ManifestRunner } from './types';
 
 export { toPosix };
 
 /**
  * The plugin's side of the run manifest: maps the Cypress config and events
- * onto `ManifestBuilder` from `visual-regression-manifest`, which
+ * onto `ManifestWriter` from `visual-regression-manifest`, which
  * owns the format, and writes the file where the config says.
  */
 
@@ -74,28 +63,14 @@ export type ManifestRunDetails = Partial<
 export type ManifestBrowserInput = Pick<Cypress.Browser, 'name' | 'version'> &
   Partial<Pick<Cypress.Browser, 'family' | 'isHeadless'>>;
 
-export type ManifestRecordInput = {
-  imgNew: string;
-  imgOld: string;
-  specPath?: string;
-  testTitlePath?: string[];
-  currentRetryNumber?: number;
-  platform?: ManifestEntryPlatform;
-  viewport?: ManifestViewport;
-  options?: ManifestEntryOptions;
-  /** Defaults to a `native` renderer derived from `platform.browser`. */
-  renderer?: ManifestRenderer;
-  status: ManifestStatus;
-  imgDiff: number;
-  maxDiffThreshold: number;
-  baselineWritten: boolean;
-  imgNewSize?: ImageInfo;
-  imgOldSize?: ImageInfo;
-  message: string;
-};
-
 // one manifest per process: Cypress runs the plugin file once per run
-let builder: ManifestBuilder | null = null;
+let builder: ManifestWriter | null = null;
+
+/** A manifest writer that keeps its entries in memory: for a run with the manifest turned off. */
+class MemoryManifestWriter extends ManifestWriter {
+  override write() {}
+  override flush() {}
+}
 
 /** `tool.name` of the manifests this plugin writes. */
 export const PLUGIN_NAME = '@pixsame/cypress-plugin-visual-regression-diff';
@@ -217,8 +192,10 @@ export const initManifestRun = (
         }
       : undefined,
   };
-  builder = new ManifestBuilder({
-    projectRoot: config.projectRoot as string,
+  const manifestPath = getManifestPath(config);
+  const header = {
+    // Cypress always has one; a bare config (unit tests) gets the working directory
+    projectRoot: config.projectRoot ?? process.cwd(),
     platform: {
       osPlatform: config.platform ?? process.platform,
       arch: config.arch ?? process.arch,
@@ -231,22 +208,26 @@ export const initManifestRun = (
     tool: { name: PLUGIN_NAME, ...(version && { version }) },
     options: getPluginOptions(config),
     runner,
-  });
+  };
+  builder = manifestPath
+    ? new ManifestWriter(manifestPath, header)
+    : new MemoryManifestWriter(path.join(header.projectRoot, 'unused'), header);
   return builder.header;
 };
 
-// `before:run` does not fire in `cypress open`; seed from the config then
-const ensureBuilder = (config: ManifestConfig) => {
+/**
+ * The run's manifest writer: every recording call writes the file, and the
+ * comparer records into it. `before:run` does not fire in `cypress open`, so
+ * it is seeded from the config then.
+ */
+export const getManifestWriter = (config: ManifestConfig) => {
   if (!builder) initManifestRun(config);
-  return builder as ManifestBuilder;
+  return builder as ManifestWriter;
 };
 
 const clearBuilder = () => {
   builder = null;
 };
-
-const write = (config: ManifestConfig, manifestPath: string) =>
-  writeManifestFile(manifestPath, ensureBuilder(config).toJSON());
 
 /**
  * Records the browser Cypress launched (`before:browser:launch`, fires in
@@ -257,44 +238,10 @@ export const setManifestBrowser = (
   config: ManifestConfig,
   browser: ManifestBrowserInput,
 ) => {
-  const manifestPath = getManifestPath(config);
-  if (!manifestPath) return;
-  const current = ensureBuilder(config);
+  if (!getManifestPath(config)) return;
+  const current = getManifestWriter(config);
   current.header.runner.browser = toManifestBrowser(browser);
-  if (current.size > 0) write(config, manifestPath);
-};
-
-/** Records the outcome of one comparison and rewrites the manifest file. */
-export const recordManifestEntry = (
-  config: ManifestConfig,
-  input: ManifestRecordInput,
-): ManifestEntry | null => {
-  const manifestPath = getManifestPath(config);
-  if (!manifestPath) return null;
-  const entry = ensureBuilder(config).record({
-    actualPath: input.imgNew,
-    baselinePath: input.imgOld,
-    testFile: input.specPath,
-    titlePath: input.testTitlePath,
-    retry: input.currentRetryNumber,
-    status: input.status,
-    diffRatio: input.imgDiff,
-    maxDiffRatio: input.maxDiffThreshold,
-    ...(typeof input.options?.diffConfig.threshold === 'number' && {
-      colorThreshold: input.options.diffConfig.threshold,
-      colorMetric: 'yiq',
-    }),
-    baselineWritten: input.baselineWritten,
-    actualSize: input.imgNewSize,
-    baselineSize: input.imgOldSize,
-    platform: input.platform,
-    viewport: input.viewport,
-    options: input.options,
-    renderer: input.renderer,
-    message: input.message,
-  });
-  write(config, manifestPath);
-  return entry;
+  if (current.size > 0) current.write();
 };
 
 /** Marks a screenshot as approved (baseline replaced by the `.actual.png`) after a headed review. */
@@ -308,13 +255,11 @@ export const markManifestEntryApproved = (
 ): ManifestEntry | null => {
   const manifestPath = getManifestPath(config);
   if (!manifestPath) return null;
-  const entry = ensureBuilder(config).approve({
+  return getManifestWriter(config).approve({
     actualPath: img,
     baselinePath: imgOld ?? img.replace(FILE_SUFFIX.actual, ''),
     testFile: specPath,
   });
-  write(config, manifestPath);
-  return entry;
 };
 
 /**
@@ -323,9 +268,8 @@ export const markManifestEntryApproved = (
  * leave stale entries behind.
  */
 export const dropSpecEntries = (config: ManifestConfig, specPath: string) => {
-  const manifestPath = getManifestPath(config);
-  if (!manifestPath) return;
-  if (ensureBuilder(config).dropTestFile(specPath)) write(config, manifestPath);
+  if (!getManifestPath(config)) return;
+  getManifestWriter(config).dropTestFile(specPath);
 };
 
 /**
