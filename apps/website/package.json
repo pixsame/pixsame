@@ -22,21 +22,21 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@nuxt/content": "3.16.1",
+    "@nuxt/content": "3.16.2",
     "@nuxtjs/i18n": "10.6.0",
     "@nuxtjs/seo": "5.3.16",
     "@pixsame/ui-layer": "workspace:*",
-    "nuxt": "4.6.2",
+    "nuxt": "4.6.4",
     "vue": "^3.5.0",
     "vue-router": "^5.0.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@frsource/eslint-config": "1.85.13",
+    "@frsource/eslint-config": "1.86.4",
     "@frsource/prettier-config": "^1.47.12",
     "@nuxt/eslint": "1.17.0",
-    "@playwright/test": "1.60.0",
-    "eslint": "10.11.0",
+    "@playwright/test": "1.65.0",
+    "eslint": "10.14.0",
     "prettier": "3.9.10",
     "sirv": "^3.0.2",
     "sirv-cli": "^3.0.1",
