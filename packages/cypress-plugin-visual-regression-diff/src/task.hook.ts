@@ -156,8 +156,7 @@ export const compareImagesTask = async (
     imgNewSize = newSize;
     imgOldSize = oldSize;
     const isImgSizeDifferent =
-      newSize.height !== oldSize.height ||
-      newSize.width !== oldSize.width;
+      newSize.height !== oldSize.height || newSize.width !== oldSize.width;
 
     const size = {
       width: Math.max(newSize.width, oldSize.width),
