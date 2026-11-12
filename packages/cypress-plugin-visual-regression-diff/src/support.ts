@@ -363,6 +363,7 @@ function openCarousel(
     cy.task(TASK.approveImage, {
       img: diff.imgPath,
       imgOld: diff.imgOldPath,
+      specPath: Cypress.spec.relative,
     }).then(() => {
       replacedCount++;
       replacedDiffs.add(diff);
@@ -418,7 +419,11 @@ before(() => {
 
   // Reset client-side deferred count and clean up artifacts from the previous spec
   if (top) top.__cpvrdDeferredCount = 0;
-  cy.task(TASK.cleanupImages, { log: false });
+  cy.task(
+    TASK.cleanupImages,
+    { specPath: Cypress.spec.relative },
+    { log: false },
+  );
   cy.task(TASK.clearPendingDiffs, null, { log: false });
 });
 
@@ -493,6 +498,7 @@ after(() => {
           cy.task(TASK.approveImage, {
             img: imgPath,
             imgOld: imgOldPath,
+            specPath: Cypress.spec.relative,
           }).then(() => wrapper.remove());
 
           queueRun();
