@@ -1,10 +1,14 @@
+import fs from 'fs';
 import path from 'path';
 import type pixelmatchType from 'pixelmatch' with {
   'resolution-mode': 'import',
 };
-import type { Comparer, Plugin } from 'visual-regression-compare' with {
-  'resolution-mode': 'import',
-};
+import type {
+  CompareContext,
+  Comparer,
+  Messages,
+  Plugin,
+} from 'visual-regression-compare' with { 'resolution-mode': 'import' };
 import {
   ManifestWriter,
   type ManifestEntry,
@@ -13,7 +17,7 @@ import {
   type ManifestViewport,
 } from 'visual-regression-manifest';
 import { FILE_SUFFIX } from './constants';
-import { addPNGMetadata } from './image.utils';
+import { addPNGMetadata, isImageCurrentVersion } from './image.utils';
 
 export type PixelmatchOptions = NonNullable<
   Parameters<typeof pixelmatchType>[5]
@@ -73,25 +77,47 @@ export type CompareResult = {
 export const diffPathFor = (actualPath: string) =>
   actualPath.replace(FILE_SUFFIX.actual, FILE_SUFFIX.diff);
 
+/** The words `matchImage` users need when there is nothing to compare with: the path and the way out. */
+const messages: Partial<Messages> = {
+  'missing-baseline': ({ baselinePath }) =>
+    `Baseline image is missing at path: "${baselinePath}". Provide a baseline image or enable "createMissingImages" option in plugin configuration.`,
+};
+
+/** A baseline of a passed comparison that was not made by this package (no marker) is refreshed from the screenshot. */
+const isUnstamped = ({ input }: CompareContext) =>
+  input.files !== undefined &&
+  !isImageCurrentVersion(fs.readFileSync(input.files.baseline));
+
 /**
- * Two things of the comparer's defaults that `matchImage` does differently:
- * pixelmatch with every one of its options (`alpha`, `aaColor`, `diffColor`,
- * `diffMask`, ...), not only the `threshold` and `includeAA` of the built-in
- * engine, and anti-aliased pixels not counted unless asked for. Registered
- * under the built-in's name, so it takes its place.
+ * What `matchImage` does differently from the comparer's defaults:
+ * - pixelmatch with every one of its options (`alpha`, `aaColor`, `diffColor`,
+ *   `diffMask`, ...), not only the `threshold` and `includeAA` of the built-in
+ *   engine, and anti-aliased pixels not counted unless asked for; registered
+ *   under the built-in's name, so it takes its place;
+ * - the `.diff.png` carries the package marker, like the screenshot does;
+ * - a passed comparison whose baseline lacks the marker refreshes the baseline,
+ *   so the file is rewritten once instead of by whoever runs the test next.
  */
-const pixelmatchPlugin = (pixelmatch: typeof pixelmatchType): Plugin => ({
-  name: '@pixsame/playwright/pixelmatch',
+const matchImagePlugin = (pixelmatch: typeof pixelmatchType): Plugin => ({
+  name: '@pixsame/playwright',
   setup: (api) => {
-    // the path and the way out: what `matchImage` users need when it fails
-    api.on('decide', (ctx, decision) =>
-      decision.status === 'missing-baseline'
-        ? {
-            ...decision,
-            message: `Baseline image is missing at path: "${ctx.input.files?.baseline}". Provide a baseline image or enable "createMissingImages" option in plugin configuration.`,
-          }
-        : decision,
-    );
+    api.on('beforeWrite', (ctx, { write }) => ({
+      write: [
+        ...write.map((file) =>
+          file.ref.kind === 'diff'
+            ? { ...file, bytes: addPNGMetadata(Buffer.from(file.bytes)) }
+            : file,
+        ),
+        ...(ctx.decision?.status === 'passed' && isUnstamped(ctx)
+          ? [
+              {
+                ref: { kind: 'baseline' as const, path: 'baseline' },
+                bytes: ctx.input.actual,
+              },
+            ]
+          : []),
+      ],
+    }));
     api.addEngine('pixelmatch', (options) => ({
       name: 'pixelmatch',
       colorMetric: 'yiq',
@@ -149,7 +175,8 @@ export const createComparison = async (
           runner: { name: 'playwright' },
         }),
     },
-    plugins: [pixelmatchPlugin(pixelmatch)],
+    messages,
+    plugins: [matchImagePlugin(pixelmatch)],
   });
 };
 
