@@ -1,13 +1,13 @@
 ---
 reviewed: false
-source: 5e965a234415c102
+source: 602d34b3bbb3bfd3
 ---
 
 ## 快速开始
 
 ### 安装
 
-您可以使用自己常用的包管理器安装本库：
+本插件需要 Node.js 20.9 或更高版本。您可以使用自己常用的包管理器安装本库：
 
 ```bash
 # npm
@@ -285,7 +285,7 @@ cy.matchImage({
     blackout: ['.element-to-be-blackouted'],
   },
   // pixelmatch 选项，参见：https://www.npmjs.com/package/pixelmatch#pixelmatchimg1-img2-output-width-height-options
-  // 默认值：{ includeAA: true }（2.0 改用 pixelmatch 自身的 includeAA: false，参见下文 "Reducing cross-OS rendering noise"）
+  // 默认值：{} - 即 pixelmatch 的默认值，尤其是 includeAA: false（抗锯齿边缘像素不计为差异）
   diffConfig: {
     threshold: 0.01,
   },
@@ -311,14 +311,13 @@ cy.matchImage({
   maxDiffThreshold: 0.1,
   // 强制将缩放比例设为 "1"
   // 可解决在 Mac Retina 等高分屏上截图被放大 2 倍的问题
-  // 适用于 Chrome 和 Chromium（2.0 将其扩展到 Edge 和 Firefox，这会使它们在高分屏上的基线图片更新一次）
   // 默认值：true
   forceDeviceScaleFactor: false,
   // 应用确定性渲染预设，参见下文 "Reducing cross-OS rendering noise"
   // 在单次调用中，它只控制为截图注入页面的 CSS（光标、动画、滚动条）；
   // 浏览器开关是进程级的，由全局选项 pluginVisualRegressionDeterministicRendering 决定
-  // 默认值：false（2.0 起默认开启）
-  deterministicRendering: true,
+  // 默认值：true
+  deterministicRendering: false,
   // 用于生成图片文件名的标题
   // 默认值：Cypress.currentTest.titlePath（即您的测试标题）
   title: `${Cypress.currentTest.titlePath.join(' ')} (${Cypress.browser.displayName})`,
@@ -368,11 +367,11 @@ export default defineConfig({
 
 ## 批量审查模式
 
-批量审查模式（Batch Review Mode）让您可以完整跑完整个测试套件，而不会在第一个视觉差异失败处停下。所有失败的快照会被收集起来，在测试结束后通过一个交互式审查界面展示——您可以批量通过或跳过这些变更。
+批量审查模式（Batch Review Mode）**默认启用**。它让您可以完整跑完整个测试套件，而不会在第一个视觉差异失败处停下。所有失败的快照会被收集起来，在测试结束后通过一个交互式审查界面展示——您可以批量通过或跳过这些变更。
 
 ### 有头模式（非 CI 环境）下的额外功能
 
-启用后，Cypress 测试运行器右下角会出现一个悬浮操作按钮（FAB）。测试运行过程中：
+Cypress 测试运行器右下角会出现一个悬浮操作按钮（FAB）。测试运行过程中：
 
 - 每当某次 `matchImage()` 调用的差异超过阈值，FAB 上的计数徽标会加一，而不是立即抛出错误。
 - 所有测试结束后，会抛出一个包含失败总数的错误。
@@ -380,17 +379,17 @@ export default defineConfig({
 
 ![批量审查模式演示](https://raw.githubusercontent.com/pixsame/pixsame/main/assets/batch-review-mode.gif)
 
-> 注意：批量模式将在下一个主版本中成为默认行为。如需保留旧行为，请务必将该配置项设为 `false`（详见下文）。
+> 注意：在 `@pixsame/cypress-plugin-visual-regression-diff` 第 2 版之前，批量审查模式是可选启用的。如果您从 4.x 升级，请参阅[迁移指南](https://github.com/pixsame/pixsame/blob/main/packages/cypress-plugin-visual-regression-diff/MIGRATION.md#4x---5x)。
 
-### 如何启用
+### 如何禁用
 
-批量审查模式是一个全局选项（不能直接传给 `matchImage`）。通过 `pluginVisualRegressionBatchReviewMode` 键启用：
+批量审查模式是一个全局选项（不能直接传给 `matchImage`）。如需恢复为在第一次不匹配时立即让 `matchImage()` 失败，请将 `pluginVisualRegressionBatchReviewMode` 键设为 `false`：
 
 ```bash
 # Cypress 15.10+
-npx cypress open --expose "pluginVisualRegressionBatchReviewMode=true"
+npx cypress open --expose "pluginVisualRegressionBatchReviewMode=false"
 # Cypress <15.10（15.10 起已弃用，16 中移除）
-npx cypress open --env "pluginVisualRegressionBatchReviewMode=true"
+npx cypress open --env "pluginVisualRegressionBatchReviewMode=false"
 ```
 
 ```ts
@@ -399,7 +398,7 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   expose: {
-    pluginVisualRegressionBatchReviewMode: true,
+    pluginVisualRegressionBatchReviewMode: false,
   },
 });
 ```
@@ -410,7 +409,7 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   env: {
-    pluginVisualRegressionBatchReviewMode: true,
+    pluginVisualRegressionBatchReviewMode: false,
   },
 });
 ```
@@ -423,9 +422,9 @@ export default defineConfig({
 
 ```bash
 # Cypress 15.10+
-npx cypress open --expose "pluginVisualRegressionBatchReviewMode=true" --expose "pluginVisualRegressionBatchReviewModeShowPassingImages=true"
+npx cypress open --expose "pluginVisualRegressionBatchReviewModeShowPassingImages=true"
 # Cypress <15.10（15.10 起已弃用，16 中移除）
-npx cypress open --env "pluginVisualRegressionBatchReviewMode=true,pluginVisualRegressionBatchReviewModeShowPassingImages=true"
+npx cypress open --env "pluginVisualRegressionBatchReviewModeShowPassingImages=true"
 ```
 
 ```ts
@@ -434,7 +433,6 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   expose: {
-    pluginVisualRegressionBatchReviewMode: true,
     pluginVisualRegressionBatchReviewModeShowPassingImages: true,
   },
 });
@@ -444,19 +442,32 @@ export default defineConfig({
 
 ## Reducing cross-OS rendering noise
 
-浏览器会把文字光栅化交给操作系统处理（macOS 上是 CoreText，Windows 上是 DirectWrite，Linux 上是 FreeType），因此同一个页面在开发者的笔记本和 Linux CI 机器上永远不会渲染出逐字节完全一致的结果。插件无法彻底消除这种差异，但 `deterministicRendering` 预设可以去掉其中产生于浏览器内部的那部分噪声。
+浏览器会把文字光栅化交给操作系统处理（macOS 上是 CoreText，Windows 上是 DirectWrite，Linux 上是 FreeType），因此同一个页面在开发者的笔记本和 Linux CI 机器上永远不会渲染出逐字节完全一致的结果。插件无法彻底消除这种差异，但 `deterministicRendering` 预设（默认启用）可以去掉其中产生于浏览器内部的那部分噪声：
 
-该预设在 1.x 中是可选的，默认关闭。2.0 会默认开启，所以现在启用它，就相当于提前获得 2.0 的行为，无需任何其他改动。
+- **Chrome、Chromium、Edge** 启动时会带上 `--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu`（文字不使用操作系统 hinting 和子像素技巧，不做色彩管理，使用 CPU 光栅化），无头模式下还会加上 `--hide-scrollbars`。该列表以 `DETERMINISTIC_RENDERING_CHROMIUM_ARGS` 之名从 `@pixsame/cypress-plugin-visual-regression-diff/constants` 导出。
+- **Firefox** 会设置 `gfx.webrender.software` 偏好项（CPU 渲染）。Firefox 没有跨平台的字体 hinting 开关，因此不同操作系统之间的文字仍可能存在差异。
+- **所有浏览器**：在 `matchImage` 截图期间，会向被测页面注入一个 `<style>` 元素，用于隐藏文本光标、禁用 CSS 过渡、动画和平滑滚动，并隐藏滚动条。截图完成后立即移除。
+- 比对时会以 `includeAA: false` 运行 `pixelmatch`，因此抗锯齿边缘像素会被检测出来，不计入差异。
 
-### 如何启用
+该预设无法解决的问题：各操作系统上字体文件和回退字体不同（典型的 Arial 与 Liberation Sans 问题）、emoji 字体、WebKit 和 Firefox 的文字光栅化，以及 WebGL 绘制的图像。对于这些情况，请为每个平台各保留一份基线（参见 `title` 和 `imagesPath` 选项，以及关于浏览器名称的 FAQ 条目），或者在与 CI 相同的环境中生成基线。
 
-浏览器开关是进程级的，因此该预设是一个全局选项。通过 `pluginVisualRegressionDeterministicRendering` 键启用：
+**Electron** 会忽略插件设置的开关。请改为通过环境变量传入这些开关：
+
+```bash
+ELECTRON_EXTRA_LAUNCH_ARGS="--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu --hide-scrollbars" npx cypress run
+```
+
+**WebGL**：`--disable-gpu` 可能导致依赖 WebGL 的页面无法获得渲染上下文。要么禁用该预设，要么在您自己的 `before:browser:launch` 处理函数中加入 `--use-gl=angle --use-angle=swiftshader`（较新的 Chrome 还需要 `--enable-unsafe-swiftshader`），并通过 [`cypress-on-fix`](https://github.com/bahmutov/cypress-on-fix) 将其与插件自带的处理函数组合起来。
+
+**截图钩子**：插件会为它拍摄的每张截图传入自己的 `onBeforeScreenshot` 和 `onAfterScreenshot`。通过 `screenshotConfig` 传入的钩子仍会被调用；通过 `Cypress.Screenshot.defaults()` 全局设置的钩子则不会。
+
+要全局关闭该预设（浏览器开关和 CSS）：
 
 ```bash
 # Cypress 15.10+
-npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true"
+npx cypress run --expose "pluginVisualRegressionDeterministicRendering=false"
 # Cypress <15.10（15.10 起已弃用，16 中移除）
-npx cypress run --env "pluginVisualRegressionDeterministicRendering=true"
+npx cypress run --env "pluginVisualRegressionDeterministicRendering=false"
 ```
 
 ```ts
@@ -465,71 +476,15 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   expose: {
-    pluginVisualRegressionDeterministicRendering: true,
+    pluginVisualRegressionDeterministicRendering: false,
   },
 });
 ```
 
-```ts
-// cypress.config.ts（Cypress <15.10，新版本中已弃用）
-import { defineConfig } from 'cypress';
-
-export default defineConfig({
-  env: {
-    pluginVisualRegressionDeterministicRendering: true,
-  },
-});
-```
-
-首次运行时，与未启用该预设时创建的基线相比会出现一些细微差异，因为文字将不再使用 hinting 进行光栅化。请使用 `pluginVisualRegressionUpdateImages=true`（或 `'failures-only'`）运行一次，或在批量审查模式中批准这些变更，然后提交结果。
-
-### 它做了什么
-
-- **Chrome、Chromium、Edge** 启动时会带上 `--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu`（文字不使用操作系统 hinting 和子像素技巧，不做色彩管理，使用 CPU 光栅化），无头模式下还会加上 `--hide-scrollbars`。该列表以 `DETERMINISTIC_RENDERING_CHROMIUM_ARGS` 之名从 `@frsource/cypress-plugin-visual-regression-diff/constants` 导出。
-- **Firefox** 会设置 `gfx.webrender.software` 偏好项（CPU 渲染）。Firefox 没有跨平台的字体 hinting 开关，因此不同操作系统之间的文字仍可能存在差异。
-- **所有浏览器**：在 `matchImage` 截图期间，会向被测页面注入一个 `<style>` 元素，用于隐藏文本光标、禁用 CSS 过渡、动画和平滑滚动，并隐藏滚动条。截图完成后立即移除。
-
-该预设无法解决的问题：各操作系统上字体文件和回退字体不同（典型的 Arial 与 Liberation Sans 问题）、emoji 字体、WebKit 和 Firefox 的文字光栅化，以及 WebGL 绘制的图像。对于这些情况，请为每个平台各保留一份基线（参见 `title` 和 `imagesPath` 选项，以及关于浏览器名称的 FAQ 条目），或者在与 CI 相同的环境中生成基线。
-
-**Electron** 会忽略插件设置的开关，因此在 Electron 中该预设只会注入 CSS，并在浏览器启动时打印一条提示。请改为通过环境变量传入这些开关：
-
-```bash
-ELECTRON_EXTRA_LAUNCH_ARGS="--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu --hide-scrollbars" npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true"
-```
-
-**WebGL**：`--disable-gpu` 可能导致依赖 WebGL 的页面无法获得渲染上下文。要么保持该预设关闭，要么在您自己的 `before:browser:launch` 处理函数中加入 `--use-gl=angle --use-angle=swiftshader`（较新的 Chrome 还需要 `--enable-unsafe-swiftshader`），并通过 [`cypress-on-fix`](https://github.com/bahmutov/cypress-on-fix) 将其与插件自带的处理函数组合起来。
-
-**截图钩子**：插件会为它拍摄的每张截图传入自己的 `onBeforeScreenshot` 和 `onAfterScreenshot`。通过 `screenshotConfig` 传入的钩子仍会被调用；通过 `Cypress.Screenshot.defaults()` 全局设置的钩子则不会。
-
-### 抗锯齿像素：搭配 `includeAA: false`
-
-1.x 中的比对仍然使用 `includeAA: true` 运行 `pixelmatch`，因此每个渲染略有不同的抗锯齿边缘像素都会计入差异比例。这是跨操作系统噪声的另一半，而该预设并不处理它。请搭配 `includeAA: false`（pixelmatch 自身的默认值，抗锯齿像素会被检测并跳过）使用——2.0 会将其设为默认值：
-
-```bash
-# Cypress 15.10+
-npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true,pluginVisualRegressionDiffConfig={\"includeAA\":false}"
-# Cypress <15.10（15.10 起已弃用，16 中移除）
-npx cypress run --env "pluginVisualRegressionDeterministicRendering=true,pluginVisualRegressionDiffConfig={\"includeAA\":false}"
-```
-
-```ts
-cy.matchImage({ diffConfig: { includeAA: false } });
-```
-
-启用后差异比例会变小，因此一些之前失败的比对现在会通过。基线图片不受影响。
-
-### 单次调用
-
-`matchImage` 的 `deterministicRendering` 选项只控制注入的 CSS；浏览器开关仍然由全局选项决定。如需对单张截图跳过该 CSS（例如您想捕获的正是动画的结束状态）：
+要保留浏览器开关，只对单张截图跳过 CSS（例如您想捕获的正是动画的结束状态）：
 
 ```ts
 cy.matchImage({ deterministicRendering: false });
-```
-
-或者只为某一张截图注入 CSS，而不在全局启用该预设：
-
-```ts
-cy.matchImage({ deterministicRendering: true });
 ```
 
 ## 常见问题

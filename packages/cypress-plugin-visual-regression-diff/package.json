@@ -69,14 +69,11 @@
   },
   "devDependencies": {
     "@frsource/prettier-config": "^1.11.0",
-    "@types/glob": "9.0.0",
-    "@types/pixelmatch": "7.1.0",
-    "@types/pngjs": "6.0.5",
-    "@types/sharp": "0.32.0",
+    "@types/node": "20.19.43",
     "@types/tmp": "0.2.6",
     "@vitest/coverage-v8": "5.1.0",
     "cpy-cli": "7.0.0",
-    "cypress": "15.21.1",
+    "cypress": "16.1.0",
     "del-cli": "8.0.1",
     "microbundle": "0.15.1",
     "prettier": "3.9.10",
@@ -107,7 +104,6 @@
     "meta-png": "1.0.6",
     "move-file": "4.1.0",
     "pixelmatch": "7.2.0",
-    "pngjs": "7.0.0",
     "sharp": "0.35.5"
   },
   "publishConfig": {

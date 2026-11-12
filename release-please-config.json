@@ -3,10 +3,14 @@
   "sequential-calls": true,
   "plugins": ["node-workspace"],
   "separate-pull-requests": true,
+  "prerelease-type": "beta",
   "packages": {
     "packages/cypress-plugin-visual-regression-diff": {
       "path": "packages/cypress-plugin-visual-regression-diff",
-      "component": "@pixsame/cypress-plugin-visual-regression-diff"
+      "component": "@pixsame/cypress-plugin-visual-regression-diff",
+      "versioning": "prerelease",
+      "prerelease": true,
+      "release-as": "5.0.0-beta.1"
     }
   }
 }

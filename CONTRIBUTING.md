@@ -44,7 +44,7 @@ Don’t hesitate to ask a question directly on the [discussions board](https://g
 
 <!-- textlint-disable spelling -->
 
-You will need [Node.js](https://nodejs.org/en/) **version 16+** and [pnpm](https://pnpm.io/installation).
+You will need [Node.js](https://nodejs.org/en/) **version 20.9+** and [pnpm](https://pnpm.io/installation).
 
 <!-- textlint-enable -->
 
