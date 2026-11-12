@@ -55,7 +55,7 @@
     "@vitest/coverage-v8": "4.1.11",
     "del-cli": "7.0.0",
     "prettier": "3.9.8",
-    "sharp": "0.35.4",
+    "sharp": "0.35.5",
     "tmp-promise": "3.0.3",
     "typescript": "6.0.3",
     "vitest": "4.1.11"
