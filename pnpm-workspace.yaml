@@ -1,9 +1,12 @@
 packages:
   - 'packages/*'
+  - 'apps/*'
   - 'examples/*'
 allowBuilds:
   cypress: true
+  esbuild: true
   ffmpeg-static: true
+  unrs-resolver: false
 minimumReleaseAgeExclude:
   - prettier@3.9.0
 overrides:

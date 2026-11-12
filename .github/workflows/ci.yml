@@ -1,4 +1,8 @@
 name: CI
+# Always triggered, because the required status checks (lint, test, test-integration-coverage) must
+# report on every PR: a workflow skipped by `paths-ignore` leaves them pending and blocks the merge.
+# The `changes` job decides instead, and a job skipped by `if` counts as passing.
+# The website has its own workflow (website.yml) with the opposite path filter.
 on:
   pull_request:
     branches:
@@ -7,9 +11,36 @@ on:
     branches:
       - main
 
+env:
+  # The plugin jobs never need the website or its Nuxt toolchain (billed minutes).
+  PLUGIN_INSTALL_FILTER: --filter '!@pixsame/website' --filter '!@pixsame/ui-layer'
+
 jobs:
+  changes:
+    name: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      plugin: ${{ steps.filter.outputs.plugin }}
+    steps:
+      # On push the filter diffs commits locally; on pull_request it uses the API.
+      - uses: actions/checkout@v7
+        if: github.event_name != 'pull_request'
+      - uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          predicate-quantifier: every
+          filters: |
+            plugin:
+              - '**'
+              - '!apps/**'
+              - '!packages/ui-layer/**'
+              - '!.github/workflows/website.yml'
+
   lint:
     name: lint
+    needs: [changes]
+    if: ${{ needs.changes.outputs.plugin == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -18,16 +49,21 @@ jobs:
         with:
           # the only job that saves the cache (fastest job, never on the critical path)
           save-cache: 'true'
+          install-filter: ${{ env.PLUGIN_INSTALL_FILTER }}
       - run: pnpm lint:ci
       - run: pnpm format:ci
 
   test:
     name: test
+    needs: [changes]
+    if: ${{ needs.changes.outputs.plugin == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
+        with:
+          install-filter: ${{ env.PLUGIN_INSTALL_FILTER }}
       - run: pnpm --filter cypress-plugin-visual-regression-diff -r build
       - name: Test e2e
         run: pnpm test:e2e:ci
@@ -43,6 +79,8 @@ jobs:
 
   test-integration-coverage:
     name: test-integration-coverage
+    needs: [changes]
+    if: ${{ needs.changes.outputs.plugin == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -51,6 +89,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
+        with:
+          install-filter: ${{ env.PLUGIN_INSTALL_FILTER }}
       - name: Test integration (with coverage)
         run: pnpm test:integration:ci
       - name: Upload coverage to Qlty
@@ -90,6 +130,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
+        with:
+          install-filter: ${{ env.PLUGIN_INSTALL_FILTER }}
       - name: Build packages to get cross-references working 🔧
         run: pnpm build
       - name: Release packages under latest

@@ -3,12 +3,12 @@
   "private": true,
   "author": "Jakub Freisler <jakub.freisler@frsource.org>",
   "scripts": {
-    "build": "pnpm -r build",
-    "lint": "eslint '**/*.ts' --ignore-pattern '**/*.d.ts'",
+    "build": "pnpm -r --filter '!@pixsame/website' build",
+    "lint": "eslint '**/*.ts' --ignore-pattern '**/*.d.ts' --ignore-pattern 'apps/**' --ignore-pattern 'packages/ui-layer/**'",
     "fix": "pnpm lint --fix",
     "lint:ci": "pnpm lint --max-warnings 0",
     "format": "pnpm -r format",
-    "format:ci": "pnpm -r format:ci",
+    "format:ci": "pnpm -r --filter '!@pixsame/website' format:ci",
     "test": "pnpm -r test:ct:ci && pnpm -r test:e2e:ci && pnpm -r test:integration:ci",
     "test:integration": "pnpm -r test:integration",
     "test:integration:watch": "pnpm -r test:integration:watch",
@@ -23,17 +23,17 @@
   "engines": {
     "node": ">=20.9.0"
   },
-  "packageManager": "pnpm@12.6.0",
+  "packageManager": "pnpm@12.18.0",
   "peerDependencies": {
     "cypress": ">=13.0.0"
   },
   "devDependencies": {
-    "@frsource/eslint-config": "1.85.13",
+    "@frsource/eslint-config": "1.86.4",
     "cypress": "16.1.0",
-    "eslint": "10.11.0",
+    "eslint": "10.14.0",
     "eslint-plugin-cypress": "^7.0.0",
     "ffmpeg-static": "^5.2.0",
-    "globals": "17.12.0",
+    "globals": "17.14.0",
     "playwright": "^1.52.0"
   }
 }

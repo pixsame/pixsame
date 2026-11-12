@@ -1,0 +1,46 @@
+{
+  "name": "@pixsame/website",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt generate",
+    "preview": "nuxt preview",
+    "lint": "eslint . ../../packages/ui-layer",
+    "lint:fix": "eslint . ../../packages/ui-layer --fix",
+    "format": "prettier --write . ../../packages/ui-layer",
+    "format:ci": "prettier --check . ../../packages/ui-layer",
+    "readme:check": "node scripts/readme-translations.mjs --check",
+    "translations:lint": "node scripts/translation-lint.mjs",
+    "translations:test": "node --test scripts/translation-checks.test.mjs scripts/translation-review-lib.test.mjs",
+    "translations:review": "node scripts/translation-review.mjs",
+    "typecheck": "nuxt typecheck",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/content": "3.16.2",
+    "@nuxtjs/i18n": "10.6.0",
+    "@nuxtjs/seo": "5.3.16",
+    "@pixsame/ui-layer": "workspace:*",
+    "nuxt": "4.6.4",
+    "vue": "^3.5.0",
+    "vue-router": "^5.0.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@frsource/eslint-config": "1.86.4",
+    "@frsource/prettier-config": "^1.47.12",
+    "@nuxt/eslint": "1.17.0",
+    "@playwright/test": "1.65.0",
+    "eslint": "10.14.0",
+    "prettier": "3.9.10",
+    "sirv": "^3.0.2",
+    "sirv-cli": "^3.0.1",
+    "typescript": "^5.9.0",
+    "vue-tsc": "^3.0.0"
+  }
+}

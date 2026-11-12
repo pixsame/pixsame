@@ -116,3 +116,11 @@ dist
 # Batch review demo recording temp files
 scripts/.frames/
 scripts/.palette.png
+
+# Nuxt
+.nuxt
+.output
+.data
+
+# Google Apps Script sources for the website forms (kept out of the repo, deployed from script.google.com)
+apps/website/apps-script/

@@ -1,0 +1,84 @@
+name: Website
+# Always triggered so the required `website` check reports on every PR (a workflow skipped by
+# `on.paths` leaves it pending and blocks the merge). The `changes` job decides whether the site
+# is built and tested; a job skipped by `if` counts as passing. Plugin-only changes cost one tiny job.
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+# A newer push to the same PR cancels the running check; a deploy from main is never cancelled.
+concurrency:
+  group: website-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  changes:
+    name: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      website: ${{ steps.filter.outputs.website }}
+    steps:
+      # On push the filter diffs commits locally; on pull_request it uses the API.
+      - uses: actions/checkout@v7
+        if: github.event_name != 'pull_request'
+      - uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            website:
+              - 'apps/website/**'
+              - 'packages/ui-layer/**'
+              - '.github/workflows/website.yml'
+              - 'pnpm-lock.yaml'
+
+  website:
+    name: website
+    needs: [changes]
+    if: ${{ needs.changes.outputs.website == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+        with:
+          # only the site and its workspace dependencies (the ui-layer), not the plugin and the examples
+          install-filter: --filter @pixsame/website...
+      - name: Lint (cheapest first)
+        run: pnpm --filter @pixsame/website lint
+      - name: Formatting
+        run: pnpm --filter @pixsame/website format:ci
+      - name: Translated READMEs match the English README
+        run: pnpm --filter @pixsame/website readme:check
+      - name: Translations keep code blocks and placeholders
+        run: |
+          pnpm --filter @pixsame/website translations:test
+          pnpm --filter @pixsame/website translations:lint
+      - name: Build (static generate)
+        run: pnpm --filter @pixsame/website build
+        env:
+          NUXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NUXT_PUBLIC_TURNSTILE_SITE_KEY }}
+          NUXT_PUBLIC_CONTACT_ENDPOINT: ${{ vars.NUXT_PUBLIC_CONTACT_ENDPOINT }}
+          NUXT_PUBLIC_WAITLIST_ENDPOINT: ${{ vars.NUXT_PUBLIC_WAITLIST_ENDPOINT }}
+      - name: Test (e2e + axe)
+        run: pnpm --filter @pixsame/website exec playwright test
+        env:
+          CI: 'true'
+      # Same job as the build, so the deployed output is exactly what was tested
+      # (no second runner, no second install: billed minutes).
+      - name: Deploy to Cloudflare Pages
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        working-directory: apps/website
+        run: pnpm dlx wrangler@4.40.0 pages deploy .output/public --project-name pixsame-website --branch main
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - uses: actions/upload-artifact@v7
+        if: ${{ failure() }}
+        with:
+          name: website-test-results
+          path: apps/website/test-results

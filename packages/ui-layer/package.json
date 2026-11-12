@@ -1,0 +1,13 @@
+{
+  "name": "@pixsame/ui-layer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./nuxt.config.ts",
+  "dependencies": {
+    "@nuxt/fonts": "0.14.0",
+    "@nuxtjs/color-mode": "4.1.0",
+    "@tailwindcss/vite": "4.3.5",
+    "tailwindcss": "4.3.5"
+  }
+}

@@ -63,7 +63,7 @@
   "engines": {
     "node": ">=20.9.0"
   },
-  "packageManager": "pnpm@12.6.0",
+  "packageManager": "pnpm@12.18.0",
   "peerDependencies": {
     "cypress": ">=13.0.0"
   },
@@ -71,17 +71,17 @@
     "@frsource/prettier-config": "^1.11.0",
     "@types/node": "20.19.43",
     "@types/tmp": "0.2.6",
-    "@vitest/coverage-v8": "5.0.3",
+    "@vitest/coverage-v8": "5.1.0",
     "cpy-cli": "7.0.0",
     "cypress": "16.1.0",
-    "del-cli": "7.0.0",
+    "del-cli": "8.0.1",
     "microbundle": "0.15.1",
-    "prettier": "3.9.9",
-    "sanitize-filename": "1.6.4",
+    "prettier": "3.9.10",
+    "sanitize-filename": "1.6.5",
     "tmp-promise": "3.0.3",
     "typescript": "6.0.3",
     "vite-tsconfig-paths": "6.1.1",
-    "vitest": "5.0.3"
+    "vitest": "5.1.0"
   },
   "keywords": [
     "Cypress",
@@ -98,12 +98,12 @@
     "Cypress image snapshot"
   ],
   "dependencies": {
-    "@frsource/base64": "1.0.237",
-    "glob": "13.0.6",
+    "@frsource/base64": "1.0.250",
+    "glob": "14.0.4",
     "meta-png": "1.0.6",
     "move-file": "4.1.0",
     "pixelmatch": "7.2.0",
-    "sharp": "0.35.4"
+    "sharp": "0.35.5"
   },
   "publishConfig": {
     "access": "public"

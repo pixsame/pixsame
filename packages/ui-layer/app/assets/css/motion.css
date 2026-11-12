@@ -1,0 +1,176 @@
+/*
+ * One 11.4s loop (6.4s of motion + a 5s hold on the finished frame) shared by every demo card (mockup artboards 2a-2c).
+ * The resting state (no animation) is the finished frame, so
+ * prefers-reduced-motion users see the final result, not a blank card.
+ */
+.px-scan {
+  top: 102%;
+  opacity: 0;
+}
+.px-pop-1,
+.px-pop-2,
+.px-row,
+.px-verdict {
+  opacity: 1;
+}
+.px-row-1 {
+  --px-row-opacity: 1;
+}
+.px-bar-fill {
+  transform-origin: left;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .px-scan {
+    animation: px-scan 11.4s cubic-bezier(0.2, 0.6, 0.2, 1) infinite;
+  }
+  .px-pop-1 {
+    animation: px-pop-1 11.4s cubic-bezier(0.2, 0.6, 0.2, 1) infinite;
+  }
+  .px-pop-2 {
+    animation: px-pop-2 11.4s cubic-bezier(0.2, 0.6, 0.2, 1) infinite;
+  }
+  .px-row-1 {
+    animation: px-row-1 11.4s ease infinite;
+  }
+  .px-row-2 {
+    animation: px-row-2 11.4s ease infinite;
+  }
+  .px-row-3 {
+    animation: px-row-3 11.4s ease infinite;
+  }
+  .px-verdict {
+    animation: px-verdict 11.4s cubic-bezier(0.2, 0.6, 0.2, 1) infinite;
+  }
+  .px-bar-fill {
+    animation: px-grow 11.4s cubic-bezier(0.2, 0.6, 0.2, 1) infinite;
+  }
+  .px-pulse {
+    animation: px-pulse 1.1s ease-in-out infinite;
+  }
+}
+
+@keyframes px-scan {
+  0% {
+    top: -6%;
+    opacity: 0;
+  }
+  2.81% {
+    opacity: 1;
+  }
+  29.19% {
+    top: 102%;
+    opacity: 1;
+  }
+  33.68%,
+  100% {
+    top: 102%;
+    opacity: 0;
+  }
+}
+@keyframes px-pop-1 {
+  0%,
+  28.07% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  33.68%,
+  97.75% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+@keyframes px-pop-2 {
+  0%,
+  34.81% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  40.42%,
+  97.75% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+@keyframes px-row-1 {
+  0%,
+  24.7% {
+    opacity: 0.25;
+  }
+  30.32%,
+  97.75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.25;
+  }
+}
+@keyframes px-row-2 {
+  0%,
+  32.56% {
+    opacity: 0.25;
+  }
+  38.18%,
+  97.75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.25;
+  }
+}
+@keyframes px-row-3 {
+  0%,
+  40.42% {
+    opacity: 0.25;
+  }
+  44.91%,
+  97.75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.25;
+  }
+}
+@keyframes px-verdict {
+  0%,
+  44.91% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  49.4%,
+  97.75% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes px-grow {
+  0%,
+  5.61% {
+    transform: scaleX(0);
+  }
+  30.88%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+@keyframes px-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}

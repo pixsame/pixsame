@@ -6,7 +6,8 @@ import cypress from 'eslint-plugin-cypress'
 export default [
   ...javascript,
   ...typescript,
-  { ignores: ['**/dist', '**/coverage', '**/node_modules'] },
+  // apps/* have their own eslint config (Vue/Nuxt) and lint step
+  { ignores: ['**/dist', '**/coverage', '**/node_modules', '**/.nuxt', '**/.output', 'apps/**'] },
   { rules: { '@typescript-eslint/no-invalid-void-type': 'off' } },
   {
     plugins: { cypress },

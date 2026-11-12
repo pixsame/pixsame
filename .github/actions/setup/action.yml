@@ -6,6 +6,10 @@ inputs:
     description: Whether this job saves the cache at the end of the job. Exactly one job per workflow should, the others only restore.
     required: false
     default: 'false'
+  install-filter:
+    description: Extra `pnpm install` arguments, usually `--filter` selectors, so a job installs only the workspace packages it needs (e.g. the plugin jobs skip the website and its Nuxt toolchain).
+    required: false
+    default: ''
 
 runs:
   using: composite
@@ -38,6 +42,6 @@ runs:
         restore-keys: |
           v2-${{ runner.os }}-pnpm-
     - shell: bash
-      run: pnpm install --frozen-lockfile --prefer-offline
+      run: pnpm install --frozen-lockfile --prefer-offline ${{ inputs.install-filter }}
       env:
         HUSKY: '0' # By default do not run HUSKY install

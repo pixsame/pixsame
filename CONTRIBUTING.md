@@ -26,6 +26,8 @@ Don’t hesitate to ask a question directly on the [discussions board](https://g
 
 - Please use [conventional commits v1.0.0 style guide](https://www.conventionalcommits.org/en/v1.0.0/) for commits and PR names
 
+- By contributing you agree that your contribution is licensed under this repository's license (MIT), as GitHub's terms of service also provide
+
 - We have no preference about number of commits on the PR - they will be all squashed by GitHub while merging
 
 - When creating a new feature/plugin/integration:

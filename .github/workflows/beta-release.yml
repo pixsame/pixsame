@@ -27,6 +27,8 @@ jobs:
         with:
           ref: ${{ inputs.branch }}
       - uses: ./.github/actions/setup
+        with:
+          install-filter: --filter '!@pixsame/website' --filter '!@pixsame/ui-layer'
       - name: Build packages to get cross-references working 🔧
         run: pnpm build
       - name: Publish every public package as X.Y.Z-beta.${{ inputs.beta }} under the beta dist-tag

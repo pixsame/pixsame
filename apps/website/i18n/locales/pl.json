@@ -1,0 +1,364 @@
+{
+  "meta": {
+    "reviewed": true
+  },
+  "seo": {
+    "title": "pixsame — regresja wizualna dla Cypressa (wkrótce Playwright)",
+    "description": "Jeden otwarty format manifestu dla każdego test frameworku, renderer produkujący zrzuty ekranu identyczne co do bajta, szczegółowa analiza różnic i akceptacja zmian w pull requeście."
+  },
+  "nav": {
+    "menu": "Menu",
+    "home": "Strona główna pixsame",
+    "product": "Produkty",
+    "docs": "Dokumentacja",
+    "pricing": "Cennik",
+    "changelog": "Changelog",
+    "githubStars": "{count} gwiazdek na GitHubie",
+    "signIn": "Zaloguj się",
+    "install": "Zainstaluj wtyczkę"
+  },
+  "a11y": {
+    "skip": "Przejdź do treści",
+    "language": "Język",
+    "close": "Zamknij"
+  },
+  "theme": {
+    "toLight": "Przełącz na tryb jasny",
+    "toDark": "Przełącz na tryb ciemny"
+  },
+  "hero": {
+    "eyebrow": "Open source · MIT · Cypress dziś, Playwright wkrótce",
+    "title": "Regresja wizualna, w której wszystko się zgadza.",
+    "tagline": "takie same. co do piksela.",
+    "body": "Jeden otwarty format manifestu dla każdego test frameworku. Nasz renderer sprawia, że zrzuty lokalne i z CI są identyczne. Szczegółowa analiza różnic zamiast czerwonej plamy i akceptacja zmian w pull requeście.",
+    "copy": "KOPIUJ",
+    "copied": "SKOPIOWANO",
+    "docs": "Czytaj dokumentację",
+    "soonNote": "Dostępne dziś: wtyczka do Cypressa i manifest. Wkrótce: renderer, analiza różnic i zatwierdzanie w pull requeście."
+  },
+  "detect": {
+    "demo": "Przykładowa ilustracja przebiegu detekcji AI",
+    "label": "Detekcja AI · PR #2841",
+    "live": "Demo",
+    "analysing": "Analiza 2 regionów",
+    "box1": "Przesunięcie układu · +4px y · Δ0,42%",
+    "box2": "Zawijanie tekstu · wiersz z ceną",
+    "row": {
+      "geometry": "Przesunięcie geometrii",
+      "reflow": "Zawinięcie tekstu",
+      "aa": "Szum antyaliasingu"
+    },
+    "verdictLabel": "Werdykt · pewność 0,94",
+    "verdict": "Jedna zmiana geometrii, a nie 5 812 znalezisk. Zgadza się z intencją „zwiększ gęstość nawigacji”.",
+    "approve": "Zaakceptuj wzorzec",
+    "hold": "Wstrzymaj"
+  },
+  "runs": {
+    "label": "Działa w"
+  },
+  "features": {
+    "title": "Funkcje",
+    "available": "Dostępne",
+    "manifest": {
+      "title": "Wspólny manifest",
+      "body": "Jeden otwarty format manifestu dla Cypress i Playwright, więc raporty, boty i narzędzia do przeglądu działają z każdym runnerem."
+    },
+    "renderer": {
+      "title": "Przypięty renderer",
+      "body": "Czcionki, antyaliasing i różnice GPU są przypięte, więc zrzuty lokalne i z CI są identyczne co do bajta."
+    },
+    "forensic": {
+      "title": "Analiza różnic",
+      "body": "Każda zmiana jest klasyfikowana jako geometria, zawijanie tekstu lub szum antyaliasingu, zamiast jednej czerwonej plamy."
+    },
+    "approve": {
+      "title": "Akceptacja",
+      "body": "Przeglądaj i akceptuj zmiany w pull requeście albo na platformie pixsame."
+    }
+  },
+  "pricing": {
+    "title": "Za darmo tam, gdzie trzeba. Płatnie tam, gdzie potrzebna skala.",
+    "body": "Plan \"core\" jest darmowy i open source. \"Team\" dodaje renderowanie w chmurze i hostowaną historię wzorców. \"Enterprise\" dodaje AI auto-evaluator, SSO i SLA.",
+    "soon": "Wkrótce",
+    "compare": "Porównaj plany",
+    "note": "Plany Team i Enterprise pojawią się wkrótce. Ceny są orientacyjne i mogą się zmienić przed startem.",
+    "tiers": {
+      "core": {
+        "name": "Core",
+        "price": "$0",
+        "unit": "",
+        "desc": "MIT licensed, możliwość hostowania samemu"
+      },
+      "team": {
+        "name": "Team",
+        "price": "$29",
+        "unit": "/dev/mies.",
+        "desc": "Renderowanie w chmurze, 30-dniowa historia, wsparcie, AI auto-ewaluator na żądanie"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Porozmawiajmy",
+        "unit": "",
+        "desc": "AI auto-ewaluator, SSO, SLA, wsparcie techniczne w trybie dyżuru do 48h"
+      }
+    },
+    "table": {
+      "caption": "Możliwości według planu",
+      "capability": "Możliwość",
+      "rows": {
+        "renderer": {
+          "label": "Przypięty renderer",
+          "core": "Lokalnie",
+          "team": "Lokalnie",
+          "enterprise": "Lokalnie"
+        },
+        "cloud": {
+          "label": "Renderowanie w chmurze",
+          "core": "—",
+          "team": "5 tys. / miesiąc",
+          "enterprise": "Do ustalenia"
+        },
+        "evaluator": {
+          "label": "AI auto-evaluator",
+          "core": "—",
+          "team": "Ograniczony, płatność za użycie",
+          "enterprise": "W cenie"
+        },
+        "history": {
+          "label": "Hostowana historia wzorców",
+          "core": "—",
+          "team": "30 dni",
+          "enterprise": "Do ustalenia"
+        },
+        "support": {
+          "label": "Wsparcie",
+          "core": "Społeczność",
+          "team": "W cenie",
+          "enterprise": "On-call, do 48 h"
+        }
+      }
+    },
+    "oss": {
+      "title": "Open source, darmowy na zawsze.",
+      "body": "Wszystko, co działa na Twoim komputerze i w Twoim CI, jest na licencji MIT. To pakiety, z których możesz korzystać już dziś albo wkrótce, bez żadnych opłat.",
+      "available": "Dostępne",
+      "cypress": "Wtyczka do Cypressa",
+      "cypressBody": "Regresja wizualna dla Cypressa: matchImage, podgląd różnic w runnerze i wzorce w Twoim repozytorium.",
+      "manifest": "Format manifestu przebiegu testów",
+      "manifestBody": "Otwarty, niezależny od runnera format JSON opisujący każde porównanie zrzutów ekranu, specyfikacja na visual-regression.dev.",
+      "playwright": "Playwright plugin",
+      "playwrightBody": "Ten sam silnik porównań i manifest dla projektów Playwright.",
+      "renderer": "Przypięty renderer",
+      "rendererBody": "Zablokowana przeglądarka, zestaw czcionek i ścieżka GPU, dzięki czemu zrzuty lokalne i z CI są identyczne co do bajta.",
+      "githubApp": "GitHub App",
+      "githubAppBody": "Różnice jako check oraz akceptacja nowych wzorców prosto z pull requesta.",
+      "vitest": "Vitest runner",
+      "vitestBody": "Ten sam silnik porównań i manifest dla projektów Vitest."
+    }
+  },
+  "product": {
+    "crumb": "Przypięty renderer",
+    "title": "Jeden ekosystem dla regresji wizualnej.",
+    "body": "pixsame to rosnący zestaw otwartych narzędzi, dzięki którym testy regresji wizualnej można traktować poważnie: wspólny format, renderer i przegląd w pull requeście. Wtyczka do Cypressa jest dostępna już dziś, reszta jest w drodze.",
+    "status": "Wtyczka do Cypressa: dostępna · wszystko inne: wkrótce",
+    "start": "Zainstaluj wtyczkę",
+    "stats": {
+      "manifest": {
+        "value": "v1",
+        "label": "Otwarty format manifestu"
+      },
+      "runners": {
+        "value": "3",
+        "label": "Runnery: dziś Cypress, wkrótce Playwright"
+      },
+      "license": {
+        "value": "MIT",
+        "label": "Licencja open source"
+      }
+    },
+    "cypressCta": "Zobacz wtyczkę do Cypressa",
+    "soon": {
+      "title": "Wkrótce",
+      "body": "Wszystkie elementy ekosystemu i to, jak do siebie pasują. Najedź na element lub zaznacz go, żeby zobaczyć, co robi, i przejdź do jego strony.",
+      "eyebrow": "Ekosystem"
+    },
+    "groups": {
+      "runners": "Runnery testów",
+      "standard": "Wspólny format",
+      "review": "Review"
+    },
+    "map": {
+      "cypress": {
+        "name": "Wtyczka do Cypressa",
+        "body": "matchImage dla Cypressa, z podglądem różnic w runnerze i zbiorczym przeglądem zmian. Dostępne już dziś."
+      },
+      "playwright": {
+        "name": "Playwright plugin",
+        "body": "Ten sam silnik porównań i manifest, dla projektów Playwright. Wzorce zostają w Twoim repozytorium."
+      },
+      "manifest": {
+        "name": "Format manifestu przebiegu testów",
+        "body": "Otwarty, niezależny od runnera format JSON opisujący każde porównanie zrzutów ekranu. Dostępny już dziś."
+      },
+      "renderer": {
+        "name": "Renderer",
+        "body": "Czcionki, antyaliasing i różnice GPU są automatycznie niwelowane, więc zrzuty lokalne i z CI są identyczne co do bajta."
+      },
+      "platform": {
+        "name": "Platforma do przeglądania zmian",
+        "body": "Renderowanie po stronie serwera oraz internetowy menedżer obrazów, różnic i wzorców dla całego zespołu."
+      },
+      "evaluator": {
+        "name": "AI auto-ewaluator",
+        "body": "Klasyfikuje każdą zmianę i akceptuje te rutynowe, żeby człowiek musiał patrzeć tylko na to, co ważne."
+      },
+      "githubApp": {
+        "name": "GitHub App",
+        "body": "Różnice jako check w pull requeście i akceptacja nowych wzorców jednym kliknięciem."
+      },
+      "vitest": {
+        "name": "Vitest runner",
+        "body": "Ten sam silnik porównań i manifest, dla trybu przeglądarkowego Vitest. Wzorce zostają w Twoim repozytorium."
+      }
+    },
+    "available": "Dostępne"
+  },
+  "soon": {
+    "status": "Wkrótce",
+    "githubApp": {
+      "title": "Aplikacja GitHub do przeglądu wizualnego.",
+      "body": "Check run i komentarze w pull requeście z różnicami obrazów oraz akceptacja zmienionych wzorców jednym kliknięciem.",
+      "b1": "Różnice obrazów w dyskusji w PR",
+      "b2": "Akceptuj lub odrzucaj wzorce bez wychodzenia z GitHuba",
+      "b3": "Działa ze wspólnym manifestem z dowolnego runnera"
+    },
+    "playwright": {
+      "title": "Regresja wizualna dla Playwright.",
+      "body": "Ten sam silnik porównań i manifest co we wtyczce Cypress, dla projektów Playwright. Wzorce zostają w Twoim repozytorium.",
+      "b1": "Wzorce przechowywane w repozytorium",
+      "b2": "Różnice pokazywane, gdy zrzuty się zmienią",
+      "b3": "Zapisuje manifest przebiegu testów używając wspólnego formatu"
+    },
+    "platform": {
+      "title": "Platforma pixsame.",
+      "body": "Renderowanie po stronie serwera oraz internetowy podgląd i menedżer obrazów i różnic, żeby cały zespół mógł przeglądać i zarządzać wzorcami.",
+      "b1": "Serwerowy renderer dla zrzutów identycznych co do bajta",
+      "b2": "Internetowy menedżer obrazów, różnic i wzorców",
+      "b3": "AI auto-evaluator dla rutynowych zmian (Enterprise, ograniczony w Team)"
+    },
+    "vitest": {
+      "title": "Regresja wizualna dla Vitest.",
+      "body": "Ten sam silnik porównań i manifest co we wtyczce Cypress, dla projektów Vitest. Wzorce zostają w Twoim repozytorium.",
+      "b1": "Wzorce przechowywane w repozytorium",
+      "b2": "Różnice pokazywane, gdy zrzuty się zmienią",
+      "b3": "Zapisuje manifest przebiegu testów używając wspólnego formatu"
+    }
+  },
+  "waitlist": {
+    "title": "Daj znać, gdy wystartujemy",
+    "emailLabel": "Adres e-mail",
+    "placeholder": "ty{'@'}firma.pl",
+    "submit": "Powiadom mnie",
+    "sending": "Wysyłanie…",
+    "success": "Dziękujemy! Wysłaliśmy e-mail. Naciśnij w nim przycisk, aby potwierdzić zapis; potem napiszemy raz, gdy będzie gotowe.",
+    "error": "Coś poszło nie tak. Spróbuj ponownie.",
+    "consent": "Wyrażam zgodę na e-mail o starcie tego produktu oraz na późniejsze informacje o nim, w tym o powiązanych zmianach w ekosystemie pixsame. Zgodę mogę wycofać w dowolnym momencie. Zobacz {privacy}.",
+    "consentRequired": "Zaznacz zgodę, aby zapisać się na listę."
+  },
+  "docs": {
+    "groups": {
+      "getting-started": "Pierwsze kroki",
+      "reference": "Dokumentacja",
+      "integrations": "Integracje"
+    },
+    "onThisPage": "Na tej stronie",
+    "menu": "Menu dokumentacji",
+    "draft": "Ta strona to tłumaczenie maszynowe, które nie zostało jeszcze zweryfikowane. Wersja angielska jest wiążąca.",
+    "fallback": "Ta strona nie ma jeszcze tłumaczenia; czytasz wersję angielską."
+  },
+  "changelog": {
+    "body": "Informacje o wydaniach wtyczki pixsame do Cypressa.",
+    "source": "Wydania wtyczki do Cypressa",
+    "title": "Changelog wtyczki do Cypressa",
+    "crumb": "Changelog",
+    "page": "Strona {n} z {total}",
+    "prev": "Newer",
+    "next": "Older",
+    "pagination": "Strony changelogu"
+  },
+  "legal": {
+    "updated": "Last updated: 17 October 2026",
+    "englishNotice": "Dokumenty prawne publikujemy wyłącznie po angielsku. Angielski jest dla nich językiem roboczym, aby tłumaczenie nie wprowadziło błędów."
+  },
+  "notFound": {
+    "title": "Nie znaleziono strony",
+    "body": "Ta strona nie istnieje albo została przeniesiona.",
+    "home": "Wróć na stronę główną"
+  },
+  "footer": {
+    "tagline": "Testy regresji wizualnej, które zgadzają się same ze sobą.",
+    "product": "Produkty",
+    "resources": "Zasoby",
+    "legal": "Prawne",
+    "githubApp": "Aplikacja GitHub",
+    "playwright": "Playwright",
+    "platform": "Platforma",
+    "privacy": "Prywatność",
+    "terms": "Regulamin",
+    "brand": "Brand",
+    "vitest": "Vitest",
+    "contact": "Kontakt",
+    "by": "od"
+  },
+  "crumb": {
+    "label": "Ścieżka nawigacji",
+    "home": "Strona główna"
+  },
+  "cypress": {
+    "crumb": "Wtyczka do Cypressa",
+    "eyebrow": "Open source · MIT · Cypress",
+    "title": "Regresja wizualna dla Cypressa.",
+    "body": "Zrób zrzut ekranu w dowolnym teście, porównaj go ze wzorcem i zobacz różnicę prosto w runnerze Cypressa. Działa z testami e2e i komponentowymi.",
+    "docs": "Czytaj dokumentację",
+    "changelog": "Changelog",
+    "npm": "npm",
+    "onThisPage": "Na tej stronie",
+    "migrate": "Migracja z {'@'}frsource"
+  },
+  "changelogs": {
+    "title": "Listy zmian",
+    "body": "Informacje o wydaniach każdej integracji pixsame."
+  },
+  "contact": {
+    "title": "Kontakt",
+    "heading": "Napisz do nas",
+    "intro": "Pytania, uwagi albo pomysł na projekt? Napisz do nas.",
+    "name": "Imię",
+    "email": "Adres e-mail",
+    "message": "Wiadomość",
+    "submit": "Wyślij wiadomość",
+    "sending": "Wysyłanie…",
+    "success": "Dziękujemy! Wkrótce odpowiemy.",
+    "error": "Coś poszło nie tak. Spróbuj ponownie lub napisz do nas bezpośrednio.",
+    "required": "Uzupełnij to pole.",
+    "invalidEmail": "Podaj poprawny adres e-mail.",
+    "unavailable": "Formularz jest chwilowo niedostępny. Napisz do nas bezpośrednio.",
+    "emailLabel": "E-mail",
+    "company": "Firma",
+    "taxIds": "Dane podatkowe",
+    "consent": "Zgadzam się na wykorzystanie moich danych, aby odpowiedzieć na wiadomość. Zobacz {privacy}.",
+    "consentRequired": "Zaznacz zgodę, aby wysłać wiadomość."
+  },
+  "company": {
+    "name": "FRS JAKUB FREISLER",
+    "address1": "al. Kijowska 48/24",
+    "address2": "30-079 Kraków, Polska",
+    "vat": "PL6783179514",
+    "nip": "6783179514",
+    "email": "pixsame{'@'}frsource.org"
+  },
+  "translate": {
+    "broken": "Tłumaczenie kuleje? Pomóż nam i popraw je samodzielnie.",
+    "missing": "Brak tłumaczenia? Pomóż nam i napisz je samodzielnie."
+  }
+}

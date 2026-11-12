@@ -87,8 +87,7 @@ import '@pixsame/cypress-plugin-visual-regression-diff';
 require('@pixsame/cypress-plugin-visual-regression-diff');
 ```
 
-- secondly:
-  - (for Cypress 10.0+) in `cypress.config.js` (or `cypress.config.ts`):
+- secondly, in `cypress.config.js` (or `cypress.config.ts`):
 
 ```ts
 // typescript / ES6
@@ -108,33 +107,6 @@ export default defineConfig({
     },
   },
 });
-```
-
-- (for Cypress <10.0) in your plugins file (located by default in `cypress/plugins/index.js`):
-
-```ts
-// typescript / ES6
-import { initPlugin as initVisualRegressionPlugin } from '@pixsame/cypress-plugin-visual-regression-diff/plugins';
-
-export default function (
-  on: Cypress.PluginEvents,
-  config: Cypress.PluginConfigOptions,
-) {
-  initVisualRegressionPlugin(on, config);
-
-  return config;
-}
-
-// javascript
-const {
-  initPlugin: initVisualRegressionPlugin,
-} = require('@pixsame/cypress-plugin-visual-regression-diff/plugins');
-
-module.exports = function (on, config) {
-  initVisualRegressionPlugin(on, config);
-
-  return config;
-};
 ```
 
 That's it - now let's see how to use the library in [usage section](#usage).
