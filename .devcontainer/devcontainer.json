@@ -1,0 +1,42 @@
+// Dev container for running `cypress open` (headed, with the plugin's review UI)
+// inside Linux, so the baselines you approve locally match the ones CI produces.
+// Docs: ./README.md
+{
+  "name": "cypress-plugin-visual-regression-diff (Linux)",
+  // Node 24.21.0 == .nvmrc; Chrome, Firefox and Edge preinstalled (no Edge on arm64).
+  // Bump this tag together with .nvmrc.
+  "image": "cypress/browsers:node-24.21.0-chrome-153.0.8010.36-1-ff-156.0-edge-153.0.4234.32-1",
+  "features": {
+    // Fluxbox desktop + VNC server + noVNC web client on port 6080. Sets DISPLAY=:1.
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "password": "vscode",
+      "webPort": "6080",
+      "vncPort": "5901"
+    }
+  },
+  // Chrome and Electron crash on Docker's 64 MB /dev/shm default (ignored by Codespaces).
+  "runArgs": ["--shm-size=2g"],
+  "containerEnv": {
+    // the image sets CI=1, which makes various tools (npm, Next.js, test runners)
+    // skip prompts and colors as if on a CI server - unset it for interactive work
+    "CI": ""
+  },
+  // the image has no non-root user; Cypress runs Chrome with --no-sandbox as root
+  "remoteUser": "root",
+  "forwardPorts": [6080, 3000, 8080],
+  "portsAttributes": {
+    "6080": { "label": "desktop (noVNC)", "onAutoForward": "openBrowser" },
+    "3000": { "label": "examples/next", "onAutoForward": "silent" },
+    "8080": { "label": "examples/webpack", "onAutoForward": "silent" }
+  },
+  "postCreateCommand": "corepack enable && corepack prepare pnpm@12.5.1 --activate && pnpm install --frozen-lockfile && pnpm build && npx cypress verify",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "vitest.explorer"
+      ]
+    }
+  }
+}

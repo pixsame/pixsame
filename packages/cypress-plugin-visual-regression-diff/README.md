@@ -405,6 +405,13 @@ on('before:browser:launch', (browser, launchOptions) => {
 ```
 
 If the two runs happen on different operating systems (a macOS laptop vs. a Linux CI runner), the remaining differences come from font rendering. See [Reducing cross-OS rendering noise](#reducing-cross-os-rendering-noise).
+If the difference is between your OS and Linux CI rather than between headless and headed mode, see [How do I keep local baselines identical to Linux CI?](#how-do-i-keep-local-baselines-identical-to-linux-ci-and-review-them-in-cypress-open) below.
+
+</details>
+
+<details><summary>How do I keep local baselines identical to Linux CI (and review them in <code>cypress open</code>)?</summary>
+
+You can't make macOS or Windows render text exactly like Linux does, but you can render on Linux locally. This repository ships a [dev container reference](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/blob/main/.devcontainer/README.md): a `cypress/browsers` image with a lightweight desktop and noVNC, so `cypress open` runs inside Linux and you review and approve diffs in the plugin's UI through your browser. Copy the `.devcontainer` folder into your project, adjust the `postCreateCommand`, and keep the Linux baselines apart from native ones with a per-platform `imagesPath` (the `{platform}` token where available, otherwise the browser-name recipe below). The doc also explains fonts, Apple Silicon, how to run CI in the same image for byte-identical results, and how this relates to the planned renderer sidecar that keeps Cypress native while rendering the pixels in a pinned container.
 
 </details>
 

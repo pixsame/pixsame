@@ -54,6 +54,10 @@ After cloning the repository, run:
 pnpm i # installs the project dependencies
 ```
 
+### Develop in a container (optional)
+
+Screenshots rendered on macOS or Windows never match the ones CI renders on Linux byte for byte (fonts, anti-aliasing, scrollbars). If you want to regenerate the example baselines the way CI does, or just review Linux screenshots in a headed `cypress open`, use the dev container in [`.devcontainer/`](./.devcontainer/README.md): with Docker (or a compatible runtime) and the VS Code Dev Containers extension, pick "Reopen in Container", then run `pnpm test:e2e` and open the forwarded port 6080 to see the Cypress runner via noVNC. The same folder is also meant as a copy-paste reference for users of the plugin.
+
 ### Committing Changes
 
 Commit messages should follow the [conventional commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) so that changelogs can be automatically generated. Commit messages will be automatically validated upon commit.
