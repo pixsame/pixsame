@@ -45,7 +45,7 @@
     "meta-png": "1.0.6",
     "pixelmatch": "7.2.0",
     "sanitize-filename": "1.6.4",
-    "sharp": "0.35.4",
+    "visual-regression-compare": "1.0.0-beta.2",
     "visual-regression-manifest": "1.0.0-beta.2"
   },
   "devDependencies": {
@@ -56,6 +56,7 @@
     "@vitest/coverage-v8": "4.1.11",
     "del-cli": "7.0.0",
     "prettier": "3.9.8",
+    "sharp": "0.35.4",
     "tmp-promise": "3.0.3",
     "typescript": "6.0.3",
     "vitest": "4.1.11"

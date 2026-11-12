@@ -12,9 +12,13 @@ import {
   type PlaywrightWorkerOptions,
   type TestInfo,
 } from '@playwright/test';
+import type { Comparer } from 'visual-regression-compare' with {
+  'resolution-mode': 'import',
+};
 import type { ManifestWriter } from 'visual-regression-manifest';
 import {
   compareImages,
+  createComparison,
   type CompareStatus,
   type PixelmatchOptions,
 } from './compare';
@@ -96,6 +100,8 @@ export type VisualRegressionWorkerFixtures = {
   visualRegressionManifestPath: string | false | undefined;
   /** The worker's manifest writer from `visual-regression-manifest`; `null` when disabled. */
   visualRegressionManifest: ManifestWriter | null;
+  /** The worker's `visual-regression-compare` comparer; records into `visualRegressionManifest`. */
+  visualRegressionComparer: Comparer;
 };
 
 const withDefaults = (
@@ -163,6 +169,17 @@ export const visualRegressionFixtures: Fixtures<
     { scope: 'worker' },
   ],
 
+  visualRegressionComparer: [
+    async ({ visualRegressionManifest }, use, workerInfo) => {
+      const comparer = await createComparison(visualRegressionManifest, {
+        rootDir: workerInfo.config.rootDir,
+      });
+      await use(comparer);
+      await comparer.close();
+    },
+    { scope: 'worker' },
+  ],
+
   matchImage: async (
     {
       page,
@@ -170,7 +187,7 @@ export const visualRegressionFixtures: Fixtures<
       browserName,
       headless,
       visualRegression,
-      visualRegressionManifest,
+      visualRegressionComparer,
     },
     use,
     testInfo: TestInfo,
@@ -202,43 +219,36 @@ export const visualRegressionFixtures: Fixtures<
         }),
         ...cfg.screenshotConfig,
       });
-      const result = await compareImages({
-        imgNew,
-        actualPath,
-        baselinePath,
-        createMissingImages: cfg.createMissingImages,
-        updateImages: cfg.updateImages,
-        maxDiffThreshold: cfg.maxDiffThreshold,
-        diffConfig: cfg.diffConfig,
-      });
-
       const viewport = page.viewportSize() ?? undefined;
-      visualRegressionManifest?.record({
-        actualPath,
-        baselinePath,
-        testFile: testInfo.file,
-        titlePath: testInfo.titlePath.slice(1),
-        retry: testInfo.retry,
-        status: result.status,
-        diffRatio: result.diffRatio,
-        maxDiffRatio: result.threshold,
-        ...(typeof cfg.diffConfig.threshold === 'number' && {
-          colorThreshold: cfg.diffConfig.threshold,
-          colorMetric: 'yiq',
-        }),
-        baselineWritten: result.baselineWritten,
-        actualSize: result.imgNewSize,
-        baselineSize: result.imgOldSize,
-        message: result.message,
-        platform: {
-          osPlatform: process.platform,
-          arch: process.arch,
-          browser: { name: browserName, version: browser.version(), headless },
+      const result = await compareImages(
+        {
+          imgNew,
+          actualPath,
+          baselinePath,
+          createMissingImages: cfg.createMissingImages,
+          updateImages: cfg.updateImages,
+          maxDiffThreshold: cfg.maxDiffThreshold,
+          diffConfig: cfg.diffConfig,
+          name,
+          test: {
+            filePath: testInfo.file,
+            titlePath: testInfo.titlePath.slice(1),
+            retry: testInfo.retry,
+          },
+          platform: {
+            osPlatform: process.platform,
+            arch: process.arch,
+            browser: {
+              name: browserName,
+              version: browser.version(),
+              headless,
+            },
+          },
+          viewport,
+          entry: { options: toManifestOptions(cfg), renderer },
         },
-        viewport,
-        options: toManifestOptions(cfg),
-        renderer,
-      });
+        visualRegressionComparer,
+      );
 
       const matchImageResult: MatchImageResult = {
         status: result.status,

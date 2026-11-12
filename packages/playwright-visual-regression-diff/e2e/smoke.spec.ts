@@ -73,7 +73,7 @@ test.describe('matchImage', () => {
 
     expect(failing).toBeInstanceOf(Error);
     expect(failing?.message).toMatch(
-      /\[changing card_#1\] Image diff factor .* is bigger than maximum threshold/,
+      /\[changing card_#1\] \d+ pixels \(.*%\) differ; the limit is 0\.1%/,
     );
     // the failure left the review files behind and attached them to the report
     expect(fs.existsSync(path.join(dir, 'changing card_#1.actual.png'))).toBe(

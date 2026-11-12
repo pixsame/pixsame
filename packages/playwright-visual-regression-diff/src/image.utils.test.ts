@@ -4,9 +4,6 @@ import path from 'path';
 import sharp from 'sharp';
 import {
   addPNGMetadata,
-  decodePNG,
-  encodePNG,
-  getImageSize,
   getPNGMetadata,
   isImageCurrentVersion,
 } from './image.utils';
@@ -29,20 +26,8 @@ describe('image.utils', () => {
       testingType: 'playwright',
     });
     expect(isImageCurrentVersion(stamped)).toBe(true);
-    await expect(getImageSize(stamped)).resolves.toEqual({
-      width: 250,
-      height: 181,
-    });
-  });
-
-  it('pads while decoding and encodes back', async () => {
-    const size = await getImageSize(png);
-    const padded = await decodePNG(png, size, { width: 300, height: 200 });
-    expect(padded.length).toBe(300 * 200 * 4);
-    // the padded corner is translucent black
-    const last = padded.subarray(padded.length - 4);
-    expect([...last]).toEqual([0, 0, 0, 64]);
-    const encoded = await encodePNG(padded, { width: 300, height: 200 });
-    expect(await getImageSize(encoded)).toEqual({ width: 300, height: 200 });
+    // still a valid image
+    const { width, height } = await sharp(stamped).metadata();
+    expect({ width, height }).toEqual({ width: 250, height: 181 });
   });
 });

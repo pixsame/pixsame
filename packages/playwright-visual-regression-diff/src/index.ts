@@ -11,6 +11,7 @@ export {
 } from './fixture';
 export {
   compareImages,
+  createComparison,
   type CompareInput,
   type CompareResult,
   type CompareStatus,

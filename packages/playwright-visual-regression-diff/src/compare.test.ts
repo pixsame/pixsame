@@ -3,14 +3,21 @@ import path from 'path';
 import fs from 'fs';
 import sharp from 'sharp';
 import { dir, setGracefulCleanup } from 'tmp-promise';
-import { compareImages, type CompareInput } from './compare';
 import {
-  getImageSize,
-  getPNGMetadata,
-  isImageCurrentVersion,
-} from './image.utils';
+  compareImages as compare,
+  createComparison,
+  type CompareInput,
+} from './compare';
+import { isImageCurrentVersion } from './image.utils';
 
 setGracefulCleanup();
+
+const getImageSize = async (png: Buffer) => {
+  const { width, height } = await sharp(png).metadata();
+  return { width, height };
+};
+const comparer = await createComparison(null, { rootDir: process.cwd() });
+const compareImages = (input: CompareInput) => compare(input, comparer);
 
 const fixtures = path.resolve(__dirname, '..', '__tests__', 'fixtures');
 // 125x125 and 250x181 images that differ in size and content; both carry the plugin marker
@@ -63,10 +70,8 @@ describe('compareImages', () => {
       error: false,
       diffRatio: 0,
       baselineWritten: false,
-      imgNewSize: { width: 125, height: 125 },
-      imgOldSize: { width: 125, height: 125 },
     });
-    expect(result.message).toMatch(/within boundaries/);
+    expect(result.message).toMatch(/Identical to the baseline/);
     expect(fs.existsSync(actualPath)).toBe(false);
     expect(fs.existsSync(diffPath)).toBe(false);
     expect(fs.readFileSync(baselinePath).equals(oldImg)).toBe(true);
@@ -75,7 +80,7 @@ describe('compareImages', () => {
     expect(isImageCurrentVersion(result.imgNew as Buffer)).toBe(true);
   });
 
-  it('fails above the threshold, keeps the .actual.png and writes a padded, stamped .diff.png', async () => {
+  it('fails above the threshold, keeps the .actual.png and writes a padded .diff.png', async () => {
     const { input, actualPath, diffPath } = await setup();
 
     const result = await compareImages(input);
@@ -84,19 +89,13 @@ describe('compareImages', () => {
       status: 'failed',
       error: true,
       baselineWritten: false,
-      imgNewSize: { width: 250, height: 181 },
-      imgOldSize: { width: 125, height: 125 },
     });
     expect(result.diffRatio).toBeGreaterThan(0.01);
-    expect(result.message).toMatch(/is bigger than maximum threshold/);
-    expect(result.message).toMatch(/Images size mismatch/);
+    expect(result.message).toMatch(/the limit is 1%/);
+    expect(result.message).toMatch(/padded to the same size/);
     expect(fs.existsSync(actualPath)).toBe(true);
     const diff = fs.readFileSync(diffPath);
     expect(await getImageSize(diff)).toEqual({ width: 250, height: 181 });
-    expect(getPNGMetadata(diff)).toEqual({
-      version: '1',
-      testingType: 'playwright',
-    });
     // both compared images come back at the common size
     expect(await getImageSize(result.imgOld as Buffer)).toEqual({
       width: 250,
@@ -104,13 +103,8 @@ describe('compareImages', () => {
     });
   });
 
-  it('passes with a high threshold and refreshes a baseline without the plugin marker', async () => {
+  it('passes with a high threshold and leaves a baseline without the plugin marker alone', async () => {
     const { input, baselinePath, actualPath } = await setup(
-      { imgNew: oldImg, maxDiffThreshold: 1 },
-      { baseline: oldImg },
-    );
-    expect(isImageCurrentVersion(oldImg)).toBe(true);
-    const { input: unstamped, baselinePath: unstampedBaseline } = await setup(
       { imgNew: newImg, maxDiffThreshold: 1 },
       { baseline: unstampedImg },
     );
@@ -121,15 +115,7 @@ describe('compareImages', () => {
       baselineWritten: false,
     });
     expect(fs.existsSync(actualPath)).toBe(false);
-    expect(fs.readFileSync(baselinePath).equals(oldImg)).toBe(true);
-
-    expect(await compareImages(unstamped)).toMatchObject({
-      status: 'passed',
-      baselineWritten: true,
-    });
-    expect(isImageCurrentVersion(fs.readFileSync(unstampedBaseline))).toBe(
-      true,
-    );
+    expect(fs.readFileSync(baselinePath).equals(unstampedImg)).toBe(true);
   });
 
   it("updates the baseline on failure with updateImages: 'failures-only'", async () => {
@@ -144,7 +130,7 @@ describe('compareImages', () => {
       error: false,
       baselineWritten: true,
     });
-    expect(result.message).toMatch(/baseline updated/);
+    expect(result.message).toMatch(/replaced with the actual screenshot/);
     expect(fs.existsSync(actualPath)).toBe(false);
     expect(fs.existsSync(diffPath)).toBe(false);
     expect(await getImageSize(fs.readFileSync(baselinePath))).toEqual({
@@ -153,19 +139,30 @@ describe('compareImages', () => {
     });
   });
 
-  it('overwrites without comparing with updateImages: true', async () => {
+  it('overwrites a baseline whose pixels differ with updateImages: true', async () => {
     const { input, baselinePath } = await setup({ updateImages: true });
     const result = await compareImages(input);
     expect(result).toMatchObject({
       status: 'updated',
-      diffRatio: 0,
       baselineWritten: true,
     });
-    expect(result.imgOld).toBeUndefined();
+    expect(result.diffRatio).toBeGreaterThan(0);
     expect(await getImageSize(fs.readFileSync(baselinePath))).toEqual({
       width: 250,
       height: 181,
     });
+  });
+
+  it('keeps a baseline with the same pixels with updateImages: true', async () => {
+    const { input, baselinePath } = await setup(
+      { imgNew: oldImg, updateImages: true },
+      { baseline: oldImg },
+    );
+    expect(await compareImages(input)).toMatchObject({
+      status: 'passed',
+      baselineWritten: false,
+    });
+    expect(fs.readFileSync(baselinePath).equals(oldImg)).toBe(true);
   });
 
   it('creates a missing baseline, stamped', async () => {

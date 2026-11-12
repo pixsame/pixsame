@@ -1,24 +1,27 @@
-import fs from 'fs';
+import path from 'path';
 import type pixelmatchType from 'pixelmatch' with {
   'resolution-mode': 'import',
 };
-import { FILE_SUFFIX } from './constants';
-import { moveFile, unlinkSafe, writeFileEnsuringDir } from './fs.utils';
+import type { Comparer, Plugin } from 'visual-regression-compare' with {
+  'resolution-mode': 'import',
+};
 import {
-  addPNGMetadata,
-  decodePNG,
-  encodePNG,
-  getImageSize,
-  isImageCurrentVersion,
-  type ImageInfo,
-} from './image.utils';
+  ManifestWriter,
+  type ManifestEntry,
+  type ManifestEntryInput,
+  type ManifestEntryPlatform,
+  type ManifestViewport,
+} from 'visual-regression-manifest';
+import { FILE_SUFFIX } from './constants';
+import { addPNGMetadata } from './image.utils';
 
 export type PixelmatchOptions = NonNullable<
   Parameters<typeof pixelmatchType>[5]
 >;
 
-// pixelmatch 7 is ESM-only; a dynamic import keeps this package usable from a
-// CommonJS `playwright.config` on every supported Node version
+// pixelmatch 7 and visual-regression-compare are ESM-only; a dynamic import
+// keeps this package usable from a CommonJS `playwright.config` on every
+// supported Node version
 let pixelmatchPromise: Promise<typeof pixelmatchType> | undefined;
 const loadPixelmatch = () =>
   (pixelmatchPromise ??= import('pixelmatch').then((m) => m.default));
@@ -37,6 +40,14 @@ export type CompareInput = {
   updateImages: boolean | 'failures-only';
   maxDiffThreshold: number;
   diffConfig: PixelmatchOptions;
+  /** Screenshot name recorded on the manifest entry; defaults to the baseline's file name. */
+  name?: string;
+  /** The test the screenshot belongs to, recorded on the manifest entry. */
+  test?: { filePath: string; titlePath: string[]; retry: number };
+  platform?: ManifestEntryPlatform;
+  viewport?: ManifestViewport;
+  /** Entry fields the comparer cannot know: the resolved `options` and the `renderer`. */
+  entry?: Pick<ManifestEntryInput, 'options' | 'renderer'>;
 };
 
 export type CompareResult = {
@@ -47,8 +58,6 @@ export type CompareResult = {
   /** Share of differing pixels, 0..1; `0` when no comparison ran. */
   diffRatio: number;
   threshold: number;
-  imgNewSize: ImageInfo;
-  imgOldSize?: ImageInfo;
   /** `true` whenever the baseline file was (re)written. */
   baselineWritten: boolean;
   /** Path of the `.diff.png` sibling of `actualPath`. */
@@ -57,139 +66,147 @@ export type CompareResult = {
   imgNew?: Buffer;
   imgOld?: Buffer;
   imgDiff?: Buffer;
+  /** What the comparer recorded in the manifest. */
+  entry: ManifestEntry;
 };
-
-const round = (n: number) => Math.ceil(n * 1000) / 1000;
-const percent = (ratio: number) => `${round(ratio * 100)}%`;
 
 export const diffPathFor = (actualPath: string) =>
   actualPath.replace(FILE_SUFFIX.actual, FILE_SUFFIX.diff);
 
 /**
- * The comparison of the Cypress plugin's `compareImagesTask`, without the
- * runner: writes the stamped screenshot to `actualPath`, compares it with the
+ * Two things of the comparer's defaults that `matchImage` does differently:
+ * pixelmatch with every one of its options (`alpha`, `aaColor`, `diffColor`,
+ * `diffMask`, ...), not only the `threshold` and `includeAA` of the built-in
+ * engine, and anti-aliased pixels not counted unless asked for. Registered
+ * under the built-in's name, so it takes its place.
+ */
+const pixelmatchPlugin = (pixelmatch: typeof pixelmatchType): Plugin => ({
+  name: '@pixsame/playwright/pixelmatch',
+  setup: (api) => {
+    // the path and the way out: what `matchImage` users need when it fails
+    api.on('decide', (ctx, decision) =>
+      decision.status === 'missing-baseline'
+        ? {
+            ...decision,
+            message: `Baseline image is missing at path: "${ctx.input.files?.baseline}". Provide a baseline image or enable "createMissingImages" option in plugin configuration.`,
+          }
+        : decision,
+    );
+    api.addEngine('pixelmatch', (options) => ({
+      name: 'pixelmatch',
+      colorMetric: 'yiq',
+      colorThreshold:
+        typeof options.threshold === 'number' ? options.threshold : 0.1,
+      compare(baseline, actual) {
+        const { width, height } = baseline;
+        const diff = new Uint8ClampedArray(width * height * 4);
+        const diffPixels = pixelmatch(
+          baseline.data,
+          actual.data,
+          diff,
+          width,
+          height,
+          { includeAA: false, ...options },
+        );
+        return {
+          diffPixels,
+          diffRatio: width * height === 0 ? 0 : diffPixels / (width * height),
+          diff: { width, height, data: diff },
+        };
+      },
+    }));
+  },
+});
+
+/** A manifest writer that keeps its entries in memory: for a run with the manifest turned off. */
+class MemoryManifestWriter extends ManifestWriter {
+  override write() {}
+  override flush() {}
+}
+
+/**
+ * The comparer of one worker, recording into `writer` (or, with the manifest
+ * disabled, into memory). Sizes that differ are padded and compared, as the
+ * Cypress plugin does.
+ */
+export const createComparison = async (
+  writer: ManifestWriter | null,
+  { rootDir }: { rootDir: string },
+): Promise<Comparer> => {
+  const [{ createComparer, fsStore }, pixelmatch] = await Promise.all([
+    import('visual-regression-compare'),
+    loadPixelmatch(),
+  ]);
+  return createComparer({
+    // every call names its files, so the store is never asked for a path
+    store: fsStore({ baselineDir: rootDir }),
+    onSizeMismatch: 'pad',
+    manifest: {
+      writer:
+        writer ??
+        new MemoryManifestWriter(path.join(rootDir, 'unused.json'), {
+          projectRoot: rootDir,
+          runner: { name: 'playwright' },
+        }),
+    },
+    plugins: [pixelmatchPlugin(pixelmatch)],
+  });
+};
+
+/**
+ * Stamps the screenshot with the package marker, compares it with the
  * baseline and leaves the files on disk the way the manifest contract
- * describes (`.actual.png` and `.diff.png` only for failures).
+ * describes (`.actual.png` and `.diff.png` only for failures). The comparison
+ * itself is `visual-regression-compare`'s; this maps `matchImage`'s options
+ * onto it.
  */
 export const compareImages = async (
   cfg: CompareInput,
+  comparer: Comparer,
 ): Promise<CompareResult> => {
-  const messages: string[] = [];
   const diffPath = diffPathFor(cfg.actualPath);
-  // stamped once, so every file derived from it carries the plugin marker
-  const rawImgNew = addPNGMetadata(cfg.imgNew);
-  writeFileEnsuringDir(cfg.actualPath, rawImgNew);
-  const imgNewSize = await getImageSize(rawImgNew);
-
-  let status: CompareStatus;
-  let error = false;
-  let baselineWritten = false;
-  let diffRatio = 0;
-  let imgOldSize: ImageInfo | undefined;
-  let images: Pick<CompareResult, 'imgNew' | 'imgOld' | 'imgDiff'> = {};
-
-  if (fs.existsSync(cfg.baselinePath) && cfg.updateImages !== true) {
-    const rawImgOld = fs.readFileSync(cfg.baselinePath);
-    imgOldSize = await getImageSize(rawImgOld);
-    const isSizeDifferent =
-      imgNewSize.width !== imgOldSize.width ||
-      imgNewSize.height !== imgOldSize.height;
-    const size = {
-      width: Math.max(imgNewSize.width, imgOldSize.width),
-      height: Math.max(imgNewSize.height, imgOldSize.height),
-    };
-
-    const [imgNew, imgOld, pixelmatch] = await Promise.all([
-      decodePNG(rawImgNew, imgNewSize, size),
-      decodePNG(rawImgOld, imgOldSize, size),
-      loadPixelmatch(),
-    ]);
-    const diff = Buffer.alloc(size.width * size.height * 4);
-    // anti-aliased edge pixels are not counted, like in the Cypress plugin
-    const diffPixels = pixelmatch(
-      imgNew,
-      imgOld,
-      diff,
-      size.width,
-      size.height,
-      { includeAA: false, ...cfg.diffConfig },
-    );
-    diffRatio = diffPixels / (size.width * size.height);
-
-    if (isSizeDifferent) {
-      messages.push(
-        `Warning: Images size mismatch - new screenshot is ${imgNewSize.width}px by ${imgNewSize.height}px while old one is ${imgOldSize.width}px by ${imgOldSize.height} (width x height).`,
-      );
-    }
-    if (diffRatio > cfg.maxDiffThreshold) {
-      messages.unshift(
-        `Image diff factor (${percent(diffRatio)}) is bigger than maximum threshold option ${percent(cfg.maxDiffThreshold)}.`,
-      );
-      error = true;
-    }
-
-    const imgDiff = await encodePNG(diff, size);
-    const [imgNewPNG, imgOldPNG] = isSizeDifferent
-      ? await Promise.all([encodePNG(imgNew, size), encodePNG(imgOld, size)])
-      : [rawImgNew, rawImgOld];
-    images = { imgNew: imgNewPNG, imgOld: imgOldPNG, imgDiff };
-
-    if (error && cfg.updateImages === 'failures-only') {
-      moveFile(cfg.actualPath, cfg.baselinePath);
-      unlinkSafe(diffPath);
-      error = false;
-      status = 'updated';
-      baselineWritten = true;
-      messages[0] = messages[0].replace(
-        'is bigger than maximum threshold option',
-        'was bigger than maximum threshold option (baseline updated):',
-      );
-    } else if (error) {
-      writeFileEnsuringDir(diffPath, addPNGMetadata(imgDiff));
-      status = 'failed';
-    } else {
-      status = 'passed';
-      unlinkSafe(diffPath);
-      if (!isImageCurrentVersion(rawImgOld)) {
-        // a baseline without the plugin marker (or from an older format) is refreshed silently
-        moveFile(cfg.actualPath, cfg.baselinePath);
-        baselineWritten = true;
-      } else {
-        fs.unlinkSync(cfg.actualPath);
-      }
-    }
-  } else {
-    const baselineExisted = fs.existsSync(cfg.baselinePath);
-    if (cfg.createMissingImages) {
-      moveFile(cfg.actualPath, cfg.baselinePath);
-      unlinkSafe(diffPath);
-      baselineWritten = true;
-      status = baselineExisted ? 'updated' : 'created';
-    } else {
-      error = true;
-      status = 'missing-baseline';
-      messages.unshift(
-        `Baseline image is missing at path: "${cfg.baselinePath}". Provide a baseline image or enable "createMissingImages" option in plugin configuration.`,
-      );
-    }
-  }
-
-  if (!error) {
-    messages.unshift(
-      `Image diff factor (${percent(diffRatio)}) is within boundaries of maximum threshold option ${percent(cfg.maxDiffThreshold)}.`,
-    );
-  }
-
+  const { entry, images } = await comparer.compare(
+    {
+      name: cfg.name ?? path.basename(cfg.baselinePath, '.png'),
+      // stamped once, so every file derived from it carries the package marker
+      actual: addPNGMetadata(cfg.imgNew),
+      files: {
+        baseline: cfg.baselinePath,
+        actual: cfg.actualPath,
+        diff: diffPath,
+      },
+      test: cfg.test,
+      platform: cfg.platform,
+      viewport: cfg.viewport,
+      entry: cfg.entry,
+      options: {
+        limits: { maxDiffRatio: cfg.maxDiffThreshold },
+        engineOptions: { ...cfg.diffConfig },
+        update:
+          cfg.updateImages === true
+            ? 'all'
+            : cfg.updateImages === 'failures-only'
+              ? 'failures-only'
+              : 'none',
+        onMissingBaseline: cfg.createMissingImages ? 'create' : 'fail',
+      },
+    },
+    { include: ['baseline', 'actual', 'diff'] },
+  );
+  const status = entry.status as CompareStatus;
+  const buffer = (bytes?: Uint8Array) =>
+    bytes ? Buffer.from(bytes) : undefined;
   return {
     status,
-    error,
-    message: messages.join('\n'),
-    diffRatio,
+    error: status === 'failed' || status === 'missing-baseline',
+    message: entry.message ?? '',
+    diffRatio: entry.comparison.diffRatio,
     threshold: cfg.maxDiffThreshold,
-    imgNewSize,
-    imgOldSize,
-    baselineWritten,
+    baselineWritten: entry.baselineWritten,
     diffPath,
-    ...images,
+    imgNew: buffer(images.actual),
+    imgOld: buffer(images.baseline),
+    imgDiff: buffer(images.diff),
+    entry,
   };
 };
