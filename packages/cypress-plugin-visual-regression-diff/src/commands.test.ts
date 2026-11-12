@@ -18,61 +18,61 @@ afterEach(() => {
 });
 
 describe('getConfig deterministicRendering (browser side)', () => {
-  it('is off when the option is not set anywhere', () => {
-    expect(getConfig({}).deterministicRendering).toBe(false);
+  it('is on when the option is not set anywhere', () => {
+    expect(getConfig({}).deterministicRendering).toBe(true);
     expect(Cypress.expose).toHaveBeenCalledWith(KEY);
   });
 
-  it.each([true, 'true'])(
-    'is on when the global option arrives as %j through Cypress.expose (Cypress 15.10+)',
-    (value) => {
-      Cypress.expose.mockImplementation((key: string) =>
-        key === KEY ? value : undefined,
-      );
-
-      expect(getConfig({}).deterministicRendering).toBe(true);
-      expect(Cypress.env).not.toHaveBeenCalled();
-    },
-  );
-
-  it.each([true, 'true'])(
-    'is on when the global option arrives as %j through Cypress.env (Cypress <15.10)',
-    (value) => {
-      Cypress.version = '15.9.0';
-      Cypress.env.mockImplementation((key: string) =>
-        key === KEY ? value : undefined,
-      );
-
-      expect(getConfig({}).deterministicRendering).toBe(true);
-      expect(Cypress.expose).not.toHaveBeenCalled();
-    },
-  );
-
-  it.each([false, 'false', 1, 'yes'])(
-    'stays off when the global option is %j',
+  it.each([false, 'false'])(
+    'is off when the global option arrives as %j through Cypress.expose (Cypress 15.10+)',
     (value) => {
       Cypress.expose.mockImplementation((key: string) =>
         key === KEY ? value : undefined,
       );
 
       expect(getConfig({}).deterministicRendering).toBe(false);
+      expect(Cypress.env).not.toHaveBeenCalled();
     },
   );
 
-  it('can be turned on per call without the global option', () => {
-    expect(
-      getConfig({ deterministicRendering: true }).deterministicRendering,
-    ).toBe(true);
-  });
+  it.each([false, 'false'])(
+    'is off when the global option arrives as %j through Cypress.env (Cypress <15.10)',
+    (value) => {
+      Cypress.version = '15.9.0';
+      Cypress.env.mockImplementation((key: string) =>
+        key === KEY ? value : undefined,
+      );
 
-  it('can be turned off per call while the global option is on', () => {
-    Cypress.expose.mockImplementation((key: string) =>
-      key === KEY ? 'true' : undefined,
-    );
+      expect(getConfig({}).deterministicRendering).toBe(false);
+      expect(Cypress.expose).not.toHaveBeenCalled();
+    },
+  );
 
+  it.each([true, 'true', 1, 'yes'])(
+    'stays on when the global option is %j',
+    (value) => {
+      Cypress.expose.mockImplementation((key: string) =>
+        key === KEY ? value : undefined,
+      );
+
+      expect(getConfig({}).deterministicRendering).toBe(true);
+    },
+  );
+
+  it('can be turned off per call', () => {
     expect(
       getConfig({ deterministicRendering: false }).deterministicRendering,
     ).toBe(false);
+  });
+
+  it('can be turned on per call while the global option is off', () => {
+    Cypress.expose.mockImplementation((key: string) =>
+      key === KEY ? 'false' : undefined,
+    );
+
+    expect(
+      getConfig({ deterministicRendering: true }).deterministicRendering,
+    ).toBe(true);
   });
 });
 

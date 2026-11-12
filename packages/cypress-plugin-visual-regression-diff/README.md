@@ -62,7 +62,7 @@
 
 ### Installation
 
-You can install this library using your favorite package manager:
+The plugin requires Node.js 20.9 or newer. You can install this library using your favorite package manager:
 
 ```bash
 # npm
@@ -340,7 +340,7 @@ cy.matchImage({
     blackout: ['.element-to-be-blackouted'],
   },
   // pixelmatch options, see: https://www.npmjs.com/package/pixelmatch#pixelmatchimg1-img2-output-width-height-options
-  // default: { includeAA: true } (2.0 switches to pixelmatch's own includeAA: false, see "Reducing cross-OS rendering noise" below)
+  // default: {} - pixelmatch defaults, notably includeAA: false (anti-aliased edge pixels are not counted as differences)
   diffConfig: {
     threshold: 0.01,
   },
@@ -371,14 +371,13 @@ cy.matchImage({
   maxDiffThreshold: 0.1,
   // forces scale factor to be set as value "1"
   // helps with screenshots being scaled 2x on high-density screens like Mac Retina
-  // applies to Chrome and Chromium (2.0 extends it to Edge and Firefox, which changes their baselines on high-density screens once)
   // default: true
   forceDeviceScaleFactor: false,
   // applies the deterministic rendering preset, see "Reducing cross-OS rendering noise" below
   // per call it only controls the CSS injected into the page for the screenshot (caret, animations, scrollbars);
   // the browser switches are process-wide and follow the global pluginVisualRegressionDeterministicRendering option
-  // default: false (2.0 turns it on by default)
-  deterministicRendering: true,
+  // default: true
+  deterministicRendering: false,
   // title used for naming the image file
   // default: Cypress.currentTest.titlePath (your test title)
   title: `${Cypress.currentTest.titlePath.join(' ')} (${Cypress.browser.displayName})`,
@@ -485,11 +484,11 @@ Where this is heading: the plan for [#212](https://github.com/FRSOURCE/cypress-p
 
 ## Batch Review Mode
 
-Batch Review Mode lets you run a full test suite without stopping on the first visual diff failure. Instead, all failing snapshots are collected and presented in an interactive review UI after the tests complete — so you can approve or skip changes in bulk.
+Batch Review Mode is **enabled by default**. It lets you run a full test suite without stopping on the first visual diff failure. Instead, all failing snapshots are collected and presented in an interactive review UI after the tests complete — so you can approve or skip changes in bulk.
 
 ### Additions in headed mode (non-CI environments)
 
-When enabled, a floating action button (FAB) appears in the bottom-right corner of the Cypress test runner. As tests run:
+A floating action button (FAB) appears in the bottom-right corner of the Cypress test runner. As tests run:
 
 - Whenever a `matchImage()` call exceeds the diff threshold, the counter badge on the FAB increments instead of immediately throwing an error.
 - Once all tests finish, an error is thrown with the total count of failures.
@@ -497,17 +496,17 @@ When enabled, a floating action button (FAB) appears in the bottom-right corner 
 
 ![Batch Review Mode demo](https://raw.githubusercontent.com/pixsame/pixsame/main/assets/batch-review-mode.gif)
 
-> Note: Batch mode will become the default in the next major version. To keep an old behaviour, make sure to set configuration property to `false` (see below for more details).
+> Note: Before version 2 of `@pixsame/cypress-plugin-visual-regression-diff` Batch Review Mode was opt-in. See the [migration guide](https://github.com/pixsame/pixsame/blob/main/packages/cypress-plugin-visual-regression-diff/MIGRATION.md#4x---5x) if you upgrade from 4.x.
 
-### How to enable
+### How to disable
 
-Batch Review Mode is a global option (it cannot be passed to `matchImage` directly). Enable it with the `pluginVisualRegressionBatchReviewMode` key:
+Batch Review Mode is a global option (it cannot be passed to `matchImage` directly). To go back to failing `matchImage()` immediately on the first mismatch, set the `pluginVisualRegressionBatchReviewMode` key to `false`:
 
 ```bash
 # Cypress 15.10+
-npx cypress open --expose "pluginVisualRegressionBatchReviewMode=true"
+npx cypress open --expose "pluginVisualRegressionBatchReviewMode=false"
 # Cypress <15.10 (deprecated in 15.10, removed in 16)
-npx cypress open --env "pluginVisualRegressionBatchReviewMode=true"
+npx cypress open --env "pluginVisualRegressionBatchReviewMode=false"
 ```
 
 ```ts
@@ -516,7 +515,7 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   expose: {
-    pluginVisualRegressionBatchReviewMode: true,
+    pluginVisualRegressionBatchReviewMode: false,
   },
 });
 ```
@@ -527,7 +526,7 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   env: {
-    pluginVisualRegressionBatchReviewMode: true,
+    pluginVisualRegressionBatchReviewMode: false,
   },
 });
 ```
@@ -540,9 +539,9 @@ The checkbox is unchecked by default. Use the `pluginVisualRegressionBatchReview
 
 ```bash
 # Cypress 15.10+
-npx cypress open --expose "pluginVisualRegressionBatchReviewMode=true" --expose "pluginVisualRegressionBatchReviewModeShowPassingImages=true"
+npx cypress open --expose "pluginVisualRegressionBatchReviewModeShowPassingImages=true"
 # Cypress <15.10 (deprecated in 15.10, removed in 16)
-npx cypress open --env "pluginVisualRegressionBatchReviewMode=true,pluginVisualRegressionBatchReviewModeShowPassingImages=true"
+npx cypress open --env "pluginVisualRegressionBatchReviewModeShowPassingImages=true"
 ```
 
 ```ts
@@ -551,7 +550,6 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   expose: {
-    pluginVisualRegressionBatchReviewMode: true,
     pluginVisualRegressionBatchReviewModeShowPassingImages: true,
   },
 });
@@ -561,19 +559,32 @@ Toggling the checkbox in the runner is remembered in the browser's local storage
 
 ## Reducing cross-OS rendering noise
 
-Browsers hand text rasterisation to the operating system (CoreText on macOS, DirectWrite on Windows, FreeType on Linux), so the same page never renders byte-for-byte identical on a developer's laptop and a Linux CI runner. The plugin cannot make that go away entirely, but the `deterministicRendering` preset removes the part of the noise that lives inside the browser.
+Browsers hand text rasterisation to the operating system (CoreText on macOS, DirectWrite on Windows, FreeType on Linux), so the same page never renders byte-for-byte identical on a developer's laptop and a Linux CI runner. The plugin cannot make that go away entirely, but the `deterministicRendering` preset (enabled by default) removes the part of the noise that lives inside the browser:
 
-The preset is opt-in on 1.x and off by default. 2.0 turns it on by default, so enabling it now gets you the 2.0 behaviour early without any other change.
+- **Chrome, Chromium, Edge** are launched with `--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu` (text without OS hinting and subpixel tricks, no colour management, CPU rasterisation), plus `--hide-scrollbars` in headless mode. The list is exported as `DETERMINISTIC_RENDERING_CHROMIUM_ARGS` from `@pixsame/cypress-plugin-visual-regression-diff/constants`.
+- **Firefox** gets the `gfx.webrender.software` preference (CPU rendering). Firefox has no cross-platform switch for font hinting, so text may still differ between operating systems.
+- **Every browser**: for the duration of a `matchImage` screenshot a `<style>` element is injected into the tested page that hides the text caret, disables CSS transitions, animations and smooth scrolling, and hides scrollbars. It is removed right after the screenshot.
+- The comparison runs `pixelmatch` with `includeAA: false`, so anti-aliased edge pixels are detected and not counted as differences.
 
-### How to enable
+What the preset does not solve: different font files and fallbacks per OS (the classic Arial vs. Liberation Sans case), emoji fonts, WebKit and Firefox text rasterisation, and images drawn by WebGL. For those, keep one baseline per platform (see the `title` and `imagesPath` options and the FAQ entry about browser names) or generate your baselines in the same environment your CI uses.
 
-The browser switches are process-wide, so the preset is a global option. Enable it with the `pluginVisualRegressionDeterministicRendering` key:
+**Electron** ignores switches set by plugins. Pass them through the environment instead:
+
+```bash
+ELECTRON_EXTRA_LAUNCH_ARGS="--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu --hide-scrollbars" npx cypress run
+```
+
+**WebGL**: `--disable-gpu` may leave pages that depend on WebGL without a rendering context. Either disable the preset or add `--use-gl=angle --use-angle=swiftshader` (recent Chrome also wants `--enable-unsafe-swiftshader`) in your own `before:browser:launch` handler, composed with the plugin's one via [`cypress-on-fix`](https://github.com/bahmutov/cypress-on-fix).
+
+**Screenshot hooks**: the plugin passes its own `onBeforeScreenshot` and `onAfterScreenshot` to every screenshot it takes. Hooks given via `screenshotConfig` are still called; hooks set globally with `Cypress.Screenshot.defaults()` are not.
+
+To turn the preset off globally (browser switches and CSS):
 
 ```bash
 # Cypress 15.10+
-npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true"
+npx cypress run --expose "pluginVisualRegressionDeterministicRendering=false"
 # Cypress <15.10 (deprecated in 15.10, removed in 16)
-npx cypress run --env "pluginVisualRegressionDeterministicRendering=true"
+npx cypress run --env "pluginVisualRegressionDeterministicRendering=false"
 ```
 
 ```ts
@@ -582,71 +593,15 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   expose: {
-    pluginVisualRegressionDeterministicRendering: true,
+    pluginVisualRegressionDeterministicRendering: false,
   },
 });
 ```
 
-```ts
-// cypress.config.ts (Cypress <15.10, deprecated in newer versions)
-import { defineConfig } from 'cypress';
-
-export default defineConfig({
-  env: {
-    pluginVisualRegressionDeterministicRendering: true,
-  },
-});
-```
-
-Expect small differences against baselines created without the preset on the first run, because text is rasterised without hinting. Run once with `pluginVisualRegressionUpdateImages=true` (or `'failures-only'`), or approve the changes in Batch Review Mode, and commit the result.
-
-### What it does
-
-- **Chrome, Chromium, Edge** are launched with `--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu` (text without OS hinting and subpixel tricks, no colour management, CPU rasterisation), plus `--hide-scrollbars` in headless mode. The list is exported as `DETERMINISTIC_RENDERING_CHROMIUM_ARGS` from `@frsource/cypress-plugin-visual-regression-diff/constants`.
-- **Firefox** gets the `gfx.webrender.software` preference (CPU rendering). Firefox has no cross-platform switch for font hinting, so text may still differ between operating systems.
-- **Every browser**: for the duration of a `matchImage` screenshot a `<style>` element is injected into the tested page that hides the text caret, disables CSS transitions, animations and smooth scrolling, and hides scrollbars. It is removed right after the screenshot.
-
-What the preset does not solve: different font files and fallbacks per OS (the classic Arial vs. Liberation Sans case), emoji fonts, WebKit and Firefox text rasterisation, and images drawn by WebGL. For those, keep one baseline per platform (see [Per-platform baselines](#per-platform-baselines)) or generate your baselines in the same environment your CI uses.
-
-**Electron** ignores switches set by plugins, so with Electron the preset only injects the CSS and prints a reminder on browser launch. Pass the switches through the environment instead:
-
-```bash
-ELECTRON_EXTRA_LAUNCH_ARGS="--font-render-hinting=none --disable-font-subpixel-positioning --disable-lcd-text --force-color-profile=srgb --disable-gpu --hide-scrollbars" npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true"
-```
-
-**WebGL**: `--disable-gpu` may leave pages that depend on WebGL without a rendering context. Either leave the preset off or add `--use-gl=angle --use-angle=swiftshader` (recent Chrome also wants `--enable-unsafe-swiftshader`) in your own `before:browser:launch` handler, composed with the plugin's one via [`cypress-on-fix`](https://github.com/bahmutov/cypress-on-fix).
-
-**Screenshot hooks**: the plugin passes its own `onBeforeScreenshot` and `onAfterScreenshot` to every screenshot it takes. Hooks given via `screenshotConfig` are still called; hooks set globally with `Cypress.Screenshot.defaults()` are not.
-
-### Anti-aliased pixels: the `includeAA: false` companion
-
-The comparison on 1.x still runs `pixelmatch` with `includeAA: true`, so every anti-aliased edge pixel that renders slightly differently counts towards the diff ratio. That is the other half of the cross-OS noise, and the preset does not touch it. Pair it with `includeAA: false` (pixelmatch's own default, anti-aliased pixels are detected and skipped) - 2.0 makes that the default:
-
-```bash
-# Cypress 15.10+
-npx cypress run --expose "pluginVisualRegressionDeterministicRendering=true,pluginVisualRegressionDiffConfig={\"includeAA\":false}"
-# Cypress <15.10 (deprecated in 15.10, removed in 16)
-npx cypress run --env "pluginVisualRegressionDeterministicRendering=true,pluginVisualRegressionDiffConfig={\"includeAA\":false}"
-```
-
-```ts
-cy.matchImage({ diffConfig: { includeAA: false } });
-```
-
-Diff ratios get smaller with it, so some comparisons that failed before pass. Baseline images are not affected.
-
-### Per call
-
-The `deterministicRendering` option of `matchImage` only controls the injected CSS; the browser switches stay whatever the global option says. Skip the CSS for a single screenshot (e.g. when an animation's end state is what you want to capture):
+To keep the browser switches but skip the CSS for a single screenshot (e.g. when an animation's end state is what you want to capture):
 
 ```ts
 cy.matchImage({ deterministicRendering: false });
-```
-
-Or inject just the CSS for one screenshot without enabling the preset globally:
-
-```ts
-cy.matchImage({ deterministicRendering: true });
 ```
 
 ## FAQ

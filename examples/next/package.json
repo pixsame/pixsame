@@ -4,8 +4,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "cypress": "cypress open --env \"pluginVisualRegressionImagesPath={spec_path}/__image_snapshots_local__\"",
-    "cypress:ci": "cypress run --env \"pluginVisualRegressionUpdateImages=true\"",
+    "cypress": "cypress open --expose \"pluginVisualRegressionImagesPath={spec_path}/__image_snapshots_local__\"",
+    "cypress:ci": "cypress run --expose \"pluginVisualRegressionUpdateImages=true\"",
     "test:e2e": "start-server-and-test dev http://localhost:3000 \"pnpm cypress --e2e\"",
     "test:e2e:ci": "start-server-and-test dev http://localhost:3000 \"pnpm cypress:ci --e2e\"",
     "test:ct": "start-server-and-test dev http://localhost:3000 \"pnpm cypress --component\"",
@@ -18,10 +18,10 @@
   },
   "devDependencies": {
     "@pixsame/cypress-plugin-visual-regression-diff": "workspace:*",
-    "@types/node": "18.0.6",
+    "@types/node": "20.19.43",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
-    "cypress": "13.14.2",
+    "cypress": "16.1.0",
     "start-server-and-test": "1.15.2",
     "typescript": "4.7.4"
   }

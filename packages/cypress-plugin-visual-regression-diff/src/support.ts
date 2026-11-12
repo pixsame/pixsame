@@ -1,6 +1,6 @@
 import * as Base64 from '@frsource/base64';
 import './commands';
-import { supportsExpose } from './version.utils';
+import { getBatchReviewMode, getShowPassingImagesConfig } from './config.utils';
 import {
   FAB_CLASS,
   FAB_BADGE_CLASS,
@@ -32,22 +32,6 @@ function queueRun() {
   (cy as unknown as { queue: { run: () => void } }).queue.run();
 }
 /* c8 ignore stop */
-
-export const getShowPassingImagesConfig = (): boolean => {
-  const key = 'pluginVisualRegressionBatchReviewModeShowPassingImages';
-  if (supportsExpose(Cypress.version)) {
-    return !!(Cypress.expose(key) as boolean | undefined);
-  }
-  return !!(Cypress.env(key) as boolean | undefined);
-};
-
-export const getBatchReviewMode = (): boolean => {
-  const key = 'pluginVisualRegressionBatchReviewMode';
-  if (supportsExpose(Cypress.version)) {
-    return !!(Cypress.expose(key) as boolean | undefined);
-  }
-  return !!(Cypress.env(key) as boolean | undefined);
-};
 
 export const getEffectiveShowPassingImages = (): boolean => {
   if (!top) return getShowPassingImagesConfig();

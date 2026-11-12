@@ -18,7 +18,7 @@
  * Usage (from the repository root):
  *   pnpm record-demo
  *
- * Requires: pnpm install (playwright + ffmpeg-static must be in the root devDependencies).
+ * Requires: pnpm install && pnpm build (cypress, playwright + ffmpeg-static must be in the root devDependencies).
  * Playwright drives the Chrome that Cypress launches (via CDP) and launches the
  * installed Google Chrome headlessly for the editor pane — no browser download
  * is needed.
@@ -33,6 +33,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, '..');
 const EXAMPLE_DIR = path.join(ROOT_DIR, 'examples', 'next');
+const DEMO_CONFIG = path.join(__dirname, 'cypress.demo.config.ts');
 const ASSETS_DIR = path.join(ROOT_DIR, 'assets');
 const FRAMES_DIR = path.join(__dirname, '.frames');
 const PALETTE_PATH = path.join(__dirname, '.palette.png');
@@ -427,7 +428,7 @@ async function shutdown() {
   try { await editorBrowser?.close(); } catch {}
   killAll(processes);
   // The Cypress desktop app outlives its CLI's process group — stop it explicitly.
-  try { execSync("pkill -f 'Cypress.app/Contents/MacOS/Cypress.*--config-file cypress.demo.config.ts'"); } catch {}
+  try { execSync(`pkill -f 'Cypress.app/Contents/MacOS/Cypress.*--config-file ${DEMO_CONFIG}'`); } catch {}
 }
 
 async function main() {
@@ -458,8 +459,8 @@ async function main() {
       './node_modules/.bin/cypress run',
       '--headless',
       '--browser chrome',
-      '--config-file cypress.demo.config.ts',
-      '--env pluginVisualRegressionUpdateImages=true',
+      `--config-file ${DEMO_CONFIG}`,
+      '--expose pluginVisualRegressionUpdateImages=true',
     ].join(' '),
     { cwd: EXAMPLE_DIR, stdio: 'inherit' },
   );
@@ -469,7 +470,7 @@ async function main() {
   log(`Starting Cypress with batch review mode (Cypress port ${CYPRESS_PORT})…`);
   processes.push(spawnProc(
     './node_modules/.bin/cypress',
-    ['open', '--browser', 'chrome', '--port', String(CYPRESS_PORT), '--config-file', 'cypress.demo.config.ts', '--e2e'],
+    ['open', '--browser', 'chrome', '--port', String(CYPRESS_PORT), '--config-file', DEMO_CONFIG, '--e2e'],
     { cwd: EXAMPLE_DIR },
   ));
   await waitForUrl(`http://localhost:${CYPRESS_PORT}`, 60_000);
