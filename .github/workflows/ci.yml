@@ -131,7 +131,7 @@ jobs:
         with:
           install-filter: ${{ env.PLUGIN_INSTALL_FILTER }}
       - name: Build the adapters
-        run: pnpm --filter @pixsame/cypress-plugin-visual-regression-diff --filter @pixsame/playwright build
+        run: pnpm --filter @pixsame/cypress-plugin-visual-regression-diff --filter @pixsame/playwright-visual-regression-diff build
       - name: Cache Playwright browsers 📦
         uses: actions/cache@v6
         with:

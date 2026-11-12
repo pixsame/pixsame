@@ -484,7 +484,7 @@ Where this is heading: the plan for [#212](https://github.com/FRSOURCE/cypress-p
 
 ## Batch Review Mode
 
-Batch Review Mode is **enabled by default**. It lets you run a full test suite without stopping on the first visual diff failure. Instead, all failing snapshots are collected and presented in an interactive review UI after the tests complete — so you can approve or skip changes in bulk.
+Batch Review Mode is **enabled by default**. It lets you run a full test suite without stopping on the first visual diff failure. Instead, all failing snapshots are collected and presented in an interactive review UI after the tests complete, so you can approve or skip changes in bulk.
 
 ### Additions in headed mode (non-CI environments)
 
@@ -770,7 +770,7 @@ This creates separate image directories per browser (`__image_snapshots__/chrome
 
 <details><summary>How to generate an HTML report showing baseline, diff, and actual images?</summary>
 
-The plugin provides a built-in visual comparison overlay in the Cypress UI — clicking "See comparison" on a failed test shows the baseline, diff, and actual images side by side.
+The plugin provides a built-in visual comparison overlay in the Cypress UI: clicking "See comparison" on a failed test shows the baseline, diff, and actual images side by side.
 
 For CI or sharable HTML reports, integrate with a reporter such as [`cypress-mochawesome-reporter`](https://www.npmjs.com/package/cypress-mochawesome-reporter). See [How do I integrate with mochawesome or other reporters that embed screenshot images?](#how-do-i-integrate-with-mochawesome-or-other-reporters-that-embed-screenshot-images) for setup details.
 

@@ -6,7 +6,7 @@ order: 2
 
 # Usage
 
-The plugin adds a single command, `matchImage`. That's the whole API on the test side.
+The plugin adds a single command to your tests, `matchImage`.
 
 ## Compare an element or the page
 

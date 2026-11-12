@@ -6,7 +6,7 @@ order: 1
 
 # Install
 
-This page covers the Cypress plugin, which is the part you can install right now. The Playwright plugin and the GitHub App are still being built.
+This page covers the Cypress plugin. For Playwright, see the [Playwright plugin](/docs/integrations/playwright-reporter) page. The GitHub App is still being built.
 
 ## Add the package
 

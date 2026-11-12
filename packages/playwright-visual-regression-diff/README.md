@@ -1,30 +1,30 @@
 # pixsame for Playwright
 
-Published as `@pixsame/playwright`. Visual regression testing for [Playwright](https://playwright.dev) with the same `matchImage` flow, baseline layout, run manifest and CI tooling as [`@frsource/cypress-plugin-visual-regression-diff`](../cypress-plugin-visual-regression-diff/README.md), plus an optional **remote browser in Docker** so that the pixels you approve locally are the pixels CI produces.
+Published as `@pixsame/playwright-visual-regression-diff`. Visual regression testing for [Playwright](https://playwright.dev) with the same `matchImage` flow, baseline layout, run manifest and CI tooling as [`@frsource/cypress-plugin-visual-regression-diff`](../cypress-plugin-visual-regression-diff/README.md), plus an optional remote browser in Docker so that the pixels you approve locally are the pixels CI produces.
 
-> Status: 0.x, published on the `next` dist-tag: options may still change. The API below is small on purpose and may still move before 1.0.
+> Status: 0.x, published on the `next` dist-tag. The API below is small on purpose and may still change before 1.0.
 
 ## Why another Playwright screenshot tool
 
 Playwright ships `toHaveScreenshot()`, and it is good. This package exists for teams that already use the Cypress plugin (or its GitHub App) and want one baseline format, one manifest and one review workflow across both runners:
 
-- **Same comparison.** `pixelmatch` with `includeAA: false`, the same padding for size mismatches, the same `<name>_#n.png` / `.actual.png` / `.diff.png` files, the same PNG marker. A baseline recorded by the Cypress plugin is a valid baseline here and vice versa. One default differs until the plugin's 5.0: the 4.x plugin compares with `includeAA: true`, so a diff that passes here can still fail there by a few anti-aliased pixels unless you set `diffConfig: { includeAA: false }` on the Cypress side too.
-- **Same run manifest.** Every comparison lands in a `visual-regression-manifest.playwright.w<n>.json` next to Playwright's test results, written through [`visual-regression-manifest`](https://www.npmjs.com/package/visual-regression-manifest), the runner-agnostic [standard](https://visual-regression.dev/manifest) the GitHub App and other consumers read. Only the `runner` block is Playwright-specific.
-- **Drift-free pixels without leaving your machine.** `remoteBrowser()` runs the browser inside the official Playwright image and keeps the test runner, your app and your editor native. Local and CI screenshots then come from the same browser build, fonts and rasteriser.
+- The comparison is the same: `pixelmatch` with `includeAA: false`, the same padding for size mismatches, the same `<name>_#n.png` / `.actual.png` / `.diff.png` files, the same PNG marker. So a baseline recorded by the Cypress plugin is a valid baseline here and vice versa. One default differs until the plugin's 5.0: the 4.x plugin compares with `includeAA: true`, so a diff that passes here can still fail there by a few anti-aliased pixels unless you set `diffConfig: { includeAA: false }` on the Cypress side too.
+- The run manifest is the same too. Every comparison lands in a `visual-regression-manifest.playwright.w<n>.json` next to Playwright's test results, written through [`visual-regression-manifest`](https://www.npmjs.com/package/visual-regression-manifest), the runner-agnostic [standard](https://visual-regression.dev/manifest) the GitHub App and other consumers read. Only the `runner` block is Playwright-specific.
+- `remoteBrowser()` runs the browser inside the official Playwright image and keeps the test runner, your app and your editor native, so local and CI screenshots come from the same browser build, fonts and rasteriser.
 
 ## Install
 
 ```bash
-npm i -D @pixsame/playwright
+npm i -D @pixsame/playwright-visual-regression-diff
 ```
 
-`@playwright/test` >= 1.40 is a peer dependency. Node.js >= 20.9. Pre-releases are published on the `next` dist-tag: `npm i -D @pixsame/playwright@next`.
+`@playwright/test` >= 1.40 is a peer dependency. Node.js >= 20.9. Pre-releases are published on the `next` dist-tag: `npm i -D @pixsame/playwright-visual-regression-diff@next`.
 
 ## Use
 
 ```ts
 // tests/home.spec.ts
-import { test, expect } from '@pixsame/playwright';
+import { test, expect } from '@pixsame/playwright-visual-regression-diff';
 
 test('home page', async ({ page, matchImage }) => {
   await page.goto('/');
@@ -37,7 +37,7 @@ test('home page', async ({ page, matchImage }) => {
 
 ```ts
 import { test as base } from '@playwright/test';
-import { visualRegressionFixtures } from '@pixsame/playwright';
+import { visualRegressionFixtures } from '@pixsame/playwright-visual-regression-diff';
 
 export const test = base.extend(visualRegressionFixtures);
 ```
@@ -101,7 +101,7 @@ Chrome hands text rasterisation to the OS, so a macOS screenshot never matches a
 ```ts
 // playwright.config.ts
 import { defineConfig } from '@playwright/test';
-import { remoteBrowser } from '@pixsame/playwright/remote';
+import { remoteBrowser } from '@pixsame/playwright-visual-regression-diff/remote';
 
 const remote = remoteBrowser({ keepAlive: true });
 
@@ -160,10 +160,10 @@ This package is the Playwright adapter from the renderer design that drives v5 o
 ## Development
 
 ```bash
-pnpm --filter @pixsame/playwright build
-pnpm --filter @pixsame/playwright test:integration     # unit tests, no browser needed
-pnpm --filter @pixsame/playwright test:smoke           # needs `npx playwright install chromium`
-pnpm --filter @pixsame/playwright test:smoke:remote    # needs Docker; pulls the Playwright image
+pnpm --filter @pixsame/playwright-visual-regression-diff build
+pnpm --filter @pixsame/playwright-visual-regression-diff test:integration     # unit tests, no browser needed
+pnpm --filter @pixsame/playwright-visual-regression-diff test:smoke           # needs `npx playwright install chromium`
+pnpm --filter @pixsame/playwright-visual-regression-diff test:smoke:remote    # needs Docker; pulls the Playwright image
 ```
 
 The smoke tests write their baselines to `e2e/__image_snapshots__` (gitignored): the first run creates them, the second compares.

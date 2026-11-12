@@ -12,7 +12,7 @@ const columns: { key: string; parts: Part[] }[] = [
     key: 'runners',
     parts: [
       { key: 'cypress', to: '/products/cypress-plugin', available: true },
-      { key: 'playwright', to: '/playwright' },
+      { key: 'playwright', to: '/playwright', available: true },
       { key: 'vitest', to: '/vitest' },
     ],
   },

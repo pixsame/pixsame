@@ -7,7 +7,7 @@ reviewed: false
 
 # 安装
 
-本页讲的是 Cypress 插件，也就是您现在就能安装的那部分。Playwright 插件和 GitHub App 还在开发中。
+本页讲的是 Cypress 插件。Playwright 请参阅 [Playwright 插件](/docs/integrations/playwright-reporter)页面。GitHub App 还在开发中。
 
 ## 添加依赖包
 

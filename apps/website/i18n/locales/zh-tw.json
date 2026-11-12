@@ -3,7 +3,7 @@
     "reviewed": false
   },
   "seo": {
-    "title": "pixsame — 為 Cypress 打造的視覺迴歸測試（Playwright 即將推出）",
+    "title": "pixsame：為 Cypress 與 Playwright 打造的視覺迴歸測試",
     "description": "兩個執行器共用一種開放的清單格式，固定版本的渲染器讓截圖逐位元組一致，鑑識式差異分析，並在 Pull Request 中完成基準審批。"
   },
   "nav": {
@@ -27,14 +27,14 @@
     "toDark": "切換至深色模式"
   },
   "hero": {
-    "eyebrow": "開源 · MIT · Cypress 現已可用，Playwright 即將推出",
+    "eyebrow": "開源 · MIT · Cypress 與 Playwright",
     "title": "始終與自身一致的視覺迴歸。",
     "tagline": "same same. 精確到像素。",
     "body": "兩個執行器共用一種開放的清單格式。固定版本的渲染器讓本機與 CI 截圖逐位元組一致。以鑑識式差異分析取代一團紅色色塊，基準審批直接在 Pull Request 中完成。",
     "copy": "複製",
     "copied": "已複製",
     "docs": "閱讀文件",
-    "soonNote": "現已可用：Cypress 外掛與清單格式。即將推出：固定渲染器、鑑識式差異分析與在 Pull Request 中核准。"
+    "soonNote": "現在就能安裝：Cypress 外掛、Playwright 外掛與清單格式。固定渲染器、鑑識式差異分析與在 Pull Request 中核准仍在開發中。"
   },
   "detect": {
     "demo": "AI 偵測流程示意",
@@ -159,8 +159,8 @@
   "product": {
     "crumb": "固定渲染器",
     "title": "視覺迴歸測試的一站式生態系。",
-    "body": "pixsame 是一組持續成長的開放工具，讓視覺迴歸測試值得信賴：共用的格式、渲染器，以及在 Pull Request 中完成審查。Cypress 外掛現已可用，其餘部分即將推出。",
-    "status": "Cypress 外掛：已提供 · 其他：即將推出",
+    "body": "pixsame 是一組持續成長的開放工具，讓視覺迴歸測試值得信賴：共用的格式、渲染器，以及在 Pull Request 中完成審查。Cypress 外掛、Playwright 外掛與清單現已可用。其餘部分仍在開發中，下方的地圖會標明哪些已可用、哪些尚未推出。",
+    "status": "Cypress 與 Playwright 外掛：已提供 · 其他：即將推出",
     "start": "安裝外掛",
     "stats": {
       "manifest": {
@@ -169,7 +169,7 @@
       },
       "runners": {
         "value": "3",
-        "label": "執行器：現有 Cypress，Playwright 即將支援"
+        "label": "執行器：現有 Cypress 與 Playwright，Vitest 即將支援"
       },
       "license": {
         "value": "MIT",
@@ -194,7 +194,7 @@
       },
       "playwright": {
         "name": "Playwright plugin",
-        "body": "同一套比對引擎與清單，適用於 Playwright 專案。基準保留在你的儲存庫中。"
+        "body": "同一套比對引擎與清單，適用於 Playwright 專案。基準保留在你的儲存庫中。現已可用。"
       },
       "manifest": {
         "name": "執行清單",

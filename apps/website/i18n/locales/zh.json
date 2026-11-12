@@ -3,7 +3,7 @@
     "reviewed": false
   },
   "seo": {
-    "title": "pixsame — 面向 Cypress 的视觉回归测试（Playwright 即将推出）",
+    "title": "pixsame：面向 Cypress 和 Playwright 的视觉回归测试",
     "description": "两个运行器共用一种开放的清单格式，固定版本的渲染器让截图逐字节一致，取证式差异分析，并在 Pull Request 中完成基线审批。"
   },
   "nav": {
@@ -27,14 +27,14 @@
     "toDark": "切换到深色模式"
   },
   "hero": {
-    "eyebrow": "开源 · MIT · Cypress 现已可用，Playwright 即将推出",
+    "eyebrow": "开源 · MIT · Cypress 和 Playwright",
     "title": "始终与自身一致的视觉回归。",
     "tagline": "same same. 精确到像素。",
     "body": "两个运行器共用一种开放的清单格式。固定版本的渲染器让本地与 CI 截图逐字节一致。用取证式差异分析取代一团红色色块，基线审批直接在 Pull Request 中完成。",
     "copy": "复制",
     "copied": "已复制",
     "docs": "阅读文档",
-    "soonNote": "现已可用：Cypress 插件和清单格式。即将推出：固定渲染器、取证式差异分析和在 Pull Request 中审批。"
+    "soonNote": "现已可用：Cypress 插件、Playwright 插件和清单格式。即将推出：固定渲染器、取证式差异分析和在 Pull Request 中审批。"
   },
   "detect": {
     "demo": "AI 检测流程示意",
@@ -159,8 +159,8 @@
   "product": {
     "crumb": "固定渲染器",
     "title": "面向视觉回归的统一生态。",
-    "body": "pixsame 是一组不断壮大的开源工具，让视觉回归测试值得信赖：共享的格式、渲染器，以及在 Pull Request 中完成审查。Cypress 插件现已可用，其余部分正在路上。",
-    "status": "Cypress 插件：已提供 · 其余：即将推出",
+    "body": "pixsame 是一组不断壮大的开源工具，让视觉回归测试值得信赖：共享的格式、渲染器，以及在 Pull Request 中完成审查。Cypress 插件、Playwright 插件和清单现已可用，其余部分正在路上。",
+    "status": "Cypress 和 Playwright 插件：已提供 · 其余：即将推出",
     "start": "安装插件",
     "stats": {
       "manifest": {
@@ -169,7 +169,7 @@
       },
       "runners": {
         "value": "3",
-        "label": "运行器：现有 Cypress，Playwright 即将支持"
+        "label": "运行器：现有 Cypress 和 Playwright，Vitest 即将支持"
       },
       "license": {
         "value": "MIT",
@@ -194,7 +194,7 @@
       },
       "playwright": {
         "name": "Playwright plugin",
-        "body": "相同的比较引擎和清单，用于 Playwright 项目。基线保留在你的仓库中。"
+        "body": "相同的比较引擎和清单，用于 Playwright 项目。基线保留在你的仓库中。现已可用。"
       },
       "manifest": {
         "name": "运行清单",

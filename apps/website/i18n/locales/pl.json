@@ -3,7 +3,7 @@
     "reviewed": true
   },
   "seo": {
-    "title": "pixsame — regresja wizualna dla Cypressa (wkrótce Playwright)",
+    "title": "pixsame: regresja wizualna dla Cypressa i Playwright",
     "description": "Jeden otwarty format manifestu dla każdego test frameworku, renderer produkujący zrzuty ekranu identyczne co do bajta, szczegółowa analiza różnic i akceptacja zmian w pull requeście."
   },
   "nav": {
@@ -27,14 +27,14 @@
     "toDark": "Przełącz na tryb ciemny"
   },
   "hero": {
-    "eyebrow": "Open source · MIT · Cypress dziś, Playwright wkrótce",
+    "eyebrow": "Open source · MIT · Cypress i Playwright",
     "title": "Regresja wizualna, w której wszystko się zgadza.",
     "tagline": "takie same. co do piksela.",
     "body": "Jeden otwarty format manifestu dla każdego test frameworku. Nasz renderer sprawia, że zrzuty lokalne i z CI są identyczne. Szczegółowa analiza różnic zamiast czerwonej plamy i akceptacja zmian w pull requeście.",
     "copy": "KOPIUJ",
     "copied": "SKOPIOWANO",
     "docs": "Czytaj dokumentację",
-    "soonNote": "Dostępne dziś: wtyczka do Cypressa i manifest. Wkrótce: renderer, analiza różnic i zatwierdzanie w pull requeście."
+    "soonNote": "Dostępne dziś: wtyczka do Cypressa, wtyczka do Playwright i manifest. Wkrótce: renderer, analiza różnic i zatwierdzanie w pull requeście."
   },
   "detect": {
     "demo": "Przykładowa ilustracja przebiegu detekcji AI",
@@ -159,8 +159,8 @@
   "product": {
     "crumb": "Przypięty renderer",
     "title": "Jeden ekosystem dla regresji wizualnej.",
-    "body": "pixsame to rosnący zestaw otwartych narzędzi, dzięki którym testy regresji wizualnej można traktować poważnie: wspólny format, renderer i przegląd w pull requeście. Wtyczka do Cypressa jest dostępna już dziś, reszta jest w drodze.",
-    "status": "Wtyczka do Cypressa: dostępna · wszystko inne: wkrótce",
+    "body": "pixsame to rosnący zestaw otwartych narzędzi, dzięki którym testy regresji wizualnej można traktować poważnie: wspólny format, renderer i przegląd w pull requeście. Wtyczka do Cypressa, wtyczka do Playwright i manifest są dostępne już dziś, reszta jest w drodze.",
+    "status": "Wtyczki do Cypressa i Playwright: dostępne · reszta: wkrótce",
     "start": "Zainstaluj wtyczkę",
     "stats": {
       "manifest": {
@@ -169,7 +169,7 @@
       },
       "runners": {
         "value": "3",
-        "label": "Runnery: dziś Cypress, wkrótce Playwright"
+        "label": "Runnery: dziś Cypress i Playwright, wkrótce Vitest"
       },
       "license": {
         "value": "MIT",
@@ -194,7 +194,7 @@
       },
       "playwright": {
         "name": "Playwright plugin",
-        "body": "Ten sam silnik porównań i manifest, dla projektów Playwright. Wzorce zostają w Twoim repozytorium."
+        "body": "Ten sam silnik porównań i manifest, dla projektów Playwright. Wzorce zostają w Twoim repozytorium. Dostępne już dziś."
       },
       "manifest": {
         "name": "Format manifestu przebiegu testów",

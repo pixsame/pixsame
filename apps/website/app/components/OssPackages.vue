@@ -3,7 +3,7 @@ const { t } = useI18n();
 const packages = [
   { key: 'cypress', to: '/products/cypress-plugin', available: true },
   { key: 'manifest', to: '/docs/reference/manifest', available: true },
-  { key: 'playwright', to: '/playwright', available: false },
+  { key: 'playwright', to: '/playwright', available: true },
   { key: 'vitest', to: '/vitest', available: false },
   { key: 'renderer', to: '/products', available: false },
   { key: 'githubApp', to: '/github-app', available: false },

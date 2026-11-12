@@ -1,3 +1,7 @@
 <template>
-  <ComingSoon page="playwright" product="playwright" />
+  <ComingSoon
+    page="playwright"
+    product="playwright"
+    docs="/docs/integrations/playwright-reporter"
+  />
 </template>

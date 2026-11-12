@@ -337,7 +337,7 @@ importers:
       '@pixsame/cypress-plugin-visual-regression-diff':
         specifier: workspace:*
         version: link:../cypress-plugin-visual-regression-diff
-      '@pixsame/playwright':
+      '@pixsame/playwright-visual-regression-diff':
         specifier: workspace:*
         version: link:../playwright-visual-regression-diff
       '@playwright/test':

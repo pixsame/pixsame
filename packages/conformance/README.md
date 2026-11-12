@@ -1,6 +1,6 @@
 # @pixsame/conformance
 
-Private suite that drives the **real** Cypress and Playwright adapters through
+Private suite that drives the real Cypress and Playwright adapters through
 the same scenarios and checks what ends up on disk and in the run manifest.
 
 It lives here, and not in the neutral repo, so it can test pixsame-specific
