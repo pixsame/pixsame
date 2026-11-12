@@ -13,14 +13,66 @@ import {
   getPluginOptions,
   initManifestRun,
   markManifestEntryApproved,
-  recordManifestEntry,
+  getManifestWriter,
   resetManifest,
   setManifestBrowser,
   toPosix,
   type ManifestConfig,
-  type ManifestRecordInput,
 } from './manifest.utils';
-import type { Manifest, ManifestEntryOptions } from './types';
+import type { ImageInfo } from './image.utils';
+import type {
+  Manifest,
+  ManifestEntry,
+  ManifestEntryOptions,
+  ManifestRenderer,
+  ManifestStatus,
+} from './types';
+
+/** What a comparison hands the run's manifest writer; the comparer records exactly this. */
+type ManifestRecordInput = {
+  imgNew: string;
+  imgOld: string;
+  specPath?: string;
+  testTitlePath?: string[];
+  currentRetryNumber?: number;
+  platform?: ManifestEntry['platform'];
+  viewport?: ManifestEntry['viewport'];
+  options?: ManifestEntryOptions;
+  renderer?: ManifestRenderer;
+  status: ManifestStatus;
+  imgDiff: number;
+  maxDiffThreshold: number;
+  baselineWritten: boolean;
+  imgNewSize?: ImageInfo;
+  imgOldSize?: ImageInfo;
+  message: string;
+};
+
+/** Records into the run's writer, the way the comparer does; `null` when the manifest is disabled. */
+const recordManifestEntry = (
+  config: ManifestConfig,
+  input: ManifestRecordInput,
+): ManifestEntry | null =>
+  getManifestPath(config)
+    ? getManifestWriter(config).record({
+        actualPath: input.imgNew,
+        baselinePath: input.imgOld,
+        testFile: input.specPath,
+        titlePath: input.testTitlePath,
+        retry: input.currentRetryNumber,
+        status: input.status,
+        diffRatio: input.imgDiff,
+        maxDiffRatio: input.maxDiffThreshold,
+        baselineWritten: input.baselineWritten,
+        actualSize: input.imgNewSize,
+        baselineSize: input.imgOldSize,
+        platform: input.platform,
+        viewport: input.viewport,
+        options: input.options,
+        renderer: input.renderer,
+        message: input.message,
+      })
+    : null;
 
 setGracefulCleanup();
 

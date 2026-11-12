@@ -10,6 +10,7 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - prettier@3.9.0
   - visual-regression-manifest@1.0.0-beta.2
+  - visual-regression-compare@1.0.0-beta.4
 overrides:
   "@rollup/pluginutils@4.2.1>picomatch": "4.0.7"
 patchedDependencies:

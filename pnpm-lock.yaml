@@ -349,6 +349,9 @@ importers:
       sharp:
         specifier: 0.35.5
         version: 0.35.5(@types/node@20.19.43)
+      visual-regression-compare:
+        specifier: 1.0.0-beta.4
+        version: 1.0.0-beta.4
       visual-regression-manifest:
         specifier: 1.0.0-beta.2
         version: 1.0.0-beta.2
@@ -9772,6 +9775,11 @@ packages:
 
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
+
+  visual-regression-compare@1.0.0-beta.4:
+    resolution: {integrity: sha512-znAPCsT5OuMBzg94f6RJnQBqg7Pid0xyx9c5W68wdbPJ+8pcmSkv5snUG5JZ4opkfufEqdXlYyQFQrU49u959Q==}
+    engines: {node: '>=20.9.0'}
+    hasBin: true
 
   visual-regression-manifest@1.0.0-beta.2:
     resolution: {integrity: sha512-BE5VtO35YP2omGghIg2Z2FocKxEA8IfNWdKytXEuqZ1SUKsKeRE6mz4VYCUPQDd9+QEdJGiMFhHNxjX3pSpaBw==}
@@ -22177,6 +22185,12 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
+
+  visual-regression-compare@1.0.0-beta.4:
+    dependencies:
+      pixelmatch: 7.2.0
+      pngjs: 7.0.0
+      visual-regression-manifest: 1.0.0-beta.2
 
   visual-regression-manifest@1.0.0-beta.2: {}
 
