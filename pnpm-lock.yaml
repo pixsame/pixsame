@@ -329,6 +329,45 @@ importers:
         specifier: ^5.0.0
         version: 5.2.5(debug@4.4.0(supports-color@8.1.1))(supports-color@8.1.1)(tslib@2.8.1)(webpack-cli@5.1.4)(webpack@5.99.9)
 
+  packages/conformance:
+    devDependencies:
+      '@frsource/prettier-config':
+        specifier: ^1.11.0
+        version: 1.48.2(prettier@3.9.8)
+      '@pixsame/cypress-plugin-visual-regression-diff':
+        specifier: workspace:*
+        version: link:../cypress-plugin-visual-regression-diff
+      '@pixsame/playwright':
+        specifier: workspace:*
+        version: link:../playwright-visual-regression-diff
+      '@playwright/test':
+        specifier: 1.63.0
+        version: 1.63.0
+      '@types/node':
+        specifier: 20.19.43
+        version: 20.19.43
+      cypress:
+        specifier: 16.1.0
+        version: 16.1.0
+      meta-png:
+        specifier: 1.0.6
+        version: 1.0.6
+      prettier:
+        specifier: 3.9.8
+        version: 3.9.8
+      sharp:
+        specifier: 0.35.5
+        version: 0.35.5(@types/node@20.19.43)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      visual-regression-manifest:
+        specifier: 1.0.0-beta.2
+        version: 1.0.0-beta.2
+      vitest:
+        specifier: 4.1.11
+        version: 4.1.11(@types/node@20.19.43)(@vitest/coverage-v8@4.1.11)(vite@8.3.5(@types/node@20.19.43)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.1))
+
   packages/cypress-plugin-visual-regression-diff:
     dependencies:
       '@frsource/base64':

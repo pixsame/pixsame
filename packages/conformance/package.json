@@ -1,0 +1,31 @@
+{
+  "name": "@pixsame/conformance",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Runs the same visual-regression scenarios through the real Cypress and Playwright adapters and checks what lands on disk and in the run manifest.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "format:ci": "prettier --check .",
+    "test:conformance": "vitest run",
+    "test:conformance:ci": "CI=true vitest run"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "devDependencies": {
+    "@frsource/prettier-config": "^1.11.0",
+    "@pixsame/cypress-plugin-visual-regression-diff": "workspace:*",
+    "@pixsame/playwright": "workspace:*",
+    "@playwright/test": "1.63.0",
+    "@types/node": "20.19.43",
+    "cypress": "16.1.0",
+    "meta-png": "1.0.6",
+    "prettier": "3.9.8",
+    "sharp": "0.35.5",
+    "typescript": "6.0.3",
+    "visual-regression-manifest": "1.0.0-beta.2",
+    "vitest": "4.1.11"
+  }
+}

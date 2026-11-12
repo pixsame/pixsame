@@ -22,6 +22,7 @@ jobs:
     timeout-minutes: 2
     outputs:
       plugin: ${{ steps.filter.outputs.plugin }}
+      conformance: ${{ steps.conformance.outputs.conformance }}
     steps:
       # On push the filter diffs commits locally; on pull_request it uses the API.
       - uses: actions/checkout@v7
@@ -36,6 +37,22 @@ jobs:
               - '!apps/**'
               - '!packages/ui-layer/**'
               - '!.github/workflows/website.yml'
+
+      # The conformance suite spawns real Cypress and Playwright runs (the most
+      # expensive job), so it only runs when one of the adapters, the suite or
+      # what installs them changes.
+      - uses: dorny/paths-filter@v4
+        id: conformance
+        with:
+          filters: |
+            conformance:
+              - 'packages/cypress-plugin-visual-regression-diff/**'
+              - 'packages/playwright-visual-regression-diff/**'
+              - 'packages/conformance/**'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - '.github/workflows/ci.yml'
+              - '.github/actions/setup/**'
 
   lint:
     name: lint
@@ -101,6 +118,29 @@ jobs:
         with:
           oidc: true
           files: ${{github.workspace}}/packages/*/coverage/lcov.info
+
+  conformance:
+    name: conformance
+    needs: [changes]
+    if: ${{ needs.changes.outputs.conformance == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+        with:
+          install-filter: ${{ env.PLUGIN_INSTALL_FILTER }}
+      - name: Build the adapters
+        run: pnpm --filter @pixsame/cypress-plugin-visual-regression-diff --filter @pixsame/playwright build
+      - name: Cache Playwright browsers 📦
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: v1-${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+      - name: Install Chromium for Playwright
+        run: pnpm --filter @pixsame/conformance exec playwright install --with-deps chromium
+      - name: Run the conformance suite
+        run: pnpm --filter @pixsame/conformance test:conformance:ci
 
   prepare-release:
     name: detect changes, bump package versions, generate changelog and commit it to main branch
