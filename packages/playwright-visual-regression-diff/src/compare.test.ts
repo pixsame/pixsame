@@ -107,6 +107,33 @@ describe('compareImages', () => {
     });
   });
 
+  it('says what changed, in the result, the message and the manifest entry', async () => {
+    const { input } = await setup();
+
+    const result = await compareImages(input);
+
+    expect(result.description).toBe(
+      'The screenshot is 125 px wider and 56 px taller than the baseline.',
+    );
+    expect(result.message.endsWith(result.description as string)).toBe(true);
+    expect(result.entry.extra?.pixsame?.analysis).toMatchObject({
+      version: 1,
+      label: 'size-change',
+      description: result.description,
+    });
+  });
+
+  it('says nothing with analysis: false', async () => {
+    const { input } = await setup({ analysis: false });
+
+    const result = await compareImages(input);
+
+    expect(result.status).toBe('failed');
+    expect(result.description).toBeUndefined();
+    expect(result.message).toMatch(/actual 250x181\)\.$/);
+    expect(result.entry.extra?.pixsame).toBeUndefined();
+  });
+
   it('passes with a high threshold and refreshes a baseline without the plugin marker', async () => {
     const { input, baselinePath, actualPath } = await setup(
       { imgNew: oldImg, maxDiffThreshold: 1 },

@@ -44,6 +44,17 @@ const check = (
     );
   }
   if (expected.message) expect(observed.output).toMatch(expected.message);
+  if (expected.analysis) {
+    const analysis = (
+      entry?.extra as
+        | { pixsame?: { analysis?: { label: string; description: string } } }
+        | undefined
+    )?.pixsame?.analysis;
+    expect(analysis?.label).toBe(expected.analysis.label);
+    expect(analysis?.description).toMatch(expected.analysis.description);
+    expect(entry?.message).toContain(analysis?.description);
+    expect(observed.output).toMatch(expected.analysis.description);
+  }
 
   for (const kind of ['baseline', 'actual', 'diff'] as const) {
     const want = expected.files?.[kind];

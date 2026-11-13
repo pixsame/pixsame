@@ -43,6 +43,12 @@ declare global {
       title?: string;
       matchAgainstPath?: string;
       showPassingImages?: boolean;
+      /**
+       * Describe what changed when a comparison finds differences (changed
+       * areas, a layout shift, rendering noise). On by default; it never
+       * changes whether the comparison passes.
+       */
+      analysis?: boolean;
       // IDEA: to be implemented if support for files NOT from filesystem needed
       // matchAgainst?: string | Buffer;
     };
@@ -136,6 +142,7 @@ export const getConfig = (options: Cypress.MatchImageOptions) => ({
   diffConfig: optionWithDefaults(options, 'diffConfig', {}),
   screenshotConfig: optionWithDefaults(options, 'screenshotConfig', {}),
   matchAgainstPath: options.matchAgainstPath || undefined,
+  analysis: isEnabled(optionWithDefaults(options, 'analysis', true)),
 });
 
 // `cy.task` payloads are JSON-serialised, so callbacks such as
@@ -183,6 +190,7 @@ Cypress.Commands.add(
       diffConfig,
       screenshotConfig,
       matchAgainstPath,
+      analysis,
     } = config;
 
     // the document of the tested page (AUT), undefined before the first visit
@@ -274,6 +282,7 @@ Cypress.Commands.add(
               updateImages,
               maxDiffThreshold,
               diffConfig,
+              analysis,
               // test context for the run manifest; the renderer is derived from
               // `platform.browser` (`cy.screenshot` renders in the browser Cypress drives)
               specPath: Cypress.spec.relative,
@@ -372,6 +381,7 @@ Cypress.Commands.add(
             imgOldBase64: res.imgOldBase64 ?? '',
             imgDiffBase64: res.imgDiffBase64 ?? '',
             message: res.message ?? '',
+            description: res.description,
             deferred,
           };
 

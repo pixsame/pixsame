@@ -1,3 +1,9 @@
+import {
+  analysisOf,
+  analysisPlugin,
+  captureComparison,
+  withAnalysis,
+} from '@pixsame/analysis';
 import fs from 'fs';
 import path from 'path';
 import type pixelmatchType from 'pixelmatch' with {
@@ -44,6 +50,8 @@ export type CompareInput = {
   updateImages: boolean | 'failures-only';
   maxDiffThreshold: number;
   diffConfig: PixelmatchOptions;
+  /** Describe what changed when the comparison finds differences. Default `true`. */
+  analysis?: boolean;
   /** Screenshot name recorded on the manifest entry; defaults to the baseline's file name. */
   name?: string;
   /** The test the screenshot belongs to, recorded on the manifest entry. */
@@ -59,6 +67,8 @@ export type CompareResult = {
   /** `true` when the test should fail. */
   error: boolean;
   message: string;
+  /** What changed, in one sentence; only for a comparison that found differences. */
+  description?: string;
   /** Share of differing pixels, 0..1; `0` when no comparison ran. */
   diffRatio: number;
   threshold: number;
@@ -93,7 +103,8 @@ const isUnstamped = ({ input }: CompareContext) =>
  * - pixelmatch with every one of its options (`alpha`, `aaColor`, `diffColor`,
  *   `diffMask`, ...), not only the `threshold` and `includeAA` of the built-in
  *   engine, and anti-aliased pixels not counted unless asked for; registered
- *   under the built-in's name, so it takes its place;
+ *   under the built-in's name, so it takes its place; the compared images
+ *   are handed to `@pixsame/analysis`, which says what changed;
  * - the `.diff.png` carries the package marker, like the screenshot does;
  * - a passed comparison whose baseline lacks the marker refreshes the baseline,
  *   so the file is rewritten once instead of by whoever runs the test next.
@@ -133,6 +144,12 @@ const matchImagePlugin = (pixelmatch: typeof pixelmatchType): Plugin => ({
           width,
           height,
           { includeAA: false, ...options },
+        );
+        captureComparison(
+          baseline,
+          actual,
+          { width, height, data: diff },
+          options as PixelmatchOptions,
         );
         return {
           diffPixels,
@@ -176,7 +193,7 @@ export const createComparison = async (
         }),
     },
     messages,
-    plugins: [matchImagePlugin(pixelmatch)],
+    plugins: [matchImagePlugin(pixelmatch), analysisPlugin()],
   });
 };
 
@@ -192,34 +209,38 @@ export const compareImages = async (
   comparer: Comparer,
 ): Promise<CompareResult> => {
   const diffPath = diffPathFor(cfg.actualPath);
-  const { entry, images } = await comparer.compare(
-    {
-      name: cfg.name ?? path.basename(cfg.baselinePath, '.png'),
-      // stamped once, so every file derived from it carries the package marker
-      actual: addPNGMetadata(cfg.imgNew),
-      files: {
-        baseline: cfg.baselinePath,
-        actual: cfg.actualPath,
-        diff: diffPath,
+  const compare = () =>
+    comparer.compare(
+      {
+        name: cfg.name ?? path.basename(cfg.baselinePath, '.png'),
+        // stamped once, so every file derived from it carries the package marker
+        actual: addPNGMetadata(cfg.imgNew),
+        files: {
+          baseline: cfg.baselinePath,
+          actual: cfg.actualPath,
+          diff: diffPath,
+        },
+        test: cfg.test,
+        platform: cfg.platform,
+        viewport: cfg.viewport,
+        entry: cfg.entry,
+        options: {
+          limits: { maxDiffRatio: cfg.maxDiffThreshold },
+          engineOptions: { ...cfg.diffConfig },
+          update:
+            cfg.updateImages === true
+              ? 'all'
+              : cfg.updateImages === 'failures-only'
+                ? 'failures-only'
+                : 'none',
+          onMissingBaseline: cfg.createMissingImages ? 'create' : 'fail',
+        },
       },
-      test: cfg.test,
-      platform: cfg.platform,
-      viewport: cfg.viewport,
-      entry: cfg.entry,
-      options: {
-        limits: { maxDiffRatio: cfg.maxDiffThreshold },
-        engineOptions: { ...cfg.diffConfig },
-        update:
-          cfg.updateImages === true
-            ? 'all'
-            : cfg.updateImages === 'failures-only'
-              ? 'failures-only'
-              : 'none',
-        onMissingBaseline: cfg.createMissingImages ? 'create' : 'fail',
-      },
-    },
-    { include: ['baseline', 'actual', 'diff'] },
-  );
+      { include: ['baseline', 'actual', 'diff'] },
+    );
+  const { entry, images } = await (cfg.analysis === false
+    ? compare()
+    : withAnalysis(compare));
   const status = entry.status as CompareStatus;
   const buffer = (bytes?: Uint8Array) =>
     bytes ? Buffer.from(bytes) : undefined;
@@ -227,6 +248,7 @@ export const compareImages = async (
     status,
     error: status === 'failed' || status === 'missing-baseline',
     message: entry.message ?? '',
+    description: analysisOf(entry)?.description,
     diffRatio: entry.comparison.diffRatio,
     threshold: cfg.maxDiffThreshold,
     baselineWritten: entry.baselineWritten,

@@ -48,6 +48,7 @@ jobs:
             conformance:
               - 'packages/cypress-plugin-visual-regression-diff/**'
               - 'packages/playwright-visual-regression-diff/**'
+              - 'packages/analysis/**'
               - 'packages/conformance/**'
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
@@ -81,7 +82,8 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           install-filter: ${{ env.PLUGIN_INSTALL_FILTER }}
-      - run: pnpm --filter cypress-plugin-visual-regression-diff -r build
+      # with its workspace dependencies (@pixsame/analysis)
+      - run: pnpm --filter 'cypress-plugin-visual-regression-diff...' -r build
       - name: Test e2e
         run: pnpm test:e2e:ci
       - name: Test component-testing
@@ -110,6 +112,8 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           install-filter: ${{ env.PLUGIN_INSTALL_FILTER }}
+      - name: Build the package the adapters import
+        run: pnpm --filter @pixsame/analysis build
       - name: Test integration (with coverage)
         run: pnpm test:integration:ci
       - name: Upload coverage to Qlty
@@ -131,7 +135,7 @@ jobs:
         with:
           install-filter: ${{ env.PLUGIN_INSTALL_FILTER }}
       - name: Build the adapters
-        run: pnpm --filter @pixsame/cypress-plugin-visual-regression-diff --filter @pixsame/playwright-visual-regression-diff build
+        run: pnpm --filter '@pixsame/cypress-plugin-visual-regression-diff...' --filter '@pixsame/playwright-visual-regression-diff...' build
       - name: Cache Playwright browsers 📦
         uses: actions/cache@v6
         with:

@@ -47,6 +47,8 @@ export type RunExpectation = {
   /** `extra.visualRegressionCompare.reason` of that entry. */
   reason?: string | string[];
   message?: RegExp;
+  /** `extra.pixsame.analysis` of that entry: its label, and the sentence that must also end the failure message. */
+  analysis?: { label: string; description: RegExp };
   files?: { baseline?: boolean; actual?: boolean; diff?: boolean };
   /** Whether the baseline carries the `FRSOURCE_CPVRD_V` marker afterwards. */
   baselineMarked?: boolean;

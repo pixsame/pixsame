@@ -6,6 +6,8 @@ export type CompareImagesTaskReturn = null | {
   imgDiffBase64?: string;
   imgOldBase64?: string;
   maxDiffThreshold?: number;
+  /** What changed, in one sentence; only for a comparison that found differences. */
+  description?: string;
 };
 
 export type PendingDiffRecord = {
@@ -16,6 +18,7 @@ export type PendingDiffRecord = {
   imgOldBase64: string;
   imgDiffBase64: string;
   message: string;
+  description?: string;
   passed?: boolean;
   deferred?: boolean;
 };

@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: f5234ae1e249d64a
+source: 3f4ca9c7906dc926
 ---
 
 ## Erste Schritte
@@ -250,6 +250,7 @@ Hinweise für Consumer:
 - Alle Pfade sind relativ zu `projectRoot` und verwenden `/` als Trenner; sie können aus dem Projekt hinausführen (`../…`), wenn `imagesPath` absolut ist. `projectRoot` ist das Cypress-Projekt, nicht zwingend der Repository-Stamm: `ci.workspace` ist das Checkout-Verzeichnis, `relative(ci.workspace, projectRoot)` ergibt also das Pfadpräfix innerhalb des Repositorys.
 - `failed` und `missing-baseline` sind die Einträge, die einen Menschen brauchen: Wer `images.actual.path` über `images.baseline.path` kopiert, gibt sie frei.
 - `baselineWritten` gibt an, ob sich der Arbeitsbaum für diesen Screenshot geändert hat, unabhängig vom `status`.
+- Ein Eintrag, dessen Vergleich Unterschiede gefunden hat, enthält `extra.pixsame.analysis` (sofern `analysis` nicht ausgeschaltet ist): ein `label` (`content-change`, `moved`, `noise-like` oder `size-change`), eine `description` in einem Satz, die geänderten `regions` mit ihren Rahmen, einen erkannten `shift` und einen `bundleKey`, der für Einträge mit der gleichen Änderung gleich ist. `bundle()` aus `@pixsame/analysis` gruppiert Einträge danach.
 - Jeder Eintrag trägt sein eigenes `platform` und `viewport`, sodass sich Einträge aus einer Matrix von Maschinen auch nach dem Zusammenführen mehrerer Manifeste auseinanderhalten lassen. `options` an einem Eintrag ist die exakte `matchImage`-Eingabe (`imagesPath` behält seine Platzhalter unaufgelöst); `comparison` ist das Ergebnis.
 - `platform` ist, wo der Test gelaufen ist, `renderer` ist, woher die Pixel stammen. Derzeit wird jeder Screenshot von dem Browser aufgenommen, den Cypress steuert, daher ist `renderer.backend` `native` und `renderer.browser` wiederholt `platform.browser.name`. Das Feld existiert, damit sich ein anderer Renderer als der lokale Browser (ein gepinntes Docker-Image, ein gehosteter Renderer) über `rendererVersion` und `imageDigest` identifizieren kann und damit ein Lauf, der auf den lokalen Browser zurückfallen musste, mit `renderer.fallback: true` markiert werden kann. Behandeln Sie Einträge mit unterschiedlichen Renderern als unterschiedliche Baselines.
 - `hashes` enthält den sha256 jeder Datei aus `images`, die auf der Festplatte existiert. Nutzen Sie ihn, um das erneute Hochladen unveränderter Baselines zu überspringen, um zu prüfen, ob ein Artefakt zum Manifest passt, oder um zwei Einträge zu erkennen, die identische Pixel erzeugt haben.
@@ -314,6 +315,11 @@ cy.matchImage({
   // maximaler Schwellenwert, ab dem der Test fehlschlagen soll
   // Standard: 0.01
   maxDiffThreshold: 0.1,
+  // beschreibt, was sich geändert hat, wenn ein Vergleich Unterschiede findet, z. B. "Everything below y=340 moved down by 12 px."
+  // der Satz steht am Ende der Fehlermeldung, erscheint im Review-Karussell und wird im Run-Manifest festgehalten
+  // er ändert nie, ob der Vergleich besteht
+  // Standard: true
+  analysis: false,
   // erzwingt den Skalierungsfaktor "1"
   // hilft gegen 2x skalierte Screenshots auf hochauflösenden Displays wie Mac Retina
   // Standard: true

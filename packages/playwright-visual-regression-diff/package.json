@@ -6,7 +6,7 @@
   "homepage": "https://pixsame.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pixsame/cypress-plugin-visual-regression-diff.git",
+    "url": "https://github.com/pixsame/pixsame.git",
     "directory": "packages/playwright-visual-regression-diff"
   },
   "license": "MIT",
@@ -41,6 +41,7 @@
     "@playwright/test": ">=1.40.0"
   },
   "dependencies": {
+    "@pixsame/analysis": "workspace:*",
     "meta-png": "1.0.6",
     "pixelmatch": "7.2.0",
     "sanitize-filename": "1.6.4",

@@ -56,6 +56,12 @@ export type MatchImageOptions = {
   screenshotConfig?: PageScreenshotOptions & LocatorScreenshotOptions;
   /** Disables CSS animations and hides the caret for the screenshot. @default true */
   deterministicRendering?: boolean;
+  /**
+   * Describe what changed when a comparison finds differences (changed areas,
+   * a layout shift, rendering noise). It never changes whether the comparison
+   * passes. @default true
+   */
+  analysis?: boolean;
 };
 
 export type VisualRegressionOptions = MatchImageOptions;
@@ -119,6 +125,7 @@ const withDefaults = (
     matchAgainstPath: merged.matchAgainstPath,
     screenshotConfig: merged.screenshotConfig ?? {},
     deterministicRendering: merged.deterministicRendering ?? true,
+    analysis: merged.analysis ?? true,
   };
 };
 
@@ -229,6 +236,7 @@ export const visualRegressionFixtures: Fixtures<
           updateImages: cfg.updateImages,
           maxDiffThreshold: cfg.maxDiffThreshold,
           diffConfig: cfg.diffConfig,
+          analysis: cfg.analysis,
           name,
           test: {
             filePath: testInfo.file,

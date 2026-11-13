@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: f5234ae1e249d64a
+source: 3f4ca9c7906dc926
 ---
 
 ## 快速開始
@@ -250,6 +250,7 @@ npx cypress run --env "pluginVisualRegressionCleanupUnusedImages=true"
 - 所有路徑都相對於 `projectRoot`，並使用 `/` 作為分隔符號；當 `imagesPath` 是絕對路徑時，路徑可能指向專案之外（`../…`）。`projectRoot` 是 Cypress 專案，不一定是 repository 的根目錄：`ci.workspace` 是 checkout 目錄，所以 `relative(ci.workspace, projectRoot)` 就是 repository 內的路徑前綴。
 - `failed` 與 `missing-baseline` 是需要人工處理的條目：把 `images.actual.path` 複製到 `images.baseline.path` 即可核准它們。
 - `baselineWritten` 表示該張截圖的工作樹是否有變更，與 `status` 無關。
+- 比對發現差異的項目帶有 `extra.pixsame.analysis`（除非關閉了 `analysis`）：一個 `label`（`content-change`、`moved`、`noise-like` 或 `size-change`）、一句話的 `description`、發生變化的 `regions` 及其邊框、偵測到的 `shift`，以及一個 `bundleKey`，以相同方式變化的項目其值相同。`@pixsame/analysis` 中的 `bundle()` 會依它將項目分組。
 - 每個條目都帶有自己的 `platform` 與 `viewport`，因此把多份清單串接後，仍能分辨來自不同機器矩陣的條目。條目上的 `options` 是 `matchImage` 確切的輸入（`imagesPath` 保留未展開的 token）；`comparison` 則是結果。
 - `platform` 是測試執行的位置，`renderer` 是像素的來源。目前每張截圖都是由 Cypress 驅動的瀏覽器拍攝的，所以 `renderer.backend` 是 `native`，而 `renderer.browser` 會重複 `platform.browser.name`。這個欄位的存在，是為了讓本機瀏覽器以外的算繪器（固定版本的 Docker 映像、託管的算繪器）能以 `rendererVersion` 與 `imageDigest` 表明身分，也讓不得不退回本機瀏覽器的執行能以 `renderer.fallback: true` 標記。請把算繪器不同的條目視為不同的基準影像。
 - `hashes` 保存 `images` 中每個實際存在於磁碟上的檔案的 sha256。可以用來略過重新上傳未變更的基準影像、檢查 artifact 是否與清單相符，或找出產生完全相同像素的兩個條目。
@@ -314,6 +315,11 @@ cy.matchImage({
   // 測試失敗的最大門檻值，差異超過此值即失敗
   // 預設值：0.01
   maxDiffThreshold: 0.1,
+  // 當比對發現差異時，描述發生了什麼變化，例如 "Everything below y=340 moved down by 12 px."
+  // 這句話會附在失敗訊息結尾，顯示在審查輪播中，並記錄到執行清單裡
+  // 它不會改變比對是否通過
+  // 預設值：true
+  analysis: false,
   // 強制將縮放比例設為 "1"
   // 可解決在 Mac Retina 等高解析度螢幕上截圖被放大 2 倍的問題
   // 預設值：true

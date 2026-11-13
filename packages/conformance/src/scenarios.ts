@@ -50,6 +50,10 @@ export const scenarios: Scenario[] = [
           status: 'failed',
           reason: 'above-limit',
           message: /pixels \(.*%\) differ; the limit is/,
+          analysis: {
+            label: 'content-change',
+            description: /One area changed: \d+x\d+ px at x=\d+, y=\d+\./,
+          },
           files: { baseline: true, actual: true, diff: true },
           baselineUnchanged: true,
         },
@@ -67,6 +71,10 @@ export const scenarios: Scenario[] = [
           status: 'failed',
           reason: 'above-limit',
           message: /padded to the same size/,
+          analysis: {
+            label: 'size-change',
+            description: /The screenshot is \d+ px taller than the baseline\./,
+          },
           files: { baseline: true, actual: true, diff: true },
         },
       },
