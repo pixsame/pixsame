@@ -1,7 +1,7 @@
 {
   "name": "@pixsame/analysis",
   "description": "Says what changed in a failed screenshot comparison: changed areas, layout shifts and rendering noise, in plain words, with a key that groups the same change across screenshots. Runner-agnostic, no dependencies.",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "Jakub Freisler <jakub.freisler@frsource.org>",
   "homepage": "https://pixsame.com",
   "repository": {
