@@ -1,5 +1,38 @@
 # Changelog
 
+## [5.0.0-beta.1](https://github.com/pixsame/pixsame/compare/@pixsame/cypress-plugin-visual-regression-diff-v1.0.0...@pixsame/cypress-plugin-visual-regression-diff-v5.0.0-beta.1) (2026-11-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* Node.js 20.9 or newer is now required (sharp 0.35 already needed it, the engines field was stale). PNG files written by the plugin are now encoded by sharp/libvips, so their bytes differ from 4.x output while pixels are identical; existing baselines keep working. When compared images differ in size, the padding now uniformly covers the whole added area. pngjs is no longer a dependency.
+
+### Features
+
+* compare through visual-regression-compare ([#469](https://github.com/pixsame/pixsame/issues/469)) ([bc8c03e](https://github.com/pixsame/pixsame/commit/bc8c03e334ebe4c190cfdae095e8004f4308820c))
+* opt-in deterministicRendering browser-launch preset ([#428](https://github.com/pixsame/pixsame/issues/428)) ([560b7a1](https://github.com/pixsame/pixsame/commit/560b7a1c7745dc6f2b8db7aae4f682b6a3be9804))
+* per-platform baselines via {platform}, {os} and {browser} path tokens ([#430](https://github.com/pixsame/pixsame/issues/430)) ([65c13fc](https://github.com/pixsame/pixsame/commit/65c13fc4728261bbb357e5f5cf7b46f49fd94c91))
+* say what changed when a screenshot comparison fails ([#475](https://github.com/pixsame/pixsame/issues/475)) ([15c934b](https://github.com/pixsame/pixsame/commit/15c934ba22f0818b6aa07ec9669bd69e14029ba2))
+* sharp for PNG codec, Batch Review Mode by default ([#413](https://github.com/pixsame/pixsame/issues/413)) ([0d3f1fc](https://github.com/pixsame/pixsame/commit/0d3f1fc38c2e8ae8669d244579f2eff8c31a7a49))
+* **website:** static pixsame.com site (Nuxt 4, i18n, light/dark) ([#442](https://github.com/pixsame/pixsame/issues/442)) ([30a7c31](https://github.com/pixsame/pixsame/commit/30a7c315d579612a68fe7f54cb3f91c399884a62))
+* write a run manifest for CI consumers ([#429](https://github.com/pixsame/pixsame/issues/429)) ([b33ad3b](https://github.com/pixsame/pixsame/commit/b33ad3bd132ef0281170d5f2ab5118e06a4abb7c))
+
+
+### Bug Fixes
+
+* **deps:** update all minor dependency bump ([#461](https://github.com/pixsame/pixsame/issues/461)) ([be61544](https://github.com/pixsame/pixsame/commit/be6154495996b0889d85d4901c13b6d70ddc2c9d))
+* **deps:** update all non-major dependency bump ([#460](https://github.com/pixsame/pixsame/issues/460)) ([36e7b11](https://github.com/pixsame/pixsame/commit/36e7b11c64d7259b994b50ff74cf158390ea7556))
+* **deps:** update all non-major dependency bump ([#466](https://github.com/pixsame/pixsame/issues/466)) ([81fc447](https://github.com/pixsame/pixsame/commit/81fc447d796a6951bce9454cf97e4b8f9a3784c9))
+* **deps:** update dependency glob to v14 [security] ([#462](https://github.com/pixsame/pixsame/issues/462)) ([ee108ad](https://github.com/pixsame/pixsame/commit/ee108add219ba1d593472bb41daad3331b90da03))
+* **deps:** update dependency sharp to v0.35.5 [security] ([#456](https://github.com/pixsame/pixsame/issues/456)) ([4593bf4](https://github.com/pixsame/pixsame/commit/4593bf43f1d3aad5d3fa5ab3d5a41a3603236691))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @pixsame/analysis bumped to 0.1.0
+
 ## 1.0.0 (2026-10-07)
 
 No changes. This release is identical to the last version (`4.3.0`) of `@frsource/cypress-plugin-visual-regression-diff`.
