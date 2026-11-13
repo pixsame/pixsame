@@ -305,6 +305,7 @@ Notes for consumers:
 - All paths are relative to `projectRoot` and use `/` separators; they may point outside the project (`../…`) when `imagesPath` is absolute. `projectRoot` is the Cypress project, not necessarily the repository root: `ci.workspace` is the checkout directory, so `relative(ci.workspace, projectRoot)` gives the path prefix inside the repository.
 - `failed` and `missing-baseline` are the entries that need a human: copying `images.actual.path` over `images.baseline.path` approves them.
 - `baselineWritten` tells whether the working tree changed for that screenshot, regardless of `status`.
+- An entry whose comparison found differences carries `extra.pixsame.analysis` (unless `analysis` is off): a `label` (`content-change`, `moved`, `noise-like` or `size-change`), a one-sentence `description`, the changed `regions` with their boxes, a detected `shift`, and a `bundleKey` that is equal for entries that changed in the same way. `bundle()` from `@pixsame/analysis` groups entries by it.
 - Every entry carries its own `platform` and `viewport`, so entries from a matrix of machines can be told apart after concatenating several manifests. `options` on an entry is the exact `matchImage` input (`imagesPath` keeps its tokens unexpanded); `comparison` is the result.
 - `platform` is where the test ran, `renderer` is where the pixels came from. Today every screenshot is taken by the browser Cypress drives, so `renderer.backend` is `native` and `renderer.browser` repeats `platform.browser.name`. The field exists so that a renderer other than the local browser (a pinned Docker image, a hosted renderer) can identify itself with `rendererVersion` and `imageDigest`, and so that a run that had to fall back to the local browser can be flagged with `renderer.fallback: true`. Treat entries with different renderers as different baselines.
 - `hashes` holds the sha256 of each file in `images` that exists on disk. Use it to skip re-uploading unchanged baselines, to check that an artifact matches the manifest, or to spot two entries that produced identical pixels.
@@ -369,6 +370,11 @@ cy.matchImage({
   // maximum threshold above which the test should fail
   // default: 0.01
   maxDiffThreshold: 0.1,
+  // describe what changed when a comparison finds differences, e.g. "Everything below y=340 moved down by 12 px."
+  // the sentence ends the failure message, shows in the review carousel and is recorded in the run manifest
+  // it never changes whether the comparison passes
+  // default: true
+  analysis: false,
   // forces scale factor to be set as value "1"
   // helps with screenshots being scaled 2x on high-density screens like Mac Retina
   // default: true

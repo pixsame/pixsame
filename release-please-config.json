@@ -16,6 +16,11 @@
       "path": "packages/playwright-visual-regression-diff",
       "component": "@pixsame/playwright-visual-regression-diff",
       "release-as": "0.1.0"
+    },
+    "packages/analysis": {
+      "path": "packages/analysis",
+      "component": "@pixsame/analysis",
+      "release-as": "0.1.0"
     }
   }
 }

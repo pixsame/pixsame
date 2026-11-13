@@ -6,6 +6,7 @@ import { moveFile } from 'move-file';
 import path from 'path';
 import { FILE_SUFFIX, TASK, type PathVariables } from './constants';
 import { getPluginConfig } from './version.utils';
+import { analysisOf, withAnalysis } from '@pixsame/analysis';
 import { getComparer } from './compare.utils';
 import { cleanupUnused, scaleImage, addPNGMetadata } from './image.utils';
 import {
@@ -37,6 +38,8 @@ export type CompareImagesCfg = {
   updateImages: boolean | 'failures-only';
   maxDiffThreshold: number;
   diffConfig: PixelmatchOptions;
+  /** Describe what changed when the comparison finds differences. Default `true`. */
+  analysis?: boolean;
   // test context, only used for the run manifest
   specPath?: string;
   testTitlePath?: string[];
@@ -124,37 +127,43 @@ export const compareImagesTask = async (
     getManifestWriter(cypressConfig),
     cypressConfig,
   );
-  const { entry, images } = await comparer.compare(
-    {
-      name: path.basename(cfg.imgNew).replace(`${FILE_SUFFIX.actual}.png`, ''),
-      actual: stampedImgNew,
-      files: {
-        baseline: cfg.imgOld,
-        actual: cfg.imgNew,
-        diff: diffPathFor(cfg.imgNew) ?? undefined,
+  const compare = () =>
+    comparer.compare(
+      {
+        name: path
+          .basename(cfg.imgNew)
+          .replace(`${FILE_SUFFIX.actual}.png`, ''),
+        actual: stampedImgNew,
+        files: {
+          baseline: cfg.imgOld,
+          actual: cfg.imgNew,
+          diff: diffPathFor(cfg.imgNew) ?? undefined,
+        },
+        test: {
+          filePath: cfg.specPath ?? '',
+          titlePath: cfg.testTitlePath ?? [],
+          retry: cfg.currentRetryNumber ?? 0,
+        },
+        platform: cfg.platform,
+        viewport: cfg.viewport,
+        entry: { options: cfg.options, renderer: cfg.renderer },
+        options: {
+          limits: { maxDiffRatio: cfg.maxDiffThreshold },
+          engineOptions: { ...cfg.diffConfig },
+          update:
+            cfg.updateImages === true
+              ? 'all'
+              : cfg.updateImages === 'failures-only'
+                ? 'failures-only'
+                : 'none',
+          onMissingBaseline: cfg.createMissingImages ? 'create' : 'fail',
+        },
       },
-      test: {
-        filePath: cfg.specPath ?? '',
-        titlePath: cfg.testTitlePath ?? [],
-        retry: cfg.currentRetryNumber ?? 0,
-      },
-      platform: cfg.platform,
-      viewport: cfg.viewport,
-      entry: { options: cfg.options, renderer: cfg.renderer },
-      options: {
-        limits: { maxDiffRatio: cfg.maxDiffThreshold },
-        engineOptions: { ...cfg.diffConfig },
-        update:
-          cfg.updateImages === true
-            ? 'all'
-            : cfg.updateImages === 'failures-only'
-              ? 'failures-only'
-              : 'none',
-        onMissingBaseline: cfg.createMissingImages ? 'create' : 'fail',
-      },
-    },
-    { include: ['baseline', 'actual', 'diff'] },
-  );
+      { include: ['baseline', 'actual', 'diff'] },
+    );
+  const { entry, images } = await (cfg.analysis === false
+    ? compare()
+    : withAnalysis(compare));
 
   // the images of a comparison that ran; a created or replaced baseline has none to show
   const base64 = (bytes?: Uint8Array) =>
@@ -167,6 +176,7 @@ export const compareImagesTask = async (
     imgDiffBase64: base64(images.diff),
     imgOldBase64: base64(images.baseline),
     maxDiffThreshold: cfg.maxDiffThreshold,
+    description: analysisOf(entry)?.description,
   };
 };
 

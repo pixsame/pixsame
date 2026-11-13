@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { analysisPlugin, captureComparison } from '@pixsame/analysis';
 import type pixelmatchType from 'pixelmatch';
 import type {
   CompareContext,
@@ -28,7 +29,8 @@ const isUnstamped = ({ input }: CompareContext) =>
  * - pixelmatch with every one of its options (`alpha`, `aaColor`, `diffColor`,
  *   `diffMask`, ...), not only the `threshold` and `includeAA` of the built-in
  *   engine, and anti-aliased pixels counted unless the options say otherwise;
- *   registered under the built-in's name, so it takes its place;
+ *   registered under the built-in's name, so it takes its place; the compared
+ *   images are handed to `@pixsame/analysis`, which says what changed;
  * - the `.diff.png` carries the plugin marker, like the screenshot does;
  * - a passed comparison whose baseline lacks the marker refreshes the baseline,
  *   so the file is rewritten once instead of by whoever runs the test next.
@@ -76,6 +78,12 @@ const matchImagePlugin = (
           // pixelmatch's own default (includeAA: false): anti-aliased edge pixels are not counted
           { ...(options as PixelmatchOptions) },
         );
+        captureComparison(
+          baseline,
+          actual,
+          { width, height, data: diff },
+          options as PixelmatchOptions,
+        );
         return {
           diffPixels,
           diffRatio: width * height === 0 ? 0 : diffPixels / (width * height),
@@ -113,7 +121,7 @@ export const getComparer = (
           onSizeMismatch: 'pad',
           manifest: { writer },
           messages,
-          plugins: [matchImagePlugin(pixelmatch, config)],
+          plugins: [matchImagePlugin(pixelmatch, config), analysisPlugin()],
         }),
       ),
     };

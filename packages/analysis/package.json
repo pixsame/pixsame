@@ -1,0 +1,61 @@
+{
+  "name": "@pixsame/analysis",
+  "description": "Says what changed in a failed screenshot comparison: changed areas, layout shifts and rendering noise, in plain words, with a key that groups the same change across screenshots. Runner-agnostic, no dependencies.",
+  "version": "0.0.0",
+  "author": "Jakub Freisler <jakub.freisler@frsource.org>",
+  "homepage": "https://pixsame.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pixsame/pixsame.git",
+    "directory": "packages/analysis"
+  },
+  "license": "MIT",
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "del-cli dist && tsc -p tsconfig.build.json",
+    "format": "prettier --write .",
+    "format:ci": "prettier --check .",
+    "test:integration": "vitest run",
+    "test:integration:watch": "vitest",
+    "test:integration:coverage": "vitest run --coverage",
+    "test:integration:ci": "CI=true vitest run --coverage"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "devDependencies": {
+    "@frsource/prettier-config": "^1.11.0",
+    "@types/node": "20.19.43",
+    "@vitest/coverage-v8": "4.1.11",
+    "del-cli": "7.0.0",
+    "prettier": "3.9.8",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
+  },
+  "keywords": [
+    "visual regression testing",
+    "visual diff",
+    "image diff",
+    "diff regions",
+    "layout shift",
+    "screenshot testing"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ]
+}

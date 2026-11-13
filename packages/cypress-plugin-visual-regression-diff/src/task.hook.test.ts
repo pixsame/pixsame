@@ -479,6 +479,23 @@ describe('compareImagesTask', () => {
           });
         });
 
+        it('says what changed, and nothing with analysis: false', async () => {
+          const described = await compareImagesTask(
+            { testingType: 'e2e' },
+            await generateConfig({ updateImages: false }),
+          );
+          expect(described?.description).toBe(
+            'The screenshot is 125 px wider and 56 px taller than the baseline.',
+          );
+
+          const plain = await compareImagesTask(
+            { testingType: 'e2e' },
+            await generateConfig({ updateImages: false, analysis: false }),
+          );
+          expect(plain?.description).toBeUndefined();
+          expect(plain?.message).toMatch(/actual 250x181\)\.$/);
+        });
+
         it('resolves with an error message and images padded to the same size', async () => {
           const cfg = await generateConfig({ updateImages: false });
 
@@ -489,7 +506,7 @@ describe('compareImagesTask', () => {
             // lower than with includeAA: true (0.7104…): anti-aliased edges are skipped
             imgDiff: expect.closeTo(0.6858121546961325, 10),
             message:
-              '31033 pixels (68.6%) differ; the limit is 50%. Both images were padded to the same size (baseline 125x125, actual 250x181).',
+              '31033 pixels (68.6%) differ; the limit is 50%. Both images were padded to the same size (baseline 125x125, actual 250x181). The screenshot is 125 px wider and 56 px taller than the baseline.',
             maxDiffThreshold: 0.5,
           });
           const paddedSize = { width: 250, height: 181 };
@@ -922,6 +939,16 @@ describe('run manifest', () => {
           visualRegressionCompare: expect.objectContaining({
             engine: 'pixelmatch',
             reason: expect.objectContaining({ code: expected.reason }),
+          }),
+          // what changed, for a comparison that found differences
+          ...(expected.diffRatio && {
+            pixsame: {
+              analysis: expect.objectContaining({
+                version: 1,
+                label: 'size-change',
+                description: expect.any(String),
+              }),
+            },
           }),
         },
       });

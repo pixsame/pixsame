@@ -142,6 +142,7 @@ const generateCarouselTemplate = () =>
         <div>
           <span data-carousel-counter style="font-size:.8em;color:#a0aec0;display:block;visibility:hidden">Image</span>
           <span data-carousel-title style="font-weight:600;color:#fff;font-size:.95em;visibility:hidden">placeholder</span>
+          <span data-carousel-description style="font-size:.8em;color:#cbd5e0;display:none"></span>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:12px">
@@ -242,6 +243,10 @@ function openCarousel(
       .find('[data-carousel-title]')
       .css('visibility', '')
       .html(`${diff.title} – screenshot diff${passedBadge}`);
+    carouselEl
+      .find('[data-carousel-description]')
+      .text(diff.description ?? '')
+      .css('display', diff.description ? 'block' : 'none');
     (carouselEl.find('[data-type="prev"]')[0] as HTMLButtonElement).disabled =
       index === 0;
     (carouselEl.find('[data-type="next"]')[0] as HTMLButtonElement).disabled =
@@ -302,6 +307,7 @@ function openCarousel(
     );
     carouselEl.find('[data-carousel-counter]').css('visibility', 'hidden');
     carouselEl.find('[data-carousel-title]').css('visibility', 'hidden');
+    carouselEl.find('[data-carousel-description]').css('display', 'none');
     carouselEl
       .find(
         '[data-see-diff-row],[data-type="skip"],[data-type="replace"],[data-replaced-info],[data-type="prev"],[data-type="next"]',

@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: f5234ae1e249d64a
+source: 3f4ca9c7906dc926
 ---
 
 ## Pierwsze kroki
@@ -250,6 +250,7 @@ Uwagi dla konsumentów:
 - Wszystkie ścieżki są względne wobec `projectRoot` i używają separatora `/`; mogą wskazywać poza projekt (`../…`), gdy `imagesPath` jest bezwzględna. `projectRoot` to projekt Cypressa, niekoniecznie katalog główny repozytorium: `ci.workspace` to katalog checkoutu, więc `relative(ci.workspace, projectRoot)` daje prefiks ścieżki wewnątrz repozytorium.
 - `failed` i `missing-baseline` to wpisy, które wymagają człowieka: skopiowanie `images.actual.path` w miejsce `images.baseline.path` je zatwierdza.
 - `baselineWritten` mówi, czy drzewo robocze zmieniło się dla danego zrzutu ekranu, niezależnie od `status`.
+- Wpis, którego porównanie wykryło różnice, zawiera `extra.pixsame.analysis` (o ile opcja `analysis` nie jest wyłączona): `label` (`content-change`, `moved`, `noise-like` lub `size-change`), jednozdaniowy `description`, zmienione obszary `regions` wraz z ich ramkami, wykryte przesunięcie `shift` oraz `bundleKey`, który jest taki sam dla wpisów zmienionych w ten sam sposób. Funkcja `bundle()` z `@pixsame/analysis` grupuje wpisy według niego.
 - Każdy wpis niesie własne `platform` i `viewport`, więc po sklejeniu kilku manifestów da się odróżnić wpisy z macierzy maszyn. `options` we wpisie to dokładne wejście `matchImage` (`imagesPath` zachowuje nierozwinięte tokeny); `comparison` to wynik.
 - `platform` to miejsce, gdzie uruchomił się test, `renderer` to miejsce, skąd pochodzą piksele. Dziś każdy zrzut ekranu robi przeglądarka sterowana przez Cypressa, więc `renderer.backend` to `native`, a `renderer.browser` powtarza `platform.browser.name`. Pole istnieje po to, żeby renderer inny niż lokalna przeglądarka (przypięty obraz Dockera, hostowany renderer) mógł się zidentyfikować przez `rendererVersion` i `imageDigest`, a uruchomienie, które musiało wrócić do lokalnej przeglądarki, mogło zostać oznaczone `renderer.fallback: true`. Wpisy z różnymi rendererami traktuj jako różne baseline'y.
 - `hashes` zawiera sha256 każdego pliku z `images`, który istnieje na dysku. Użyj ich, żeby pominąć ponowne wgrywanie niezmienionych baseline'ów, sprawdzić, czy artefakt zgadza się z manifestem, albo wykryć dwa wpisy, które dały identyczne piksele.
@@ -314,6 +315,11 @@ cy.matchImage({
   // maksymalny próg, powyżej którego test ma nie przejść
   // domyślnie: 0.01
   maxDiffThreshold: 0.1,
+  // opisuje, co się zmieniło, gdy porównanie wykryje różnice, np. "Everything below y=340 moved down by 12 px."
+  // zdanie kończy komunikat błędu, jest widoczne w karuzeli przeglądu i trafia do manifestu przebiegu
+  // nigdy nie wpływa na to, czy porównanie przechodzi
+  // domyślnie: true
+  analysis: false,
   // wymusza ustawienie współczynnika skalowania na wartość "1"
   // pomaga, gdy zrzuty ekranu są skalowane 2x na ekranach o wysokiej gęstości, np. Mac Retina
   // domyślnie: true

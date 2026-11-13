@@ -98,6 +98,7 @@
   ],
   "dependencies": {
     "@frsource/base64": "1.0.250",
+    "@pixsame/analysis": "workspace:*",
     "glob": "14.0.4",
     "meta-png": "1.0.6",
     "move-file": "4.1.0",
