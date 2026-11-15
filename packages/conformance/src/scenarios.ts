@@ -18,6 +18,7 @@ const created: RunExpectation = {
   reason: 'created',
   files: { baseline: true, actual: false, diff: false },
   baselineMarked: true,
+  baselineHasLayout: true,
 };
 
 const passed: RunExpectation = {
@@ -53,6 +54,27 @@ export const scenarios: Scenario[] = [
           analysis: {
             label: 'content-change',
             description: /One area changed: \d+x\d+ px at x=\d+, y=\d+\./,
+          },
+          files: { baseline: true, actual: true, diff: true },
+          baselineUnchanged: true,
+        },
+      },
+    ],
+  },
+  {
+    name: 'says that content moved and what was added, from the page layout',
+    runs: [
+      { fixture: 'blue', expect: created },
+      {
+        fixture: 'banner',
+        expect: {
+          outcome: 'fail',
+          status: 'failed',
+          reason: 'above-limit',
+          analysis: {
+            label: 'moved-and-changed',
+            description:
+              /moved down by \d+ px\. Changed: added div\.promo "Free shipping"\./,
           },
           files: { baseline: true, actual: true, diff: true },
           baselineUnchanged: true,

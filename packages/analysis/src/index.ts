@@ -35,6 +35,7 @@ export { decodeLayout, encodeLayout } from './layout/codec';
 export {
   LAYOUT_KEYWORD,
   layoutVersionOf,
+  pngSize,
   readLayout,
   writeLayout,
 } from './layout/png';

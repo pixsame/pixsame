@@ -3,7 +3,7 @@ import type { ManifestEntry } from 'visual-regression-manifest';
 export type RunnerName = 'cypress' | 'playwright';
 
 /** The fixture pages the harness serves; same markup for every runner. */
-export type Fixture = 'blue' | 'red' | 'tall';
+export type Fixture = 'blue' | 'red' | 'tall' | 'banner';
 
 /** The matchImage options both adapters understand. */
 export type CommonOptions = {
@@ -52,6 +52,8 @@ export type RunExpectation = {
   files?: { baseline?: boolean; actual?: boolean; diff?: boolean };
   /** Whether the baseline carries the `FRSOURCE_CPVRD_V` marker afterwards. */
   baselineMarked?: boolean;
+  /** Whether the baseline carries the page layout (`pixsame-layout-v<version>` chunk) afterwards. */
+  baselineHasLayout?: boolean;
   /** Whether the baseline bytes are the same as before the run. */
   baselineUnchanged?: boolean;
   /** Expected directory segment of the baseline path, e.g. the `{platform}` value. */

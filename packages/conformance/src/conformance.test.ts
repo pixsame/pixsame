@@ -68,6 +68,15 @@ const check = (
       expected.baselineMarked,
     );
   }
+  if (expected.baselineHasLayout !== undefined) {
+    expect(
+      !!baseline &&
+        /pixsame-layout-v\d+/.test(
+          fs.readFileSync(baseline).toString('latin1'),
+        ),
+      'baseline layout',
+    ).toBe(expected.baselineHasLayout);
+  }
   if (expected.baselineUnchanged && baseline && before) {
     expect(fs.readFileSync(baseline).equals(before), 'baseline bytes').toBe(
       true,

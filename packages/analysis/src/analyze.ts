@@ -130,8 +130,11 @@ export const analyze = ({
       unexplained: checked.doubt,
     };
   })();
+  // only elements that really moved: a page that grew resizes its body, which is not a move
   const layoutMoved =
-    layoutResult && layoutResult.verdict !== 'changed'
+    layoutResult &&
+    layoutResult.verdict !== 'changed' &&
+    layoutResult.moves.length > 0
       ? layoutResult
       : undefined;
 

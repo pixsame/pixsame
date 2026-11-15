@@ -6,7 +6,15 @@ import { moveFile } from 'move-file';
 import path from 'path';
 import { FILE_SUFFIX, TASK, type PathVariables } from './constants';
 import { getPluginConfig } from './version.utils';
-import { analysisOf, withAnalysis } from '@pixsame/analysis';
+import {
+  analysisOf,
+  pngSize,
+  readLayout,
+  withAnalysis,
+  writeLayout,
+  type Layout,
+} from '@pixsame/analysis';
+import type { LayoutPayload } from './layout.utils';
 import { getComparer } from './compare.utils';
 import { cleanupUnused, scaleImage, addPNGMetadata } from './image.utils';
 import {
@@ -40,6 +48,8 @@ export type CompareImagesCfg = {
   diffConfig: PixelmatchOptions;
   /** Describe what changed when the comparison finds differences. Default `true`. */
   analysis?: boolean;
+  /** The page as the screenshot was taken, from the browser. */
+  layout?: LayoutPayload;
   // test context, only used for the run manifest
   specPath?: string;
   testTitlePath?: string[];
@@ -112,6 +122,26 @@ export const approveImageTask = async (
   return null;
 };
 
+/**
+ * The layout from the browser with the scale of the image that was really
+ * written: device scale, a forced scale factor and cropping all show up in it,
+ * so it is measured, never assumed.
+ */
+const layoutOf = (
+  payload: LayoutPayload | undefined,
+  png: Uint8Array,
+): Layout | undefined => {
+  const image = pngSize(png);
+  if (!payload || !image || payload.size.width <= 0) return;
+  const scale = image.width / payload.size.width;
+  return {
+    size: { width: payload.size.width, height: image.height / scale },
+    scale,
+    count: payload.count,
+    root: payload.root,
+  };
+};
+
 export const compareImagesTask = async (
   cypressConfig: ManifestConfig,
   cfg: CompareImagesCfg,
@@ -119,10 +149,21 @@ export const compareImagesTask = async (
   // Stamp the screenshot with plugin metadata exactly once, so that every file
   // derived from it (baseline, kept .actual.png, manual rename) carries
   // FRSOURCE_CPVRD_V and won't be silently rewritten on the next run.
-  const stampedImgNew = addPNGMetadata(
-    cypressConfig,
-    await scaleImage(fs.readFileSync(cfg.imgNew), cfg.scaleFactor),
+  const scaledImgNew = await scaleImage(
+    fs.readFileSync(cfg.imgNew),
+    cfg.scaleFactor,
   );
+  const layout =
+    cfg.analysis === false ? undefined : layoutOf(cfg.layout, scaledImgNew);
+  const markedImgNew = addPNGMetadata(cypressConfig, scaledImgNew);
+  // the layout goes into the PNG, so it is there when this screenshot becomes a baseline
+  const stampedImgNew = layout
+    ? Buffer.from(writeLayout(markedImgNew, layout))
+    : markedImgNew;
+  const baselineLayout =
+    layout && fs.existsSync(cfg.imgOld)
+      ? readLayout(fs.readFileSync(cfg.imgOld))
+      : undefined;
   const comparer = await getComparer(
     getManifestWriter(cypressConfig),
     cypressConfig,
@@ -163,7 +204,12 @@ export const compareImagesTask = async (
     );
   const { entry, images } = await (cfg.analysis === false
     ? compare()
-    : withAnalysis(compare));
+    : withAnalysis(compare, {
+        layout:
+          layout && baselineLayout
+            ? { baseline: baselineLayout, actual: layout }
+            : undefined,
+      }));
 
   // the images of a comparison that ran; a created or replaced baseline has none to show
   const base64 = (bytes?: Uint8Array) =>

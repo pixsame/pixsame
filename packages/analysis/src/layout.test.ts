@@ -191,6 +191,46 @@ describe('analyze with a layout snapshot', () => {
   });
 });
 
+describe('analyze with a layout snapshot, no moves', () => {
+  it('leaves a page that only grew to the size analysis', () => {
+    // the page got 100 px taller: a filler was added and the body was resized
+    const grey: [number, number, number] = [220, 220, 220];
+    const baseline = paint(
+      image(W, H + 100),
+      { x: 20, y: 40, width: 100, height: 50 },
+      CARD,
+    );
+    const actual = paint(
+      clone(baseline),
+      { x: 0, y: H, width: W, height: 100 },
+      grey,
+    );
+    const body = (height: number, kids: LayoutNode[]) =>
+      node('body', [0, 0, W, height], { box: true, paint: 'b', kids });
+    const filler = node('div', [0, H, W, 100], {
+      cls: 'filler',
+      box: true,
+      paint: 'f',
+    });
+    const grown = {
+      ...layout([body(H + 100, [card(40), filler])]),
+      size: { width: W, height: H + 100 },
+    };
+    const result = analyze({
+      baseline,
+      actual,
+      mask: maskOf(baseline, actual),
+      sizes: {
+        baseline: { width: W, height: H },
+        actual: { width: W, height: H + 100 },
+      },
+      layout: { baseline: layout([body(H, [card(40)])]), actual: grown },
+    });
+    expect(result.label).toBe('size-change');
+    expect(result.layout?.moves).toEqual([]);
+  });
+});
+
 describe('diffLayouts', () => {
   it('matches a reordered list by content and a rebuilt page by structure', () => {
     const item = (text: string, y: number) =>

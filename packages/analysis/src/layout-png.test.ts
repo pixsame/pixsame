@@ -6,7 +6,9 @@ import {
   encodeLayout,
   LAYOUT_KEYWORD,
   layoutVersionOf,
+  pngSize,
   readLayout,
+  snapshotLayout,
   writeLayout,
   type Layout,
   type LayoutNode,
@@ -138,5 +140,20 @@ describe('layout in a PNG', () => {
     const junk = Buffer.from('definitely not a png');
     expect(writeLayout(junk, layout)).toBe(junk);
     expect(readLayout(junk)).toBeUndefined();
+  });
+});
+
+describe('pngSize', () => {
+  it('reads the size from the header', () => {
+    expect(pngSize(png())).toEqual({ width: 2, height: 1 });
+    expect(pngSize(Buffer.from('nope'))).toBeUndefined();
+  });
+});
+
+describe('the in-page snapshot function', () => {
+  it('is self-contained, so a runner can ship it as source', () => {
+    const source = snapshotLayout.toString();
+    // nothing a bundler or compiler would turn into an outside reference
+    expect(source).not.toMatch(/__name|__awaiter|__assign|cov_|require\(/);
   });
 });

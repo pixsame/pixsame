@@ -107,3 +107,12 @@ export const layoutVersionOf = (png: Uint8Array): number | undefined => {
   const match = /-v(\d+)$/.exec(layoutKeyword(chunk.data));
   return match ? Number(match[1]) : undefined;
 };
+
+/** Width and height in pixels of a PNG, from its header; `undefined` for anything else. */
+export const pngSize = (
+  png: Uint8Array,
+): { width: number; height: number } | undefined => {
+  if (png.length < 24 || SIGNATURE.some((byte, i) => png[i] !== byte)) return;
+  const view = new DataView(png.buffer, png.byteOffset, png.byteLength);
+  return { width: view.getUint32(16), height: view.getUint32(20) };
+};

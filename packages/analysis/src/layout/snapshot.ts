@@ -1,3 +1,5 @@
+// Browser-safe on purpose: this file is also published as `@pixsame/analysis/snapshot`,
+// which a Cypress support file bundles, so it imports nothing but types.
 import type { LayoutNode, Rect } from './types';
 
 // The page's globals; the package's own typings have no DOM.

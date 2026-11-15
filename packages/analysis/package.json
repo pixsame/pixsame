@@ -18,7 +18,18 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./snapshot": {
+      "types": "./dist/layout/snapshot.d.ts",
+      "default": "./dist/layout/snapshot.js"
+    },
     "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "snapshot": [
+        "dist/layout/snapshot.d.ts"
+      ]
+    }
   },
   "scripts": {
     "build": "del-cli dist && tsc -p tsconfig.build.json",
