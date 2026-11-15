@@ -1,8 +1,12 @@
 import { descriptions as english, type Descriptions } from './describe';
 import { regionHash } from './hash';
+import { ANALYSIS_VERSION } from './version';
+import { diffLayouts, has, LAYOUT, CHANGE } from './layout/diff';
+import type { Layout } from './layout/types';
+import { causesOf, checkAgainstPixels } from './layout/verify';
 import { findRegions } from './regions';
 import { detectRegionShift, detectShift } from './shift';
-import type { Analysis, Label, RgbaImage, Size } from './types';
+import type { Analysis, Label, Move, RgbaImage, Size } from './types';
 
 /** Regions that get a hash: the ones a person would look at. */
 const HASHED_REGIONS = 5;
@@ -19,7 +23,33 @@ export type AnalyzeInput = {
   mask: Uint8Array;
   /** The sizes before any padding or cropping, when known. */
   sizes?: { baseline: Size; actual: Size };
+  /** What the page looked like when each screenshot was taken. */
+  layout?: { baseline: Layout; actual: Layout };
   descriptions?: Partial<Descriptions>;
+};
+
+/** Offsets closer than this (CSS pixels) are one offset. */
+const OFFSET_STEP = 0.1;
+const MAX_MOVES = 5;
+
+const movesOf = (pairs: ReturnType<typeof diffLayouts>['layout']): Move[] => {
+  const tally = new Map<string, Move>();
+  for (const { a, b, kinds } of pairs) {
+    if (!a || !b || !kinds.includes('moved')) continue;
+    const dx = Math.round((b.rect[0] - a.rect[0]) / OFFSET_STEP) * OFFSET_STEP;
+    const dy = Math.round((b.rect[1] - a.rect[1]) / OFFSET_STEP) * OFFSET_STEP;
+    const key = `${dx.toFixed(1)},${dy.toFixed(1)}`;
+    const entry = tally.get(key) ?? {
+      dx: Number(dx.toFixed(1)),
+      dy: Number(dy.toFixed(1)),
+      elements: 0,
+    };
+    entry.elements++;
+    tally.set(key, entry);
+  }
+  return [...tally.values()]
+    .sort((m, n) => n.elements - m.elements)
+    .slice(0, MAX_MOVES);
 };
 
 /**
@@ -33,6 +63,7 @@ export const analyze = ({
   actual,
   mask,
   sizes,
+  layout,
   descriptions,
 }: AnalyzeInput): Analysis => {
   const words = { ...english, ...descriptions };
@@ -72,10 +103,51 @@ export const analyze = ({
   const allMoved =
     !truncated && parts.length > 0 && parts.every((region) => region.moved);
 
+  // the page's own layout, checked against the pixels
+  const sameArea =
+    layout !== undefined &&
+    layout.actual.size.width > 0 &&
+    layout.baseline.size.width > 0;
+  const layoutResult = (() => {
+    if (!layout || !sameArea || regions.length === 0) return undefined;
+    const diff = diffLayouts(layout.baseline, layout.actual);
+    const checked = checkAgainstPixels({
+      diff,
+      before: layout.baseline,
+      after: layout.actual,
+      baseline,
+      actual,
+      mask,
+    });
+    return {
+      verdict: checked.verdict,
+      moves: movesOf(
+        diff.layout.filter((pair) => !has(pair, CHANGE) && has(pair, LAYOUT)),
+      ),
+      causes: causesOf(checked.real),
+      explained:
+        checked.shares.verified + checked.shares.approx + checked.shares.trust,
+      unexplained: checked.doubt,
+    };
+  })();
+  const layoutMoved =
+    layoutResult && layoutResult.verdict !== 'changed'
+      ? layoutResult
+      : undefined;
+
   let label: Label;
   let description: string;
   let bundleKey: string;
-  if (resized) {
+  if (layoutMoved) {
+    const { moves, causes, unexplained } = layoutMoved;
+    const only = layoutMoved.verdict === 'moved';
+    label = only ? 'moved' : 'moved-and-changed';
+    description = only
+      ? words['moved-elements']({ moves })
+      : words['moved-and-changed']({ moves, causes, unexplained });
+    const top = moves[0];
+    bundleKey = `${only ? 'moved' : 'moved-changed'}:${top ? `${top.dx},${top.dy}` : 'none'}${only ? '' : `:${causes.join('|')}`}`;
+  } else if (resized) {
     label = 'size-change';
     description = words['size-change'](sizes);
     bundleKey = `size:${sizes.baseline.width}x${sizes.baseline.height}>${sizes.actual.width}x${sizes.actual.height}`;
@@ -109,13 +181,21 @@ export const analyze = ({
   }
 
   return {
-    version: 1,
+    version: ANALYSIS_VERSION,
     label,
     description,
     regions,
     ...(truncated && { truncated }),
     speckRatio,
     shift,
+    ...(layoutResult && {
+      layout: {
+        moves: layoutResult.moves,
+        causes: layoutResult.causes,
+        explained: layoutResult.explained,
+        unexplained: layoutResult.unexplained,
+      },
+    }),
     ...(resized && { sizes }),
     bundleKey,
   };

@@ -1,6 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import {
+  ANALYSIS_VERSION,
+  layoutVersionOf,
+  readLayout,
+} from '@pixsame/analysis';
+import {
   MANIFEST_SPEC_VERSION,
   readManifestFile,
   validateManifest,
@@ -89,6 +94,41 @@ test.describe('matchImage', () => {
     ]);
     fs.rmSync(path.join(dir, 'changing card_#1.actual.png'));
     fs.rmSync(path.join(dir, 'changing card_#1.diff.png'));
+  });
+
+  test('stores the page layout in the baseline and names a move and a change', async ({
+    page,
+    matchImage,
+  }) => {
+    const layoutPage = (banner: string) => `<!doctype html>
+<body style="margin:0;font:20px Arial">
+  ${banner}
+  <div id="card" style="margin:20px;padding:16px;width:300px;background:#dbeafe;border:2px solid #3b82f6">Order total</div>
+  <p style="margin:20px">Shipping and returns</p>
+</body>`;
+    await page.setContent(layoutPage(''));
+    const first = await matchImage(undefined, { title: 'layout card' });
+    const baseline = fs.readFileSync(first.imgPath);
+    expect(layoutVersionOf(baseline)).toBe(ANALYSIS_VERSION);
+    expect(readLayout(baseline)?.size).toEqual({ width: 640, height: 400 });
+
+    await page.setContent(
+      layoutPage(
+        '<div id="promo" style="height:40px;background:#fde68a;margin:0">Free shipping</div>',
+      ),
+    );
+    const failing = await matchImage(undefined, {
+      title: 'layout card',
+      matchAgainstPath: first.imgPath,
+    }).then(
+      () => undefined,
+      (e: Error) => e,
+    );
+    const dir = path.dirname(first.imgPath);
+    expect(failing?.message).toMatch(/moved down by 40 px/);
+    expect(failing?.message).toMatch(/added div#promo/);
+    fs.rmSync(path.join(dir, 'layout card_#1.actual.png'), { force: true });
+    fs.rmSync(path.join(dir, 'layout card_#1.diff.png'), { force: true });
   });
 
   test('writes a manifest per worker that validates against the standard', async ({

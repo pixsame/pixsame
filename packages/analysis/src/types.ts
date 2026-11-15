@@ -43,11 +43,20 @@ export type Shift = {
   coverage: number;
 };
 
-export type Label = 'size-change' | 'moved' | 'noise-like' | 'content-change';
+/** Elements of the page that moved by the same offset, in CSS pixels. */
+export type Move = { dx: number; dy: number; elements: number };
+
+export type Label =
+  | 'size-change'
+  | 'moved'
+  | 'moved-and-changed'
+  | 'noise-like'
+  | 'content-change';
 
 /** What `extra.pixsame.analysis` of a manifest entry holds. */
 export type Analysis = {
-  version: 1;
+  /** `ANALYSIS_VERSION` of the package that wrote this. */
+  version: number;
   label: Label;
   /** One sentence for a person. */
   description: string;
@@ -59,6 +68,18 @@ export type Analysis = {
   speckRatio: number;
   /** A move of everything below a row or right of a column; `null` when searched and not found. Areas that moved on their own have `moved` set instead. */
   shift: Shift | null;
+  /**
+   * Set when a layout snapshot of the page was available: how elements moved,
+   * most elements first, and what changed on the page, by element.
+   */
+  layout?: {
+    moves: Move[];
+    causes: string[];
+    /** Share of the differing pixels the layout explains by a move, 0..1. */
+    explained: number;
+    /** Areas where the pixels disagree with the layout. */
+    unexplained: Region[];
+  };
   /** Both sizes, when they differed. */
   sizes?: { baseline: Size; actual: Size };
   /** Entries with the same key changed in the same way. */

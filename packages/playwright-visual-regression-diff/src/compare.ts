@@ -2,7 +2,10 @@ import {
   analysisOf,
   analysisPlugin,
   captureComparison,
+  readLayout,
   withAnalysis,
+  writeLayout,
+  type Layout,
 } from '@pixsame/analysis';
 import fs from 'fs';
 import path from 'path';
@@ -52,6 +55,8 @@ export type CompareInput = {
   diffConfig: PixelmatchOptions;
   /** Describe what changed when the comparison finds differences. Default `true`. */
   analysis?: boolean;
+  /** What the page looked like when the screenshot was taken. Stored in the PNG, so it is there when this screenshot becomes a baseline. */
+  layout?: Layout;
   /** Screenshot name recorded on the manifest entry; defaults to the baseline's file name. */
   name?: string;
   /** The test the screenshot belongs to, recorded on the manifest entry. */
@@ -209,12 +214,24 @@ export const compareImages = async (
   comparer: Comparer,
 ): Promise<CompareResult> => {
   const diffPath = diffPathFor(cfg.actualPath);
+  const withLayout = cfg.analysis !== false && cfg.layout !== undefined;
+  // stamped once, so every file derived from it carries the package marker
+  // and, for analysis, the layout of the page
+  const stamped = addPNGMetadata(cfg.imgNew);
+  const actual = withLayout
+    ? Buffer.from(writeLayout(stamped, cfg.layout as Layout))
+    : stamped;
+  const baselineLayout = withLayout
+    ? await fs.promises.readFile(cfg.baselinePath).then(
+        (bytes) => readLayout(bytes),
+        () => undefined,
+      )
+    : undefined;
   const compare = () =>
     comparer.compare(
       {
         name: cfg.name ?? path.basename(cfg.baselinePath, '.png'),
-        // stamped once, so every file derived from it carries the package marker
-        actual: addPNGMetadata(cfg.imgNew),
+        actual,
         files: {
           baseline: cfg.baselinePath,
           actual: cfg.actualPath,
@@ -240,7 +257,12 @@ export const compareImages = async (
     );
   const { entry, images } = await (cfg.analysis === false
     ? compare()
-    : withAnalysis(compare));
+    : withAnalysis(compare, {
+        layout:
+          cfg.layout && baselineLayout
+            ? { baseline: baselineLayout, actual: cfg.layout }
+            : undefined,
+      }));
   const status = entry.status as CompareStatus;
   const buffer = (bytes?: Uint8Array) =>
     bytes ? Buffer.from(bytes) : undefined;

@@ -30,6 +30,7 @@ import {
   rendererFor,
   toManifestOptions,
 } from './manifest.utils';
+import { captureLayout } from './layout';
 import { resolveImagesDir, ScreenshotNamer } from './screenshotPath';
 
 export type MatchImageOptions = {
@@ -227,6 +228,16 @@ export const visualRegressionFixtures: Fixtures<
         ...cfg.screenshotConfig,
       });
       const viewport = page.viewportSize() ?? undefined;
+      const layout =
+        cfg.analysis === false
+          ? undefined
+          : await captureLayout({
+              page,
+              target,
+              png: imgNew,
+              fullPage: cfg.screenshotConfig.fullPage,
+              clip: cfg.screenshotConfig.clip,
+            });
       const result = await compareImages(
         {
           imgNew,
@@ -237,6 +248,7 @@ export const visualRegressionFixtures: Fixtures<
           maxDiffThreshold: cfg.maxDiffThreshold,
           diffConfig: cfg.diffConfig,
           analysis: cfg.analysis,
+          layout,
           name,
           test: {
             filePath: testInfo.file,
