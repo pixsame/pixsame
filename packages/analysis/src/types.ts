@@ -1,3 +1,5 @@
+import type { PixelMove } from './blocks';
+
 /** Decoded image: 8-bit RGBA, row by row. */
 export type RgbaImage = {
   width: number;
@@ -25,22 +27,6 @@ export type Region = Box & {
   kind: RegionKind;
   /** Difference hash of the screenshot's pixels inside the box; the largest regions have one. */
   hash?: string;
-  /** Set when the content of this area only moved, by this many pixels. */
-  moved?: { dx: number; dy: number };
-};
-
-/**
- * The whole screenshot equals the baseline moved by `dy` rows from row `fromY`
- * down, or by `dx` columns from column `fromX` to the right, for `coverage` of
- * those lines. One of `dx` and `dy` is 0, and so is the `from` of the other
- * direction.
- */
-export type Shift = {
-  fromX: number;
-  fromY: number;
-  dx: number;
-  dy: number;
-  coverage: number;
 };
 
 /** Elements of the page that moved by the same offset, in CSS pixels. */
@@ -66,8 +52,19 @@ export type Analysis = {
   truncated?: { count: number; area: number };
   /** Share of the differing pixels that sit in specks; near 1 means rendering noise. */
   speckRatio: number;
-  /** A move of everything below a row or right of a column; `null` when searched and not found. Areas that moved on their own have `moved` set instead. */
-  shift: Shift | null;
+  /**
+   * Set when the pixels alone showed definite moves (no layout snapshot, or
+   * none that explained them): offsets in image pixels, most pixels first. A
+   * move is only reported when the answer is definite, so its absence means
+   * "no claim", not "nothing moved".
+   */
+  pixels?: {
+    moves: PixelMove[];
+    /** Share of the differing pixels explained by a move, 0..1. */
+    explained: number;
+    /** What no move explains. */
+    unexplained: Region[];
+  };
   /**
    * Set when a layout snapshot of the page was available: how elements moved,
    * most elements first, and what changed on the page, by element.

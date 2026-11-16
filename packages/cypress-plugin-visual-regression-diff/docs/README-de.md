@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 3f4ca9c7906dc926
+source: e7eac5f197e28c93
 ---
 
 ## Erste Schritte
@@ -250,7 +250,7 @@ Hinweise für Consumer:
 - Alle Pfade sind relativ zu `projectRoot` und verwenden `/` als Trenner; sie können aus dem Projekt hinausführen (`../…`), wenn `imagesPath` absolut ist. `projectRoot` ist das Cypress-Projekt, nicht zwingend der Repository-Stamm: `ci.workspace` ist das Checkout-Verzeichnis, `relative(ci.workspace, projectRoot)` ergibt also das Pfadpräfix innerhalb des Repositorys.
 - `failed` und `missing-baseline` sind die Einträge, die einen Menschen brauchen: Wer `images.actual.path` über `images.baseline.path` kopiert, gibt sie frei.
 - `baselineWritten` gibt an, ob sich der Arbeitsbaum für diesen Screenshot geändert hat, unabhängig vom `status`.
-- Ein Eintrag, dessen Vergleich Unterschiede gefunden hat, enthält `extra.pixsame.analysis` (sofern `analysis` nicht ausgeschaltet ist): ein `label` (`content-change`, `moved`, `noise-like` oder `size-change`), eine `description` in einem Satz, die geänderten `regions` mit ihren Rahmen, einen erkannten `shift` und einen `bundleKey`, der für Einträge mit der gleichen Änderung gleich ist. `bundle()` aus `@pixsame/analysis` gruppiert Einträge danach.
+- Ein Eintrag, dessen Vergleich Unterschiede gefunden hat, enthält `extra.pixsame.analysis` (sofern `analysis` nicht ausgeschaltet ist): ein `label` (`content-change`, `moved`, `moved-and-changed`, `noise-like` oder `size-change`), eine `description` in einem Satz, die geänderten `regions` mit ihren Rahmen und einen `bundleKey`, der für Einträge mit der gleichen Änderung gleich ist. `bundle()` aus `@pixsame/analysis` gruppiert Einträge danach. Enthält die Baseline einen Layout-Schnappschuss der Seite, listet `layout` die verschobenen Elemente auf (`moves`, in CSS-Pixeln) und benennt, was sich geändert hat (`causes`, z. B. `added div.promo "Free shipping"`). Ohne ihn listet `pixels` Verschiebungen auf, die allein aus den Pixeln gefunden wurden, und nur, wenn die Antwort eindeutig ist: Ein Screenshot ohne klare Verschiebung bekommt keine Aussage über Verschiebungen.
 - Jeder Eintrag trägt sein eigenes `platform` und `viewport`, sodass sich Einträge aus einer Matrix von Maschinen auch nach dem Zusammenführen mehrerer Manifeste auseinanderhalten lassen. `options` an einem Eintrag ist die exakte `matchImage`-Eingabe (`imagesPath` behält seine Platzhalter unaufgelöst); `comparison` ist das Ergebnis.
 - `platform` ist, wo der Test gelaufen ist, `renderer` ist, woher die Pixel stammen. Derzeit wird jeder Screenshot von dem Browser aufgenommen, den Cypress steuert, daher ist `renderer.backend` `native` und `renderer.browser` wiederholt `platform.browser.name`. Das Feld existiert, damit sich ein anderer Renderer als der lokale Browser (ein gepinntes Docker-Image, ein gehosteter Renderer) über `rendererVersion` und `imageDigest` identifizieren kann und damit ein Lauf, der auf den lokalen Browser zurückfallen musste, mit `renderer.fallback: true` markiert werden kann. Behandeln Sie Einträge mit unterschiedlichen Renderern als unterschiedliche Baselines.
 - `hashes` enthält den sha256 jeder Datei aus `images`, die auf der Festplatte existiert. Nutzen Sie ihn, um das erneute Hochladen unveränderter Baselines zu überspringen, um zu prüfen, ob ein Artefakt zum Manifest passt, oder um zwei Einträge zu erkennen, die identische Pixel erzeugt haben.
@@ -315,9 +315,13 @@ cy.matchImage({
   // maximaler Schwellenwert, ab dem der Test fehlschlagen soll
   // Standard: 0.01
   maxDiffThreshold: 0.1,
-  // beschreibt, was sich geändert hat, wenn ein Vergleich Unterschiede findet, z. B. "Everything below y=340 moved down by 12 px."
+  // beschreibt, was sich geändert hat, wenn ein Vergleich Unterschiede findet, z. B. "One element moved down by 40 px. Changed: added div.promo "Free shipping"."
   // der Satz steht am Ende der Fehlermeldung, erscheint im Review-Karussell und wird im Run-Manifest festgehalten
   // er ändert nie, ob der Vergleich besteht
+  // um die Elemente zu benennen, speichert das Plugin einen Schnappschuss des Seitenlayouts (Elementrahmen, Text, ein Hash des Aussehens; 6 bis 40 KB)
+  // in jeder Baseline-PNG. Er deckt Viewport-Aufnahmen, Ganzseiten-Aufnahmen einer Seite, die ins Fenster passt, und Elemente ab, die hineinpassen;
+  // höhere Aufnahmen setzt Cypress aus mehreren Teilen zusammen, für sie bleibt die Analyse rein pixelbasiert
+  // eine Baseline von vor dieser Änderung funktioniert weiter und bekommt ihren Schnappschuss, sobald `updateImages` sie das nächste Mal ersetzt
   // Standard: true
   analysis: false,
   // erzwingt den Skalierungsfaktor "1"

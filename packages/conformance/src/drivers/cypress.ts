@@ -39,14 +39,22 @@ export const cypressDriver: Driver = {
     );
     return ws;
   },
-  async run(ws, { fixture, options, imagesPath }) {
-    const matchOptions = { title: SHOT_TITLE, ...options, imagesPath };
+  async run(ws, { fixture, options, imagesPath, capture }) {
+    const matchOptions = {
+      title: SHOT_TITLE,
+      ...(capture === 'viewport' && {
+        screenshotConfig: { capture: 'viewport' },
+      }),
+      ...options,
+      imagesPath,
+    };
+    const subject = capture === 'element' ? "cy.get('main')" : 'cy';
     fs.writeFileSync(
       path.join(ws.dir, 'cypress/e2e/conformance.cy.js'),
       `describe('conformance', () => {
   it('shot', () => {
     cy.visit('/?v=${fixture}');
-    cy.matchImage(${JSON.stringify(matchOptions)});
+    ${subject}.matchImage(${JSON.stringify(matchOptions)});
   });
 });
 `,

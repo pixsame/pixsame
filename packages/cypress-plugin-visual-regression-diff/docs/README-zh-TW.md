@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 3f4ca9c7906dc926
+source: e7eac5f197e28c93
 ---
 
 ## 快速開始
@@ -250,7 +250,7 @@ npx cypress run --env "pluginVisualRegressionCleanupUnusedImages=true"
 - 所有路徑都相對於 `projectRoot`，並使用 `/` 作為分隔符號；當 `imagesPath` 是絕對路徑時，路徑可能指向專案之外（`../…`）。`projectRoot` 是 Cypress 專案，不一定是 repository 的根目錄：`ci.workspace` 是 checkout 目錄，所以 `relative(ci.workspace, projectRoot)` 就是 repository 內的路徑前綴。
 - `failed` 與 `missing-baseline` 是需要人工處理的條目：把 `images.actual.path` 複製到 `images.baseline.path` 即可核准它們。
 - `baselineWritten` 表示該張截圖的工作樹是否有變更，與 `status` 無關。
-- 比對發現差異的項目帶有 `extra.pixsame.analysis`（除非關閉了 `analysis`）：一個 `label`（`content-change`、`moved`、`noise-like` 或 `size-change`）、一句話的 `description`、發生變化的 `regions` 及其邊框、偵測到的 `shift`，以及一個 `bundleKey`，以相同方式變化的項目其值相同。`@pixsame/analysis` 中的 `bundle()` 會依它將項目分組。
+- 比對發現差異的項目帶有 `extra.pixsame.analysis`（除非關閉了 `analysis`）：一個 `label`（`content-change`、`moved`、`moved-and-changed`、`noise-like` 或 `size-change`）、一句話的 `description`、發生變化的 `regions` 及其邊框，以及一個 `bundleKey`，以相同方式變化的項目其值相同。`@pixsame/analysis` 中的 `bundle()` 會依它將項目分組。當基準圖帶有頁面版面快照時，`layout` 會列出發生移動的元素（`moves`，單位為 CSS 像素），並指出發生了什麼變化（`causes`，例如 `added div.promo "Free shipping"`）。沒有快照時，`pixels` 只根據像素列出找到的移動，而且只在答案明確時才給出：沒有明顯移動的截圖不會得到任何關於移動的結論。
 - 每個條目都帶有自己的 `platform` 與 `viewport`，因此把多份清單串接後，仍能分辨來自不同機器矩陣的條目。條目上的 `options` 是 `matchImage` 確切的輸入（`imagesPath` 保留未展開的 token）；`comparison` 則是結果。
 - `platform` 是測試執行的位置，`renderer` 是像素的來源。目前每張截圖都是由 Cypress 驅動的瀏覽器拍攝的，所以 `renderer.backend` 是 `native`，而 `renderer.browser` 會重複 `platform.browser.name`。這個欄位的存在，是為了讓本機瀏覽器以外的算繪器（固定版本的 Docker 映像、託管的算繪器）能以 `rendererVersion` 與 `imageDigest` 表明身分，也讓不得不退回本機瀏覽器的執行能以 `renderer.fallback: true` 標記。請把算繪器不同的條目視為不同的基準影像。
 - `hashes` 保存 `images` 中每個實際存在於磁碟上的檔案的 sha256。可以用來略過重新上傳未變更的基準影像、檢查 artifact 是否與清單相符，或找出產生完全相同像素的兩個條目。
@@ -315,9 +315,13 @@ cy.matchImage({
   // 測試失敗的最大門檻值，差異超過此值即失敗
   // 預設值：0.01
   maxDiffThreshold: 0.1,
-  // 當比對發現差異時，描述發生了什麼變化，例如 "Everything below y=340 moved down by 12 px."
+  // 當比對發現差異時，描述發生了什麼變化，例如 "One element moved down by 40 px. Changed: added div.promo "Free shipping"."
   // 這句話會附在失敗訊息結尾，顯示在審查輪播中，並記錄到執行清單裡
   // 它不會改變比對是否通過
+  // 為了指出具體元素，外掛會把頁面版面的快照（元素邊框、文字、每個元素外觀的雜湊；6 到 40 KB）
+  // 存入每張基準 PNG 中。它涵蓋視窗截圖、能放進視窗的整頁截圖，以及能放進視窗的元素；
+  // 更高的截圖由 Cypress 分段拼接而成，對它們仍只依像素分析
+  // 在此之前產生的基準圖仍然可用，並會在下次被 `updateImages` 取代時獲得快照
   // 預設值：true
   analysis: false,
   // 強制將縮放比例設為 "1"

@@ -9,7 +9,13 @@ export {
   type AnalysisPlugin,
 } from './plugin';
 export { findRegions, maskFromPixelmatchDiff, type Regions } from './regions';
-export { detectRegionShift, detectShift } from './shift';
+export {
+  DEFINITE,
+  findMoves,
+  MAX_PIXELS,
+  type PixelMove,
+  type PixelMoves,
+} from './blocks';
 export type {
   Analysis,
   Box,
@@ -18,7 +24,6 @@ export type {
   Region,
   RegionKind,
   RgbaImage,
-  Shift,
   Size,
 } from './types';
 export {

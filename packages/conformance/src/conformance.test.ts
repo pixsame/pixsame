@@ -116,6 +116,7 @@ for (const driver of drivers) {
               fixture: run.fixture,
               options: run.options ?? {},
               imagesPath: run.imagesPath,
+              capture: run.capture ?? 'fullPage',
             });
             check(observed, run.expect, before);
             const [entry] = observed.entries;

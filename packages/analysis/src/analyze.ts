@@ -1,3 +1,4 @@
+import { findMoves } from './blocks';
 import { descriptions as english, type Descriptions } from './describe';
 import { regionHash } from './hash';
 import { ANALYSIS_VERSION } from './version';
@@ -5,7 +6,6 @@ import { diffLayouts, has, LAYOUT, CHANGE } from './layout/diff';
 import type { Layout } from './layout/types';
 import { causesOf, checkAgainstPixels } from './layout/verify';
 import { findRegions } from './regions';
-import { detectRegionShift, detectShift } from './shift';
 import type { Analysis, Label, Move, RgbaImage, Size } from './types';
 
 /** Regions that get a hash: the ones a person would look at. */
@@ -81,7 +81,6 @@ export const analyze = ({
     sizes !== undefined &&
     (sizes.baseline.width !== sizes.actual.width ||
       sizes.baseline.height !== sizes.actual.height);
-  const shift = detectShift(baseline, actual);
   const regionCount = regions.length + (truncated?.count ?? 0);
   const noisy =
     !truncated &&
@@ -92,17 +91,6 @@ export const analyze = ({
           region.kind === 'speck' || region.fillRatio < NOISE_FILL_RATIO,
       ));
   const largest = regions[0];
-  // areas that moved on their own (a badge, a sidebar), when the page as a whole did not
-  const parts = regions.filter((region) => region.kind !== 'speck');
-  if (!resized && !shift) {
-    for (const region of parts) {
-      const moved = detectRegionShift(baseline, actual, region);
-      if (moved) region.moved = moved;
-    }
-  }
-  const allMoved =
-    !truncated && parts.length > 0 && parts.every((region) => region.moved);
-
   // the page's own layout, checked against the pixels
   const sameArea =
     layout !== undefined &&
@@ -138,6 +126,12 @@ export const analyze = ({
       ? layoutResult
       : undefined;
 
+  // without a layout to go by, the pixels alone: only a definite answer counts
+  const pixelMoves =
+    !layoutResult && !noisy && regions.length > 0
+      ? findMoves({ baseline, actual, mask, sizes })
+      : undefined;
+
   let label: Label;
   let description: string;
   let bundleKey: string;
@@ -150,26 +144,19 @@ export const analyze = ({
       : words['moved-and-changed']({ moves, causes, unexplained });
     const top = moves[0];
     bundleKey = `${only ? 'moved' : 'moved-changed'}:${top ? `${top.dx},${top.dy}` : 'none'}${only ? '' : `:${causes.join('|')}`}`;
+  } else if (pixelMoves) {
+    const { moves, unexplained } = pixelMoves;
+    const only = pixelMoves.verdict === 'moved';
+    label = pixelMoves.verdict;
+    description = only
+      ? words['moved-content']({ moves })
+      : words['moved-content-and-changed']({ moves, unexplained });
+    const top = moves[0];
+    bundleKey = `${only ? 'moved' : 'moved-changed'}:${top.dx},${top.dy}${only ? '' : `:${unexplained[0].width}x${unexplained[0].height}:${unexplained[0].hash ?? regionHash(actual, unexplained[0])}`}`;
   } else if (resized) {
     label = 'size-change';
     description = words['size-change'](sizes);
     bundleKey = `size:${sizes.baseline.width}x${sizes.baseline.height}>${sizes.actual.width}x${sizes.actual.height}`;
-  } else if (shift) {
-    label = 'moved';
-    description = words.moved(shift);
-    bundleKey = `moved:${shift.dx},${shift.dy}`;
-  } else if (allMoved && largest) {
-    const { dx, dy } = largest.moved as { dx: number; dy: number };
-    const same = parts.every(
-      (region) => region.moved?.dx === dx && region.moved?.dy === dy,
-    );
-    label = 'moved';
-    description = words['moved-areas']({
-      regions: parts.length,
-      largest: parts[0],
-      ...(same && { offset: { dx, dy } }),
-    });
-    bundleKey = `moved-area:${dx},${dy}:${parts[0].width}x${parts[0].height}:${parts[0].hash ?? regionHash(actual, parts[0])}`;
   } else if (noisy || !largest) {
     label = 'noise-like';
     description = words['noise-like']({
@@ -190,7 +177,13 @@ export const analyze = ({
     regions,
     ...(truncated && { truncated }),
     speckRatio,
-    shift,
+    ...(pixelMoves && {
+      pixels: {
+        moves: pixelMoves.moves,
+        explained: pixelMoves.explained,
+        unexplained: pixelMoves.unexplained,
+      },
+    }),
     ...(layoutResult && {
       layout: {
         moves: layoutResult.moves,

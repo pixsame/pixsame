@@ -1,11 +1,11 @@
 # @pixsame/analysis
 
-Says what changed in a failed screenshot comparison, from the pixels alone. No model, no network, no dependencies.
+Says what changed in a failed screenshot comparison, from the pixels and, when there is one, a snapshot of the page's layout. No model, no network, no dependencies.
 
 A pixel diff gives you one number. This package turns the same comparison into something a person or an agent can act on:
 
 - the changed areas, each with its box and pixel count;
-- whether the content only moved, as a whole ("Everything below y=340 moved down by 12 px.") or one area ("One area moved right by 12 px: 52x16 px at x=130, y=250.");
+- whether content moved, and by how much ("Content moved down by 12 px." from the pixels, "One element moved down by 40 px. Changed: added div.promo "Free shipping"." with a layout snapshot);
 - whether the difference looks like rendering noise;
 - one sentence describing it;
 - a key that is equal for screenshots that changed in the same way, so one change showing in 14 screenshots is one thing to decide.
@@ -21,10 +21,11 @@ import { analyze } from '@pixsame/analysis';
 // mask: Uint8Array with 1 for every pixel your comparison counted as different
 const analysis = analyze({ baseline, actual, mask });
 
-analysis.label; // 'content-change' | 'moved' | 'noise-like' | 'size-change'
+analysis.label; // 'content-change' | 'moved' | 'moved-and-changed' | 'noise-like' | 'size-change'
 analysis.description; // 'One area changed: 220x40 px at x=40, y=120.'
-analysis.regions; // [{ x, y, width, height, area, fillRatio, kind, hash, moved }]
-analysis.shift; // { fromX, fromY, dx, dy, coverage } or null
+analysis.regions; // [{ x, y, width, height, area, fillRatio, kind, hash }]
+analysis.pixels; // { moves: [{ dx, dy, share }], explained, unexplained } when a move is definite
+analysis.layout; // { moves, causes, explained, unexplained } with a layout snapshot
 analysis.bundleKey; // equal for entries that changed in the same way
 ```
 
@@ -45,14 +46,17 @@ for (const { description, entries } of bundle(manifest.entries)) {
 
 ## How it decides
 
-| label            | when                                                                                                                        |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `size-change`    | the two images had different sizes                                                                                          |
-| `moved`          | at least 90% of the changed lines equal a baseline line a fixed distance away, for the whole page or for every changed area |
-| `noise-like`     | the differing pixels sit in specks of at most 4 px, or are thinly scattered                                                 |
-| `content-change` | anything else                                                                                                               |
+| label               | when                                                                                                                       |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `moved`             | the move explains every differing pixel (with a layout snapshot: elements moved and nothing changed)                       |
+| `moved-and-changed` | a move explains most differing pixels and something else changed too; `unexplained` (pixels) or `causes` (layout) say what |
+| `size-change`       | the two images had different sizes and no move explains the difference                                                     |
+| `noise-like`        | the differing pixels sit in specks of at most 4 px, or are thinly scattered                                                |
+| `content-change`    | anything else                                                                                                              |
 
-Differing pixels closer than 8 px form one area, so a changed word is one area and not one per letter. Moves are searched up, down, left and right, up to 64 px, one direction at a time: first for the page as a whole (everything below a row or right of a column), then for each changed area on its own, which gets `moved: { dx, dy }`. A move is only recognised when the moved pixels are identical, so content that was re-rendered with different anti-aliasing counts as a content change.
+Differing pixels closer than 8 px form one area, so a changed word is one area and not one per letter.
+
+**Moves from the pixels are only reported when the answer is definite.** The pixel search cuts both images into 8 px blocks, finds where the blocks that hold differing pixels went, and checks every differing pixel at the offsets found, with a tolerance of 3 per colour channel (a moved picture or gradient is redrawn a colour step off). It reports a move only when an offset is supported by at least 3 blocks, the moves explain at least half of the differing pixels, and at most 1% (`moved`) or 25% (`moved-and-changed`) is left unexplained (`DEFINITE` in the package holds the numbers). Content pushed out of the picture, copies of content that stayed, half-pixel moves, images over 4 million pixels and anything else unclear get no claim, so `pixels` is absent and the label is `content-change`. On 40 real renders made for the spike, it found 12 of 17 pure moves and 11 of 13 moves with a change, said "moved" wrongly 0 times, and left all 9 non-moves alone. Those cases were used to set the thresholds, so treat the numbers as optimistic.
 
 ## With a layout snapshot of the page
 

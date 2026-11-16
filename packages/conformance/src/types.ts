@@ -5,6 +5,9 @@ export type RunnerName = 'cypress' | 'playwright';
 /** The fixture pages the harness serves; same markup for every runner. */
 export type Fixture = 'blue' | 'red' | 'tall' | 'banner';
 
+/** What a screenshot covers: the whole page, the viewport, or one element (`main`). */
+export type Capture = 'fullPage' | 'viewport' | 'element';
+
 /** The matchImage options both adapters understand. */
 export type CommonOptions = {
   createMissingImages?: boolean;
@@ -36,7 +39,12 @@ export type Driver = {
   create: (baseUrl: string) => Promise<Workspace>;
   run: (
     ws: Workspace,
-    run: { fixture: Fixture; options: CommonOptions; imagesPath?: string },
+    run: {
+      fixture: Fixture;
+      options: CommonOptions;
+      imagesPath?: string;
+      capture: Capture;
+    },
   ) => Promise<Observed>;
 };
 
@@ -64,6 +72,8 @@ export type Run = {
   fixture: Fixture;
   options?: CommonOptions;
   imagesPath?: string;
+  /** Default: the whole page. */
+  capture?: Capture;
   /** Mutate the workspace before the run, e.g. strip the marker. */
   before?: (ws: Workspace) => Promise<void> | void;
   expect: RunExpectation;
