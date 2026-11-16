@@ -39,7 +39,13 @@ Twoje stare baseline'y nadal działają. Nowe i zastąpione baseline'y zapisują
 npx pixsame baselines
 ```
 
-Następnie uruchom testy raz z opcją aktualizacji, którą już znasz (`pluginVisualRegressionUpdateImages=true` w Cypress, `--update-snapshots` w Playwright) i zatwierdź wynik. Baseline'y, które nadal przechodzą, są zastępowane tylko przy `true`; `'failures-only'` zastępuje te, które nie przechodzą.
+Potem pozwól CLI uruchomić testy raz, żeby runner zastąpił baseline'y. Uruchom je w katalogu z `cypress.config.*` lub `playwright.config.*`; pokaże komendę, zapyta przed uruchomieniem i dopyta o to, czego sam nie znajdzie (np. katalog z konfiguracją):
+
+```bash
+npx pixsame baselines --update
+```
+
+Zastępuje to wszystkie baseline'y w tym przebiegu, tak jak `pluginVisualRegressionUpdateImages=true`. Dodaj `--failures-only`, żeby zastąpić tylko te, które nie przechodzą. Zatwierdź wynik.
 
 ## Wolisz zrobić to ręcznie?
 

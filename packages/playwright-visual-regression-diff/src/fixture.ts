@@ -32,6 +32,7 @@ import {
 } from './manifest.utils';
 import { captureLayout } from './layout';
 import { resolveImagesDir, ScreenshotNamer } from './screenshotPath';
+import { updateImagesFromEnv } from './update.utils';
 
 export type MatchImageOptions = {
   /**
@@ -121,7 +122,8 @@ const withDefaults = (
     maxDiffThreshold: merged.maxDiffThreshold ?? 0.01,
     diffConfig: merged.diffConfig ?? {},
     createMissingImages: merged.createMissingImages ?? true,
-    updateImages: merged.updateImages ?? false,
+    // the environment wins: the `pixsame` CLI refreshes baselines for a single run
+    updateImages: updateImagesFromEnv() ?? merged.updateImages ?? false,
     title: merged.title,
     matchAgainstPath: merged.matchAgainstPath,
     screenshotConfig: merged.screenshotConfig ?? {},

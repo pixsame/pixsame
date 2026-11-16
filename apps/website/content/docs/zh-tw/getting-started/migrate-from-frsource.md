@@ -39,7 +39,13 @@ npx @frsource/cypress-plugin-visual-regression-diff migrate
 npx pixsame baselines
 ```
 
-接著用你熟悉的更新選項執行一次測試（Cypress 用 `pluginVisualRegressionUpdateImages=true`，Playwright 用 `--update-snapshots`），並提交結果。仍然通過的基準圖只有在 `true` 時才會被取代；`'failures-only'` 只取代失敗的基準圖。
+接著讓 CLI 執行一次測試，由測試執行器取代基準圖。請在包含 `cypress.config.*` 或 `playwright.config.*` 的目錄中執行；它會顯示指令、執行前先詢問，並詢問它自己找不到的資訊（例如設定檔所在的目錄）：
+
+```bash
+npx pixsame baselines --update
+```
+
+這次執行會取代每一張基準圖，與 `pluginVisualRegressionUpdateImages=true` 相同。加上 `--failures-only` 則只取代失敗的基準圖。接著提交結果。
 
 ## 想自己手動處理？
 

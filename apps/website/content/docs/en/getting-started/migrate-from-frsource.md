@@ -38,7 +38,13 @@ Your old baselines keep working. New and replaced baselines also record the layo
 npx pixsame baselines
 ```
 
-Then run your tests once with the update option you already know (`pluginVisualRegressionUpdateImages=true` for Cypress, `--update-snapshots` for Playwright) and commit the result. Baselines that still pass are only replaced with `true`; `'failures-only'` replaces the failing ones.
+Then let the CLI run your tests once so the runner replaces them. Run it in the directory with your `cypress.config.*` or `playwright.config.*`; it shows the command, asks before running it and asks for anything it can't find on its own (such as the config's directory):
+
+```bash
+npx pixsame baselines --update
+```
+
+It replaces every baseline in that run, like `pluginVisualRegressionUpdateImages=true`. Add `--failures-only` to replace only the failing ones. Commit the result.
 
 ## Prefer to do it by hand?
 

@@ -39,7 +39,13 @@ npx @frsource/cypress-plugin-visual-regression-diff migrate
 npx pixsame baselines
 ```
 
-然后用你已熟悉的更新选项运行一次测试（Cypress 用 `pluginVisualRegressionUpdateImages=true`，Playwright 用 `--update-snapshots`），并提交结果。仍然通过的基线只有在 `true` 时才会被替换；`'failures-only'` 只替换失败的基线。
+然后让 CLI 运行一次测试，由测试运行器替换基线。请在包含 `cypress.config.*` 或 `playwright.config.*` 的目录中运行；它会显示命令、运行前先询问，并询问它自己找不到的信息（例如配置所在的目录）：
+
+```bash
+npx pixsame baselines --update
+```
+
+这次运行会替换每一张基线，与 `pluginVisualRegressionUpdateImages=true` 相同。加上 `--failures-only` 则只替换失败的基线。然后提交结果。
 
 ## 想手动迁移？
 
