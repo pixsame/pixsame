@@ -30,6 +30,16 @@ Before it writes anything it prints the files it's about to touch and waits for 
 | `--yes`        | Skip the question (required in CI)    |
 | `--no-install` | Skip the install step                 |
 
+## After migrating: give old baselines their layout
+
+Your old baselines keep working. New and replaced baselines also record the layout of the page, so a failed comparison can say what moved instead of only listing changed areas. See which baselines still lack it:
+
+```bash
+npx pixsame baselines
+```
+
+Then run your tests once with the update option you already know (`pluginVisualRegressionUpdateImages=true` for Cypress, `--update-snapshots` for Playwright) and commit the result. Baselines that still pass are only replaced with `true`; `'failures-only'` replaces the failing ones.
+
 ## Prefer to do it by hand?
 
 Swap the package, then search and replace the name in your imports:

@@ -31,6 +31,16 @@ Zanim cokolwiek zapisze, wypisuje pliki, które zamierza ruszyć, i czeka na two
 | `--yes`        | Pomija pytanie o zgodę (wymagane w CI)          |
 | `--no-install` | Pomija krok instalacji                          |
 
+## Po migracji: nadaj starym baseline'om layout
+
+Twoje stare baseline'y nadal działają. Nowe i zastąpione baseline'y zapisują też layout strony, dzięki czemu nieudane porównanie może powiedzieć, co się przesunęło, zamiast tylko wypisywać zmienione obszary. Sprawdź, którym baseline'om go jeszcze brakuje:
+
+```bash
+npx pixsame baselines
+```
+
+Następnie uruchom testy raz z opcją aktualizacji, którą już znasz (`pluginVisualRegressionUpdateImages=true` w Cypress, `--update-snapshots` w Playwright) i zatwierdź wynik. Baseline'y, które nadal przechodzą, są zastępowane tylko przy `true`; `'failures-only'` zastępuje te, które nie przechodzą.
+
 ## Wolisz zrobić to ręcznie?
 
 Dwa kroki. Podmień pakiet, a potem znajdź i zamień nazwę w importach:

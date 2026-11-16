@@ -31,6 +31,16 @@ npx @frsource/cypress-plugin-visual-regression-diff migrate
 | `--yes`        | 跳过确认提问（在 CI 中必须使用） |
 | `--no-install` | 跳过安装步骤                     |
 
+## 迁移之后：让旧基线带上布局
+
+旧基线仍然可用。新生成和被替换的基线还会记录页面布局，这样失败的比较就能说明哪些元素移动了，而不只是列出变化的区域。查看哪些基线还没有布局：
+
+```bash
+npx pixsame baselines
+```
+
+然后用你已熟悉的更新选项运行一次测试（Cypress 用 `pluginVisualRegressionUpdateImages=true`，Playwright 用 `--update-snapshots`），并提交结果。仍然通过的基线只有在 `true` 时才会被替换；`'failures-only'` 只替换失败的基线。
+
 ## 想手动迁移？
 
 两步。先替换依赖包，然后在导入语句里查找替换包名：

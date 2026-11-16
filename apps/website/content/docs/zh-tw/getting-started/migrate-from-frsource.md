@@ -31,6 +31,16 @@ npx @frsource/cypress-plugin-visual-regression-diff migrate
 | `--yes`        | 略過詢問（在 CI 中為必要） |
 | `--no-install` | 略過安裝步驟               |
 
+## 遷移之後：讓舊基準圖帶上版面
+
+舊基準圖仍然可用。新產生與被取代的基準圖還會記錄頁面版面，讓失敗的比對能說明哪些元素移動了，而不只是列出變化的區域。查看哪些基準圖還沒有版面：
+
+```bash
+npx pixsame baselines
+```
+
+接著用你熟悉的更新選項執行一次測試（Cypress 用 `pluginVisualRegressionUpdateImages=true`，Playwright 用 `--update-snapshots`），並提交結果。仍然通過的基準圖只有在 `true` 時才會被取代；`'failures-only'` 只取代失敗的基準圖。
+
 ## 想自己手動處理？
 
 兩步。先換掉套件，再把 import 裡的名稱搜尋取代：

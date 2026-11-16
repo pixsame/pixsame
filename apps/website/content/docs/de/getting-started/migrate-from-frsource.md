@@ -31,6 +31,16 @@ Bevor er irgendetwas schreibt, listet er die Dateien auf, die er anfassen wird, 
 | `--yes`        | Rückfrage überspringen (in CI erforderlich)       |
 | `--no-install` | Installationsschritt überspringen                 |
 
+## Nach der Migration: alten Baselines ihr Layout geben
+
+Deine alten Baselines funktionieren weiter. Neue und ersetzte Baselines halten zusätzlich das Layout der Seite fest, damit ein fehlgeschlagener Vergleich sagen kann, was sich verschoben hat, statt nur geänderte Bereiche aufzulisten. So siehst du, welchen Baselines es noch fehlt:
+
+```bash
+npx pixsame baselines
+```
+
+Führe dann deine Tests einmal mit der Update-Option aus, die du schon kennst (`pluginVisualRegressionUpdateImages=true` bei Cypress, `--update-snapshots` bei Playwright), und committe das Ergebnis. Baselines, die weiter bestehen, werden nur mit `true` ersetzt; `'failures-only'` ersetzt die fehlschlagenden.
+
 ## Lieber von Hand?
 
 Zwei Schritte. Paket tauschen, dann den Namen in Ihren Imports suchen und ersetzen:

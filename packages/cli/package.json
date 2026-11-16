@@ -1,0 +1,56 @@
+{
+  "name": "pixsame",
+  "description": "Command line for pixsame visual regression testing. Starts with `baselines`: finds the baseline screenshots that were stored before the page layout was recorded in them, so the next update can add it.",
+  "version": "0.0.0",
+  "author": "Jakub Freisler <jakub.freisler@frsource.org>",
+  "homepage": "https://pixsame.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pixsame/pixsame.git",
+    "directory": "packages/cli"
+  },
+  "license": "MIT",
+  "bin": {
+    "pixsame": "dist/bin.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "del-cli dist && tsc -p tsconfig.build.json",
+    "format": "prettier --write .",
+    "format:ci": "prettier --check .",
+    "test:integration": "vitest run",
+    "test:integration:watch": "vitest",
+    "test:integration:coverage": "vitest run --coverage",
+    "test:integration:ci": "CI=true vitest run --coverage"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "@pixsame/analysis": "workspace:*"
+  },
+  "devDependencies": {
+    "@frsource/prettier-config": "^1.11.0",
+    "@types/node": "20.19.43",
+    "@vitest/coverage-v8": "4.1.11",
+    "del-cli": "7.0.0",
+    "prettier": "3.9.8",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
+  },
+  "keywords": [
+    "visual regression testing",
+    "cli",
+    "baselines"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ]
+}
