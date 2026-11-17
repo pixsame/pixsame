@@ -1,0 +1,157 @@
+{
+  "reportFormat": "visual-regression-manifest",
+  "specVersion": "1.0.0-beta.1",
+  "createdAt": "2026-11-17T01:20:44.722Z",
+  "updatedAt": "2026-11-17T01:20:44.959Z",
+  "projectRoot": "__PROJECT_ROOT__",
+  "platform": {
+    "osPlatform": "darwin",
+    "arch": "arm64",
+    "osRelease": "24.6.0",
+    "osVersion": "Darwin Kernel Version 24.6.0: Sun Aug 23 20:37:17 PDT 2026; root:xnu-11417.140.69.712.69~1/RELEASE_ARM64_T6020"
+  },
+  "ci": null,
+  "tool": {
+    "name": "@pixsame/playwright-visual-regression-diff",
+    "version": "0.0.0"
+  },
+  "options": {
+    "maxDiffThreshold": 0.001
+  },
+  "runner": {
+    "name": "playwright",
+    "version": "1.63.0",
+    "mode": "run",
+    "configFile": "playwright.config.ts",
+    "browser": {
+      "name": "chromium",
+      "version": "153.0.8010.12",
+      "headless": true
+    },
+    "baseUrl": null,
+    "viewport": {
+      "width": 640,
+      "height": 400
+    },
+    "retries": 0,
+    "testDir": ".",
+    "outputDir": "test-results",
+    "workers": 5,
+    "parallelIndex": 0,
+    "workerIndex": 0
+  },
+  "summary": {
+    "entries": 1,
+    "passed": 0,
+    "failed": 1,
+    "missingBaseline": 0,
+    "created": 0,
+    "updated": 0,
+    "approved": 0,
+    "needsHuman": 1
+  },
+  "entries": [
+    {
+      "name": "home_#0",
+      "test": {
+        "filePath": "home.spec.ts",
+        "titlePath": ["home", "shows the banner"],
+        "retry": 0
+      },
+      "status": "failed",
+      "comparison": {
+        "diffRatio": 0.127328125,
+        "maxDiffRatio": 0.001,
+        "colorThreshold": 0.1,
+        "colorMetric": "yiq"
+      },
+      "images": {
+        "baseline": {
+          "path": "shots/home_#0.png"
+        },
+        "actual": {
+          "path": "shots/home_#0.actual.png"
+        },
+        "diff": {
+          "path": "shots/home_#0.diff.png"
+        }
+      },
+      "baselineWritten": false,
+      "recordedAt": "2026-11-17T01:20:44.934Z",
+      "duration": 99,
+      "platform": {
+        "osPlatform": "darwin",
+        "arch": "arm64",
+        "browser": {
+          "name": "chromium",
+          "version": "153.0.8010.12",
+          "headless": true
+        }
+      },
+      "extra": {
+        "pixsame": {
+          "analysis": {
+            "version": 1,
+            "label": "moved-and-changed",
+            "description": "3 elements moved down by 40 px. Changed: added div.promo \"Free shipping\".",
+            "regions": [],
+            "speckRatio": 0,
+            "layout": {
+              "moves": [
+                {
+                  "dx": 0,
+                  "dy": 40,
+                  "elements": 3
+                }
+              ],
+              "causes": ["added div.promo \"Free shipping\""],
+              "explained": 0.3173088722542643,
+              "unexplained": []
+            },
+            "bundleKey": "moved-changed:0,40:added div.promo \"Free shipping\""
+          }
+        },
+        "visualRegressionCompare": {
+          "engine": "pixelmatch",
+          "diffPixels": 32596,
+          "reason": {
+            "code": "above-limit",
+            "diffPixels": 32596,
+            "diffRatio": 0.127328125,
+            "maxDiffRatio": 0.001,
+            "baselineSize": {
+              "width": 640,
+              "height": 400
+            },
+            "actualSize": {
+              "width": 640,
+              "height": 400
+            }
+          }
+        }
+      },
+      "viewport": {
+        "width": 640,
+        "height": 400
+      },
+      "options": {
+        "imagesPath": "{spec_path}/__image_snapshots__",
+        "title": "demo",
+        "maxDiffRatio": 0.001,
+        "diffConfig": {},
+        "createMissingImages": true,
+        "updateImages": false,
+        "forceDeviceScaleFactor": false,
+        "matchAgainstPath": "/Users/jakubfreisler/Projects/Web/cypress-plugin-visual-regression-diff/packages/playwright-visual-regression-diff/e2e/__image_snapshots__/demo_#0.png",
+        "screenshotConfig": {}
+      },
+      "renderer": {
+        "backend": "native",
+        "browser": "chromium",
+        "browserVersion": "153.0.8010.12"
+      },
+      "hashes": {},
+      "message": "32596 pixels (12.7%) differ; the limit is 0.1%. 3 elements moved down by 40 px. Changed: added div.promo \"Free shipping\"."
+    }
+  ]
+}

@@ -38,6 +38,8 @@ const session = (
     out: (line) => void out.push(line),
     ask: answers && (async (q) => (asked.push(q), answers.shift() ?? '')),
     exec: async (plan) => (ran.push(plan), await onExec?.(), 0),
+    open: () => undefined,
+    wait: async () => undefined,
   };
   return { io, out, asked, ran, text: () => out.join('\n') };
 };

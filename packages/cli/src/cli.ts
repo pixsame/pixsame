@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import { createInterface } from 'node:readline/promises';
 import path from 'node:path';
 import { findBaselines, type Report } from './baselines';
+import { startReview } from './review';
 import {
   cypressVersionOf,
   detectRunners,
@@ -24,7 +25,14 @@ Commands:
     --cypress-version  Cypress version, when it is not installed there
     --json             Print the report as JSON
 
-Run it in the directory with cypress.config.* or playwright.config.*.
+  review [dir...]      Open a page to look at the failed comparisons of the last
+                       run (from its manifests below dir, default: here) and
+                       replace baselines
+    --port <n>         Port to serve on (default: a free one)
+    --no-open          Print the address, do not open a browser
+    --repo-root <dir>  The repository the manifests' paths belong to (default: here)
+
+Run baselines in the directory with cypress.config.* or playwright.config.*.
 `;
 
 export type Io = {
@@ -32,6 +40,10 @@ export type Io = {
   /** Asks a question; `undefined` when nobody can answer (no terminal). */
   ask?: (question: string) => Promise<string>;
   exec: (plan: Plan) => Promise<number>;
+  /** Opens an address in the browser. */
+  open: (url: string) => void;
+  /** Resolves when the user is done with a running page (Ctrl-C). */
+  wait: () => Promise<void>;
   cwd: string;
 };
 
@@ -64,6 +76,18 @@ const defaults = (): Io => {
         child.on('error', reject);
         child.on('close', (code) => resolve(code ?? 1));
       }),
+    open: (url) => {
+      const [program, ...args] =
+        process.platform === 'darwin'
+          ? ['open', url]
+          : process.platform === 'win32'
+            ? ['cmd', '/c', 'start', '', url]
+            : ['xdg-open', url];
+      spawn(program, args, { stdio: 'ignore', detached: true })
+        .on('error', () => undefined)
+        .unref();
+    },
+    wait: () => new Promise((resolve) => process.once('SIGINT', resolve)),
     cwd: process.cwd(),
   };
 };
@@ -209,6 +233,7 @@ export const run = async (
   io: Io = defaults(),
 ): Promise<number> => {
   const [command, ...rest] = argv;
+  if (command === 'review') return review(rest, io);
   if (command !== 'baselines') {
     io.out(HELP);
     return command === undefined || command === '--help' || command === '-h'
@@ -268,5 +293,54 @@ export const run = async (
     if (!(error instanceof Stop)) throw error;
     io.out(error.message);
     return error.code;
+  }
+};
+
+const review = async (args: string[], io: Io): Promise<number> => {
+  const roots: string[] = [];
+  let port: number | undefined;
+  let repoRoot: string | undefined;
+  let open = true;
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === '--no-open') open = false;
+    else if (arg === '--port') port = Number(args[++i]);
+    else if (arg === '--repo-root') repoRoot = args[++i];
+    else if (arg.startsWith('--')) {
+      io.out(`Unknown option ${arg}\n\n${HELP}`);
+      return 1;
+    } else roots.push(arg);
+  }
+  if (port !== undefined && !(port >= 0 && port < 65536)) {
+    io.out('--port needs a number from 0 to 65535.');
+    return 2;
+  }
+  try {
+    const session = await startReview({
+      roots: (roots.length > 0 ? roots : ['.']).map((root) =>
+        path.resolve(io.cwd, root),
+      ),
+      port,
+      repoRoot: path.resolve(io.cwd, repoRoot ?? '.'),
+    });
+    const items = session.items();
+    if (items.length === 0) {
+      io.out(
+        'No failed comparisons found in the manifests below here. Run your tests first, or pass the directory that has the visual-regression-manifest*.json files.',
+      );
+      await session.close();
+      return 0;
+    }
+    io.out(
+      `${items.length} comparison${items.length === 1 ? '' : 's'} to look at: ${session.url}`,
+    );
+    io.out('Press Ctrl-C to stop.');
+    if (open) io.open(session.url);
+    await io.wait();
+    await session.close();
+    return 0;
+  } catch (error) {
+    io.out(error instanceof Error ? error.message : String(error));
+    return 2;
   }
 };
