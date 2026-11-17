@@ -236,3 +236,16 @@ describe('pixsame baselines --update', () => {
     expect(await run(['baselines', '--update'], s.io)).toBe(3);
   });
 });
+
+describe('pixsame baselines without a known runner', () => {
+  it('points at --update and lists the command for each runner', async () => {
+    await put('snapshots/a.png', png());
+    const s = session(undefined);
+    await run(['baselines'], s.io);
+    expect(s.text()).toContain('npx pixsame baselines --update');
+    expect(s.text()).toContain(
+      'PIXSAME_UPDATE_IMAGES=true npx playwright test',
+    );
+    expect(s.text()).toContain('npx cypress run --expose');
+  });
+});

@@ -84,10 +84,16 @@ const text = (report: Report, plan?: Plan) => {
         `  ${file}  ${status === 'missing' ? 'no layout' : `layout v${version}`}`,
     ),
     '',
-    'They still compare. They get the layout when your tests replace them:',
-    plan
-      ? `  ${show(plan)}`
-      : '  pixsame baselines --update   (or pass the update option yourself)',
+    'They still compare. They get the layout when your tests replace them. Let the CLI run them:',
+    '  npx pixsame baselines --update',
+    '',
+    'If that does not work, run the command yourself:',
+    ...(plan
+      ? [`  ${show(plan)}`]
+      : [
+          '  Cypress     npx cypress run --expose pluginVisualRegressionUpdateImages=true  (--env before Cypress 15.10)',
+          '  Playwright  PIXSAME_UPDATE_IMAGES=true npx playwright test',
+        ]),
   ].join('\n');
 };
 

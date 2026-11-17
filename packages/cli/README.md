@@ -18,7 +18,10 @@ $ npx pixsame baselines
   cypress/e2e/__image_snapshots__/home_#0.png  no layout
   ...
 
-They still compare. They get the layout when your tests replace them:
+They still compare. They get the layout when your tests replace them. Let the CLI run them:
+  npx pixsame baselines --update
+
+If that does not work, run the command yourself:
   npx cypress run --expose pluginVisualRegressionUpdateImages=true
 ```
 
@@ -42,16 +45,16 @@ Then it runs the tests, and checks the baselines again. It replaces every baseli
 
 Without a terminal (CI, an agent) it can't ask, so it stops and names the flag that answers: `--dir <path>`, `--runner cypress|playwright`, `--cypress-version <x.y.z>`, `--yes`.
 
-| Option                    | What it does                                           |
-| ------------------------- | ------------------------------------------------------ |
-| `--update`                | Run your tests once so the runner replaces the baselines |
-| `--failures-only`         | With `--update`: replace only the failing baselines    |
-| `--yes`                   | With `--update`: don't ask before running              |
-| `--runner <name>`         | `cypress` or `playwright`                              |
-| `--dir <path>`            | The directory with the runner config                   |
-| `--cypress-version <v>`   | Cypress version, when it isn't installed there         |
-| `--json`                  | Print the report as JSON, for scripts and agents       |
-| `--check`                 | Exit with 1 when any baseline lacks the layout         |
+| Option                  | What it does                                             |
+| ----------------------- | -------------------------------------------------------- |
+| `--update`              | Run your tests once so the runner replaces the baselines |
+| `--failures-only`       | With `--update`: replace only the failing baselines      |
+| `--yes`                 | With `--update`: don't ask before running                |
+| `--runner <name>`       | `cypress` or `playwright`                                |
+| `--dir <path>`          | The directory with the runner config                     |
+| `--cypress-version <v>` | Cypress version, when it isn't installed there           |
+| `--json`                | Print the report as JSON, for scripts and agents         |
+| `--check`               | Exit with 1 when any baseline lacks the layout           |
 
 `--check` is for after the migration: it fails until every baseline has been replaced once, so don't add it to CI before that.
 
