@@ -54,9 +54,6 @@ Without a terminal (CI, an agent) it can't ask, so it stops and names the flag t
 | `--dir <path>`          | The directory with the runner config                     |
 | `--cypress-version <v>` | Cypress version, when it isn't installed there           |
 | `--json`                | Print the report as JSON, for scripts and agents         |
-| `--check`               | Exit with 1 when any baseline lacks the layout           |
-
-`--check` is for after the migration: it fails until every baseline has been replaced once, so don't add it to CI before that.
 
 A PNG counts as a baseline when it was written by the plugins, already has a layout, or sits in a `snapshots`, `__screenshots__` or `*-snapshots` folder. Failure artifacts (`*.actual.png`, `*.diff.png`) and `node_modules` are skipped.
 

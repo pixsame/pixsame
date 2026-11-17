@@ -23,7 +23,6 @@ Commands:
     --dir <path>       The directory with the runner config (default: here)
     --cypress-version  Cypress version, when it is not installed there
     --json             Print the report as JSON
-    --check            Exit with 1 when any baseline lacks the layout
 
 Run it in the directory with cypress.config.* or playwright.config.*.
 `;
@@ -99,7 +98,6 @@ const text = (report: Report, plan?: Plan) => {
 
 type Flags = {
   json: boolean;
-  check: boolean;
   update: boolean;
   failuresOnly: boolean;
   yes: boolean;
@@ -112,7 +110,6 @@ type Flags = {
 
 const BOOLEAN = {
   '--json': 'json',
-  '--check': 'check',
   '--update': 'update',
   '--failures-only': 'failuresOnly',
   '--yes': 'yes',
@@ -126,7 +123,6 @@ const VALUE = {
 const parse = (args: string[]): Flags => {
   const flags: Flags = {
     json: false,
-    check: false,
     update: false,
     failuresOnly: false,
     yes: false,
@@ -267,7 +263,7 @@ export const run = async (
       io.out(text(after));
       return lacking(after) > 0 ? 1 : 0;
     }
-    return flags.check && lacking(report) > 0 ? 1 : 0;
+    return 0;
   } catch (error) {
     if (!(error instanceof Stop)) throw error;
     io.out(error.message);

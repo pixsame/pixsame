@@ -106,12 +106,10 @@ describe('pixsame baselines', () => {
     expect(s.ran).toEqual([]);
   });
 
-  it('exits 1 with --check only while something lacks a layout', async () => {
-    await put('snapshots/a.png', png());
-    expect(await run(['baselines', '--check'], session(undefined).io)).toBe(1);
+  it('says so when every baseline has a layout', async () => {
     await put('snapshots/a.png', writeLayout(png(), layout));
     const s = session(undefined);
-    expect(await run(['baselines', '--check'], s.io)).toBe(0);
+    expect(await run(['baselines'], s.io)).toBe(0);
     expect(s.out[0]).toMatch(/^All 1 baselines have the page layout/);
   });
 
