@@ -10,7 +10,7 @@ npx pixsame baselines
 
 Finds the baseline screenshots stored before the page layout was recorded in them. New and replaced baselines carry the layout of the page (a small chunk inside the PNG, versioned with `@pixsame/analysis`), which lets a failed comparison say "One element moved down by 40 px" instead of only listing changed areas.
 
-Old baselines keep working: they still compare, and are described from the pixels alone. They get the layout when your tests replace them.
+Old baselines keep working: they still compare, and are described from the pixels alone. They get the layout when your tests replace them. The Cypress and Playwright packages tell you once per run when they meet one (in Cypress also in the review carousel, in Playwright also in the HTML report) and point here.
 
 ```text
 $ npx pixsame baselines

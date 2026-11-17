@@ -377,6 +377,7 @@ cy.matchImage({
   // inside every baseline PNG. It covers viewport captures, full-page captures of a page that fits the window and elements that fit it;
   // taller captures are stitched by Cypress and keep the pixel-only analysis
   // a baseline made before that keeps working and gets its snapshot the next time `updateImages` replaces it
+  // a run tells you once when it meets one, and the review carousel shows a line about it; `npx pixsame baselines --update` adds the snapshots
   // default: true
   analysis: false,
   // forces scale factor to be set as value "1"

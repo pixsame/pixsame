@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: e7eac5f197e28c93
+source: 50180dcdbb9fd137
 ---
 
 ## 快速開始
@@ -322,6 +322,7 @@ cy.matchImage({
   // 存入每張基準 PNG 中。它涵蓋視窗截圖、能放進視窗的整頁截圖，以及能放進視窗的元素；
   // 更高的截圖由 Cypress 分段拼接而成，對它們仍只依像素分析
   // 在此之前產生的基準圖仍然可用，並會在下次被 `updateImages` 取代時獲得快照
+  // 一次執行遇到這樣的基準圖時會提示一次，審查輪播中也會顯示一行說明；`npx pixsame baselines --update` 可補上快照
   // 預設值：true
   analysis: false,
   // 強制將縮放比例設為 "1"

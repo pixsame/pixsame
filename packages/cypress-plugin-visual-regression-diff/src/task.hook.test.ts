@@ -1,4 +1,4 @@
-import { it, expect, describe, beforeEach, afterEach } from 'vitest';
+import { it, expect, describe, beforeEach, afterEach, vi } from 'vitest';
 import path from 'path';
 import { promises as fs, existsSync, readFileSync } from 'fs';
 import sharp from 'sharp';
@@ -6,6 +6,7 @@ import { dir, file, setGracefulCleanup, withFile } from 'tmp-promise';
 import {
   approveImageTask,
   compareImagesTask,
+  resetOldBaselineNotice,
   doesFileExistTask,
   getScreenshotPathInfoTask,
   CompareImagesCfg,
@@ -1058,5 +1059,55 @@ describe('pendingDiffs tasks', () => {
     recordPendingDiffTask(record);
     expect(clearPendingDiffsTask()).toBeNull();
     expect(getPendingDiffsTask()).toHaveLength(0);
+  });
+});
+
+describe('compareImagesTask with an old baseline', () => {
+  const layout = {
+    size: { width: 250, height: 181 },
+    count: 1,
+    root: { tag: 'html', rect: [0, 0, 250, 181], kids: [] },
+  } as unknown as CompareImagesCfg['layout'];
+  const spy = () => vi.spyOn(process.stderr, 'write').mockReturnValue(true);
+
+  it('flags a baseline that has no layout and tells the terminal once', async () => {
+    resetOldBaselineNotice();
+    const write = spy();
+    const first = await compareImagesTask(
+      { testingType: 'e2e' },
+      await generateConfig({ layout }),
+    );
+    const second = await compareImagesTask(
+      { testingType: 'e2e' },
+      await generateConfig({ layout }),
+    );
+    expect(first?.oldBaseline).toBe(true);
+    expect(second?.oldBaseline).toBe(true);
+    const told = write.mock.calls.filter(([text]) =>
+      String(text).includes('saved before page layouts were recorded'),
+    );
+    expect(told).toHaveLength(1);
+    expect(String(told[0][0])).toContain('npx pixsame baselines --update');
+    write.mockRestore();
+  });
+
+  it('says nothing when the baseline was replaced, when there is no layout or no baseline', async () => {
+    resetOldBaselineNotice();
+    const write = spy();
+    const replaced = await compareImagesTask(
+      { testingType: 'e2e' },
+      await generateConfig({ layout, updateImages: true }),
+    );
+    const noLayout = await compareImagesTask(
+      { testingType: 'e2e' },
+      await generateConfig({}),
+    );
+    const cfg = await generateConfig({ layout });
+    await fs.rm(cfg.imgOld);
+    const noBaseline = await compareImagesTask({ testingType: 'e2e' }, cfg);
+    for (const result of [replaced, noLayout, noBaseline])
+      expect(result).not.toHaveProperty('oldBaseline');
+    expect(write).not.toHaveBeenCalled();
+    write.mockRestore();
   });
 });

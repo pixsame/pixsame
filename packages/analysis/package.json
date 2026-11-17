@@ -22,12 +22,19 @@
       "types": "./dist/layout/snapshot.d.ts",
       "default": "./dist/layout/snapshot.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./notice": {
+      "types": "./dist/notice.d.ts",
+      "default": "./dist/notice.js"
+    }
   },
   "typesVersions": {
     "*": {
       "snapshot": [
         "dist/layout/snapshot.d.ts"
+      ],
+      "notice": [
+        "dist/notice.d.ts"
       ]
     }
   },

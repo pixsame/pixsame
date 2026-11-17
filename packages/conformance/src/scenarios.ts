@@ -137,6 +137,7 @@ export const scenarios: Scenario[] = [
           ...passed,
           baselineHasLayout: false,
           baselineUnchanged: true,
+          oldBaselineNotice: true,
         },
       },
       {
@@ -153,6 +154,7 @@ export const scenarios: Scenario[] = [
           files: { baseline: true, actual: true, diff: true },
           baselineHasLayout: false,
           baselineUnchanged: true,
+          oldBaselineNotice: true,
         },
       },
     ],
@@ -171,6 +173,7 @@ export const scenarios: Scenario[] = [
           reason: 'updated',
           files: { baseline: true, actual: false, diff: false },
           baselineHasLayout: true,
+          oldBaselineNotice: false,
         },
       },
       {
@@ -183,6 +186,7 @@ export const scenarios: Scenario[] = [
           reason: 'updated',
           files: { baseline: true, actual: false, diff: false },
           baselineHasLayout: true,
+          oldBaselineNotice: false,
         },
       },
     ],

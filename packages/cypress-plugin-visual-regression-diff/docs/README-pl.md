@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: e7eac5f197e28c93
+source: 50180dcdbb9fd137
 ---
 
 ## Pierwsze kroki
@@ -322,6 +322,7 @@ cy.matchImage({
   // wewnątrz każdego bazowego pliku PNG. Obejmuje zrzuty viewportu, zrzuty całej strony, jeśli mieści się w oknie, oraz elementy, które się w nim mieszczą;
   // wyższe zrzuty Cypress skleja z kilku fragmentów i dla nich analiza opiera się wyłącznie na pikselach
   // bazowy obraz sprzed tej zmiany nadal działa i dostaje migawkę przy następnej zamianie przez `updateImages`
+  // przebieg informuje o tym raz, gdy na taki trafi, a karuzela przeglądu pokazuje o tym wiersz; `npx pixsame baselines --update` dodaje migawki
   // domyślnie: true
   analysis: false,
   // wymusza ustawienie współczynnika skalowania na wartość "1"

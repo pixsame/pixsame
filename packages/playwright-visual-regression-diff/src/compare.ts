@@ -79,6 +79,8 @@ export type CompareResult = {
   threshold: number;
   /** `true` whenever the baseline file was (re)written. */
   baselineWritten: boolean;
+  /** The baseline exists but was saved before page layouts were recorded, and was not replaced now. */
+  oldBaseline: boolean;
   /** Path of the `.diff.png` sibling of `actualPath`. */
   diffPath: string;
   /** The compared images (padded to a common size when they differed in size); absent when no comparison ran. */
@@ -221,12 +223,12 @@ export const compareImages = async (
   const actual = withLayout
     ? Buffer.from(writeLayout(stamped, cfg.layout as Layout))
     : stamped;
-  const baselineLayout = withLayout
-    ? await fs.promises.readFile(cfg.baselinePath).then(
-        (bytes) => readLayout(bytes),
-        () => undefined,
-      )
+  const baselineBytes = withLayout
+    ? await fs.promises.readFile(cfg.baselinePath).catch(() => undefined)
     : undefined;
+  const baselineLayout = baselineBytes ? readLayout(baselineBytes) : undefined;
+  // a baseline that exists but carries no layout of this version
+  const oldBaseline = baselineBytes !== undefined && !baselineLayout;
   const compare = () =>
     comparer.compare(
       {
@@ -274,6 +276,8 @@ export const compareImages = async (
     diffRatio: entry.comparison.diffRatio,
     threshold: cfg.maxDiffThreshold,
     baselineWritten: entry.baselineWritten,
+    // a replaced baseline got the layout just now
+    oldBaseline: oldBaseline && entry.status !== 'updated',
     diffPath,
     imgNew: buffer(images.actual),
     imgOld: buffer(images.baseline),

@@ -44,6 +44,12 @@ const check = (
     );
   }
   if (expected.message) expect(observed.output).toMatch(expected.message);
+  if (expected.oldBaselineNotice !== undefined) {
+    expect(
+      observed.output.includes('saved before page layouts were recorded'),
+      'old baseline notice',
+    ).toBe(expected.oldBaselineNotice);
+  }
   if (expected.analysis) {
     const analysis = (
       entry?.extra as

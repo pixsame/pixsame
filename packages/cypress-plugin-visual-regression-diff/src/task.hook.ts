@@ -8,6 +8,7 @@ import { FILE_SUFFIX, TASK, type PathVariables } from './constants';
 import { getPluginConfig } from './version.utils';
 import {
   analysisOf,
+  OLD_BASELINES_NOTICE,
   pngSize,
   readLayout,
   withAnalysis,
@@ -36,6 +37,18 @@ import type {
 } from './types';
 
 let pendingDiffs: PendingDiffRecord[] = [];
+
+let toldAboutOldBaselines = false;
+/** Says once per run, in the terminal, that a baseline has no page layout. */
+const noteOldBaseline = () => {
+  if (toldAboutOldBaselines) return;
+  toldAboutOldBaselines = true;
+  process.stderr.write(`[pixsame] ${OLD_BASELINES_NOTICE}\n`);
+};
+/** Lets the next run tell again; for tests. */
+export const resetOldBaselineNotice = () => {
+  toldAboutOldBaselines = false;
+};
 
 export type CompareImagesCfg = {
   scaleFactor: number;
@@ -160,10 +173,13 @@ export const compareImagesTask = async (
   const stampedImgNew = layout
     ? Buffer.from(writeLayout(markedImgNew, layout))
     : markedImgNew;
-  const baselineLayout =
+  const baselineBytes =
     layout && fs.existsSync(cfg.imgOld)
-      ? readLayout(fs.readFileSync(cfg.imgOld))
+      ? fs.readFileSync(cfg.imgOld)
       : undefined;
+  const baselineLayout = baselineBytes ? readLayout(baselineBytes) : undefined;
+  // a baseline that exists but carries no layout of this version
+  const hadNoLayout = baselineBytes !== undefined && !baselineLayout;
   const comparer = await getComparer(
     getManifestWriter(cypressConfig),
     cypressConfig,
@@ -211,6 +227,10 @@ export const compareImagesTask = async (
             : undefined,
       }));
 
+  // a replaced baseline got its layout just now
+  const oldBaseline = hadNoLayout && entry.status !== 'updated';
+  if (oldBaseline) noteOldBaseline();
+
   // the images of a comparison that ran; a created or replaced baseline has none to show
   const base64 = (bytes?: Uint8Array) =>
     bytes && images.baseline ? Buffer.from(bytes).toString('base64') : '';
@@ -223,6 +243,7 @@ export const compareImagesTask = async (
     imgOldBase64: base64(images.baseline),
     maxDiffThreshold: cfg.maxDiffThreshold,
     description: analysisOf(entry)?.description,
+    ...(oldBaseline && { oldBaseline }),
   };
 };
 

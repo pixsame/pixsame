@@ -35,6 +35,7 @@ export {
 export { snapshotLayout, type RawLayout } from './layout/snapshot';
 export type { Layout, LayoutNode, Rect } from './layout/types';
 export { checkAgainstPixels, type Checked } from './layout/verify';
+export { OLD_BASELINES_NOTICE, UPDATE_BASELINES_COMMAND } from './notice';
 export { ANALYSIS_VERSION } from './version';
 export { decodeLayout, encodeLayout } from './layout/codec';
 export {

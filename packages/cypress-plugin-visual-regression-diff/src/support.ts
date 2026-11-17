@@ -1,5 +1,6 @@
 import * as Base64 from '@frsource/base64';
 import './commands';
+import { UPDATE_BASELINES_COMMAND } from '@pixsame/analysis/notice';
 import { getBatchReviewMode, getShowPassingImagesConfig } from './config.utils';
 import {
   FAB_CLASS,
@@ -153,6 +154,7 @@ const generateCarouselTemplate = () =>
         <button data-type="close" style="background:transparent;border:1px solid #4a5568;color:#a0aec0;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:.85em">✕ Close</button>
       </div>
     </header>
+    <div data-carousel-notice style="display:none;background:#744210;color:#fefcbf;padding:8px 16px;font-size:.8em;flex-shrink:0"></div>
     <div data-carousel-content style="flex:1;overflow:auto;padding:20px;color:#fff"></div>
     <div data-see-diff-row style="background:#1a202c;padding:0 16px 10px;display:flex;justify-content:flex-end;flex-shrink:0">
       <button data-type="see-diff" style="background:#4a5568;border:none;color:#fff;padding:6px 14px;border-radius:4px;cursor:pointer;font-size:.85em">See diff image →</button>
@@ -225,6 +227,16 @@ function openCarousel(
   const carouselEl = Cypress.$(generateCarouselTemplate()).appendTo(
     top.document.body,
   );
+
+  const oldBaselines = allDiffs.filter((d) => d.oldBaseline).length;
+  if (oldBaselines > 0) {
+    carouselEl
+      .find('[data-carousel-notice]')
+      .text(
+        `${oldBaselines === 1 ? '1 baseline was' : `${oldBaselines} baselines were`} saved before page layouts were recorded, so changes in ${oldBaselines === 1 ? 'it are' : 'them are'} described from pixels only. Run \`${UPDATE_BASELINES_COMMAND}\` to add the layouts.`,
+      )
+      .css('display', 'block');
+  }
 
   function renderDiff(index: number) {
     currentIndex = index;

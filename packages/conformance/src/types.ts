@@ -55,6 +55,8 @@ export type RunExpectation = {
   /** `extra.visualRegressionCompare.reason` of that entry. */
   reason?: string | string[];
   message?: RegExp;
+  /** Whether the run told, in its output, that a baseline had no page layout. */
+  oldBaselineNotice?: boolean;
   /** `extra.pixsame.analysis` of that entry: its label, and the sentence that must also end the failure message. */
   analysis?: { label: string; description: RegExp };
   files?: { baseline?: boolean; actual?: boolean; diff?: boolean };

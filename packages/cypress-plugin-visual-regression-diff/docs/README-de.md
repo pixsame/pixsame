@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: e7eac5f197e28c93
+source: 50180dcdbb9fd137
 ---
 
 ## Erste Schritte
@@ -322,6 +322,7 @@ cy.matchImage({
   // in jeder Baseline-PNG. Er deckt Viewport-Aufnahmen, Ganzseiten-Aufnahmen einer Seite, die ins Fenster passt, und Elemente ab, die hineinpassen;
   // höhere Aufnahmen setzt Cypress aus mehreren Teilen zusammen, für sie bleibt die Analyse rein pixelbasiert
   // eine Baseline von vor dieser Änderung funktioniert weiter und bekommt ihren Schnappschuss, sobald `updateImages` sie das nächste Mal ersetzt
+  // ein Lauf meldet es einmal, wenn er auf eine solche trifft, und das Review-Karussell zeigt eine Zeile dazu; `npx pixsame baselines --update` ergänzt die Schnappschüsse
   // Standard: true
   analysis: false,
   // erzwingt den Skalierungsfaktor "1"

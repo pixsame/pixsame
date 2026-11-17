@@ -406,6 +406,7 @@ Cypress.Commands.add(
             imgDiffBase64: res.imgDiffBase64 ?? '',
             message: res.message ?? '',
             description: res.description,
+            oldBaseline: res.oldBaseline,
             deferred,
           };
 

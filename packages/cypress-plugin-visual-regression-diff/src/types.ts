@@ -8,6 +8,8 @@ export type CompareImagesTaskReturn = null | {
   maxDiffThreshold?: number;
   /** What changed, in one sentence; only for a comparison that found differences. */
   description?: string;
+  /** The baseline exists but was saved before page layouts were recorded, and was not replaced now. */
+  oldBaseline?: boolean;
 };
 
 export type PendingDiffRecord = {
@@ -19,6 +21,8 @@ export type PendingDiffRecord = {
   imgDiffBase64: string;
   message: string;
   description?: string;
+  /** Compared against a baseline that has no page layout. */
+  oldBaseline?: boolean;
   passed?: boolean;
   deferred?: boolean;
 };

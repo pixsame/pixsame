@@ -32,6 +32,7 @@ import {
 } from './manifest.utils';
 import { captureLayout } from './layout';
 import { resolveImagesDir, ScreenshotNamer } from './screenshotPath';
+import { oldBaselinesNotice } from './notice.utils';
 import { updateImagesFromEnv } from './update.utils';
 
 export type MatchImageOptions = {
@@ -271,6 +272,15 @@ export const visualRegressionFixtures: Fixtures<
         },
         visualRegressionComparer,
       );
+
+      if (result.oldBaseline) {
+        const notice = oldBaselinesNotice(testInfo.project.outputDir);
+        if (notice) {
+          // the terminal, and the HTML report on the test that met it first
+          process.stderr.write(`[pixsame] ${notice}\n`);
+          testInfo.annotations.push({ type: 'pixsame', description: notice });
+        }
+      }
 
       const matchImageResult: MatchImageResult = {
         status: result.status,
