@@ -7,9 +7,7 @@ import { OLD_BASELINES_NOTICE } from '@pixsame/analysis';
  * Playwright clears at the start of a run) that a baseline had no page layout.
  * Returns the notice when this call is the one to show it, otherwise `undefined`.
  */
-export const oldBaselinesNotice = (
-  outputDir: string,
-): string | undefined => {
+export const oldBaselinesNotice = (outputDir: string): string | undefined => {
   try {
     fs.mkdirSync(outputDir, { recursive: true });
     // `wx` fails when another worker already wrote it

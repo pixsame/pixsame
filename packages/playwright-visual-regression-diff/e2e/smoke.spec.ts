@@ -88,9 +88,9 @@ test.describe('matchImage', () => {
       true,
     );
     expect(testInfo.attachments.map((a) => a.name)).toEqual([
-      'changing card_#1 (baseline)',
-      'changing card_#1 (actual)',
-      'changing card_#1 (diff)',
+      'changing card_#1-expected.png',
+      'changing card_#1-actual.png',
+      'changing card_#1-diff.png',
     ]);
     fs.rmSync(path.join(dir, 'changing card_#1.actual.png'));
     fs.rmSync(path.join(dir, 'changing card_#1.diff.png'));

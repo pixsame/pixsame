@@ -46,7 +46,7 @@ export const test = base.extend(visualRegressionFixtures);
 
 - **passes** when the share of differing pixels is within `maxDiffThreshold`, leaving only the baseline on disk;
 - **creates** the baseline from the screenshot when there is none (`createMissingImages`, on by default);
-- **fails** the test otherwise, keeps `<name>.actual.png` and `<name>.diff.png` next to the baseline and attaches baseline, actual and diff to the Playwright report.
+- **fails** the test otherwise, keeps `<name>.actual.png` and `<name>.diff.png` next to the baseline and attaches baseline, actual and diff to the Playwright report as `<name>-expected.png`, `<name>-actual.png` and `<name>-diff.png`, the names Playwright's HTML report and UI mode turn into their image viewer (diff, actual, expected, side by side, slider).
 
 It resolves to `{ status, message, diffValue, imgPath, imgNewPath, imgDiffPath, img, imgNew, imgDiff }`.
 

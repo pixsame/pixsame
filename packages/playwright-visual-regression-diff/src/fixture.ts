@@ -295,15 +295,17 @@ export const visualRegressionFixtures: Fixtures<
       };
 
       if (result.error) {
-        // the three images land in the HTML report next to the failure
-        const attach = (label: string, body: Buffer | undefined) =>
+        // Playwright's HTML report and UI mode group image attachments named
+        // `<name>-expected.png`, `-actual.png` and `-diff.png` into their own
+        // viewer (diff, actual, expected, side by side, slider)
+        const attach = (kind: 'expected' | 'actual' | 'diff', body?: Buffer) =>
           body &&
-          testInfo.attach(`${name} (${label})`, {
+          testInfo.attach(`${name}-${kind}.png`, {
             body,
             contentType: 'image/png',
           });
         // one after another, so the report lists them in a stable order
-        await attach('baseline', result.imgOld);
+        await attach('expected', result.imgOld);
         await attach('actual', result.imgNew ?? imgNew);
         await attach('diff', result.imgDiff);
         throw new Error(`[${name}] ${result.message}`);
