@@ -44,6 +44,12 @@ const check = (
     );
   }
   if (expected.message) expect(observed.output).toMatch(expected.message);
+  if (expected.oldBaselineNotice !== undefined) {
+    expect(
+      observed.output.includes('saved before page layouts were recorded'),
+      'old baseline notice',
+    ).toBe(expected.oldBaselineNotice);
+  }
   if (expected.analysis) {
     const analysis = (
       entry?.extra as
@@ -67,6 +73,15 @@ const check = (
     expect(baseline && hasMarker(baseline), 'baseline marker').toBe(
       expected.baselineMarked,
     );
+  }
+  if (expected.baselineHasLayout !== undefined) {
+    expect(
+      !!baseline &&
+        /pixsame-layout-v\d+/.test(
+          fs.readFileSync(baseline).toString('latin1'),
+        ),
+      'baseline layout',
+    ).toBe(expected.baselineHasLayout);
   }
   if (expected.baselineUnchanged && baseline && before) {
     expect(fs.readFileSync(baseline).equals(before), 'baseline bytes').toBe(
@@ -107,6 +122,7 @@ for (const driver of drivers) {
               fixture: run.fixture,
               options: run.options ?? {},
               imagesPath: run.imagesPath,
+              capture: run.capture ?? 'fullPage',
             });
             check(observed, run.expect, before);
             const [entry] = observed.entries;

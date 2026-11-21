@@ -250,3 +250,31 @@ describe('compareImages', () => {
     expect(fs.existsSync(baselinePath)).toBe(false);
   });
 });
+
+describe('compareImages with an old baseline', () => {
+  const layout = {
+    size: { width: 250, height: 181 },
+    scale: 1,
+    count: 1,
+    root: { tag: 'html', rect: [0, 0, 250, 181], kids: [] },
+  } as CompareInput['layout'];
+
+  it('flags a baseline that has no layout', async () => {
+    const { input } = await setup({ layout });
+    expect((await compareImages(input)).oldBaseline).toBe(true);
+  });
+
+  it('does not flag a replaced baseline, a missing one or a run without layout', async () => {
+    expect(
+      (await compareImages((await setup({ layout, updateImages: true })).input))
+        .oldBaseline,
+    ).toBe(false);
+    expect(
+      (await compareImages((await setup({ layout }, { baseline: null })).input))
+        .oldBaseline,
+    ).toBe(false);
+    expect((await compareImages((await setup()).input)).oldBaseline).toBe(
+      false,
+    );
+  });
+});

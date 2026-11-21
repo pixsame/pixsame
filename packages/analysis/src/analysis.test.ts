@@ -4,7 +4,7 @@ import {
   analyze,
   bundle,
   captureComparison,
-  detectShift,
+  findMoves,
   findRegions,
   maskFromPixelmatchDiff,
   regionHash,
@@ -97,8 +97,14 @@ describe('maskFromPixelmatchDiff', () => {
   });
 });
 
-describe('detectShift', () => {
-  const shiftedDown = (source: RgbaImage, fromY: number, by: number) => {
+describe('moves found from the pixels alone', () => {
+  /** The page with everything from row `fromY` down moved by `by`, the rows it left filled with `fill`. */
+  const shiftedDown = (
+    source: RgbaImage,
+    fromY: number,
+    by: number,
+    fill: [number, number, number] = [255, 255, 255],
+  ) => {
     const target = clone(source);
     const stride = source.width * 4;
     for (let y = source.height - 1; y >= fromY + by; y--) {
@@ -107,63 +113,9 @@ describe('detectShift', () => {
         y * stride,
       );
     }
-    paint(
-      target,
-      { x: 0, y: fromY, width: source.width, height: by },
-      [200, 30, 30],
-    );
+    paint(target, { x: 0, y: fromY, width: source.width, height: by }, fill);
     return target;
   };
-
-  it('finds content moved down', () => {
-    const before = page();
-    const shift = detectShift(before, shiftedDown(before, 60, 12));
-    expect(shift).toMatchObject({ fromX: 0, fromY: 60, dx: 0, dy: 12 });
-    expect(shift?.coverage).toBeGreaterThan(0.9);
-  });
-
-  it('finds content moved up', () => {
-    const after = page();
-    const before = shiftedDown(after, 60, 12);
-    expect(detectShift(before, after)).toMatchObject({ fromY: 60, dy: -12 });
-  });
-
-  it('finds none for a change in place, even on a mostly blank page', () => {
-    const before = image(200, 300);
-    const after = paint(
-      clone(before),
-      { x: 20, y: 40, width: 80, height: 30 },
-      [0, 0, 0],
-    );
-    expect(detectShift(before, after)).toBeNull();
-    expect(detectShift(before, before)).toBeNull();
-  });
-});
-
-describe('moves sideways and of single areas', () => {
-  it('finds everything right of a column moved right', () => {
-    const before = image(300, 120);
-    for (let i = 0; i < 10; i++) {
-      paint(
-        before,
-        { x: 12 + i * 27, y: 10 + ((i * 17) % 60), width: 14, height: 30 + i },
-        [(i * 53) % 256, (i * 97) % 256, (i * 31) % 256],
-      );
-    }
-    const after = clone(before);
-    for (let y = 0; y < before.height; y++) {
-      const row = y * before.width * 4;
-      after.data.copyWithin(row + (100 + 9) * 4, row + 100 * 4, row + 291 * 4);
-    }
-    expect(detectShift(before, after)).toMatchObject({
-      fromY: 0,
-      dx: 9,
-      dy: 0,
-    });
-    expect(analyzePair(before, after).description).toMatch(
-      /^Everything right of x=\d+ moved right by 9 px\.$/,
-    );
-  });
 
   const badge = (target: RgbaImage, x: number, y: number) => {
     paint(target, { x, y, width: 40, height: 16 }, [20, 90, 200]);
@@ -176,51 +128,136 @@ describe('moves sideways and of single areas', () => {
     return target;
   };
 
-  it('finds one area that moved while the rest stayed', () => {
-    const before = badge(page(), 130, 250);
-    const after = badge(page(), 142, 250);
-    const analysis = analyzePair(before, after);
-    expect(analysis.shift).toBeNull();
-    expect(analysis.regions[0]).toMatchObject({
-      x: 130,
-      y: 250,
-      width: 52,
-      height: 16,
-      moved: { dx: 12, dy: 0 },
-    });
-    expect(analysis).toMatchObject({
+  it('says content moved down when the pixels explain every difference', () => {
+    const before = page();
+    const result = analyzePair(before, shiftedDown(before, 70, 12));
+    expect(result).toMatchObject({
       label: 'moved',
-      description: 'One area moved right by 12 px: 52x16 px at x=130, y=250.',
+      description: 'Content moved down by 12 px.',
+      bundleKey: 'moved:0,12',
     });
-    expect(analysis.bundleKey).toMatch(/^moved-area:12,0:52x16:/);
+    expect(result.pixels?.moves[0]).toMatchObject({ dx: 0, dy: 12 });
+    expect(result.pixels?.explained).toBeGreaterThan(0.99);
+    expect(result.pixels?.unexplained).toEqual([]);
   });
 
-  it('describes areas that moved in different ways', () => {
-    const before = badge(badge(page(300, 300), 130, 250), 240, 40);
-    const after = badge(badge(page(300, 300), 130, 243), 251, 40);
-    const analysis = analyzePair(before, after);
-    expect(analysis.regions.map((region) => region.moved)).toEqual([
-      { dx: 0, dy: -7 },
-      { dx: 11, dy: 0 },
-    ]);
-    expect(analysis.description).toBe(
-      '2 areas moved. The largest is 40x23 px at x=130, y=243.',
+  it('says what it cannot explain when a moved element uncovers other content', () => {
+    // the badge sits over a bar of the page; moving it shows part of that bar
+    const result = analyzePair(
+      badge(page(300, 300), 100, 100),
+      badge(page(300, 300), 108, 95),
+    );
+    expect(result.label).toBe('moved-and-changed');
+    expect(result.pixels?.unexplained).toHaveLength(1);
+  });
+
+  it('says content moved up', () => {
+    const after = page();
+    const before = shiftedDown(after, 70, 12);
+    expect(analyzePair(before, after).description).toBe(
+      'Content moved up by 12 px.',
     );
   });
 
-  it('does not call a change next to a move a move', () => {
+  it('finds a move sideways', () => {
+    const before = badge(page(), 130, 250);
+    const after = badge(page(), 142, 250);
+    expect(analyzePair(before, after)).toMatchObject({
+      label: 'moved',
+      description: 'Content moved right by 12 px.',
+    });
+  });
+
+  it('finds a diagonal move', () => {
+    const before = badge(image(300, 300), 100, 100);
+    const after = badge(image(300, 300), 108, 95);
+    expect(analyzePair(before, after).description).toBe(
+      'Content moved up by 5 px and right by 8 px.',
+    );
+  });
+
+  it('names what else changed, when most of it moved', () => {
     const before = badge(page(300, 300), 130, 250);
     const after = paint(
       badge(page(300, 300), 142, 250),
-      { x: 240, y: 40, width: 30, height: 30 },
+      { x: 240, y: 40, width: 12, height: 12 },
       [0, 0, 0],
     );
-    const analysis = analyzePair(before, after);
-    expect(analysis.label).toBe('content-change');
-    expect(analysis.regions.map((region) => !!region.moved)).toEqual([
-      false,
-      true,
-    ]);
+    const result = analyzePair(before, after);
+    expect(result.label).toBe('moved-and-changed');
+    expect(result.description).toBe(
+      'Content moved right by 12 px. Something else changed too: 12x12 px at x=240, y=40.',
+    );
+    expect(result.pixels?.unexplained).toHaveLength(1);
+  });
+
+  it('claims nothing for a change in place, even on a mostly blank page', () => {
+    const before = image(200, 300);
+    const after = paint(
+      clone(before),
+      { x: 20, y: 40, width: 80, height: 30 },
+      [0, 0, 0],
+    );
+    const result = analyzePair(before, after);
+    expect(result.label).toBe('content-change');
+    expect(result.pixels).toBeUndefined();
+  });
+
+  it('claims nothing when a changed area is not a move of anything', () => {
+    const before = page();
+    const after = clone(before);
+    // a new price: new pixels that sit nowhere in the baseline
+    paint(after, { x: 20, y: 30, width: 40, height: 10 }, [10, 10, 10]);
+    paint(after, { x: 30, y: 31, width: 7, height: 8 }, [250, 250, 250]);
+    expect(analyzePair(before, after).pixels).toBeUndefined();
+  });
+
+  it('does not take a copy of untouched content for a move', () => {
+    const before = badge(page(300, 300), 130, 250);
+    // the same badge appears a second time; the first one stays
+    const after = badge(badge(page(300, 300), 130, 250), 220, 250);
+    const result = analyzePair(before, after);
+    expect(result.label).toBe('content-change');
+    expect(result.pixels).toBeUndefined();
+  });
+
+  it('claims nothing for content pushed out of the picture', () => {
+    const before = page();
+    const after = clone(before);
+    const stride = before.width * 4;
+    // everything moves up by 40 px and the top of the page is gone: same pixels as a removal
+    after.data.copyWithin(0, 40 * stride);
+    paint(after, { x: 0, y: 260, width: 200, height: 40 }, [255, 255, 255]);
+    expect(analyzePair(before, after).label).not.toBe('moved');
+  });
+
+  it('does not search images too large to search', () => {
+    const before = image(2100, 2000);
+    paint(before, { x: 10, y: 10, width: 30, height: 20 }, [0, 0, 255]);
+    const after = image(2100, 2000);
+    paint(after, { x: 10, y: 22, width: 30, height: 20 }, [0, 0, 255]);
+    expect(
+      findMoves({
+        baseline: before,
+        actual: after,
+        mask: maskOf(before, after),
+      }),
+    ).toBeUndefined();
+  });
+
+  it('takes the sizes of padded images into account', () => {
+    const before = page(200, 300);
+    const moved = shiftedDown(before, 70, 12);
+    const result = analyze({
+      baseline: before,
+      actual: moved,
+      mask: maskOf(before, moved),
+      sizes: {
+        baseline: { width: 200, height: 300 },
+        actual: { width: 200, height: 300 },
+      },
+    });
+    expect(result.label).toBe('moved');
   });
 });
 
@@ -257,7 +294,6 @@ describe('analyze', () => {
       version: 1,
       label: 'content-change',
       description: 'One area changed: 50x30 px at x=120, y=200.',
-      shift: null,
       speckRatio: 0,
     });
     expect(analysis.bundleKey).toMatch(/^change:50x30:[0-9a-f]{16}$/);
@@ -288,19 +324,6 @@ describe('analyze', () => {
       description:
         '20 pixels differ in tiny scattered spots, which looks like rendering noise.',
       bundleKey: 'noise',
-    });
-  });
-
-  it('describes a move', () => {
-    const before = page();
-    const after = clone(before);
-    const stride = before.width * 4;
-    // rows 100..109 lie inside one block, so the first row that looks different is 110
-    after.data.copyWithin(100 * stride + 5 * stride, 100 * stride);
-    expect(analyzePair(before, after)).toMatchObject({
-      label: 'moved',
-      description: 'Everything below y=110 moved down by 5 px.',
-      bundleKey: 'moved:0,5',
     });
   });
 

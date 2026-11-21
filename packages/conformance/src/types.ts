@@ -3,7 +3,10 @@ import type { ManifestEntry } from 'visual-regression-manifest';
 export type RunnerName = 'cypress' | 'playwright';
 
 /** The fixture pages the harness serves; same markup for every runner. */
-export type Fixture = 'blue' | 'red' | 'tall';
+export type Fixture = 'blue' | 'red' | 'tall' | 'banner';
+
+/** What a screenshot covers: the whole page, the viewport, or one element (`main`). */
+export type Capture = 'fullPage' | 'viewport' | 'element';
 
 /** The matchImage options both adapters understand. */
 export type CommonOptions = {
@@ -36,7 +39,12 @@ export type Driver = {
   create: (baseUrl: string) => Promise<Workspace>;
   run: (
     ws: Workspace,
-    run: { fixture: Fixture; options: CommonOptions; imagesPath?: string },
+    run: {
+      fixture: Fixture;
+      options: CommonOptions;
+      imagesPath?: string;
+      capture: Capture;
+    },
   ) => Promise<Observed>;
 };
 
@@ -47,11 +55,15 @@ export type RunExpectation = {
   /** `extra.visualRegressionCompare.reason` of that entry. */
   reason?: string | string[];
   message?: RegExp;
+  /** Whether the run told, in its output, that a baseline had no page layout. */
+  oldBaselineNotice?: boolean;
   /** `extra.pixsame.analysis` of that entry: its label, and the sentence that must also end the failure message. */
   analysis?: { label: string; description: RegExp };
   files?: { baseline?: boolean; actual?: boolean; diff?: boolean };
   /** Whether the baseline carries the `FRSOURCE_CPVRD_V` marker afterwards. */
   baselineMarked?: boolean;
+  /** Whether the baseline carries the page layout (`pixsame-layout-v<version>` chunk) afterwards. */
+  baselineHasLayout?: boolean;
   /** Whether the baseline bytes are the same as before the run. */
   baselineUnchanged?: boolean;
   /** Expected directory segment of the baseline path, e.g. the `{platform}` value. */
@@ -62,6 +74,8 @@ export type Run = {
   fixture: Fixture;
   options?: CommonOptions;
   imagesPath?: string;
+  /** Default: the whole page. */
+  capture?: Capture;
   /** Mutate the workspace before the run, e.g. strip the marker. */
   before?: (ws: Workspace) => Promise<void> | void;
   expect: RunExpectation;

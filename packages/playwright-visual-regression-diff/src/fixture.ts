@@ -30,8 +30,12 @@ import {
   rendererFor,
   toManifestOptions,
 } from './manifest.utils';
+import { captureLayout } from './layout';
 import { resolveImagesDir, ScreenshotNamer } from './screenshotPath';
+import { oldBaselinesNotice } from './notice.utils';
+import { updateImagesFromEnv } from './update.utils';
 
+const REVIEW_COMMAND = 'npx pixsame review';
 export type MatchImageOptions = {
   /**
    * Where baselines live. Relative paths resolve against Playwright's
@@ -120,7 +124,8 @@ const withDefaults = (
     maxDiffThreshold: merged.maxDiffThreshold ?? 0.01,
     diffConfig: merged.diffConfig ?? {},
     createMissingImages: merged.createMissingImages ?? true,
-    updateImages: merged.updateImages ?? false,
+    // the environment wins: the `pixsame` CLI refreshes baselines for a single run
+    updateImages: updateImagesFromEnv() ?? merged.updateImages ?? false,
     title: merged.title,
     matchAgainstPath: merged.matchAgainstPath,
     screenshotConfig: merged.screenshotConfig ?? {},
@@ -227,6 +232,16 @@ export const visualRegressionFixtures: Fixtures<
         ...cfg.screenshotConfig,
       });
       const viewport = page.viewportSize() ?? undefined;
+      const layout =
+        cfg.analysis === false
+          ? undefined
+          : await captureLayout({
+              page,
+              target,
+              png: imgNew,
+              fullPage: cfg.screenshotConfig.fullPage,
+              clip: cfg.screenshotConfig.clip,
+            });
       const result = await compareImages(
         {
           imgNew,
@@ -237,6 +252,7 @@ export const visualRegressionFixtures: Fixtures<
           maxDiffThreshold: cfg.maxDiffThreshold,
           diffConfig: cfg.diffConfig,
           analysis: cfg.analysis,
+          layout,
           name,
           test: {
             filePath: testInfo.file,
@@ -258,6 +274,15 @@ export const visualRegressionFixtures: Fixtures<
         visualRegressionComparer,
       );
 
+      if (result.oldBaseline) {
+        const notice = oldBaselinesNotice(testInfo.project.outputDir);
+        if (notice) {
+          // the terminal, and the HTML report on the test that met it first
+          process.stderr.write(`[pixsame] ${notice}\n`);
+          testInfo.annotations.push({ type: 'pixsame', description: notice });
+        }
+      }
+
       const matchImageResult: MatchImageResult = {
         status: result.status,
         message: result.message,
@@ -271,17 +296,25 @@ export const visualRegressionFixtures: Fixtures<
       };
 
       if (result.error) {
-        // the three images land in the HTML report next to the failure
-        const attach = (label: string, body: Buffer | undefined) =>
+        // Playwright's HTML report and UI mode group image attachments named
+        // `<name>-expected.png`, `-actual.png` and `-diff.png` into their own
+        // viewer (diff, actual, expected, side by side, slider)
+        const attach = (kind: 'expected' | 'actual' | 'diff', body?: Buffer) =>
           body &&
-          testInfo.attach(`${name} (${label})`, {
+          testInfo.attach(`${name}-${kind}.png`, {
             body,
             contentType: 'image/png',
           });
         // one after another, so the report lists them in a stable order
-        await attach('baseline', result.imgOld);
+        await attach('expected', result.imgOld);
         await attach('actual', result.imgNew ?? imgNew);
         await attach('diff', result.imgDiff);
+        // the report cannot host a button, but it gives text attachments a
+        // copy button: one click to the command that reviews and replaces
+        await testInfo.attach('pixsame: review and replace baselines', {
+          body: REVIEW_COMMAND,
+          contentType: 'text/plain',
+        });
         throw new Error(`[${name}] ${result.message}`);
       }
       return matchImageResult;

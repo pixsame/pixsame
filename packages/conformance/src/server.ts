@@ -4,14 +4,16 @@ import type { Fixture } from './types.js';
 
 // Static, animation-free pages: both runners render exactly this markup, so a
 // change in the output can only come from the adapter under test.
-const page = (accent: string, extra = '') => `<!doctype html>
+const page = (accent: string, extra = '', top = '') => `<!doctype html>
 <html><head><style>
   body { margin: 0; font: 24px/1.4 Arial, sans-serif; background: #fafafa; color: #222; }
   main { padding: 32px; }
   .card { border: 4px solid ${accent}; border-radius: 12px; padding: 16px; width: 320px; background: ${accent}22; }
+  .promo { height: 40px; margin: 0 0 16px; background: #fde68a; }
   .filler { height: 1200px; background: linear-gradient(#fafafa, #ddd); }
 </style></head>
 <body><main>
+  ${top}
   <h1>Conformance</h1>
   <div class="card"><p>Hello.</p></div>
   ${extra}
@@ -21,6 +23,7 @@ const FIXTURES: Record<Fixture, string> = {
   blue: page('#3b82f6'),
   red: page('#ef4444'),
   tall: page('#3b82f6', '<div class="filler"></div>'),
+  banner: page('#3b82f6', '', '<div class="promo">Free shipping</div>'),
 };
 
 export const startFixtureServer = async () => {

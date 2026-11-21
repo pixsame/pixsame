@@ -27,21 +27,22 @@ export const playwrightDriver: Driver = {
     fs.writeFileSync(path.join(ws.dir, 'playwright.config.mjs'), CONFIG);
     return ws;
   },
-  async run(ws, { fixture, options, imagesPath }) {
+  async run(ws, { fixture, options, imagesPath, capture }) {
     // Cypress captures the full page by default, Playwright only the viewport
     const matchOptions = {
       title: SHOT_TITLE,
-      screenshotConfig: { fullPage: true },
+      ...(capture === 'fullPage' && { screenshotConfig: { fullPage: true } }),
       ...options,
       imagesPath,
     };
+    const target = capture === 'element' ? "page.locator('main')" : 'page';
     fs.writeFileSync(
       path.join(ws.dir, 'conformance.spec.mjs'),
       `import { test } from '@pixsame/playwright-visual-regression-diff';
 
 test('shot', async ({ page, matchImage }) => {
   await page.goto('/?v=${fixture}');
-  await matchImage(page, ${JSON.stringify(matchOptions)});
+  await matchImage(${target}, ${JSON.stringify(matchOptions)});
 });
 `,
     );

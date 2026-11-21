@@ -1,7 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "sequential-calls": true,
-  "plugins": ["node-workspace"],
+  "plugins": [
+    "node-workspace"
+  ],
   "separate-pull-requests": true,
   "prerelease-type": "beta",
   "packages": {
@@ -20,6 +22,11 @@
     "packages/analysis": {
       "path": "packages/analysis",
       "component": "@pixsame/analysis",
+      "release-as": "0.1.0"
+    },
+    "packages/cli": {
+      "path": "packages/cli",
+      "component": "pixsame",
       "release-as": "0.1.0"
     }
   }

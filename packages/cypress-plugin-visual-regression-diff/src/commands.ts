@@ -6,6 +6,7 @@ import {
   type PathVariables,
 } from './constants';
 import { getBatchReviewMode, getExposedOption } from './config.utils';
+import { samePlacement, takeLayout, type LayoutPayload } from './layout.utils';
 import {
   injectDeterministicStyle,
   removeDeterministicStyle,
@@ -176,6 +177,8 @@ Cypress.Commands.add(
   (subject, options = {}) => {
     const $el = subject as JQuery<HTMLElement> | undefined;
     let title: string;
+    // what the page looked like, for the analysis; set while the screenshot is taken
+    let layout: LayoutPayload | undefined;
     /* c8 ignore next */
     let pendingPassingRecord: PendingDiffRecord | null = null;
 
@@ -204,6 +207,14 @@ Cypress.Commands.add(
     };
     // a style left behind by an aborted screenshot must never stack up
     removeStyle();
+    const layoutOptions = () => ({
+      subject: $el?.[0],
+      capture: (screenshotConfig as { capture?: string }).capture,
+      clip: (screenshotConfig as { clip?: unknown }).clip,
+    });
+    const autWindow = () =>
+      autDocument()?.defaultView as
+        (Window & { eval: (code: string) => unknown }) | null | undefined;
 
     const test = (
       cy as unknown as {
@@ -245,9 +256,21 @@ Cypress.Commands.add(
                 removeDeterministicStyle(doc);
                 if (deterministicRendering) injectDeterministicStyle(doc);
               }
+              // after the deterministic style, so it is the page as captured
+              const win = autWindow();
+              layout =
+                analysis && win ? takeLayout(win, layoutOptions()) : undefined;
               screenshotConfig.onBeforeScreenshot?.(el);
             },
             onAfterScreenshot(el, props) {
+              const win = autWindow();
+              // Cypress may have scrolled between the snapshot and the capture
+              if (
+                layout &&
+                (!win || !samePlacement(win, layoutOptions(), layout))
+              ) {
+                layout = undefined;
+              }
               removeStyle();
               imgPath = props.path;
               screenshotConfig.onAfterScreenshot?.(el, props);
@@ -283,6 +306,7 @@ Cypress.Commands.add(
               maxDiffThreshold,
               diffConfig,
               analysis,
+              layout,
               // test context for the run manifest; the renderer is derived from
               // `platform.browser` (`cy.screenshot` renders in the browser Cypress drives)
               specPath: Cypress.spec.relative,
@@ -382,6 +406,7 @@ Cypress.Commands.add(
             imgDiffBase64: res.imgDiffBase64 ?? '',
             message: res.message ?? '',
             description: res.description,
+            oldBaseline: res.oldBaseline,
             deferred,
           };
 

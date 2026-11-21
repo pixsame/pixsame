@@ -353,6 +353,40 @@ importers:
         specifier: 4.1.12
         version: 4.1.12(@types/node@20.19.43)(@vitest/coverage-v8@4.1.12)(vite@8.3.5(@types/node@20.19.43)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.1))
 
+  packages/cli:
+    dependencies:
+      '@pixsame/analysis':
+        specifier: workspace:*
+        version: link:../analysis
+      visual-regression-compare:
+        specifier: 1.0.0-beta.4
+        version: 1.0.0-beta.4
+      visual-regression-manifest:
+        specifier: 1.0.0-beta.2
+        version: 1.0.0-beta.2
+    devDependencies:
+      '@frsource/prettier-config':
+        specifier: ^1.11.0
+        version: 1.48.3(prettier@3.9.8)
+      '@types/node':
+        specifier: 20.19.43
+        version: 20.19.43
+      '@vitest/coverage-v8':
+        specifier: 4.1.12
+        version: 4.1.12(vitest@4.1.12)
+      del-cli:
+        specifier: 7.0.0
+        version: 7.0.0
+      prettier:
+        specifier: 3.9.8
+        version: 3.9.8
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.1.12
+        version: 4.1.12(@types/node@20.19.43)(@vitest/coverage-v8@4.1.12)(vite@8.3.5(@types/node@20.19.43)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.1))
+
   packages/conformance:
     devDependencies:
       '@frsource/prettier-config':

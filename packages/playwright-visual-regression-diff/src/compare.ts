@@ -2,7 +2,10 @@ import {
   analysisOf,
   analysisPlugin,
   captureComparison,
+  readLayout,
   withAnalysis,
+  writeLayout,
+  type Layout,
 } from '@pixsame/analysis';
 import fs from 'fs';
 import path from 'path';
@@ -52,6 +55,8 @@ export type CompareInput = {
   diffConfig: PixelmatchOptions;
   /** Describe what changed when the comparison finds differences. Default `true`. */
   analysis?: boolean;
+  /** What the page looked like when the screenshot was taken. Stored in the PNG, so it is there when this screenshot becomes a baseline. */
+  layout?: Layout;
   /** Screenshot name recorded on the manifest entry; defaults to the baseline's file name. */
   name?: string;
   /** The test the screenshot belongs to, recorded on the manifest entry. */
@@ -74,6 +79,8 @@ export type CompareResult = {
   threshold: number;
   /** `true` whenever the baseline file was (re)written. */
   baselineWritten: boolean;
+  /** The baseline exists but was saved before page layouts were recorded, and was not replaced now. */
+  oldBaseline: boolean;
   /** Path of the `.diff.png` sibling of `actualPath`. */
   diffPath: string;
   /** The compared images (padded to a common size when they differed in size); absent when no comparison ran. */
@@ -209,12 +216,24 @@ export const compareImages = async (
   comparer: Comparer,
 ): Promise<CompareResult> => {
   const diffPath = diffPathFor(cfg.actualPath);
+  const withLayout = cfg.analysis !== false && cfg.layout !== undefined;
+  // stamped once, so every file derived from it carries the package marker
+  // and, for analysis, the layout of the page
+  const stamped = addPNGMetadata(cfg.imgNew);
+  const actual = withLayout
+    ? Buffer.from(writeLayout(stamped, cfg.layout as Layout))
+    : stamped;
+  const baselineBytes = withLayout
+    ? await fs.promises.readFile(cfg.baselinePath).catch(() => undefined)
+    : undefined;
+  const baselineLayout = baselineBytes ? readLayout(baselineBytes) : undefined;
+  // a baseline that exists but carries no layout of this version
+  const oldBaseline = baselineBytes !== undefined && !baselineLayout;
   const compare = () =>
     comparer.compare(
       {
         name: cfg.name ?? path.basename(cfg.baselinePath, '.png'),
-        // stamped once, so every file derived from it carries the package marker
-        actual: addPNGMetadata(cfg.imgNew),
+        actual,
         files: {
           baseline: cfg.baselinePath,
           actual: cfg.actualPath,
@@ -240,7 +259,12 @@ export const compareImages = async (
     );
   const { entry, images } = await (cfg.analysis === false
     ? compare()
-    : withAnalysis(compare));
+    : withAnalysis(compare, {
+        layout:
+          cfg.layout && baselineLayout
+            ? { baseline: baselineLayout, actual: cfg.layout }
+            : undefined,
+      }));
   const status = entry.status as CompareStatus;
   const buffer = (bytes?: Uint8Array) =>
     bytes ? Buffer.from(bytes) : undefined;
@@ -252,6 +276,8 @@ export const compareImages = async (
     diffRatio: entry.comparison.diffRatio,
     threshold: cfg.maxDiffThreshold,
     baselineWritten: entry.baselineWritten,
+    // a replaced baseline got the layout just now
+    oldBaseline: oldBaseline && entry.status !== 'updated',
     diffPath,
     imgNew: buffer(images.actual),
     imgOld: buffer(images.baseline),

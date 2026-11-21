@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 3f4ca9c7906dc926
+source: 50180dcdbb9fd137
 ---
 
 ## Pierwsze kroki
@@ -250,7 +250,7 @@ Uwagi dla konsumentów:
 - Wszystkie ścieżki są względne wobec `projectRoot` i używają separatora `/`; mogą wskazywać poza projekt (`../…`), gdy `imagesPath` jest bezwzględna. `projectRoot` to projekt Cypressa, niekoniecznie katalog główny repozytorium: `ci.workspace` to katalog checkoutu, więc `relative(ci.workspace, projectRoot)` daje prefiks ścieżki wewnątrz repozytorium.
 - `failed` i `missing-baseline` to wpisy, które wymagają człowieka: skopiowanie `images.actual.path` w miejsce `images.baseline.path` je zatwierdza.
 - `baselineWritten` mówi, czy drzewo robocze zmieniło się dla danego zrzutu ekranu, niezależnie od `status`.
-- Wpis, którego porównanie wykryło różnice, zawiera `extra.pixsame.analysis` (o ile opcja `analysis` nie jest wyłączona): `label` (`content-change`, `moved`, `noise-like` lub `size-change`), jednozdaniowy `description`, zmienione obszary `regions` wraz z ich ramkami, wykryte przesunięcie `shift` oraz `bundleKey`, który jest taki sam dla wpisów zmienionych w ten sam sposób. Funkcja `bundle()` z `@pixsame/analysis` grupuje wpisy według niego.
+- Wpis, którego porównanie wykryło różnice, zawiera `extra.pixsame.analysis` (o ile opcja `analysis` nie jest wyłączona): `label` (`content-change`, `moved`, `moved-and-changed`, `noise-like` lub `size-change`), jednozdaniowy `description`, zmienione obszary `regions` wraz z ich ramkami oraz `bundleKey`, który jest taki sam dla wpisów zmienionych w ten sam sposób. Funkcja `bundle()` z `@pixsame/analysis` grupuje wpisy według niego. Gdy bazowy obraz zawiera migawkę układu strony, `layout` wymienia elementy, które się przesunęły (`moves`, w pikselach CSS), i nazywa to, co się zmieniło (`causes`, np. `added div.promo "Free shipping"`). Bez niej `pixels` wymienia przesunięcia znalezione wyłącznie na podstawie pikseli, i tylko wtedy, gdy odpowiedź jest jednoznaczna: zrzut, który nie pokazuje wyraźnego przesunięcia, nie dostaje żadnego twierdzenia o przesunięciach.
 - Każdy wpis niesie własne `platform` i `viewport`, więc po sklejeniu kilku manifestów da się odróżnić wpisy z macierzy maszyn. `options` we wpisie to dokładne wejście `matchImage` (`imagesPath` zachowuje nierozwinięte tokeny); `comparison` to wynik.
 - `platform` to miejsce, gdzie uruchomił się test, `renderer` to miejsce, skąd pochodzą piksele. Dziś każdy zrzut ekranu robi przeglądarka sterowana przez Cypressa, więc `renderer.backend` to `native`, a `renderer.browser` powtarza `platform.browser.name`. Pole istnieje po to, żeby renderer inny niż lokalna przeglądarka (przypięty obraz Dockera, hostowany renderer) mógł się zidentyfikować przez `rendererVersion` i `imageDigest`, a uruchomienie, które musiało wrócić do lokalnej przeglądarki, mogło zostać oznaczone `renderer.fallback: true`. Wpisy z różnymi rendererami traktuj jako różne baseline'y.
 - `hashes` zawiera sha256 każdego pliku z `images`, który istnieje na dysku. Użyj ich, żeby pominąć ponowne wgrywanie niezmienionych baseline'ów, sprawdzić, czy artefakt zgadza się z manifestem, albo wykryć dwa wpisy, które dały identyczne piksele.
@@ -315,9 +315,14 @@ cy.matchImage({
   // maksymalny próg, powyżej którego test ma nie przejść
   // domyślnie: 0.01
   maxDiffThreshold: 0.1,
-  // opisuje, co się zmieniło, gdy porównanie wykryje różnice, np. "Everything below y=340 moved down by 12 px."
+  // opisuje, co się zmieniło, gdy porównanie wykryje różnice, np. "One element moved down by 40 px. Changed: added div.promo "Free shipping"."
   // zdanie kończy komunikat błędu, jest widoczne w karuzeli przeglądu i trafia do manifestu przebiegu
   // nigdy nie wpływa na to, czy porównanie przechodzi
+  // aby nazwać elementy, wtyczka zapisuje migawkę układu strony (ramki elementów, tekst, skrót wyglądu każdego z nich; 6 do 40 KB)
+  // wewnątrz każdego bazowego pliku PNG. Obejmuje zrzuty viewportu, zrzuty całej strony, jeśli mieści się w oknie, oraz elementy, które się w nim mieszczą;
+  // wyższe zrzuty Cypress skleja z kilku fragmentów i dla nich analiza opiera się wyłącznie na pikselach
+  // bazowy obraz sprzed tej zmiany nadal działa i dostaje migawkę przy następnej zamianie przez `updateImages`
+  // przebieg informuje o tym raz, gdy na taki trafi, a karuzela przeglądu pokazuje o tym wiersz; `npx pixsame baselines --update` dodaje migawki
   // domyślnie: true
   analysis: false,
   // wymusza ustawienie współczynnika skalowania na wartość "1"
