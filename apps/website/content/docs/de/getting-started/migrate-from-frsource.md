@@ -31,22 +31,6 @@ Bevor er irgendetwas schreibt, listet er die Dateien auf, die er anfassen wird, 
 | `--yes`        | Rückfrage überspringen (in CI erforderlich)       |
 | `--no-install` | Installationsschritt überspringen                 |
 
-## Nach der Migration: alten Baselines ihr Layout geben
-
-Deine alten Baselines funktionieren weiter. Neue und ersetzte Baselines halten zusätzlich das Layout der Seite fest, damit ein fehlgeschlagener Vergleich sagen kann, was sich verschoben hat, statt nur geänderte Bereiche aufzulisten. So siehst du, welchen Baselines es noch fehlt:
-
-```bash
-npx pixsame baselines
-```
-
-Lass dann die CLI deine Tests einmal laufen, damit der Runner sie ersetzt. Starte sie im Verzeichnis mit deiner `cypress.config.*` oder `playwright.config.*`; sie zeigt den Befehl, fragt vor dem Start nach und fragt nach allem, was sie nicht selbst findet (etwa dem Verzeichnis der Konfiguration):
-
-```bash
-npx pixsame baselines --update
-```
-
-Dabei wird jede Baseline in diesem Lauf ersetzt, wie bei `pluginVisualRegressionUpdateImages=true`. Mit `--failures-only` werden nur die fehlschlagenden ersetzt. Committe das Ergebnis.
-
 ## Lieber von Hand?
 
 Zwei Schritte. Paket tauschen, dann den Namen in Ihren Imports suchen und ersetzen:

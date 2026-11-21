@@ -30,22 +30,6 @@ Before it writes anything it prints the files it's about to touch and waits for 
 | `--yes`        | Skip the question (required in CI)    |
 | `--no-install` | Skip the install step                 |
 
-## After migrating: give old baselines their layout
-
-Your old baselines keep working. New and replaced baselines also record the layout of the page, so a failed comparison can say what moved instead of only listing changed areas. See which baselines still lack it:
-
-```bash
-npx pixsame baselines
-```
-
-Then let the CLI run your tests once so the runner replaces them. Run it in the directory with your `cypress.config.*` or `playwright.config.*`; it shows the command, asks before running it and asks for anything it can't find on its own (such as the config's directory):
-
-```bash
-npx pixsame baselines --update
-```
-
-It replaces every baseline in that run, like `pluginVisualRegressionUpdateImages=true`. Add `--failures-only` to replace only the failing ones. Commit the result.
-
 ## Prefer to do it by hand?
 
 Swap the package, then search and replace the name in your imports:

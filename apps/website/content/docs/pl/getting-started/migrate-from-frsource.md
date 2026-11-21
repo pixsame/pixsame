@@ -31,22 +31,6 @@ Zanim cokolwiek zapisze, wypisuje pliki, które zamierza ruszyć, i czeka na two
 | `--yes`        | Pomija pytanie o zgodę (wymagane w CI)          |
 | `--no-install` | Pomija krok instalacji                          |
 
-## Po migracji: nadaj starym baseline'om layout
-
-Twoje stare baseline'y nadal działają. Nowe i zastąpione baseline'y zapisują też layout strony, dzięki czemu nieudane porównanie może powiedzieć, co się przesunęło, zamiast tylko wypisywać zmienione obszary. Sprawdź, którym baseline'om go jeszcze brakuje:
-
-```bash
-npx pixsame baselines
-```
-
-Potem pozwól CLI uruchomić testy raz, żeby runner zastąpił baseline'y. Uruchom je w katalogu z `cypress.config.*` lub `playwright.config.*`; pokaże komendę, zapyta przed uruchomieniem i dopyta o to, czego sam nie znajdzie (np. katalog z konfiguracją):
-
-```bash
-npx pixsame baselines --update
-```
-
-Zastępuje to wszystkie baseline'y w tym przebiegu, tak jak `pluginVisualRegressionUpdateImages=true`. Dodaj `--failures-only`, żeby zastąpić tylko te, które nie przechodzą. Zatwierdź wynik.
-
 ## Wolisz zrobić to ręcznie?
 
 Dwa kroki. Podmień pakiet, a potem znajdź i zamień nazwę w importach:
