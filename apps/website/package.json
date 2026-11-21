@@ -40,7 +40,7 @@
     "prettier": "3.9.10",
     "sirv": "^3.0.2",
     "sirv-cli": "^3.0.1",
-    "typescript": "^5.9.0",
+    "typescript": "^7.0.0",
     "vue-tsc": "^3.0.0"
   }
 }
