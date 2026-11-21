@@ -1,6 +1,5 @@
-import { spawn } from 'node:child_process';
-import { createInterface } from 'node:readline/promises';
 import path from 'node:path';
+import { defaults, type Io } from './io';
 import { findBaselines, type Report } from './baselines';
 import { startReview } from './review';
 import {
@@ -35,62 +34,7 @@ Commands:
 Run baselines in the directory with cypress.config.* or playwright.config.*.
 `;
 
-export type Io = {
-  out: (line: string) => void;
-  /** Asks a question; `undefined` when nobody can answer (no terminal). */
-  ask?: (question: string) => Promise<string>;
-  exec: (plan: Plan) => Promise<number>;
-  /** Opens an address in the browser. */
-  open: (url: string) => void;
-  /** Resolves when the user is done with a running page (Ctrl-C). */
-  wait: () => Promise<void>;
-  cwd: string;
-};
-
-const defaults = (): Io => {
-  const interactive = process.stdin.isTTY && process.stdout.isTTY;
-  return {
-    out: (line) => void process.stdout.write(`${line}\n`),
-    ask: interactive
-      ? async (question) => {
-          const rl = createInterface({
-            input: process.stdin,
-            output: process.stdout,
-          });
-          try {
-            return (await rl.question(`${question} `)).trim();
-          } finally {
-            rl.close();
-          }
-        }
-      : undefined,
-    exec: (plan) =>
-      new Promise((resolve, reject) => {
-        const [program, ...args] = plan.command;
-        const child = spawn(program, args, {
-          cwd: plan.cwd,
-          stdio: 'inherit',
-          env: { ...process.env, ...plan.env },
-          shell: process.platform === 'win32',
-        });
-        child.on('error', reject);
-        child.on('close', (code) => resolve(code ?? 1));
-      }),
-    open: (url) => {
-      const [program, ...args] =
-        process.platform === 'darwin'
-          ? ['open', url]
-          : process.platform === 'win32'
-            ? ['cmd', '/c', 'start', '', url]
-            : ['xdg-open', url];
-      spawn(program, args, { stdio: 'ignore', detached: true })
-        .on('error', () => undefined)
-        .unref();
-    },
-    wait: () => new Promise((resolve) => process.once('SIGINT', resolve)),
-    cwd: process.cwd(),
-  };
-};
+export type { Io } from './io';
 
 const lacking = ({ counts }: Report) => counts.missing + counts.outdated;
 
