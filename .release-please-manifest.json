@@ -2,5 +2,5 @@
   "packages/cypress-plugin-visual-regression-diff": "1.0.0",
   "packages/playwright-visual-regression-diff": "0.0.0",
   "packages/analysis": "0.0.0",
-  "packages/cli": "0.0.0"
+  "packages/cli": "0.1.0"
 }
