@@ -46,7 +46,7 @@ export const test = base.extend(visualRegressionFixtures);
 
 - **passes** when the share of differing pixels is within `maxDiffThreshold`, leaving only the baseline on disk;
 - **creates** the baseline from the screenshot when there is none (`createMissingImages`, on by default);
-- **fails** the test otherwise, keeps `<name>.actual.png` and `<name>.diff.png` next to the baseline and attaches baseline, actual and diff to the Playwright report as `<name>-expected.png`, `<name>-actual.png` and `<name>-diff.png`, the names Playwright's HTML report and UI mode turn into their image viewer (diff, actual, expected, side by side, slider). To replace baselines after a run, `npx pixsame review` opens a page with the same images, what changed in words and a Replace button; Playwright's own reports have no place for such a button.
+- **fails** the test otherwise, keeps `<name>.actual.png` and `<name>.diff.png` next to the baseline and attaches baseline, actual and diff to the Playwright report as `<name>-expected.png`, `<name>-actual.png` and `<name>-diff.png`, the names Playwright's HTML report and UI mode turn into their image viewer (diff, actual, expected, side by side, slider). To replace baselines after a run, `npx pixsame review` opens a page with the same images, what changed in words and a Replace button; Playwright's own reports have no place for such a button, so each failure also carries a text attachment, `pixsame: review and replace baselines`, whose copy button gives you that command.
 
 It resolves to `{ status, message, diffValue, imgPath, imgNewPath, imgDiffPath, img, imgNew, imgDiff }`.
 

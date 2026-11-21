@@ -35,6 +35,7 @@ import { resolveImagesDir, ScreenshotNamer } from './screenshotPath';
 import { oldBaselinesNotice } from './notice.utils';
 import { updateImagesFromEnv } from './update.utils';
 
+const REVIEW_COMMAND = 'npx pixsame review';
 export type MatchImageOptions = {
   /**
    * Where baselines live. Relative paths resolve against Playwright's
@@ -308,6 +309,12 @@ export const visualRegressionFixtures: Fixtures<
         await attach('expected', result.imgOld);
         await attach('actual', result.imgNew ?? imgNew);
         await attach('diff', result.imgDiff);
+        // the report cannot host a button, but it gives text attachments a
+        // copy button: one click to the command that reviews and replaces
+        await testInfo.attach('pixsame: review and replace baselines', {
+          body: REVIEW_COMMAND,
+          contentType: 'text/plain',
+        });
         throw new Error(`[${name}] ${result.message}`);
       }
       return matchImageResult;
