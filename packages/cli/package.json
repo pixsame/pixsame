@@ -1,7 +1,7 @@
 {
   "name": "pixsame",
   "description": "Command line for pixsame visual regression testing: `baselines` finds baselines saved before page layouts were recorded and refreshes them, `review` opens a page to look at failed comparisons and replace baselines.",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "Jakub Freisler <jakub.freisler@frsource.org>",
   "homepage": "https://pixsame.com",
   "repository": {
