@@ -1,0 +1,43 @@
+{
+  "answer": "Ethiopia Guji \"Add to cart\" button: larger, about 117×51px before and about 123×57px after (width up ~6px, height up ~6px). The label text is also slightly larger and shifted (y 384 → 387).\nEthiopia Guji card: taller, with the bottom edge moving from y≈425 to y≈431 (+6px) because of the larger button.\nSecond-row cards (Brazil Cerrado, Guatemala Antigua, Decaf Sugarcane): shifted down 6px, with the top edge moving from y≈446 to y≈452. Their contents (images, titles, descriptions, prices, buttons) moved down by the same amount.\nSecond-row card bottoms: moved down 6px, from y≈730 to y≈736.\nColombia Huila and Kenya Nyeri cards: height unchanged, with the bottom edge still at y≈425 (in the after image the row's grid height grows to 431, but their content is unchanged).",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3307,
+    "cache_read_input_tokens": 6396,
+    "output_tokens": 519,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 318,
+        "cache_read_input_tokens": 3384,
+        "cache_creation_input_tokens": 2935,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2935
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.019065600000000002,
+  "turns": 3,
+  "durationMs": 7915,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

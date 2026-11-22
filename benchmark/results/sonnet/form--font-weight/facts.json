@@ -1,0 +1,43 @@
+{
+  "answer": "a#submit \"Create account\": font-weight changed 700 → 400; width shrank 146.4 → 139.7 px (height unchanged at 44.5)\na#cancel \"Cancel\": moved left by 6.6 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 590,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 178,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 590,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 74,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 218,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 218
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.004791,
+  "turns": 2,
+  "durationMs": 3544,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

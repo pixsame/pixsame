@@ -1,0 +1,43 @@
+{
+  "answer": "div#f2: padding 18px → 24px\ndiv.footer \"© Northwind Tradin\": moved down by 12px\ndiv#f1: resized 325.3x123.5 → 325.3x135.5 (height +12px)\nh3 \"Get paid sooner\": resized 287.3x25.5 → 275.3x25.5 (width −12px)\np.muted \"Reminders go out o\": resized 287.3x42 → 275.3x42 (width −12px)\ndiv#f3: resized 325.3x123.5 → 325.3x135.5 (height +12px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 699,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 287,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 699,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 182,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 326,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 326
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.006317100000000001,
+  "turns": 2,
+  "durationMs": 3960,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

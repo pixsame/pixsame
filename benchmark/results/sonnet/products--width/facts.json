@@ -1,0 +1,43 @@
+{
+  "answer": "a.btn \"Add to cart\": resized from 117.2x44.5 to 100x67 (narrower by 17.2px, taller by 22.5px), and its text now wraps onto 2 lines (was 1)\ndiv#p2: height increased from 285 to 307.5 (width unchanged at 325.3)\ndiv#p3: height increased from 285 to 307.5 (width unchanged at 325.3)\ndiv#p4, div, h3 \"Brazil Cerrado\", and 15 other elements (18 in total): moved down by 22.5 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 665,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 282,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 665,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 177,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 292,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 292
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0061311000000000004,
+  "turns": 2,
+  "durationMs": 4339,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

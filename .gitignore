@@ -127,3 +127,6 @@ apps/website/apps-script/
 
 # copied from /skills when the CLI is packed
 packages/cli/skills
+
+# benchmark: rebuilt by `pnpm generate`
+benchmark/cases

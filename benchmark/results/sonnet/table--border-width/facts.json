@@ -1,0 +1,43 @@
+{
+  "answer": "- th#th-cust \"Customer\": gained a dark border or outline (dark left, right and bottom edges in the 293x6 px area at x=324, y=209), and its height grew from 41.5 to 44 px.\n- th \"Number\": height grew from 41.5 to 44 px (width unchanged at 174.4).\n- th \"Due\": height grew from 41.5 to 44 px (width unchanged at 143.1).\n- th \"Due\" label text: shifted down slightly, about 2 px, because the header is taller (changed pixels at x=629, y=184).\n- th \"Amount\": height grew from 41.5 to 44 px (width unchanged at 182.8).\n- th \"Status\": height grew from 41.5 to 44 px (width unchanged at 187.9).\n- Table body (31 elements, including td \"INV-1042\", td.cust \"Acme Tools\" and td \"12 Mar\"): moved down 4 px.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1682,
+    "cache_read_input_tokens": 10414,
+    "output_tokens": 1144,
+    "output_tokens_details": {
+      "thinking_tokens": 210
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1682,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 467,
+        "cache_read_input_tokens": 3984,
+        "cache_creation_input_tokens": 727,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 727
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0192214,
+  "turns": 6,
+  "durationMs": 11022,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

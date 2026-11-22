@@ -1,0 +1,43 @@
+{
+  "answer": "Conversion card: gains a thicker light-gray border (about 3px, versus the 1px border before) and a subtle shadow.\nConversion card: height grows from about 137px to 143px (bottom edge moves from y≈278 to y≈284).\nConversion card contents: label, value and progress bar shift about 3px down and right. The bar narrows from x 496–784 to x 499–781.\nRecent alerts card: moves down about 6px, with its top edge going from y≈299 to y≈305 and its bottom edge from y≈543 to y≈549. The heading, table header and rows all move down with it.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3310,
+    "cache_read_input_tokens": 6397,
+    "output_tokens": 401,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3310,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 198,
+        "cache_read_input_tokens": 3385,
+        "cache_creation_input_tokens": 2937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0178977,
+  "turns": 3,
+  "durationMs": 4295,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

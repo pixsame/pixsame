@@ -1,0 +1,43 @@
+{
+  "answer": "span#ok \"Resolved\": look changed. The \"Resolved\" badge text looks bolder and the badge colors look slightly darker in the after capture. snap.txt gives no exact values, and I couldn't read them from the crops.\ntd (69x19 px at x=797, y=419): pixels changed. This is the same badge area, with no layout shift.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1029,
+    "cache_read_input_tokens": 10109,
+    "output_tokens": 554,
+    "output_tokens_details": {
+      "thinking_tokens": 67
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1029,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 151,
+        "cache_read_input_tokens": 3678,
+        "cache_creation_input_tokens": 380,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 380
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.010678900000000002,
+  "turns": 4,
+  "durationMs": 7715,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

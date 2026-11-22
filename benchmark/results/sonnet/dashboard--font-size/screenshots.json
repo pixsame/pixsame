@@ -1,0 +1,43 @@
+{
+  "answer": "Stat cards (Active users, Conversion, Churn): height increased about 3px, with the bottom edge moving from y≈278 to y≈281.\nStat values (12,480 / 3.9% / 1.2%): moved down about 2px, from y≈215 to y≈217.\nStat card progress bars: moved down about 3px, from y≈255 to y≈258. Their width and fill are unchanged.\nRecent alerts card: moved down about 3px, with its top edge going from y≈299 to y≈302. Its bottom edge went from y≈543 to y≈546, so its height is unchanged.\nRecent alerts heading, table header row, table rows and status badges: all moved down about 3px as a result of the card shift. Their spacing is unchanged.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3307,
+    "cache_read_input_tokens": 6396,
+    "output_tokens": 571,
+    "output_tokens_details": {
+      "thinking_tokens": 121
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 370,
+        "cache_read_input_tokens": 3384,
+        "cache_creation_input_tokens": 2935,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2935
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0195856,
+  "turns": 3,
+  "durationMs": 6440,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

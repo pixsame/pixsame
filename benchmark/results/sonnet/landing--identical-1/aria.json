@@ -1,0 +1,41 @@
+{
+  "answer": "NO DIFFERENCE",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 1386,
+    "cache_read_input_tokens": 6445,
+    "output_tokens": 223,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1386,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 12,
+        "cache_read_input_tokens": 3409,
+        "cache_creation_input_tokens": 1013,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1013
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0084265,
+  "turns": 3,
+  "durationMs": 3592,
+  "model": "claude-sonnet-5-5"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "Brazil Cerrado card description (\"Hazelnut, cocoa\"): letter-spacing increased, so the text is wider and ends at about x=263 instead of x=251. Size, color and position are otherwise unchanged.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3307,
+    "cache_read_input_tokens": 6396,
+    "output_tokens": 335,
+    "output_tokens_details": {
+      "thinking_tokens": 59
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 134,
+        "cache_read_input_tokens": 3384,
+        "cache_creation_input_tokens": 2935,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2935
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0172256,
+  "turns": 3,
+  "durationMs": 4571,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

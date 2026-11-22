@@ -1,0 +1,43 @@
+{
+  "answer": "5 elements (including h2 \"Team\", p#team-price \"$29\" and p.muted \"Per member, per mo\"): moved down by 10 px\ndiv#plan-free: resized 325.3x233.1 → 325.3x243.1 (height +10 px)\nspan#popular \"Most popular\": resized 91.3x22 → 103.3x34, padding 2px 8px → 8px 14px (top/bottom 2px → 8px, left/right 8px → 14px)\ndiv#plan-ent: resized 325.3x233.1 → 325.3x243.1 (height +10 px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 709,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 335,
+    "output_tokens_details": {
+      "thinking_tokens": 42
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 709,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 230,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 336,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 336
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0068371000000000005,
+  "turns": 2,
+  "durationMs": 4654,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "Customer header cell: gained a dark ~3px focus-style outline/border, and its text shifted right about 2px (x 337→339) and down about 3px (y 188→191).\nTable header row: taller, with its bottom edge moving from y≈209 to y≈213 (about 4px taller). The Number and Amount header text moved down about 2px (y 188→190).\nDue header: text shifted right about 2px (x 627→629) and down about 2px (y 188→190).\nTable body rows: all shifted down about 4px (INV-1042 row y 230→234, INV-1046 row y 402→406).\nDue column values: the \"21 Mar\" cell text shifted right about 6px (x 627→627, now aligned differently from the other dates), so it is no longer aligned with the other dates.\nTable card: bottom edge moved down about 4px (y 443→447).\n\"Showing 5 of 128 invoices\" footer text: moved down about 4px (y 466→470).",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3313,
+    "cache_read_input_tokens": 6398,
+    "output_tokens": 518,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3313,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 313,
+        "cache_read_input_tokens": 3386,
+        "cache_creation_input_tokens": 2939,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2939
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0190798,
+  "turns": 3,
+  "durationMs": 6175,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "span.tag \"Sent\": margin-top changed 0px → 14px\n20 elements (including span.tag \"Sent\", td \"INV-1044\", td.cust \"Cobalt Labs\", and others): moved down by 14px\ntd \"INV-1043\": resized 174.4x43 → 174.4x57 (height increased by 14px)\ntd.cust \"Birch & Co\": resized 289.8x43 → 289.8x57 (height increased by 14px)\ntd \"14 Mar\": resized 143.1x43 → 143.1x57 (height increased by 14px)\ntd.amt \"$380.00\": resized 182.8x43 → 182.8x57 (height increased by 14px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 716,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 324,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 716,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 218,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 342,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 342
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0067552,
+  "turns": 2,
+  "durationMs": 4093,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

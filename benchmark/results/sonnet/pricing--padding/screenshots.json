@@ -1,0 +1,43 @@
+{
+  "answer": "\"Most popular\" badge: larger, with more padding. It grew from about 92×22px (x 496–588, y 195–217) to about 104×34px (x 496–600, y 193–227). The text is at about the same size, but it moved right and down, from x 504 to x 510.\nTeam card heading \"Team\": moved down about 10px, from y≈230 to y≈240.\nTeam card price \"$29\": moved down about 10px, from y≈275 to y≈285.\nTeam card \"Per member, per month\": moved down about 10px, from y≈320 to y≈330.\n\"Choose Team\" button: moved down about 10px, from y≈343–388 to y≈353–398.\nTeam card: taller by about 10px. Its bottom border moved from y≈406 to y≈416.\nFree card: taller by about 10px. Its bottom border moved from y≈406 to y≈416, and its content is unchanged.\nEnterprise card: taller by about 10px. Its bottom border moved from y≈406 to y≈416, and its content is unchanged.\nFooter divider line: moved down about 10px, from y≈471 to y≈481.\nFooter \"Prices exclude tax.\": moved down about 10px, from y≈501 to y≈511.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3310,
+    "cache_read_input_tokens": 6397,
+    "output_tokens": 600,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3310,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 397,
+        "cache_read_input_tokens": 3385,
+        "cache_creation_input_tokens": 2937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.019887699999999998,
+  "turns": 3,
+  "durationMs": 6250,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

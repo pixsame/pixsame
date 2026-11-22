@@ -1,0 +1,43 @@
+{
+  "answer": "Hero paragraph: line spacing increased; the second line moved from y≈181 to y≈183 (line-height about 2px taller), and the first line is unchanged at y≈155.\nButtons (\"Start free trial\", \"Watch demo\"): shifted down 2px, from y≈229 to y≈231.\nFeature cards (all three): shifted down 2px, with the top edge moving from y≈279 to y≈281. Their size and content are unchanged.\nFooter divider and text: shifted down 2px, with the divider moving from y≈467 to y≈469 and the text from y≈497 to y≈499.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3307,
+    "cache_read_input_tokens": 6396,
+    "output_tokens": 400,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 199,
+        "cache_read_input_tokens": 3384,
+        "cache_creation_input_tokens": 2935,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2935
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.017875600000000002,
+  "turns": 3,
+  "durationMs": 4903,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

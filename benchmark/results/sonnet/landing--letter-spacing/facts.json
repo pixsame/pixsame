@@ -1,0 +1,43 @@
+{
+  "answer": "a#cta \"Start free trial\": button widened from 135.6px to 149.9px (+14.3px). Height is unchanged at 44.5px, and the tool also reports a look change on it.\na#demo \"Watch demo\": moved right by 14.4px. The tool's pixel diff at x=297, y=224 (87x10px) shows the same text shifted right, with no visible change to its colour or wording.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1103,
+    "cache_read_input_tokens": 10171,
+    "output_tokens": 651,
+    "output_tokens_details": {
+      "thinking_tokens": 145
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1103,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 228,
+        "cache_read_input_tokens": 3740,
+        "cache_creation_input_tokens": 392,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 392
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0119511,
+  "turns": 4,
+  "durationMs": 7838,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

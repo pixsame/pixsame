@@ -252,6 +252,15 @@ importers:
         specifier: ^3.0.0
         version: 3.3.14(typescript@5.9.3)
 
+  benchmark:
+    dependencies:
+      pixsame:
+        specifier: workspace:*
+        version: link:../packages/cli
+      playwright-core:
+        specifier: 1.65.0
+        version: 1.65.0
+
   examples/next:
     dependencies:
       next:

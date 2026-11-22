@@ -1,0 +1,43 @@
+{
+  "answer": "h1 \"Configure\": moved down about 4px (text center y≈107 → 111), probably from added top margin or padding.\nIntro paragraph (\"Kiln reads kiln.toml…\"): moved down about 6px (y≈152 → 158).\nh2 \"Output directory\": moved down about 6px (y≈190 → 196).\nParagraph \"Where the build is written…\": moved down about 7px (y≈224 → 231).\nCode block: moved down 7px (top y 249 → 256), with the same height and size.\nTip callout: moved down 7px (top y 352 → 359), with the same height and size.\n\"Next: Deploy\" button: moved down 7px (top y 422 → 429), with the same size.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3307,
+    "cache_read_input_tokens": 6396,
+    "output_tokens": 588,
+    "output_tokens_details": {
+      "thinking_tokens": 155
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 387,
+        "cache_read_input_tokens": 3384,
+        "cache_creation_input_tokens": 2935,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2935
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.019755599999999998,
+  "turns": 3,
+  "durationMs": 6249,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

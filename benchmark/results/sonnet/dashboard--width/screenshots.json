@@ -1,0 +1,43 @@
+{
+  "answer": "Resolved badge (row 1, 09:14 Checkout API): the pill is narrower in the after state. Its right edge is at about x=855, down from about x=865. The badge text is unchanged, and the text now sits close to the right edge, so the right padding looks smaller.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3310,
+    "cache_read_input_tokens": 6397,
+    "output_tokens": 292,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3310,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 89,
+        "cache_read_input_tokens": 3385,
+        "cache_creation_input_tokens": 2937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0168077,
+  "turns": 3,
+  "durationMs": 4650,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "a#new \"New invoice\": font-size increased 15px → 17px, line-height 22.5px → 25.5px, margin-left 735.219px → 723.656px, size grew 124.7x44.5 → 136.3x47.5\ndiv#tbl, th \"Number\", th#th-cust \"Customer\" and 34 other elements (37 in total): moved down by 3px\nh1#t-title \"Invoices\": moved down by 1.5px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 666,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 246,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 666,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 141,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 293,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 293
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005775100000000001,
+  "turns": 2,
+  "durationMs": 4054,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

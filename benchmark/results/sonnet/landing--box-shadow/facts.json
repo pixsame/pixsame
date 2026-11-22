@@ -1,0 +1,43 @@
+{
+  "answer": "a#cta \"Start free trial\": a soft drop shadow appears beneath the button (none before), and the corner radius looks slightly larger. The fill color, label text and size look unchanged. The change is in the 144x44 px area at x=128, y=218, and I read it by eye from the before and after crops, so I have no exact values.\nbody (144x44 px at x=128, y=218): the same region as the button change. The layout doesn't explain it, and the shadow is the likely cause.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1052,
+    "cache_read_input_tokens": 10110,
+    "output_tokens": 603,
+    "output_tokens_details": {
+      "thinking_tokens": 75
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1052,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 198,
+        "cache_read_input_tokens": 3679,
+        "cache_creation_input_tokens": 402,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 402
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.011261,
+  "turns": 4,
+  "durationMs": 6143,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

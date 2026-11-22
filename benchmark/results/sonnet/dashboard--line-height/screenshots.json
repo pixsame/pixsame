@@ -1,0 +1,43 @@
+{
+  "answer": "Recent alerts heading: moved down ~4px (text y 331 → 335), which adds spacing below the card's top edge.\nRecent alerts table header row: moved down ~7px (y 374 → 381 text, background starts 354 → 361).\nRecent alerts table rows: all shifted down ~6–7px (09:14 row y 417 → 423, 08:52 row 460 → 466, 07:30 row 503 → 509).\nRecent alerts card: height increased ~7px, with the bottom edge moving from y≈543 to y≈550.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3313,
+    "cache_read_input_tokens": 6398,
+    "output_tokens": 386,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3313,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 181,
+        "cache_read_input_tokens": 3386,
+        "cache_creation_input_tokens": 2939,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2939
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0177598,
+  "turns": 3,
+  "durationMs": 3964,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

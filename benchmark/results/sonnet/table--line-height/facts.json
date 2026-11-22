@@ -1,0 +1,43 @@
+{
+  "answer": "th#th-cust \"Customer\": line-height 21px → 27px; height 41.5 → 47.5 (taller by 6px)\nth \"Number\": height 41.5 → 47.5 (taller by 6px), width unchanged at 174.4\nth \"Due\": height 41.5 → 47.5 (taller by 6px), width unchanged at 143.1\nth \"Amount\": height 41.5 → 47.5 (taller by 6px), width unchanged at 182.8\nth \"Status\": height 41.5 → 47.5 (taller by 6px), width unchanged at 187.9\n31 elements below the header (td \"INV-1042\", td.cust \"Acme Tools\", td \"12 Mar\", and others): moved down by 6px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 732,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 341,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 732,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 236,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 359,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 359
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.006989100000000001,
+  "turns": 2,
+  "durationMs": 3240,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

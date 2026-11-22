@@ -1,0 +1,43 @@
+{
+  "answer": "h3 \"Colombia Huila\": margin-top changed 0px → 14px\n22 elements (including h3 \"Colombia Huila\", p.muted \"Caramel, red apple\", b.price \"$16.50\", and others): moved down 2px\ndiv#p1: resized from 325.3x285 to 325.3x287 (height +2px)\ndiv#p3: resized from 325.3x285 to 325.3x287 (height +2px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 651,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 243,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 651,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 138,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 278,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 278
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0056851,
+  "turns": 2,
+  "durationMs": 3819,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

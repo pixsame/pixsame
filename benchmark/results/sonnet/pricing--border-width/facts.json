@@ -1,0 +1,43 @@
+{
+  "answer": "div#plan-team: look changed; resized 325.3x233.1 → 325.3x239.1 (height +6px)\nspan#popular \"Most popular\": moved down 3px and right 3px\na#choose-team \"Choose Team\": moved down 3px and right 3px\ndiv.footer \"Prices exclude tax\": moved down 6px\ndiv#plan-free: resized 325.3x233.1 → 325.3x239.1 (height +6px)\nh2 \"Team\": resized 287.3x28.6 → 281.3x28.6 (width -6px)\np#team-price \"$29\": resized 287.3x45 → 281.3x45 (width -6px)\np.muted \"Per member, per mo\": resized 287.3x21 → 281.3x21 (width -6px)\ndiv#plan-ent: resized 325.3x233.1 → 325.3x239.1 (height +6px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 794,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 390,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 794,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 284,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 420,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 420
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0077272,
+  "turns": 2,
+  "durationMs": 4502,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

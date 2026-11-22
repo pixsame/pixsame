@@ -1,0 +1,43 @@
+{
+  "answer": "a#new \"New invoice\": look changed (the tool gave no values). In the crops, the after state looks like it has a soft drop shadow under the button, and the before state looks flat. The fill color and label look the same.\nbody (133x43 px at x=1019, y=100): pixels changed around the \"New invoice\" button. This is the same shadow change spilling outside the button's box, and the layout doesn't explain it.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1047,
+    "cache_read_input_tokens": 10109,
+    "output_tokens": 587,
+    "output_tokens_details": {
+      "thinking_tokens": 82
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1047,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 186,
+        "cache_read_input_tokens": 3678,
+        "cache_creation_input_tokens": 398,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 398
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.011080900000000001,
+  "turns": 4,
+  "durationMs": 7788,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

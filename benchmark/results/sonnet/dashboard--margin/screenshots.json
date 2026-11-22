@@ -1,0 +1,43 @@
+{
+  "answer": "Recent alerts first row (09:14 / Checkout API): the row is taller, about 57px against 43px. The row's bottom border moves from y≈438 to y≈452.\nRecent alerts first row \"09:14\" and \"Checkout API\" text: moved down from y≈417 to y≈424, and they are no longer vertically centered in the row.\nRecent alerts first row \"Resolved\" badge: moved down from y≈417 to y≈431, and now sits lower than the text beside it.\nRecent alerts second row (08:52 / Search / Resolved): moved down about 14px, with text from y≈460 to y≈474. Its height is unchanged.\nRecent alerts third row (07:30 / Email queue / Open): moved down about 14px, with text from y≈503 to y≈517. Its height is unchanged.\nRecent alerts card: taller, with its bottom edge moving from y≈543 to y≈557.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3310,
+    "cache_read_input_tokens": 6397,
+    "output_tokens": 502,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3310,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 299,
+        "cache_read_input_tokens": 3385,
+        "cache_creation_input_tokens": 2937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0189077,
+  "turns": 3,
+  "durationMs": 5913,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}
