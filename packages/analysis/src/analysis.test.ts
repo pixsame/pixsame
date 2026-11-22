@@ -231,18 +231,56 @@ describe('moves found from the pixels alone', () => {
     expect(analyzePair(before, after).label).not.toBe('moved');
   });
 
-  it('does not search images too large to search', () => {
-    const before = image(2100, 2000);
-    paint(before, { x: 10, y: 10, width: 30, height: 20 }, [0, 0, 255]);
-    const after = image(2100, 2000);
-    paint(after, { x: 10, y: 22, width: 30, height: 20 }, [0, 0, 255]);
-    expect(
-      findMoves({
+  describe('an image over the size limit (a retina screenshot)', () => {
+    // 2560 x 1600 is over MAX_PIXELS: the search runs on a reduced copy
+    const retina = () => {
+      const target = image(2560, 1600);
+      for (let i = 0; i < 14; i++) {
+        paint(
+          target,
+          { x: 40 + ((i * 97) % 600), y: 40 + i * 100, width: 360, height: 60 },
+          [20 + i * 10, 90, 200 - i * 8],
+        );
+        paint(
+          target,
+          { x: 60 + ((i * 97) % 600), y: 56 + i * 100, width: 120, height: 14 },
+          [255, 255, 255],
+        );
+      }
+      return target;
+    };
+    const moved = (by: number) => {
+      const before = retina();
+      const after = shiftedDown(before, 500, by);
+      return findMoves({
         baseline: before,
         actual: after,
         mask: maskOf(before, after),
-      }),
-    ).toBeUndefined();
+      });
+    };
+
+    it('finds a move and gives it to the pixel', () => {
+      expect(moved(74)?.moves[0]).toMatchObject({ dx: 0, dy: 74 });
+    });
+
+    it('never reports an offset that is not the real one', () => {
+      // an odd offset smears the reduced copy, so no answer is fine; a wrong one is not
+      const result = moved(75);
+      if (result) expect(result.moves[0]).toMatchObject({ dx: 0, dy: 75 });
+    });
+
+    it('does not call a change a move', () => {
+      const before = retina();
+      const after = clone(before);
+      paint(after, { x: 300, y: 700, width: 500, height: 300 }, [200, 30, 30]);
+      expect(
+        findMoves({
+          baseline: before,
+          actual: after,
+          mask: maskOf(before, after),
+        }),
+      ).toBeUndefined();
+    });
   });
 
   it('takes the sizes of padded images into account', () => {
