@@ -8,6 +8,12 @@ import {
   type Kind,
   type Pair,
 } from './layout/diff';
+import {
+  describeStyleChanges,
+  SPACING,
+  styleChanges,
+  type StyleChange,
+} from './layout/style';
 import type { Layout, LayoutNode, Rect } from './layout/types';
 import { checkAgainstPixels } from './layout/verify';
 import type { Region, RgbaImage, Size } from './types';
@@ -26,6 +32,16 @@ type FactBody =
       rect: Rect;
       before?: string;
       after?: string;
+      /** The stored styles that have another value, when the snapshots hold them. */
+      styles?: StyleChange[];
+      text: string;
+    }
+  /** An element whose spacing (margin, padding, gap) changed and that shows no other change of its own: what it did is in the moves and resizes around it. */
+  | {
+      type: 'style';
+      element: string;
+      rect: Rect;
+      styles: StyleChange[];
       text: string;
     }
   /** Elements that kept their content and moved by the same offset, in CSS pixels. */
@@ -46,6 +62,7 @@ type FactBody =
       rect: Rect;
       before: Size;
       after: Size;
+      styles?: StyleChange[];
       text: string;
     }
   /** Pixels differ and the page's layout does not say why (a canvas, a picture, a video frame). In image pixels. */
@@ -92,9 +109,18 @@ const within = (inner: Rect, outer: Rect, slack = SAME_RECT) =>
 type Root = {
   a: LayoutNode | null;
   b: LayoutNode;
-  /** It is new, or its content or look changed: a reason of its own to be elsewhere. */
+  /** It is new, or its content, look or a style of its own changed: a reason of its own to be elsewhere. */
   changed: boolean;
+  /** Its own margin, padding or gap changed: it can push its neighbours without changing size. */
+  spaced: boolean;
 };
+
+/** The style changes of a pair's element; see `styleChanges`. */
+type Styles = (pair: Pair) => StyleChange[];
+
+const own = (changes: StyleChange[]) => changes.filter(({ from }) => !from);
+const spacing = (changes: StyleChange[]) =>
+  own(changes).filter(({ property }) => SPACING.includes(property));
 type Scope = {
   rects: Rect[];
   roots: Root[];
@@ -105,7 +131,12 @@ type Scope = {
 };
 
 /** The `only` rectangles as elements of both snapshots, with everything inside them. */
-const scopeOf = (only: Rect[], after: Layout, pairs: Pair[]): Scope => {
+const scopeOf = (
+  only: Rect[],
+  after: Layout,
+  pairs: Pair[],
+  styles: Styles,
+): Scope => {
   const pairOf = new Map<LayoutNode, Pair>();
   for (const pair of pairs) if (pair.b) pairOf.set(pair.b, pair);
   const scope: Scope = {
@@ -128,7 +159,13 @@ const scopeOf = (only: Rect[], after: Layout, pairs: Pair[]): Scope => {
     if (!same) return node.kids.forEach(visit);
     const pair = pairOf.get(node);
     const a = pair?.a ?? null;
-    const root = { a, b: node, changed: !a || (!!pair && has(pair, CHANGE)) };
+    const changes = pair ? styles(pair) : [];
+    const root = {
+      a,
+      b: node,
+      changed: !a || (!!pair && has(pair, CHANGE)) || own(changes).length > 0,
+      spaced: spacing(changes).length > 0,
+    };
     scope.roots.push(root);
     addAll(node, scope.inB, root);
     if (a) addAll(a, scope.inA);
@@ -148,9 +185,9 @@ const sized = ({ a, b }: Root, axis: 0 | 1) =>
   !a || Math.abs(b.rect[axis + 2] - a.rect[axis + 2]) > EPS;
 
 /**
- * Whether one of the `only` elements pushed this element: that element is new
- * or changed size along the axis, and this one started at or past its top
- * (left) edge.
+ * Whether one of the `only` elements pushed this element: that element is
+ * new, changed size along the axis or changed its own spacing, and this one
+ * started at or past its top (left) edge.
  */
 const pushed = (
   { a, b }: { a: LayoutNode | null; b: LayoutNode | null },
@@ -163,7 +200,7 @@ const pushed = (
   return scope.roots.some((root) => {
     if (root === except) return false;
     const from = (root.a ?? root.b).rect;
-    const disturbed = (axis: 0 | 1) => sized(root, axis);
+    const disturbed = (axis: 0 | 1) => root.spaced || sized(root, axis);
     return (
       (!dy || (disturbed(1) && a.rect[1] >= from[1] - SAME_RECT)) &&
       (!dx || (disturbed(0) && a.rect[0] >= from[0] - SAME_RECT))
@@ -203,7 +240,7 @@ const direction = (dx: number, dy: number) =>
 
 const quote = (text?: string) => JSON.stringify(text ?? '');
 
-const elementFact = (pair: Pair): FactBody => {
+const elementFact = (pair: Pair, styles: StyleChange[]): FactBody => {
   const node = (pair.b ?? pair.a) as LayoutNode;
   const kinds = pair.kinds.filter((kind) => CHANGE.includes(kind));
   const element = nameOf(node);
@@ -216,7 +253,15 @@ const elementFact = (pair: Pair): FactBody => {
   if (textChanged) {
     parts.push(`text changed on ${b.tag}: ${quote(a.text)} → ${quote(b.text)}`);
   }
-  if (kinds.includes('look')) parts.push(`look changed on ${element}`);
+  // with the values at hand the change is named; without them only that there is one
+  const named = describeStyleChanges(styles);
+  const look = kinds.includes('look') || kinds.includes('font');
+  if (look && named) parts.push(`${element}: ${named}`);
+  else if (look)
+    parts.push(
+      `${kinds.includes('look') ? 'look' : 'font'} changed on ${element}`,
+    );
+  else if (named) parts.push(named);
   if (a && b && pair.kinds.includes('resized')) {
     parts.push(
       `resized ${round(a.rect[2])}x${round(a.rect[3])} → ${round(b.rect[2])}x${round(b.rect[3])}`,
@@ -228,6 +273,7 @@ const elementFact = (pair: Pair): FactBody => {
     element,
     rect: node.rect,
     ...(textChanged && { before: a.text ?? '', after: b.text ?? '' }),
+    ...(styles.length > 0 && { styles }),
     text: parts.join('; '),
   };
 };
@@ -283,6 +329,8 @@ const moveFacts = (pairs: Pair[], scope?: Scope): Fact[] => {
 const resizeFacts = (
   pairs: Pair[],
   touched: Set<LayoutNode>,
+  styles: Styles,
+  covered: Set<Pair>,
   scope?: Scope,
 ): Fact[] => {
   const inside = (node: LayoutNode): boolean =>
@@ -297,6 +345,7 @@ const resizeFacts = (
     const before = { width: round(a.rect[2]), height: round(a.rect[3]) };
     const after = { width: round(b.rect[2]), height: round(b.rect[3]) };
     const element = nameOf(b);
+    const changes = styles(pair);
     const parts = [
       ...(resized
         ? [
@@ -316,9 +365,11 @@ const resizeFacts = (
       rect: b.rect,
       before,
       after,
-      text: parts.join('; '),
+      ...(changes.length > 0 && { styles: changes }),
+      text: `${parts.join('; ')}${changes.length > 0 ? `: ${describeStyleChanges(changes)}` : ''}`,
       ...(scope && { outside: outsidePair(pair, scope) }),
     });
+    covered.add(pair);
   }
   return out;
 };
@@ -338,8 +389,10 @@ const areaText = (area: Region, on?: string) =>
 
 /**
  * Everything that is different between two screenshots, one fact each:
- * changed elements first, then moves (one per offset, however many elements),
- * then elements that changed size, then areas the layout cannot explain.
+ * changed elements first, then elements whose spacing changed, then moves
+ * (one per offset, however many elements), then elements that changed size,
+ * then areas the layout cannot explain. Where the snapshots hold style values
+ * a change is named by property ("border-radius 8px → 4px").
  * With no layout snapshot on both sides it is what the pixels alone say.
  * Deterministic; an empty mask gives no facts.
  */
@@ -398,20 +451,62 @@ export const facts = ({
     actual,
     mask,
   });
-  const scope = only && scopeOf(only, layout.actual, diff.pairs);
+  // the style changes of each element, with what it only inherited marked as such
+  const pairOf = new Map<LayoutNode, Pair>();
+  const parentOf = new Map<LayoutNode, LayoutNode>();
+  for (const pair of diff.pairs) {
+    if (!pair.b) continue;
+    pairOf.set(pair.b, pair);
+    for (const kid of pair.b.kids) parentOf.set(kid, pair.b);
+  }
+  const known = new Map<Pair, StyleChange[]>();
+  const styles: Styles = (pair) => {
+    let changes = known.get(pair);
+    if (!changes) {
+      const parent = pair.b && parentOf.get(pair.b);
+      const parentPair = parent && pairOf.get(parent);
+      changes = styleChanges(
+        pair.a,
+        pair.b,
+        parent && parentPair
+          ? { changes: styles(parentPair), name: nameOf(parent) }
+          : undefined,
+      );
+      known.set(pair, changes);
+    }
+    return changes;
+  };
+  const scope = only && scopeOf(only, layout.actual, diff.pairs, styles);
+  const covered = new Set<Pair>(checked.real);
   out.push(
     ...checked.real.map((pair) => ({
-      ...elementFact(pair),
+      ...elementFact(pair, styles(pair)),
       ...(scope && { outside: outsidePair(pair, scope) }),
     })),
   );
   const layoutOnly = diff.layout.filter((pair) => !has(pair, CHANGE));
-  out.push(...moveFacts(layoutOnly, scope));
   const touched = new Set<LayoutNode>();
   for (const pair of [...diff.changed, ...diff.layout]) {
     if (pair.b) touched.add(pair.b);
   }
-  out.push(...resizeFacts(layoutOnly, touched, scope));
+  const resizes = resizeFacts(layoutOnly, touched, styles, covered, scope);
+  // spacing that changed on an element nothing else names: the cause of moves around it
+  for (const pair of diff.pairs) {
+    if (!pair.a || !pair.b || covered.has(pair)) continue;
+    const changes = spacing(styles(pair));
+    if (changes.length === 0) continue;
+    const element = nameOf(pair.b);
+    out.push({
+      type: 'style',
+      element,
+      rect: pair.b.rect,
+      styles: changes,
+      text: `${element}: ${describeStyleChanges(changes)}`,
+      ...(scope && { outside: outsidePair(pair, scope) }),
+    });
+  }
+  out.push(...moveFacts(layoutOnly, scope));
+  out.push(...resizes);
   checked.doubt.forEach((area, i) => {
     const on = checked.doubtOn[i];
     out.push({

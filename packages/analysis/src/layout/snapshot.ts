@@ -82,6 +82,29 @@ export const snapshotLayout = ({
     'stroke',
     'list-style-type',
   ];
+  // the styles kept as values; the same list, in the same order, as STYLE in ./style
+  const STYLE = [
+    'font-family',
+    'font-size',
+    'font-weight',
+    'line-height',
+    'color',
+    'background-color',
+    'border-top-left-radius',
+    'border-top-right-radius',
+    'border-bottom-right-radius',
+    'border-bottom-left-radius',
+    'padding-top',
+    'padding-right',
+    'padding-bottom',
+    'padding-left',
+    'row-gap',
+    'column-gap',
+    'margin-top',
+    'margin-right',
+    'margin-bottom',
+    'margin-left',
+  ];
   const SKIP = ['script', 'style', 'head', 'template', 'noscript'];
   const MEDIA = ['img', 'canvas', 'svg', 'video', 'iframe'];
   const hash = (text: string): string => {
@@ -166,6 +189,7 @@ export const snapshotLayout = ({
       }
     }
     node.paint = hash(paint);
+    node.style = STYLE.map((p) => cs.getPropertyValue(p)).join('|');
     const border = ['top', 'right', 'bottom', 'left'].some(
       (side) => parseFloat(cs.getPropertyValue(`border-${side}-width`)) > 0,
     );

@@ -9,6 +9,7 @@ import {
   type LayoutDiff,
   type Pair,
 } from './diff';
+import { describeStyleChanges, styleChanges } from './style';
 import type { Layout, LayoutNode, Rect } from './types';
 
 /** Per channel, how far a moved pixel may be from its source and still count as the same. */
@@ -376,5 +377,9 @@ export const checkAgainstPixels = ({
 export const causesOf = (pairs: Pair[], limit = 3): string[] =>
   pairs.slice(0, limit).map((pair) => {
     const kinds = pair.kinds.filter((kind) => CHANGE.includes(kind));
-    return `${kinds.join('+')} ${nameOf((pair.b ?? pair.a) as LayoutNode)}`;
+    // the first values that changed, when the snapshots hold them
+    const named = describeStyleChanges(
+      styleChanges(pair.a, pair.b).slice(0, 2),
+    );
+    return `${kinds.join('+')} ${nameOf((pair.b ?? pair.a) as LayoutNode)}${named ? ` (${named})` : ''}`;
   });

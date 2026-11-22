@@ -34,6 +34,12 @@ export type LayoutNode = {
   media?: boolean;
   /** Hash of the picture source. */
   src?: string;
+  /**
+   * The computed values of the styles in `STYLE` (font, colours, radius,
+   * padding, gap, margin), in that order, joined with `|`: what lets a change
+   * be named ("border-radius 8px → 4px") instead of "look changed".
+   */
+  style?: string;
   /** Hash of the font family of the element's own text; set only where there is text. */
   font?: string;
   kids: LayoutNode[];

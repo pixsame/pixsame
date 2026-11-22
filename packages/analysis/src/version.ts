@@ -6,8 +6,8 @@
  * Raise it with any change that makes data written by an older version wrong
  * or unreadable: a different field in the snapshot, a different encoding, a
  * different way of reading the snapshot. A PNG carries it in the keyword of
- * its layout chunk (`pixsame-layout-v2`), so a baseline stamped by an older
+ * its layout chunk (`pixsame-layout-v3`), so a baseline stamped by an older
  * version is recognised without decoding it and the comparison falls back to
  * pixels only. Re-running the tests with `--update` stamps new baselines.
  */
-export const ANALYSIS_VERSION = 2;
+export const ANALYSIS_VERSION = 3;

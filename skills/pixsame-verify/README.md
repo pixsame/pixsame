@@ -6,7 +6,7 @@ Without it, an agent that edits a component takes a screenshot and looks at it, 
 
 ```
 http://localhost:3000/cart at 1280x800: 2 changes since the first capture, all on .checkout-button or caused by it:
-  - look changed on button "Checkout"; resized 97x42 → 105x50
+  - button.checkout "Checkout": border-radius 8px → 4px, padding 12px → 16px; resized 80.3x39 → 88.3x47
   - 1 element moved down by 8 px: p "Total: 24.99"
 ```
 

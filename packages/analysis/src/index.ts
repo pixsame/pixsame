@@ -38,6 +38,13 @@ export {
   type RawLayout,
   type SnapshotInput,
 } from './layout/snapshot';
+export {
+  STYLE,
+  styleChanges,
+  styleOf,
+  type StyleChange,
+  type StyleProperty,
+} from './layout/style';
 export type { Environment, Layout, LayoutNode, Rect } from './layout/types';
 export { checkAgainstPixels, type Checked } from './layout/verify';
 export { OLD_BASELINES_NOTICE, UPDATE_BASELINES_COMMAND } from './notice';

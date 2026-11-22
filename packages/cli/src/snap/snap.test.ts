@@ -174,7 +174,7 @@ describe('snap', { timeout: 60_000 }, () => {
       '<h1>Welcome</h1><div class="card" style="background:#c81e1e"></div>',
     );
     expect((await run(origin, '--selector', '.card')).text).toContain(
-      'look changed on div.card',
+      'div.card: background-color rgb(30, 90, 200) → rgb(200, 30, 30)',
     );
   });
 
@@ -295,7 +295,25 @@ describe('snap', { timeout: 60_000 }, () => {
       html = shop(40, 'Welcome', 36);
       const { code, text } = await run(origin, '--only', '.promo');
       expect(code).toBe(1);
+      expect(text).toContain(
+        'OUTSIDE: h1 "Welcome": margin-bottom 20px → 36px',
+      );
       expect(text).toContain('OUTSIDE: 2 elements moved down by 16 px');
+    });
+
+    it('exits with 0 when the element moved by its own margin', async () => {
+      const own = (margin: number) =>
+        page(
+          `<h1>Welcome</h1><div class="promo" style="margin-top:${margin}px"></div><div class="card"></div>`,
+        );
+      html = own(20);
+      await run(origin);
+      html = own(44);
+      const { code, text } = await run(origin, '--only', '.promo');
+      expect(text).toContain('div.promo: margin-top 20px → 44px');
+      expect(text).toContain('2 elements moved down by 24 px');
+      expect(text).not.toContain('OUTSIDE');
+      expect(code).toBe(0);
     });
 
     it('needs the element to be there', async () => {

@@ -87,11 +87,11 @@ npx pixsame snap http://localhost:3000/cart   # after: says what is different
 
 ```
 http://localhost:3000/cart at 1280x800: 2 changes since the first capture on commit 25b0fb7:
-  - look changed on button "Checkout"; resized 97x42 → 105x50
+  - button.checkout "Checkout": border-radius 8px → 4px, padding 12px → 16px; resized 80.3x39 → 88.3x47
   - 1 element moved down by 8 px: p "Total: 24.99"
 ```
 
-Each line is one fact: an element that was added, removed or changed its text or look, a group of elements that moved by the same offset, an element that changed size, or an area where pixels changed and the page's layout does not say why (a canvas, a picture). For such an area the command writes a before and an after crop and prints their paths. "No change" means no pixel differs.
+Each line is one fact: an element that was added, removed or changed its text or look (named by property where it is one of font, colour, background, border radius, padding, gap or margin: `border-radius 8px → 4px`), an element whose spacing changed, a group of elements that moved by the same offset, an element that changed size, or an area where pixels changed and the page's layout does not say why (a canvas, a picture). For such an area the command writes a before and an after crop and prints their paths. "No change" means no pixel differs.
 
 How it works:
 
@@ -126,13 +126,13 @@ npx pixsame snap http://localhost:3000/cart --only '.checkout-button'
 ```
 http://localhost:3000/cart at 1280x800: 3 changes since the first capture on commit 25b0fb7, 1 of them NOT on .checkout-button:
   - OUTSIDE: text changed on h1: "Cart" → "Basket"
-  - look changed on button "Checkout"; resized 97x42 → 105x50
+  - button.checkout "Checkout": border-radius 8px → 4px, padding 12px → 16px; resized 80.3x39 → 88.3x47
   - 1 element moved down by 8 px: p "Total: 24.99"
 ```
 
 A change is inside when it is on that element or on something in it, or when it is a move the element caused: the element is new or changed size, and what moved started at or below its top edge (at or right of its left edge). Everything else is marked `OUTSIDE:`, printed first, and makes the command exit with 1.
 
-When the named element itself sits elsewhere and nothing about it changed, something else moved it, and that counts as outside too. A change to the element's own margin looks the same to the command, so it is reported that way.
+When the named element itself sits elsewhere and nothing about it changed, something else moved it, and that counts as outside too. A change to its own margin, padding or gap is a change of its own, so what that pushes aside counts as inside.
 
 ### Exit codes
 

@@ -96,9 +96,26 @@ await withAnalysis(() => comparer.compare(input), {
 });
 ```
 
-The layout is stored in an `iTXt` chunk of the PNG as columnar JSON, deflated (about 6 to 40 KB for a real page). **The chunk's keyword carries the analysis version**: `pixsame-layout-v2`. `ANALYSIS_VERSION` is raised by any change that makes stored data wrong or unreadable (the snapshot, its encoding, how it is read), so a baseline stamped by an older version is recognised without decoding it and that comparison falls back to the pixels alone. `readLayout` only returns a layout of the current version, `layoutVersionOf` tells a stale one from none, and `writeLayout` drops layouts of any other version.
+The layout is stored in an `iTXt` chunk of the PNG as columnar JSON, deflated (about 6 to 40 KB for a real page). **The chunk's keyword carries the analysis version**: `pixsame-layout-v3`. `ANALYSIS_VERSION` is raised by any change that makes stored data wrong or unreadable (the snapshot, its encoding, how it is read), so a baseline stamped by an older version is recognised without decoding it and that comparison falls back to the pixels alone. `readLayout` only returns a layout of the current version, `layoutVersionOf` tells a stale one from none, and `writeLayout` drops layouts of any other version.
 
 **Large pages.** A snapshot costs about 70 microseconds an element, so a page with more than 3000 elements (`cullAbove`) is snapshotted without the elements that lie outside `area` or outside an ancestor that clips them: the rows of a long list or data grid that are scrolled out of view. They explain no pixel of the screenshot. On a grid of 380,000 elements this takes the snapshot from 27 seconds to 0.2 seconds.
+
+### Style values
+
+Each element of a snapshot also carries the computed values of a fixed list of styles (`STYLE`: font family, size and weight, line height, colour, background colour, the four border radii, padding, row and column gap, margin). They let a change be named instead of only noticed:
+
+```ts
+import { facts, styleChanges } from '@pixsame/analysis';
+
+facts({ baseline, actual, mask, layout });
+// [{ type: 'element', element: 'button.checkout "Checkout"',
+//    styles: [{ property: 'border-radius', before: '8px', after: '4px' }],
+//    text: 'button.checkout "Checkout": border-radius 8px → 4px' }, …]
+```
+
+`facts()` returns everything that differs, one fact each: changed elements, elements whose spacing changed, moves grouped by offset, resizes and areas the layout cannot explain. Four sides or corners that changed alike are written as one (`padding`, `margin`, `border-radius`, `gap`), and a style an element only inherited is marked with the ancestor it came from. With `only` (rectangles of the elements that were meant to change) every fact says whether it is `outside` them. The failure description of `analyze()` names the first values in the same way.
+
+A style outside the list still shows as a changed look, through the `paint` hash. The values add about 15% to the stored layout (0.4 to 1.7 KB on the pages measured).
 
 ## Screenshots from different systems
 
