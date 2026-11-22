@@ -22,8 +22,10 @@ const B = 8;
 const TOLERANCE = 3;
 /** Offsets are searched this far from where they were seen, in pixels. */
 const REACH_PIXELS = 48;
-/** Images with more pixels than this are not searched: it needs several arrays of that size. */
+/** Images with more pixels than this are searched at a reduced size: the search needs several arrays of that size. */
 export const MAX_PIXELS = 4_000_000;
+/** The most an image is reduced by, per side. A retina screenshot needs 2; beyond this the detail is gone. */
+const MAX_REDUCTION = 4;
 
 /**
  * What it takes to claim a move. Anything weaker is not reported at all, so
@@ -228,25 +230,21 @@ const matchBlocks = (
   return { found, cols, rows };
 };
 
-/**
- * Content that moved between two images of the same size, or `undefined`
- * when there is no definite answer: no offset with enough support, too much
- * left unexplained, content pushed out of the picture, or an image too large
- * to search. `sizes` are the sizes before padding; padding is not content.
- */
-export const findMoves = ({
-  baseline,
-  actual,
-  mask,
-  sizes,
-}: {
+type SearchInput = {
   baseline: RgbaImage;
   actual: RgbaImage;
   mask: Uint8Array;
   sizes?: { baseline: Size; actual: Size };
-}): PixelMoves | undefined => {
+};
+
+const search = ({
+  baseline,
+  actual,
+  mask,
+  sizes,
+}: SearchInput): PixelMoves | undefined => {
   const { width: w, height: h } = actual;
-  if (w < B * 2 || h < B * 2 || w * h > MAX_PIXELS) return;
+  if (w < B * 2 || h < B * 2) return;
   if (baseline.width !== w || baseline.height !== h) return;
   const base = px32(baseline);
   const act = px32(actual);
@@ -435,5 +433,150 @@ export const findMoves = ({
     moves,
     explained: 1 - leftover,
     unexplained: only ? [] : unexplained,
+  };
+};
+
+/** The image with every `k` x `k` square of pixels averaged into one. */
+const reduce = (image: RgbaImage, k: number): RgbaImage => {
+  const { width: w, height: h, data } = image;
+  const rw = Math.ceil(w / k);
+  const rh = Math.ceil(h / k);
+  const out = new Uint8ClampedArray(rw * rh * 4);
+  for (let ry = 0; ry < rh; ry++) {
+    for (let rx = 0; rx < rw; rx++) {
+      const sum = [0, 0, 0, 0];
+      let n = 0;
+      for (let y = ry * k; y < Math.min(h, ry * k + k); y++) {
+        for (let x = rx * k; x < Math.min(w, rx * k + k); x++) {
+          const i = (y * w + x) * 4;
+          for (let c = 0; c < 4; c++) sum[c] += data[i + c];
+          n++;
+        }
+      }
+      for (let c = 0; c < 4; c++) out[(ry * rw + rx) * 4 + c] = sum[c] / n;
+    }
+  }
+  return { width: rw, height: rh, data: out };
+};
+
+/** A reduced pixel counts as different when any pixel in its square did. */
+const reduceMask = (
+  mask: Uint8Array,
+  w: number,
+  h: number,
+  k: number,
+): Uint8Array => {
+  const rw = Math.ceil(w / k);
+  const out = new Uint8Array(rw * Math.ceil(h / k));
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (mask[y * w + x]) out[Math.floor(y / k) * rw + Math.floor(x / k)] = 1;
+    }
+  }
+  return out;
+};
+
+/** Changed pixels the offset explains at full size, as a share of those looked at. */
+const matchAt = (
+  base: Uint32Array,
+  act: Uint32Array,
+  mask: Uint8Array,
+  w: number,
+  h: number,
+  dx: number,
+  dy: number,
+  sample: number[],
+) => {
+  let hit = 0;
+  for (const p of sample) {
+    const x = (p % w) - dx;
+    const y = Math.floor(p / w) - dy;
+    if (x >= 0 && y >= 0 && x < w && y < h && close(act[p], base[y * w + x])) {
+      hit++;
+    }
+  }
+  return sample.length === 0 ? 0 : hit / sample.length;
+};
+
+const SAMPLE = 20_000;
+
+/**
+ * Content that moved between two images of the same size, or `undefined`
+ * when there is no definite answer: no offset with enough support, too much
+ * left unexplained, content pushed out of the picture, or an image too large
+ * to search even reduced. `sizes` are the sizes before padding; padding is not
+ * content.
+ *
+ * An image over `MAX_PIXELS` (a retina screenshot) is searched at a reduced
+ * size. Each offset found is then checked at full size, within the reduction
+ * of where it was found, and kept only when full-size pixels agree with it.
+ */
+export const findMoves = (input: SearchInput): PixelMoves | undefined => {
+  const { baseline, actual, mask, sizes } = input;
+  const { width: w, height: h } = actual;
+  if (baseline.width !== w || baseline.height !== h) return;
+  if (w * h <= MAX_PIXELS) return search(input);
+
+  let k = 2;
+  while (Math.ceil(w / k) * Math.ceil(h / k) > MAX_PIXELS) k++;
+  if (k > MAX_REDUCTION) return;
+  const scaled = (size: Size): Size => ({
+    width: Math.ceil(size.width / k),
+    height: Math.ceil(size.height / k),
+  });
+  const found = search({
+    baseline: reduce(baseline, k),
+    actual: reduce(actual, k),
+    mask: reduceMask(mask, w, h, k),
+    sizes: sizes && {
+      baseline: scaled(sizes.baseline),
+      actual: scaled(sizes.actual),
+    },
+  });
+  if (!found) return;
+
+  // the offsets, to the pixel: the reduced search only knows them to within k
+  const base = px32(baseline);
+  const act = px32(actual);
+  const changed: number[] = [];
+  for (let p = 0; p < mask.length; p++) if (mask[p]) changed.push(p);
+  const stride = Math.max(1, Math.floor(changed.length / SAMPLE));
+  const sample = changed.filter((_, i) => i % stride === 0);
+  const moves: PixelMove[] = [];
+  const around = 2 * k;
+  for (const move of found.moves) {
+    // the best offset within two reductions of the reduced one; two equally good ones is no answer
+    let best = { dx: 0, dy: 0, score: -1, ties: 0 };
+    for (let j = -around; j <= around; j++) {
+      for (let i = -around; i <= around; i++) {
+        const dx = move.dx * k + i;
+        const dy = move.dy * k + j;
+        const score = matchAt(base, act, mask, w, h, dx, dy, sample);
+        if (score > best.score) best = { dx, dy, score, ties: 0 };
+        else if (score === best.score) best.ties++;
+      }
+    }
+    // full-size pixels must back up what the reduced ones said
+    if (best.ties === 0 && best.score >= move.share * 0.5) {
+      moves.push({ dx: best.dx, dy: best.dy, share: move.share });
+    }
+  }
+  if (moves.length === 0 || moves[0].share !== found.moves[0].share) return;
+  return {
+    ...found,
+    moves,
+    unexplained: found.unexplained.map((region) => {
+      const x = region.x * k;
+      const y = region.y * k;
+      return {
+        ...region,
+        x,
+        y,
+        width: Math.min(w - x, region.width * k),
+        height: Math.min(h - y, region.height * k),
+        area: region.area * k * k,
+        hash: undefined,
+      };
+    }),
   };
 };
