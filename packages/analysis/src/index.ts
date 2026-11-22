@@ -32,8 +32,12 @@ export {
   type Pair,
   type Kind,
 } from './layout/diff';
-export { snapshotLayout, type RawLayout } from './layout/snapshot';
-export type { Layout, LayoutNode, Rect } from './layout/types';
+export {
+  snapshotLayout,
+  type RawLayout,
+  type SnapshotInput,
+} from './layout/snapshot';
+export type { Environment, Layout, LayoutNode, Rect } from './layout/types';
 export { checkAgainstPixels, type Checked } from './layout/verify';
 export { OLD_BASELINES_NOTICE, UPDATE_BASELINES_COMMAND } from './notice';
 export { ANALYSIS_VERSION } from './version';

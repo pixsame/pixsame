@@ -264,6 +264,10 @@ export const compareImages = async (
           cfg.layout && baselineLayout
             ? { baseline: baselineLayout, actual: cfg.layout }
             : undefined,
+        environment: {
+          baseline: baselineLayout?.env,
+          actual: cfg.layout?.env,
+        },
       }));
   const status = entry.status as CompareStatus;
   const buffer = (bytes?: Uint8Array) =>

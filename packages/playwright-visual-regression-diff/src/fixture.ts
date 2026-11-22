@@ -30,6 +30,7 @@ import {
   rendererFor,
   toManifestOptions,
 } from './manifest.utils';
+import { environmentFor } from './environment.utils';
 import { captureLayout } from './layout';
 import { resolveImagesDir, ScreenshotNamer } from './screenshotPath';
 import { oldBaselinesNotice } from './notice.utils';
@@ -208,6 +209,7 @@ export const visualRegressionFixtures: Fixtures<
     const rootDir = testInfo.config.rootDir;
     const specPath = toPosix(path.relative(rootDir, testInfo.file));
     const renderer = rendererFor(browserName, browser.version());
+    const env = environmentFor(renderer);
 
     await use(async (target = page, options = {}) => {
       const cfg = withDefaults(visualRegression, options);
@@ -241,6 +243,7 @@ export const visualRegressionFixtures: Fixtures<
               png: imgNew,
               fullPage: cfg.screenshotConfig.fullPage,
               clip: cfg.screenshotConfig.clip,
+              env,
             });
       const result = await compareImages(
         {

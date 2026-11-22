@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import path from 'path';
 import fs from 'fs';
 import sharp from 'sharp';
+import { ANALYSIS_VERSION } from '@pixsame/analysis';
 import { dir, setGracefulCleanup } from 'tmp-promise';
 import {
   compareImages as compare,
@@ -117,7 +118,7 @@ describe('compareImages', () => {
     );
     expect(result.message.endsWith(result.description as string)).toBe(true);
     expect(result.entry.extra?.pixsame?.analysis).toMatchObject({
-      version: 1,
+      version: ANALYSIS_VERSION,
       label: 'size-change',
       description: result.description,
     });

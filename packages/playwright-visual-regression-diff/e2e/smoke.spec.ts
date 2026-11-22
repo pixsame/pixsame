@@ -112,6 +112,11 @@ test.describe('matchImage', () => {
     const baseline = fs.readFileSync(first.imgPath);
     expect(layoutVersionOf(baseline)).toBe(ANALYSIS_VERSION);
     expect(readLayout(baseline)?.size).toEqual({ width: 640, height: 400 });
+    // what rendered it, so a later run on another system can tell
+    expect(readLayout(baseline)?.env).toMatchObject({
+      os: process.platform,
+      browser: 'chromium',
+    });
 
     await page.setContent(
       layoutPage(
@@ -130,6 +135,21 @@ test.describe('matchImage', () => {
     expect(failing?.message).toMatch(/added div#promo/);
     fs.rmSync(path.join(dir, 'layout card_#1.actual.png'), { force: true });
     fs.rmSync(path.join(dir, 'layout card_#1.diff.png'), { force: true });
+  });
+
+  test('leaves what cannot be seen out of the layout of a large page', async ({
+    page,
+    matchImage,
+  }) => {
+    // 6000 rows in a box that shows ten of them
+    await page.setContent(`<!doctype html><body style="margin:0">
+<div style="height:320px;overflow:hidden"><div id="list">${Array.from(
+      { length: 6000 },
+      (_, i) => `<div style="height:32px"><b>Item ${i}</b></div>`,
+    ).join('')}</div></div></body>`);
+    const first = await matchImage(undefined, { title: 'large page' });
+    const layout = readLayout(fs.readFileSync(first.imgPath));
+    expect(layout?.count).toBeLessThan(100);
   });
 
   test('writes a manifest per worker that validates against the standard', async ({

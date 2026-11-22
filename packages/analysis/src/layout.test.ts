@@ -231,6 +231,82 @@ describe('analyze with a layout snapshot, no moves', () => {
   });
 });
 
+describe('analyze across systems', () => {
+  const MAC = { os: 'darwin', browser: 'chromium' };
+  const LINUX = { os: 'linux', browser: 'chromium' };
+  const line = (x: number, text: string, font: string) =>
+    node('p', [x, 40, 60, 16], {
+      text,
+      lines: [[x, 40, 60, 16]],
+      font,
+      paint: 'p',
+    });
+  const text = (x: number) =>
+    paint(image(W, H), { x, y: 40, width: 60, height: 16 }, [20, 20, 20]);
+  const across = (
+    environment: Parameters<typeof analyze>[0]['environment'],
+    words: [string, string] = ['Hello', 'Hello'],
+  ) =>
+    analyze({
+      baseline: text(20),
+      actual: text(23),
+      mask: maskOf(text(20), text(23)),
+      layout: {
+        baseline: layout([line(20, words[0], 'times')]),
+        actual: layout([line(23, words[1], 'liberation')]),
+      },
+      environment,
+    });
+
+  it('says so when a font and the position of text differ between systems', () => {
+    const result = across({ baseline: MAC, actual: LINUX });
+    expect(result.label).toBe('cross-os');
+    expect(result.description).toBe(
+      'The baseline was rendered on macOS and this screenshot on Linux, so fonts and anti-aliasing differ and some text sits differently. Nothing was added, removed or restyled.',
+    );
+    expect(result.bundleKey).toBe('cross-os:darwin>linux');
+    expect(result.environment).toEqual({ baseline: MAC, actual: LINUX });
+  });
+
+  it('calls the same difference a change when the system is the same', () => {
+    const result = across({ baseline: LINUX, actual: LINUX });
+    expect(result.label).toBe('content-change');
+    expect(result.description).not.toMatch(/rendered on/);
+  });
+
+  it('does not hide a text that changed behind the other system', () => {
+    const result = across({ baseline: MAC, actual: LINUX }, ['Hello', 'Hallo']);
+    expect(result.label).not.toBe('cross-os');
+    expect(result.description).toMatch(
+      /The baseline was rendered on macOS and this screenshot on Linux, so some differences are expected\.$/,
+    );
+  });
+
+  it('says nothing about systems when the baseline does not know its own', () => {
+    const result = across({ actual: LINUX });
+    expect(result.label).not.toBe('cross-os');
+    expect(result.description).not.toMatch(/rendered on/);
+  });
+
+  it('notes the systems on a comparison made from pixels alone', () => {
+    const result = analyze({
+      baseline: text(20),
+      actual: paint(
+        text(20),
+        { x: 100, y: 100, width: 40, height: 30 },
+        [0, 0, 0],
+      ),
+      mask: maskOf(
+        text(20),
+        paint(text(20), { x: 100, y: 100, width: 40, height: 30 }, [0, 0, 0]),
+      ),
+      environment: { baseline: MAC, actual: LINUX },
+    });
+    expect(result.label).toBe('content-change');
+    expect(result.description).toMatch(/rendered on macOS/);
+  });
+});
+
 describe('diffLayouts', () => {
   it('matches a reordered list by content and a rebuilt page by structure', () => {
     const item = (text: string, y: number) =>

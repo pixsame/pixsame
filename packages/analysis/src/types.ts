@@ -1,4 +1,5 @@
 import type { PixelMove } from './blocks';
+import type { Environment } from './layout/types';
 
 /** Decoded image: 8-bit RGBA, row by row. */
 export type RgbaImage = {
@@ -37,6 +38,7 @@ export type Label =
   | 'moved'
   | 'moved-and-changed'
   | 'noise-like'
+  | 'cross-os'
   | 'content-change';
 
 /** What `extra.pixsame.analysis` of a manifest entry holds. */
@@ -79,6 +81,8 @@ export type Analysis = {
   };
   /** Both sizes, when they differed. */
   sizes?: { baseline: Size; actual: Size };
+  /** What rendered the baseline and this screenshot, as far as it is known. */
+  environment?: { baseline?: Environment; actual?: Environment };
   /** Entries with the same key changed in the same way. */
   bundleKey: string;
 };

@@ -8,17 +8,39 @@ declare const document: any;
 declare const getComputedStyle: (el: any, pseudo?: string) => any;
 
 /** What `snapshotLayout` returns, before the adapter adds the size and scale. */
-export type RawLayout = { count: number; root: LayoutNode };
+export type RawLayout = {
+  count: number;
+  /** Elements left out because they lie outside the screenshot; 0 unless the page was large. */
+  culled: number;
+  root: LayoutNode;
+};
+
+/** What `snapshotLayout` takes. */
+export type SnapshotInput = {
+  /** Where the screenshot's top left is, in the page's viewport coordinates: the scroll position for a viewport capture, an element's corner for an element capture. */
+  origin: [number, number];
+  /** Width and height of the screenshot in CSS pixels. Needed to leave out what lies outside it. */
+  area?: [number, number];
+  /** Pages with more elements than this are snapshotted without what lies outside `area`; the snapshot costs about 70 microseconds an element. */
+  cullAbove?: number;
+};
 
 /**
  * Takes a layout snapshot of the page. It runs inside the page, so it has to be
  * self-contained: no imports, no helpers from outside, and nothing the
  * compiler turns into a helper. An adapter passes it to `page.evaluate` (or
- * `cy.window().then`) with the `origin` the screenshot's top left has in the
- * page: the scroll position for a viewport capture, an element's corner for an
- * element capture.
+ * `cy.window().then`) with a `SnapshotInput`.
+ *
+ * A page with many elements (`cullAbove`, 3000 by default) is snapshotted
+ * without the elements that cannot be seen in the screenshot: outside `area`
+ * or outside an ancestor that clips them. Those cost most of the time on a
+ * large app (a long list, a data grid) and explain no pixel of the screenshot.
  */
-export const snapshotLayout = (origin: [number, number]): RawLayout => {
+export const snapshotLayout = ({
+  origin,
+  area,
+  cullAbove = 3000,
+}: SnapshotInput): RawLayout => {
   const PAINT = [
     'color',
     'background-color',
@@ -46,7 +68,6 @@ export const snapshotLayout = (origin: [number, number]): RawLayout => {
     'filter',
     'backdrop-filter',
     'mix-blend-mode',
-    'font-family',
     'font-size',
     'font-weight',
     'font-style',
@@ -80,8 +101,30 @@ export const snapshotLayout = (origin: [number, number]): RawLayout => {
   const styleOf = (cs: any) =>
     PAINT.map((p) => cs.getPropertyValue(p)).join('|');
   let count = 0;
+  let culled = 0;
+  type Clip = [number, number, number, number];
+  const cull = !!area && document.getElementsByTagName('*').length > cullAbove;
+  const view: Clip = area
+    ? [origin[0], origin[1], origin[0] + area[0], origin[1] + area[1]]
+    : [0, 0, 0, 0];
+  const outside = (el: any, clip: Clip) => {
+    const r = el.getBoundingClientRect();
+    // what overflows the box (a list taller than its container) counts as part of the element
+    const right = r.left + Math.max(r.width, el.scrollWidth || 0);
+    const bottom = r.top + Math.max(r.height, el.scrollHeight || 0);
+    if (
+      r.left < clip[2] &&
+      right > clip[0] &&
+      r.top < clip[3] &&
+      bottom > clip[1]
+    ) {
+      return false;
+    }
+    // a fixed element is placed against the window, whatever its ancestors do
+    return getComputedStyle(el).position !== 'fixed';
+  };
 
-  const walk = (el: any): LayoutNode => {
+  const walk = (el: any, clip: Clip): LayoutNode => {
     count++;
     const cs = getComputedStyle(el);
     const r = el.getBoundingClientRect();
@@ -113,6 +156,7 @@ export const snapshotLayout = (origin: [number, number]): RawLayout => {
     if (own) {
       node.text = own;
       node.lines = lines;
+      node.font = hash(cs.getPropertyValue('font-family'));
     }
     let paint = styleOf(cs);
     for (const pseudo of ['::before', '::after']) {
@@ -139,13 +183,27 @@ export const snapshotLayout = (origin: [number, number]): RawLayout => {
     if (media || cs.backgroundImage !== 'none') node.scales = true;
     if (media) node.media = true;
     if (el.currentSrc) node.src = hash(el.currentSrc);
+    // an element that clips its content hides what lies beyond its own box
+    const clips = cs.overflowX !== 'visible' || cs.overflowY !== 'visible';
+    const inner: Clip = clips
+      ? [
+          Math.max(clip[0], r.left),
+          Math.max(clip[1], r.top),
+          Math.min(clip[2], r.right),
+          Math.min(clip[3], r.bottom),
+        ]
+      : clip;
     for (const child of el.children) {
       if (SKIP.includes(String(child.tagName).toLowerCase())) continue;
-      node.kids.push(walk(child));
+      if (cull && outside(child, inner)) {
+        culled++;
+        continue;
+      }
+      node.kids.push(walk(child, inner));
     }
     return node;
   };
 
-  const root = walk(document.documentElement);
-  return { count, root };
+  const root = walk(document.documentElement, view);
+  return { count, culled, root };
 };

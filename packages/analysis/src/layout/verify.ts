@@ -106,7 +106,7 @@ const owners = (
     }
     const { a, b } = pair;
     const other = side === 'a' ? b : a;
-    const changed = has(pair, ['added', 'removed', 'text', 'look']);
+    const changed = has(pair, ['added', 'removed', 'text', 'look', 'font']);
     if (node.box) {
       let kind: Status = 'static';
       let d: [number, number] | null = null;
@@ -156,6 +156,8 @@ export type Checked = {
   ignored: number;
   /** What each doubt area sits on, by element name. */
   doubtOn: string[];
+  /** Whether any doubt area sits on a picture, canvas, SVG, video or frame: pixels the page's text cannot account for. */
+  doubtOnMedia: boolean;
 };
 
 /**
@@ -340,6 +342,18 @@ export const checkAgainstPixels = ({
     return [...tally].sort((m, n) => n[1] - m[1])[0]?.[0] ?? 'the page';
   });
 
+  let doubtOnMedia = false;
+  for (const r of doubt) {
+    for (let y = r.y; y < r.y + r.height && !doubtOnMedia; y++) {
+      for (let x = r.x; x < r.x + r.width; x++) {
+        if (leftDoubt[y * w + x] && B.items[B.owner[y * w + x]]?.node.media) {
+          doubtOnMedia = true;
+          break;
+        }
+      }
+    }
+  }
+
   const share = (n: number) => (total === 0 ? 0 : n / total);
   return {
     verdict,
@@ -354,6 +368,7 @@ export const checkAgainstPixels = ({
     real,
     ignored: diff.changed.length - real.length,
     doubtOn,
+    doubtOnMedia,
   };
 };
 

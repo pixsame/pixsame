@@ -13,6 +13,7 @@ import {
   readLayout,
   withAnalysis,
   writeLayout,
+  type Environment,
   type Layout,
 } from '@pixsame/analysis';
 import type { LayoutPayload } from './layout.utils';
@@ -143,17 +144,33 @@ export const approveImageTask = async (
 const layoutOf = (
   payload: LayoutPayload | undefined,
   png: Uint8Array,
+  env?: Environment,
 ): Layout | undefined => {
   const image = pngSize(png);
   if (!payload || !image || payload.size.width <= 0) return;
   const scale = image.width / payload.size.width;
   return {
+    ...(env && { env }),
     size: { width: payload.size.width, height: image.height / scale },
     scale,
     count: payload.count,
     root: payload.root,
   };
 };
+
+/** What renders this screenshot: the machine and the browser Cypress drives (`cy.screenshot` draws in that browser). */
+const environmentOf = ({
+  platform,
+}: Pick<CompareImagesCfg, 'platform'>): Environment | undefined =>
+  platform?.osPlatform
+    ? {
+        os: platform.osPlatform,
+        ...(platform.browser?.name && { browser: platform.browser.name }),
+        ...(platform.browser?.version && {
+          browserVersion: platform.browser.version,
+        }),
+      }
+    : undefined;
 
 export const compareImagesTask = async (
   cypressConfig: ManifestConfig,
@@ -167,7 +184,9 @@ export const compareImagesTask = async (
     cfg.scaleFactor,
   );
   const layout =
-    cfg.analysis === false ? undefined : layoutOf(cfg.layout, scaledImgNew);
+    cfg.analysis === false
+      ? undefined
+      : layoutOf(cfg.layout, scaledImgNew, environmentOf(cfg));
   const markedImgNew = addPNGMetadata(cypressConfig, scaledImgNew);
   // the layout goes into the PNG, so it is there when this screenshot becomes a baseline
   const stampedImgNew = layout
@@ -225,6 +244,7 @@ export const compareImagesTask = async (
           layout && baselineLayout
             ? { baseline: baselineLayout, actual: layout }
             : undefined,
+        environment: { baseline: baselineLayout?.env, actual: layout?.env },
       }));
 
   // a replaced baseline got its layout just now

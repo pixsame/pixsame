@@ -1,3 +1,4 @@
+import { ANALYSIS_VERSION } from './version';
 import type { Analysis, Label } from './types';
 
 /** The part of a manifest entry `bundle` reads. */
@@ -18,7 +19,7 @@ export type Bundle = {
 /** The analysis recorded on a manifest entry, if any. */
 export const analysisOf = (entry: BundleEntry): Analysis | undefined => {
   const analysis = entry.extra?.pixsame?.analysis as Analysis | undefined;
-  return analysis?.version === 1 ? analysis : undefined;
+  return analysis?.version === ANALYSIS_VERSION ? analysis : undefined;
 };
 
 /**

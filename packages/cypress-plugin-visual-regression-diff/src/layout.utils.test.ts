@@ -78,7 +78,7 @@ describe('placementOf', () => {
 });
 
 describe('takeLayout', () => {
-  it('evaluates the snapshot function in the page with the origin', () => {
+  it('evaluates the snapshot function in the page with the origin and the area', () => {
     const run = vi.fn(() => ({
       count: 3,
       root: { tag: 'html', rect: [0, 0, 1, 1], kids: [] },
@@ -90,7 +90,7 @@ describe('takeLayout', () => {
     });
     const code = String(run.mock.calls[0]);
     expect(code).toContain('getComputedStyle');
-    expect(code.endsWith('([0,0])')).toBe(true);
+    expect(code.endsWith('({"origin":[0,0],"area":[640,400]})')).toBe(true);
   });
 
   it('goes without a layout when the page forbids eval', () => {

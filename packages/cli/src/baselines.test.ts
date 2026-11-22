@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { writeLayout, type Layout } from '@pixsame/analysis';
+import { ANALYSIS_VERSION, writeLayout, type Layout } from '@pixsame/analysis';
 import { findBaselines } from './baselines';
 import { png } from './test-utils';
 
@@ -33,7 +33,9 @@ describe('findBaselines', () => {
     await put(
       'a/outdated.png',
       Buffer.from(
-        outdated.toString('latin1').replace('layout-v1', 'layout-v0'),
+        outdated
+          .toString('latin1')
+          .replace(`layout-v${ANALYSIS_VERSION}`, 'layout-v0'),
         'latin1',
       ),
     );

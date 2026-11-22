@@ -9,6 +9,7 @@ import {
   maskFromPixelmatchDiff,
   regionHash,
   withAnalysis,
+  ANALYSIS_VERSION,
 } from './index';
 import { clone, image, maskOf, page, paint } from './test-utils';
 import type { RgbaImage } from './types';
@@ -291,7 +292,7 @@ describe('analyze', () => {
     );
     const analysis = analyzePair(before, after);
     expect(analysis).toMatchObject({
-      version: 1,
+      version: ANALYSIS_VERSION,
       label: 'content-change',
       description: 'One area changed: 50x30 px at x=120, y=200.',
       speckRatio: 0,

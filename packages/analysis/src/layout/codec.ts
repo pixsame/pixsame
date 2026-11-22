@@ -1,5 +1,5 @@
 import { deflateSync, inflateSync } from 'node:zlib';
-import type { Layout, LayoutNode, Rect } from './types';
+import type { Environment, Layout, LayoutNode, Rect } from './types';
 
 /**
  * Columns of a snapshot, one entry per element in document order: the tree
@@ -9,6 +9,7 @@ import type { Layout, LayoutNode, Rect } from './types';
  */
 type Columns = {
   size: [number, number];
+  env?: Environment;
   scale: number;
   count: number;
   strings: string[];
@@ -24,6 +25,7 @@ type Columns = {
   text: number[];
   paint: number[];
   src: number[];
+  font: number[];
   lineCount: number[];
   lines: number[];
 };
@@ -51,6 +53,7 @@ export const toColumns = (layout: Layout): Columns => {
   };
   const c: Columns = {
     size: [layout.size.width, layout.size.height],
+    ...(layout.env && { env: layout.env }),
     scale: layout.scale,
     count: layout.count,
     strings,
@@ -66,6 +69,7 @@ export const toColumns = (layout: Layout): Columns => {
     text: [],
     paint: [],
     src: [],
+    font: [],
     lineCount: [],
     lines: [],
   };
@@ -90,6 +94,7 @@ export const toColumns = (layout: Layout): Columns => {
     c.text.push(str(n.text));
     c.paint.push(str(n.paint));
     c.src.push(str(n.src));
+    c.font.push(str(n.font));
     c.lineCount.push(n.lines?.length ?? 0);
     for (const line of n.lines ?? []) c.lines.push(...line.map(hundredths));
     n.kids.forEach(walk);
@@ -132,11 +137,14 @@ export const fromColumns = (c: Columns): Layout => {
     if (c.flags[i] & MEDIA) node.media = true;
     const src = str(c.src[i]);
     if (src !== undefined) node.src = src;
+    const font = str(c.font[i]);
+    if (font !== undefined) node.font = font;
     for (let k = 0; k < c.kids[i]; k++) node.kids.push(walk());
     return node;
   };
   const root = walk();
   return {
+    ...(c.env && { env: c.env }),
     size: { width: c.size[0], height: c.size[1] },
     scale: c.scale,
     count: c.count,
