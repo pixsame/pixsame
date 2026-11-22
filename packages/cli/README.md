@@ -75,6 +75,75 @@ The page is reachable only from this machine, at an address with a random token 
 
 Run it from the repository root. When the manifest's project is outside the directory you run it in, the page says so and asks for `--repo-root`.
 
+## `snap <url>`
+
+Says what changed on a page since you started editing, without a test. Made for coding agents and for a quick check by hand.
+
+```bash
+npx pixsame snap http://localhost:3000/cart   # before the edit: saves the first capture
+# ...edit...
+npx pixsame snap http://localhost:3000/cart   # after: says what is different
+```
+
+```
+http://localhost:3000/cart at 1280x800: 2 changes since the first capture on commit 25b0fb7:
+  - look changed on button "Checkout"; resized 97x42 → 105x50
+  - 1 element moved down by 8 px: p "Total: 24.99"
+```
+
+Each line is one fact: an element that was added, removed or changed its text or look, a group of elements that moved by the same offset, an element that changed size, or an area where pixels changed and the page's layout does not say why (a canvas, a picture). For such an area the command writes a before and an after crop and prints their paths. "No change" means no pixel differs.
+
+How it works:
+
+- The first capture of an address after the last commit is what later captures are compared with. A new commit starts over; `--reset` does it by hand.
+- Every capture is taken twice. What differs between the two (a clock, a carousel) is left out of the comparison, and the output says so.
+- Captures live in `.pixsame/snaps/`, which ignores itself in git. Nothing is committed.
+- It uses the Chrome installed on your machine, in Cypress projects too. Nothing is downloaded.
+
+| Option                   | What it does                                                              |
+| ------------------------ | ------------------------------------------------------------------------- |
+| `--selector <css>`       | Capture one element instead of the window                                 |
+| `--viewport <WxH>`       | Window size, repeatable (default: `1280x800`)                             |
+| `--storage-state <file>` | A Playwright storage state, for pages behind a login                      |
+| `--only <css>`           | The element you meant to change, repeatable; see below                    |
+| `--keep`                 | Also mark this page to become a test; `--report` lists it                 |
+| `--report`               | No capture: print what the captures found, as Markdown for a pull request |
+| `--reset`                | Forget the first capture of this page and take a new one                  |
+| `--no-stable`            | Capture once: do not look for what changes by itself                      |
+| `--all`                  | Print every change (default: the first 100)                               |
+| `--json`                 | Print the result as JSON: the facts as data, the files, the commit        |
+
+### `--only`: did anything else change?
+
+Name the element you meant to change and the command checks the rest for you:
+
+```bash
+npx pixsame snap http://localhost:3000/cart --only '.checkout-button'
+```
+
+```
+http://localhost:3000/cart at 1280x800: 3 changes since the first capture on commit 25b0fb7, 1 of them NOT on .checkout-button:
+  - OUTSIDE: text changed on h1: "Cart" → "Basket"
+  - look changed on button "Checkout"; resized 97x42 → 105x50
+  - 1 element moved down by 8 px: p "Total: 24.99"
+```
+
+A change is inside when it is on that element or on something in it, or when it is a move the element caused: the element is new or changed size, and what moved started at or below its top edge (at or right of its left edge). Everything else is marked `OUTSIDE:`, printed first, and makes the command exit with 1.
+
+When the named element itself sits elsewhere and nothing about it changed, something else moved it, and that counts as outside too. A change to the element's own margin looks the same to the command, so it is reported that way.
+
+### Exit codes
+
+| Code | Meaning                                                                                    |
+| ---- | ------------------------------------------------------------------------------------------ |
+| 0    | The capture worked: first capture, no change, or changes (all inside `--only`, when given) |
+| 1    | With `--only`: something outside the named elements changed                                |
+| 2    | The command or the setup is wrong; the message says what to do                             |
+
+### For coding agents
+
+The [`pixsame-verify`](../../skills/pixsame-verify) skill, shipped in this package under `skills/`, teaches an agent the loop: capture before editing, edit, capture with `--only`, fix what is marked `OUTSIDE:`, and paste `pixsame snap --report` into the pull request.
+
 A PNG counts as a baseline when it was written by the plugins, already has a layout, or sits in a `snapshots`, `__screenshots__` or `*-snapshots` folder. Failure artifacts (`*.actual.png`, `*.diff.png`) and `node_modules` are skipped.
 
 The command is the first of the `pixsame` CLI; `init`, `doctor` and the agent skills will live here too.

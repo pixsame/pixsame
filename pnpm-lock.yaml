@@ -358,6 +358,12 @@ importers:
       '@pixsame/analysis':
         specifier: workspace:*
         version: link:../analysis
+      pixelmatch:
+        specifier: 7.2.0
+        version: 7.2.0
+      playwright-core:
+        specifier: 1.65.0
+        version: 1.65.0
       visual-regression-compare:
         specifier: 1.0.0-beta.4
         version: 1.0.0-beta.4

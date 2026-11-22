@@ -1,6 +1,6 @@
 {
   "name": "pixsame",
-  "description": "Command line for pixsame visual regression testing: `baselines` finds baselines saved before page layouts were recorded and refreshes them, `review` opens a page to look at failed comparisons and replace baselines.",
+  "description": "Command line for pixsame visual regression testing: `baselines` finds baselines saved before page layouts were recorded and refreshes them, `review` opens a page to look at failed comparisons and replace baselines, `snap` says what changed on a page since you started editing.",
   "version": "0.0.0",
   "author": "Jakub Freisler <jakub.freisler@frsource.org>",
   "homepage": "https://pixsame.com",
@@ -17,6 +17,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "del-cli dist && tsc -p tsconfig.build.json",
+    "prepack": "node -e \"require('node:fs').cpSync('../../skills', 'skills', { recursive: true })\"",
     "format": "prettier --write .",
     "format:ci": "prettier --check .",
     "test:integration": "vitest run",
@@ -29,6 +30,8 @@
   },
   "dependencies": {
     "@pixsame/analysis": "workspace:*",
+    "pixelmatch": "7.2.0",
+    "playwright-core": "1.65.0",
     "visual-regression-compare": "1.0.0-beta.4",
     "visual-regression-manifest": "1.0.0-beta.2"
   },
@@ -52,6 +55,7 @@
   },
   "files": [
     "dist",
+    "skills",
     "package.json",
     "README.md",
     "LICENSE"

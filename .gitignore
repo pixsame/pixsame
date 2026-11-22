@@ -124,3 +124,6 @@ scripts/.palette.png
 
 # Google Apps Script sources for the website forms (kept out of the repo, deployed from script.google.com)
 apps/website/apps-script/
+
+# copied from /skills when the CLI is packed
+packages/cli/skills

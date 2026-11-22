@@ -1,6 +1,7 @@
 export { analyze, type AnalyzeInput } from './analyze';
 export { analysisOf, bundle, type Bundle, type BundleEntry } from './bundle';
 export { descriptions, type Descriptions } from './describe';
+export { facts, type Fact, type FactsInput } from './facts';
 export { regionHash } from './hash';
 export {
   analysisPlugin,

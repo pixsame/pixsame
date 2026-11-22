@@ -2,6 +2,7 @@ import path from 'node:path';
 import { defaults, type Io } from './io';
 import { findBaselines, type Report } from './baselines';
 import { startReview } from './review';
+import { snap, SNAP_HELP } from './snap/snap';
 import {
   cypressVersionOf,
   detectRunners,
@@ -30,6 +31,8 @@ Commands:
     --port <n>         Port to serve on (default: a free one)
     --no-open          Print the address, do not open a browser
     --repo-root <dir>  The repository the manifests' paths belong to (default: here)
+
+${SNAP_HELP}
 
 Run baselines in the directory with cypress.config.* or playwright.config.*.
 `;
@@ -178,6 +181,7 @@ export const run = async (
 ): Promise<number> => {
   const [command, ...rest] = argv;
   if (command === 'review') return review(rest, io);
+  if (command === 'snap') return snap(rest, io);
   if (command !== 'baselines') {
     io.out(HELP);
     return command === undefined || command === '--help' || command === '-h'
