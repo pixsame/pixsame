@@ -1,4 +1,3 @@
-import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,6 +7,7 @@ import {
   type Fact,
   type Region,
 } from '@pixsame/analysis';
+import { git, projectRoot } from '../git';
 import type { Io } from '../io';
 import {
   CaptureError,
@@ -36,6 +36,11 @@ export const SNAP_HELP = `  snap <url>           Say what changed on a page sinc
     --keep             Also mark this page to become a test (see --report)
     --report           No capture: print what this session's captures found, as
                        Markdown for a pull request; with --json, as data
+    --check            No address: capture every page of this session again and
+                       print what changed since each was last captured; exit
+                       with 1 when something did
+    --hook claude      With --check: answer as a Claude Code Stop hook, so the
+                       agent is told before it finishes
     --reset            Forget the first capture of this page and take a new one
     --no-stable        Do not capture twice to leave out what changes by itself
     --all              Print every change (default: the first 100)
@@ -54,6 +59,8 @@ export type SnapResult = {
   /** The commit the first capture was taken on; `null` outside a git repository. */
   commit: string | null;
   facts: Fact[];
+  /** The `--storage-state` file of this capture. */
+  storageState?: string;
   /** The `--only` selectors of this capture. */
   only?: string[];
   /** With `--only`: how many of `facts` are outside those elements. */
@@ -76,6 +83,8 @@ type Flags = {
   only: string[];
   keep: boolean;
   report: boolean;
+  check: boolean;
+  hook?: string;
   reset: boolean;
   stable: boolean;
   all: boolean;
@@ -90,6 +99,7 @@ const parse = (args: string[]): Flags => {
     only: [],
     keep: false,
     report: false,
+    check: false,
     reset: false,
     stable: true,
     all: false,
@@ -106,6 +116,8 @@ const parse = (args: string[]): Flags => {
     if (arg === '--reset') flags.reset = true;
     else if (arg === '--keep') flags.keep = true;
     else if (arg === '--report') flags.report = true;
+    else if (arg === '--check') flags.check = true;
+    else if (arg === '--hook') flags.hook = value(arg, ++i);
     else if (arg === '--no-stable') flags.stable = false;
     else if (arg === '--all') flags.all = true;
     else if (arg === '--json') flags.json = true;
@@ -128,18 +140,6 @@ const parse = (args: string[]): Flags => {
   return flags;
 };
 
-const git = (cwd: string, ...args: string[]): string | undefined => {
-  try {
-    return execFileSync('git', args, {
-      cwd,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }).trim();
-  } catch {
-    return undefined;
-  }
-};
-
 const slug = (text: string) =>
   text
     .replace(/^https?:\/\//, '')
@@ -160,11 +160,7 @@ const readIf = (file: string) =>
   fs.existsSync(file) ? fs.readFileSync(file) : undefined;
 
 const rootOf = (cwd: string) =>
-  path.join(
-    git(cwd, 'rev-parse', '--show-toplevel') ?? cwd,
-    '.pixsame',
-    'snaps',
-  );
+  path.join(projectRoot(cwd), '.pixsame', 'snaps');
 
 const json = <T>(file: string): T | undefined => {
   try {
@@ -354,6 +350,7 @@ const snapOne = async ({
     ...(flags.selector && { selector: flags.selector }),
     viewport,
     commit,
+    ...(flags.storageState && { storageState: flags.storageState }),
     ...(flags.only.length > 0 && { only: flags.only }),
   };
   const before = readIf(file('before.png'));
@@ -468,6 +465,98 @@ const text = (result: SnapResult, all: boolean, only: string[]): string[] => {
   return lines;
 };
 
+/** The same facts give the same string: for telling a new change from one already shown. */
+const fingerprint = ({ facts }: SnapResult) =>
+  facts
+    .map((fact) => `${fact.outside ? '!' : ''}${fact.text}`)
+    .sort()
+    .join('\n');
+
+const saveResult = (dir: string, result: SnapResult) =>
+  fs.writeFileSync(
+    path.join(dir, 'result.json'),
+    `${JSON.stringify(result, null, 2)}\n`,
+  );
+
+/**
+ * Captures every page of the session again, with the options it was last
+ * captured with, and reports those whose changes are not the ones last shown.
+ * What it reports counts as shown, so the same change is reported once.
+ *
+ * As a hook it must never trap the agent: with nothing new, or when a page
+ * cannot be captured (the dev server is down), it says nothing and exits 0.
+ */
+const check = async (
+  flags: Flags,
+  io: Io,
+  open: (cwd: string) => Promise<Browser>,
+): Promise<number> => {
+  const hook = flags.hook !== undefined;
+  const store = openStore(io.cwd);
+  const saved = savedResults(store.root);
+  if (saved.length === 0) {
+    if (!hook) io.out('No page was captured since the last commit.');
+    return 0;
+  }
+  let browser: Browser | undefined;
+  try {
+    browser = await open(io.cwd);
+    const fresh: SnapResult[] = [];
+    const failed: string[] = [];
+    for (const old of saved) {
+      const { url, selector, viewport, storageState, only = [] } = old;
+      const dir = path.join(
+        store.root,
+        targetKey(url, selector),
+        `${viewport.width}x${viewport.height}`,
+      );
+      try {
+        const result = await snapOne({
+          browser,
+          flags: { ...flags, selector, storageState, only, stable: true },
+          url,
+          viewport,
+          dir,
+          commit: store.commit,
+          cwd: io.cwd,
+        });
+        saveResult(dir, result);
+        if (fingerprint(result) !== fingerprint(old)) fresh.push(result);
+      } catch (error) {
+        if (!(error instanceof CaptureError)) throw error;
+        failed.push(error.message);
+      }
+    }
+    const body = fresh
+      .flatMap((result) => text(result, flags.all, result.only ?? []))
+      .join('\n');
+    if (hook) {
+      if (fresh.length > 0)
+        io.out(
+          JSON.stringify({
+            decision: 'block',
+            reason: `pixsame: the page is not as it was when you last captured it.\n\n${body}\n\nIf these changes are what you meant, say so in your summary. If not, fix them and run \`pixsame snap\` again. This is shown once per change.`,
+          }),
+        );
+      return 0;
+    }
+    if (failed.length > 0) io.out(failed.join('\n'));
+    io.out(
+      fresh.length > 0
+        ? `Changed since last captured:\n${body}`
+        : `${saved.length - failed.length} of ${saved.length} ${saved.length === 1 ? 'capture' : 'captures'} checked: nothing new.`,
+    );
+    return failed.length > 0 ? 2 : fresh.length > 0 ? 1 : 0;
+  } catch (error) {
+    if (!(error instanceof CaptureError)) throw error;
+    if (hook) return 0;
+    io.out(error.message);
+    return 2;
+  } finally {
+    await browser?.close();
+  }
+};
+
 /** `pixsame snap`; returns the exit code. `open` is the browser, replaceable in tests. */
 export const snap = async (
   args: string[],
@@ -480,6 +569,12 @@ export const snap = async (
     if (flags.report) {
       if (flags.url) throw new Usage('--report takes no address.');
       return report(flags, io);
+    }
+    if (flags.hook !== undefined && (!flags.check || flags.hook !== 'claude'))
+      throw new Usage('--hook goes with --check, and takes: claude');
+    if (flags.check) {
+      if (flags.url) throw new Usage('--check takes no address.');
+      return await check(flags, io, open);
     }
     if (!flags.url)
       throw new Usage('snap needs an address: pixsame snap <url>');
@@ -513,10 +608,7 @@ export const snap = async (
         commit: store.commit,
         cwd: io.cwd,
       });
-      fs.writeFileSync(
-        path.join(dir, 'result.json'),
-        `${JSON.stringify(result, null, 2)}\n`,
-      );
+      saveResult(dir, result);
       results.push(result);
     }
     if (flags.keep)

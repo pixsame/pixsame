@@ -376,4 +376,106 @@ describe('snap', { timeout: 60_000 }, () => {
       expect((await run('--report')).text).toContain('Marked to become tests:');
     });
   });
+  describe('--check', () => {
+    const changed = page('<h1>Welcome back</h1><div class="card"></div>');
+
+    it('has nothing to say when nothing was captured or nothing is new', async () => {
+      expect(await run('--check')).toMatchObject({
+        code: 0,
+        text: 'No page was captured since the last commit.',
+      });
+      await run(origin);
+      expect(await run('--check')).toMatchObject({
+        code: 0,
+        text: '1 of 1 capture checked: nothing new.',
+      });
+    });
+
+    it('reports a change nobody captured, once', async () => {
+      await run(origin);
+      await run(origin, '--selector', '.card');
+      html = changed;
+      const first = await run('--check');
+      expect(first.code).toBe(1);
+      expect(first.text).toContain('Changed since last captured:');
+      expect(first.text).toContain('text changed on h1');
+      // the element capture did not change
+      expect(first.text).not.toContain('.card at');
+      expect(await run('--check')).toMatchObject({ code: 0 });
+    });
+
+    it('stays quiet about a change that was already shown', async () => {
+      await run(origin);
+      html = changed;
+      await run(origin);
+      expect(await run('--check')).toMatchObject({ code: 0 });
+    });
+
+    it('checks with the options of the last capture', async () => {
+      html = page('<h1>Welcome</h1><div class="promo"></div>');
+      await run(origin, '--only', '.promo');
+      html = page('<h1>Welcome back</h1><div class="promo"></div>');
+      expect((await run('--check')).text).toContain(
+        'OUTSIDE: text changed on h1',
+      );
+    });
+
+    it('answers as a Claude Code Stop hook', async () => {
+      await run(origin);
+      expect(await run('--check', '--hook', 'claude')).toEqual({
+        code: 0,
+        text: '',
+      });
+      html = changed;
+      const { code, text } = await run('--check', '--hook', 'claude');
+      expect(code).toBe(0);
+      const answer = JSON.parse(text) as { decision: string; reason: string };
+      expect(answer.decision).toBe('block');
+      expect(answer.reason).toContain('text changed on h1');
+      expect(await run('--check', '--hook', 'claude')).toEqual({
+        code: 0,
+        text: '',
+      });
+    });
+
+    it('never holds the agent up when the page cannot be opened', async () => {
+      const gone = 'http://127.0.0.1:9/';
+      const snaps = path.join(dir, '.pixsame', 'snaps');
+      const at = path.join(snaps, targetKey(gone), '1280x800');
+      fs.mkdirSync(at, { recursive: true });
+      fs.writeFileSync(
+        path.join(snaps, 'session.json'),
+        JSON.stringify({ commit: null }),
+      );
+      fs.writeFileSync(
+        path.join(at, 'result.json'),
+        JSON.stringify({
+          url: gone,
+          viewport: { width: 1280, height: 800 },
+          status: 'first',
+          commit: null,
+          facts: [],
+          unstable: [],
+          files: { before: 'before.png', crops: [] },
+        }),
+      );
+      expect(await run('--check', '--hook', 'claude')).toEqual({
+        code: 0,
+        text: '',
+      });
+      const plain = await run('--check');
+      expect(plain.code).toBe(2);
+      expect(plain.text).toContain('Is the dev server running?');
+    });
+
+    it('says what is wrong with the options', async () => {
+      expect((await run('--check', origin)).text).toContain(
+        '--check takes no address',
+      );
+      expect((await run(origin, '--hook', 'claude')).text).toContain(
+        '--hook goes with --check',
+      );
+      expect((await run('--check', '--hook', 'other')).code).toBe(2);
+    });
+  });
 });

@@ -100,18 +100,20 @@ How it works:
 - Captures live in `.pixsame/snaps/`, which ignores itself in git. Nothing is committed.
 - It uses the Chrome installed on your machine, in Cypress projects too. Nothing is downloaded.
 
-| Option                   | What it does                                                              |
-| ------------------------ | ------------------------------------------------------------------------- |
-| `--selector <css>`       | Capture one element instead of the window                                 |
-| `--viewport <WxH>`       | Window size, repeatable (default: `1280x800`)                             |
-| `--storage-state <file>` | A Playwright storage state, for pages behind a login                      |
-| `--only <css>`           | The element you meant to change, repeatable; see below                    |
-| `--keep`                 | Also mark this page to become a test; `--report` lists it                 |
-| `--report`               | No capture: print what the captures found, as Markdown for a pull request |
-| `--reset`                | Forget the first capture of this page and take a new one                  |
-| `--no-stable`            | Capture once: do not look for what changes by itself                      |
-| `--all`                  | Print every change (default: the first 100)                               |
-| `--json`                 | Print the result as JSON: the facts as data, the files, the commit        |
+| Option                   | What it does                                                                                             |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `--selector <css>`       | Capture one element instead of the window                                                                |
+| `--viewport <WxH>`       | Window size, repeatable (default: `1280x800`)                                                            |
+| `--storage-state <file>` | A Playwright storage state, for pages behind a login                                                     |
+| `--only <css>`           | The element you meant to change, repeatable; see below                                                   |
+| `--keep`                 | Also mark this page to become a test; `--report` lists it                                                |
+| `--report`               | No capture: print what the captures found, as Markdown for a pull request                                |
+| `--check`                | No address: capture every page of this session again and print what changed since each was last captured |
+| `--hook claude`          | With `--check`: answer as a Claude Code Stop hook                                                        |
+| `--reset`                | Forget the first capture of this page and take a new one                                                 |
+| `--no-stable`            | Capture once: do not look for what changes by itself                                                     |
+| `--all`                  | Print every change (default: the first 100)                                                              |
+| `--json`                 | Print the result as JSON: the facts as data, the files, the commit                                       |
 
 ### `--only`: did anything else change?
 
@@ -140,9 +142,44 @@ When the named element itself sits elsewhere and nothing about it changed, somet
 | 1    | With `--only`: something outside the named elements changed                                |
 | 2    | The command or the setup is wrong; the message says what to do                             |
 
+### `--check`: what changed that nobody looked at?
+
+```bash
+npx pixsame snap --check
+```
+
+Captures every page of the session again, each with the options it was last captured with, and prints those whose changes are not the ones the last capture showed. It exits with 1 when it printed something. What it prints counts as shown, so the same change is reported once.
+
+It is what the Stop hook runs (see `init --hook` below): an agent that captured a page, edited and never looked again is told before it finishes.
+
 ### For coding agents
 
-The [`pixsame-verify`](../../skills/pixsame-verify) skill, shipped in this package under `skills/`, teaches an agent the loop: capture before editing, edit, capture with `--only`, fix what is marked `OUTSIDE:`, and paste `pixsame snap --report` into the pull request.
+The [`pixsame-verify`](../../skills/pixsame-verify) skill, shipped in this package under `skills/`, teaches an agent the loop: capture before editing, edit, capture with `--only`, fix what is marked `OUTSIDE:`, and paste `pixsame snap --report` into the pull request. `pixsame init` installs it.
+
+## `init`
+
+Sets a project up for coding agents. Setting up the test runner is not part of this command yet.
+
+```bash
+npx pixsame init          # copy the agent skills into .claude/skills
+npx pixsame init --hook   # and add the Stop hook for Claude Code
+```
+
+It lists the files it will write, asks once, and writes them. Run it again after updating pixsame to get the current skills; it replaces only files that differ and says which.
+
+| Option               | What it does                                                                      |
+| -------------------- | --------------------------------------------------------------------------------- |
+| `--hook`             | Also add a Stop hook to `.claude/settings.json`, next to what is there            |
+| `--skills-dir <dir>` | Where the skills go, repeatable (default: `.claude/skills` at the repository top) |
+| `--yes`              | Do not ask before writing                                                         |
+
+Skills follow the [Agent Skills](https://agentskills.io) format, which other agents read too. Point `--skills-dir` at the directory your agent reads.
+
+### The Stop hook
+
+With `--hook`, Claude Code runs `pixsame snap --check --hook claude` each time the agent is about to finish. When a page the agent captured has changed in a way no capture has shown yet, the agent is held back once and given the changes, so it either confirms they were meant or fixes them. Otherwise the hook says nothing.
+
+It never traps the agent: when nothing was captured, when the dev server is down or when a page cannot be opened, it lets the agent finish. It costs nothing in a session that never ran `pixsame snap`. In a session that did, it opens Chrome and captures each page again, which takes a few seconds per page; the hook's time limit is 120 seconds.
 
 A PNG counts as a baseline when it was written by the plugins, already has a layout, or sits in a `snapshots`, `__screenshots__` or `*-snapshots` folder. Failure artifacts (`*.actual.png`, `*.diff.png`) and `node_modules` are skipped.
 

@@ -55,4 +55,5 @@ It needs the page reachable at an address (the project's dev server, a Storybook
 - A new commit starts over: the next `snap` is a first capture again. Capture before the next edit.
 - `--reset` forgets the first capture of a page. Use it only when the "before" is wrong (the server was showing an error page), never to make a reported change disappear.
 - Never claim a visual change was verified when you did not run the second capture, or when it exited with 1 or 2.
+- If you are stopped at the end with a message from pixsame listing changes, a page changed after you last captured it. Treat it like step 4: check each line against what you meant, fix what you did not mean, and say in your summary what you confirmed.
 - `--json` gives the same facts as data when you need to process them.

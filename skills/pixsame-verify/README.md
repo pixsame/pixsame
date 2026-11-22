@@ -14,14 +14,13 @@ When something changed that the agent did not mean to change, the command exits 
 
 ## Install
 
-Copy this folder into your project's skills directory:
-
 ```bash
-mkdir -p .claude/skills
-cp -r node_modules/pixsame/skills/pixsame-verify .claude/skills/
+npx pixsame init
 ```
 
-Other agents read skills from their own directory (`.cursor/skills`, `.agents/skills`); the folder is the same.
+It copies this folder into `.claude/skills/` at the top of your repository, after showing what it will write. For an agent that reads skills from another directory, name it: `npx pixsame init --skills-dir .agents/skills`.
+
+`npx pixsame init --hook` also adds a Stop hook for Claude Code: before the agent finishes, it is told what changed on the pages it captured and has not looked at since.
 
 ## Needs
 
