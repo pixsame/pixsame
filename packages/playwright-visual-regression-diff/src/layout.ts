@@ -1,4 +1,9 @@
-import { snapshotLayout, type Layout } from '@pixsame/analysis';
+import {
+  snapshotLayout,
+  type Environment,
+  type Layout,
+  type SnapshotInput,
+} from '@pixsame/analysis';
 import type { Locator, Page } from '@playwright/test';
 
 /** Width in pixels of a PNG, from its header. */
@@ -19,12 +24,15 @@ export const captureLayout = async ({
   png,
   fullPage,
   clip,
+  env,
 }: {
   page: Page;
   target: Page | Locator;
   png: Buffer;
   fullPage?: boolean;
   clip?: unknown;
+  /** What renders the screenshot; stored with the layout. */
+  env?: Environment;
 }): Promise<Layout | undefined> => {
   try {
     if (clip) return undefined;
@@ -54,8 +62,13 @@ export const captureLayout = async ({
       size = { width: box.width, height: box.height };
     }
     if (size.width <= 0) return undefined;
-    const raw = await page.evaluate(snapshotLayout, origin);
+    const input: SnapshotInput = {
+      origin,
+      area: [size.width, size.height],
+    };
+    const raw = await page.evaluate(snapshotLayout, input);
     return {
+      ...(env && { env }),
       size,
       // measured from the image: device scale, `scale: 'css'` and cropping all show up here
       scale: imageWidth / size.width,

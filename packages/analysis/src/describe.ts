@@ -1,4 +1,5 @@
 import type { PixelMove } from './blocks';
+import type { Environment } from './layout/types';
 import type { Move, Region, Size } from './types';
 
 /**
@@ -22,9 +23,31 @@ export type Descriptions = {
     moves: PixelMove[];
     unexplained: Region[];
   }) => string;
+  /**
+   * The baseline and the screenshot were rendered on different systems and the
+   * page's layout shows nothing but what that causes: another font, text
+   * sitting a little differently, edges drawn differently.
+   */
+  'cross-os': (params: {
+    baseline: Environment;
+    actual: Environment;
+    moves: Move[];
+  }) => string;
+  /** Appended to any other description when the two renderings came from different systems. */
+  'other-system': (params: {
+    baseline: Environment;
+    actual: Environment;
+  }) => string;
   'noise-like': (params: { pixels: number; regions: number }) => string;
   'content-change': (params: { regions: number; largest: Region }) => string;
 };
+
+const OS_NAMES: Record<string, string> = {
+  darwin: 'macOS',
+  linux: 'Linux',
+  win32: 'Windows',
+};
+const systemOf = ({ os }: Environment) => OS_NAMES[os] ?? os;
 
 const size = ({ width, height }: Size) => `${width}x${height}`;
 
@@ -82,6 +105,12 @@ export const descriptions: Descriptions = {
   'moved-content': ({ moves }) => `${movedContent(moves)}.`,
   'moved-content-and-changed': ({ moves, unexplained }) =>
     `${movedContent(moves)}. ${somethingElse(unexplained)}`,
+  'cross-os': ({ baseline, actual, moves }) =>
+    `The baseline was rendered on ${systemOf(baseline)} and this screenshot on ${systemOf(actual)}, so fonts and anti-aliasing differ${
+      moves.length > 0 ? ' and some text sits differently' : ''
+    }. Nothing was added, removed or restyled.`,
+  'other-system': ({ baseline, actual }) =>
+    `The baseline was rendered on ${systemOf(baseline)} and this screenshot on ${systemOf(actual)}, so some differences are expected.`,
   'noise-like': ({ pixels }) =>
     `${pixels} ${pixels === 1 ? 'pixel differs' : 'pixels differ'} in tiny scattered spots, which looks like rendering noise.`,
   'content-change': ({ regions, largest }) =>

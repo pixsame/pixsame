@@ -21,11 +21,12 @@ import { analyze } from '@pixsame/analysis';
 // mask: Uint8Array with 1 for every pixel your comparison counted as different
 const analysis = analyze({ baseline, actual, mask });
 
-analysis.label; // 'content-change' | 'moved' | 'moved-and-changed' | 'noise-like' | 'size-change'
+analysis.label; // 'content-change' | 'moved' | 'moved-and-changed' | 'noise-like' | 'size-change' | 'cross-os'
 analysis.description; // 'One area changed: 220x40 px at x=40, y=120.'
 analysis.regions; // [{ x, y, width, height, area, fillRatio, kind, hash }]
 analysis.pixels; // { moves: [{ dx, dy, share }], explained, unexplained } when a move is definite
 analysis.layout; // { moves, causes, explained, unexplained } with a layout snapshot
+analysis.environment; // { baseline, actual }: what rendered each image, when known
 analysis.bundleKey; // equal for entries that changed in the same way
 ```
 
@@ -51,12 +52,13 @@ for (const { description, entries } of bundle(manifest.entries)) {
 | `moved`             | the move explains every differing pixel (with a layout snapshot: elements moved and nothing changed)                       |
 | `moved-and-changed` | a move explains most differing pixels and something else changed too; `unexplained` (pixels) or `causes` (layout) say what |
 | `size-change`       | the two images had different sizes and no move explains the difference                                                     |
+| `cross-os`          | the baseline and the screenshot came from different operating systems and the layout shows only what that causes           |
 | `noise-like`        | the differing pixels sit in specks of at most 4 px, or are thinly scattered                                                |
 | `content-change`    | anything else                                                                                                              |
 
 Differing pixels closer than 8 px form one area, so a changed word is one area and not one per letter.
 
-**Moves from the pixels are only reported when the answer is definite.** The pixel search cuts both images into 8 px blocks, finds where the blocks that hold differing pixels went, and checks every differing pixel at the offsets found, with a tolerance of 3 per colour channel (a moved picture or gradient is redrawn a colour step off). It reports a move only when an offset is supported by at least 3 blocks, the moves explain at least half of the differing pixels, and at most 1% (`moved`) or 25% (`moved-and-changed`) is left unexplained (`DEFINITE` in the package holds the numbers). Content pushed out of the picture, copies of content that stayed, half-pixel moves, images over 4 million pixels and anything else unclear get no claim, so `pixels` is absent and the label is `content-change`. On 40 real renders made for the spike, it found 12 of 17 pure moves and 11 of 13 moves with a change, said "moved" wrongly 0 times, and left all 9 non-moves alone. Those cases were used to set the thresholds, so treat the numbers as optimistic.
+**Moves from the pixels are only reported when the answer is definite.** The pixel search cuts both images into 8 px blocks, finds where the blocks that hold differing pixels went, and checks every differing pixel at the offsets found, with a tolerance of 3 per colour channel (a moved picture or gradient is redrawn a colour step off). It reports a move only when an offset is supported by at least 3 blocks, the moves explain at least half of the differing pixels, and at most 1% (`moved`) or 25% (`moved-and-changed`) is left unexplained (`DEFINITE` in the package holds the numbers). Content pushed out of the picture, copies of content that stayed, half-pixel moves, and anything else unclear get no claim, so `pixels` is absent and the label is `content-change`. An image over 4 million pixels (a 1280x800 screenshot at device scale 2) is searched at a reduced size, and each offset found is checked again at full size; one that full-size pixels do not back, or that has two equally good neighbours, gets no claim, so an odd offset may go unanswered at scale 2. On 40 real renders made for the spike, it found 12 of 17 pure moves and 11 of 13 moves with a change, said "moved" wrongly 0 times, and left all 9 non-moves alone. Those cases were used to set the thresholds, so treat the numbers as optimistic.
 
 ## With a layout snapshot of the page
 
@@ -70,9 +72,19 @@ import {
   writeLayout,
 } from '@pixsame/analysis';
 
-// in the page, after the screenshot; origin is the screenshot's top left in the page
-const raw = await page.evaluate(snapshotLayout, [0, 0]);
-const layout = { size, scale: png.width / size.width, ...raw };
+// in the page, after the screenshot; origin is the screenshot's top left in the
+// page, area its size in CSS pixels
+const raw = await page.evaluate(snapshotLayout, {
+  origin: [0, 0],
+  area: [size.width, size.height],
+});
+// env: what renders the screenshot, so a later run on another system can tell
+const layout = {
+  env: { os: process.platform, browser: 'chromium' },
+  size,
+  scale: png.width / size.width,
+  ...raw,
+};
 
 // keep it in the PNG, so it is there when this screenshot becomes a baseline
 const stamped = writeLayout(png, layout);
@@ -80,10 +92,17 @@ const stamped = writeLayout(png, layout);
 // later: compare against the baseline's layout
 await withAnalysis(() => comparer.compare(input), {
   layout: { baseline: readLayout(baselinePng)!, actual: layout },
+  environment: { baseline: readLayout(baselinePng)?.env, actual: layout.env },
 });
 ```
 
-The layout is stored in an `iTXt` chunk of the PNG as columnar JSON, deflated (about 6 to 40 KB for a real page). **The chunk's keyword carries the analysis version**: `pixsame-layout-v1`. `ANALYSIS_VERSION` is raised by any change that makes stored data wrong or unreadable (the snapshot, its encoding, how it is read), so a baseline stamped by an older version is recognised without decoding it and that comparison falls back to the pixels alone. `readLayout` only returns a layout of the current version, `layoutVersionOf` tells a stale one from none, and `writeLayout` drops layouts of any other version.
+The layout is stored in an `iTXt` chunk of the PNG as columnar JSON, deflated (about 6 to 40 KB for a real page). **The chunk's keyword carries the analysis version**: `pixsame-layout-v2`. `ANALYSIS_VERSION` is raised by any change that makes stored data wrong or unreadable (the snapshot, its encoding, how it is read), so a baseline stamped by an older version is recognised without decoding it and that comparison falls back to the pixels alone. `readLayout` only returns a layout of the current version, `layoutVersionOf` tells a stale one from none, and `writeLayout` drops layouts of any other version.
+
+**Large pages.** A snapshot costs about 70 microseconds an element, so a page with more than 3000 elements (`cullAbove`) is snapshotted without the elements that lie outside `area` or outside an ancestor that clips them: the rows of a long list or data grid that are scrolled out of view. They explain no pixel of the screenshot. On a grid of 380,000 elements this takes the snapshot from 27 seconds to 0.2 seconds.
+
+## Screenshots from different systems
+
+Fonts, hinting and anti-aliasing differ between macOS, Linux and Windows, so the same page differs in 1 to 9 percent of its pixels. When the analysis knows what rendered each image (`environment`, or the `env` of each layout) and the operating systems differ, it says so. With a layout it answers `cross-os` when every changed element only has a different font, sits a little differently or shows more of itself, and no differing pixel lies on a picture, canvas, SVG, video or frame, whose redrawn pixels the page's text cannot account for. An added, removed, re-texted or restyled element, or a different picture, keeps its own label and the description ends with "so some differences are expected". A baseline saved before the environment was recorded has no `env`, so nothing is said about systems for it.
 
 ## Use it in your own `visual-regression-compare` adapter
 

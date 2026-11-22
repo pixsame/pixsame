@@ -2,6 +2,7 @@ import { it, expect, describe, beforeEach, afterEach, vi } from 'vitest';
 import path from 'path';
 import { promises as fs, existsSync, readFileSync } from 'fs';
 import sharp from 'sharp';
+import { ANALYSIS_VERSION } from '@pixsame/analysis';
 import { dir, file, setGracefulCleanup, withFile } from 'tmp-promise';
 import {
   approveImageTask,
@@ -945,7 +946,7 @@ describe('run manifest', () => {
           ...(expected.diffRatio && {
             pixsame: {
               analysis: expect.objectContaining({
-                version: 1,
+                version: ANALYSIS_VERSION,
                 label: 'size-change',
                 description: expect.any(String),
               }),

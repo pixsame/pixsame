@@ -80,7 +80,10 @@ export const takeLayout = (
     if (!placement) return;
     // the function runs in the page, whose globals it reads, so it goes over as source
     const raw = win.eval(
-      `(${snapshotLayout.toString()})(${JSON.stringify(placement.origin)})`,
+      `(${snapshotLayout.toString()})(${JSON.stringify({
+        origin: placement.origin,
+        area: [placement.size.width, placement.size.height],
+      })})`,
     ) as RawLayout;
     return { size: placement.size, count: raw.count, root: raw.root };
   } catch {

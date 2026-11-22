@@ -2,7 +2,7 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import { analyze } from './analyze';
 import type { Descriptions } from './describe';
 import { maskFromPixelmatchDiff } from './regions';
-import type { Layout } from './layout/types';
+import type { Environment, Layout } from './layout/types';
 import type { Analysis, RgbaImage, Size } from './types';
 
 type Color = [number, number, number];
@@ -11,6 +11,7 @@ type Captured = { baseline: RgbaImage; actual: RgbaImage; mask: Uint8Array };
 /** One comparison's hand-over point between the engine (which has the pixels) and the hook (which has the entry). */
 const comparison = new AsyncLocalStorage<{
   layout?: { baseline: Layout; actual: Layout };
+  environment?: { baseline?: Environment; actual?: Environment };
   captured?: Captured;
   analysis?: Analysis;
 }>();
@@ -20,11 +21,19 @@ const comparison = new AsyncLocalStorage<{
  * be analyzed for that call's entry. Without it nothing is recorded.
  * `layout` is what the page looked like when the baseline and the screenshot
  * were taken (see `readLayout`); both are needed for it to be used.
+ * `environment` is what rendered each image (a layout's `env`, or the
+ * adapter's own for the screenshot); it can be given without a layout.
  */
 export const withAnalysis = <T>(
   compare: () => Promise<T>,
-  { layout }: { layout?: { baseline: Layout; actual: Layout } } = {},
-): Promise<T> => comparison.run({ layout }, compare);
+  {
+    layout,
+    environment,
+  }: {
+    layout?: { baseline: Layout; actual: Layout };
+    environment?: { baseline?: Environment; actual?: Environment };
+  } = {},
+): Promise<T> => comparison.run({ layout, environment }, compare);
 
 /**
  * For a pixelmatch engine to call with the images it compared and the diff
@@ -96,6 +105,7 @@ export const analysisPlugin = ({
       const analysis: Analysis = analyze({
         ...captured,
         layout: slot.layout,
+        environment: slot.environment,
         descriptions,
         ...(measurement.baselineSize &&
           measurement.actualSize && {

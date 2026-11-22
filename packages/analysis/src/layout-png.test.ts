@@ -27,6 +27,12 @@ const node = (
 });
 
 const layout: Layout = {
+  env: {
+    os: 'darwin',
+    browser: 'chromium',
+    browserVersion: '147.0',
+    renderer: 'docker',
+  },
   size: { width: 1280, height: 800 },
   scale: 2,
   count: 4,
@@ -38,6 +44,7 @@ const layout: Layout = {
         text: 'Zażółć gęślą jaźń 你好 🙂',
         lines: [[20.25, 10.5, 300.12, 40]],
         paint: 'abc12',
+        font: 'f0nt',
         box: true,
       }),
       node('img', [20, 60.5, 100, 100], {

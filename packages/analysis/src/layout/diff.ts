@@ -6,13 +6,21 @@ export type Kind =
   | 'removed'
   | 'text'
   | 'look'
+  | 'font'
   | 'entered'
   | 'moved'
   | 'resized'
   | 'rewrapped';
 
 /** Kinds that mean new or different content, as opposed to the same content elsewhere. */
-export const CHANGE: Kind[] = ['added', 'removed', 'text', 'look', 'entered'];
+export const CHANGE: Kind[] = [
+  'added',
+  'removed',
+  'text',
+  'look',
+  'font',
+  'entered',
+];
 export const LAYOUT: Kind[] = ['moved', 'resized', 'rewrapped'];
 
 /** One element in both snapshots; one side is missing when it was added or removed. */
@@ -188,6 +196,8 @@ const classify = (pair: Pair, areaA: Area, areaB: Area) => {
   if (a.paint !== b.paint || a.src !== b.src || !!a.box !== !!b.box) {
     add('look');
   }
+  // the font family is its own kind: another system picks another default font
+  if ((a.font ?? '') !== (b.font ?? '')) add('font');
   const moved =
     Math.abs(a.rect[0] - b.rect[0]) > EPS ||
     Math.abs(a.rect[1] - b.rect[1]) > EPS;
