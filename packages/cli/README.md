@@ -91,7 +91,11 @@ http://localhost:3000/cart at 1280x800: 2 changes since the first capture on com
   - 1 element moved down by 8 px: p "Total: 24.99"
 ```
 
-Each line is one fact: an element that was added, removed or changed its text or look (named by property where it is one of font, colour, background, border radius, padding, gap or margin: `border-radius 8px → 4px`), an element whose spacing changed, a group of elements that moved by the same offset, an element that changed size, or an area where pixels changed and the page's layout does not say why (a canvas, a picture). For such an area the command writes a before and an after crop and prints their paths. "No change" means no pixel differs.
+Each line is one fact: an element that was added, removed or changed its text or look (named by property where it is one of font, letter spacing, text alignment, decoration or case, colour, background colour or image, opacity, filter, transform, border, border radius, shadow, outline, padding, gap, margin or flex order: `border-radius 8px → 4px`), an element with such a change that shows only on what is around or inside it (a margin, an opacity on a wrapper), a group of elements that moved by the same offset (the outermost one is named: a row, not the icon in it), an element that changed size (a narrower box is named once, with how many elements narrowed with it), or an area where pixels changed and the page's layout does not say why (a canvas, a picture). An element that came or went is one line however much it holds (`removed div.card with the 8 elements inside it`). For such an area, and for a look that changed in a way none of those properties names (a clip path, a blend mode), the command writes a before and an after crop and prints their paths.
+
+Both captures come from the same browser on the same machine, so `snap` reports a change even when its pixels differ by less than a test would count, and marks the line `(faint: the pixels differ by less than a test counts)`. "No change" means the layout names no change that any pixel shows.
+
+Some things are drawn a little differently every time (a rotated box, a canvas). `snap` leaves those pixels out, and still reports a change the page's layout names on such an element, when both captures of the page as it is now agree on it. The line ends with `(from the page's layout alone: the pixels there change by themselves)`. A clock or a counter differs between the two captures in the layout too, so it stays left out.
 
 How it works:
 
@@ -155,6 +159,8 @@ It is what the Stop hook runs (see `init --hook` below): an agent that captured 
 ### For coding agents
 
 The [`pixsame-verify`](../../skills/pixsame-verify) skill, shipped in this package under `skills/`, teaches an agent the loop: capture before editing, edit, capture with `--only`, fix what is marked `OUTSIDE:`, and paste `pixsame snap --report` into the pull request. `pixsame init` installs it.
+
+How much this helps is measured in the [benchmark](../../benchmark/README.md): on ten pages `snap` was never adjusted to, Claude Sonnet 5.5 in Claude Code found 94% of single-property changes from two screenshots and 99% from the `snap` output, at a third of the cost per check. Screenshots mostly missed line height and padding. It is one model and one kind of change (a single CSS property), so read it as that.
 
 ## `init`
 

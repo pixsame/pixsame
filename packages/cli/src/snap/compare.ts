@@ -1,4 +1,5 @@
 import {
+  diffLayouts,
   facts,
   findRegions,
   maskFromPixelmatchDiff,
@@ -126,6 +127,7 @@ const leaveOut = (
   width: number,
   height: number,
   unstable: Unstable,
+  value = 0,
 ) => {
   for (let y = 0; y < unstable.height; y++) {
     for (let x = 0; x < unstable.width; x++) {
@@ -140,7 +142,7 @@ const leaveOut = (
           px <= Math.min(width - 1, x + UNSTABLE_MARGIN);
           px++
         ) {
-          mask[py * width + px] = 0;
+          mask[py * width + px] = value;
         }
       }
     }
@@ -169,7 +171,10 @@ export const unstableAreas = ({ width, height, mask }: Unstable): Region[] =>
 
 const CROP_MARGIN = 8;
 
-const crop = (image: Pixels, area: Region): Pixels => {
+const crop = (
+  image: Pixels,
+  area: Pick<Region, 'x' | 'y' | 'width' | 'height'>,
+): Pixels => {
   const x0 = Math.max(0, area.x - CROP_MARGIN);
   const y0 = Math.max(0, area.y - CROP_MARGIN);
   const x1 = Math.min(image.width, area.x + area.width + CROP_MARGIN);
@@ -184,9 +189,29 @@ const crop = (image: Pixels, area: Region): Pixels => {
   return { width, height, data };
 };
 
+/**
+ * Whether a fact comes with pictures: an area the layout does not explain,
+ * or a look that changed in a way no stored style names (a background image,
+ * a filter). Text cannot say what happened there; a small crop can.
+ */
+export const hasCrop = (fact: Fact): boolean =>
+  fact.type === 'area' ||
+  (fact.type === 'element' &&
+    !fact.styles &&
+    fact.kinds.some((kind) => kind === 'look' || kind === 'font') &&
+    !fact.kinds.some((kind) => kind === 'added' || kind === 'removed'));
+
+/** An element's rectangle (CSS pixels) as a box in image pixels. */
+const boxOf = ([x, y, w, h]: Rect, scale: number) => ({
+  x: Math.max(0, Math.floor(x * scale)),
+  y: Math.max(0, Math.floor(y * scale)),
+  width: Math.ceil(w * scale),
+  height: Math.ceil(h * scale),
+});
+
 export type Compared = {
   facts: Fact[];
-  /** For each `area` fact, in order: what was there before and what is there now, as PNGs. */
+  /** For each fact that `hasCrop`, in order: what was there before and what is there now, as PNGs. */
   crops: { before: Uint8Array; after: Uint8Array }[];
 };
 
@@ -199,11 +224,17 @@ export const compareShots = async ({
   before,
   after,
   unstable = [],
+  twin,
   only,
 }: {
   before: { png: Uint8Array; layout?: Layout };
   after: { png: Uint8Array; layout?: Layout };
   unstable?: Unstable[];
+  /**
+   * The layout of the other capture of `after`. Where the two agree, a
+   * change the layout names is reported even on pixels that are left out.
+   */
+  twin?: Layout;
   /** The elements meant to change, as rectangles in the `after` screenshot. */
   only?: Rect[];
 }): Promise<Compared> => {
@@ -222,11 +253,58 @@ export const compareShots = async ({
     includeAA: false,
   });
   const mask = maskFromPixelmatchDiff({ width, height, data: diff });
-  for (const one of unstable) leaveOut(mask, width, height, one);
+  // both captures come from this machine, so any difference is one: a change
+  // too faint for a test's threshold is still what the edit did
+  const faint = new Uint8Array(width * height);
+  const one32 = new Uint32Array(
+    baseline.data.buffer,
+    baseline.data.byteOffset,
+    width * height,
+  );
+  const two32 = new Uint32Array(
+    actual.data.buffer,
+    actual.data.byteOffset,
+    width * height,
+  );
+  for (let at = 0; at < faint.length; at++) {
+    if (one32[at] !== two32[at]) faint[at] = 1;
+  }
+  // left out, on elements that are the same in both captures of the page as
+  // it is now: there the pixels flicker (a rotated box is drawn a little
+  // differently each time) and the layout can still be believed
+  const unseen =
+    twin && after.layout && unstable.length > 0
+      ? new Uint8Array(width * height)
+      : undefined;
+  for (const one of unstable) {
+    leaveOut(mask, width, height, one);
+    leaveOut(faint, width, height, one);
+    if (unseen) leaveOut(unseen, width, height, one, 1);
+  }
+  if (unseen && twin && after.layout) {
+    for (const { a, b, kinds } of diffLayouts(twin, after.layout).pairs) {
+      if (kinds.length === 0 && a?.style === b?.style) continue;
+      for (const [node, scale] of [
+        [a, twin.scale],
+        [b, after.layout.scale],
+      ] as const) {
+        if (!node) continue;
+        const box = boxOf(node.rect, scale);
+        const x0 = Math.max(0, box.x - UNSTABLE_MARGIN);
+        const x1 = Math.min(width, box.x + box.width + UNSTABLE_MARGIN);
+        const y1 = Math.min(height, box.y + box.height + UNSTABLE_MARGIN);
+        for (let y = Math.max(0, box.y - UNSTABLE_MARGIN); y < y1; y++) {
+          if (x1 > x0) unseen.fill(0, y * width + x0, y * width + x1);
+        }
+      }
+    }
+  }
   const found = facts({
     baseline,
     actual,
     mask,
+    faint,
+    unseen,
     sizes,
     layout:
       before.layout && after.layout
@@ -236,15 +314,15 @@ export const compareShots = async ({
   });
   return {
     facts: found,
-    crops: found.flatMap((fact) =>
-      fact.type === 'area'
-        ? [
-            {
-              before: encodePng(crop(baseline, fact.area)),
-              after: encodePng(crop(actual, fact.area)),
-            },
-          ]
-        : [],
-    ),
+    crops: found.filter(hasCrop).map((fact) => {
+      const area =
+        fact.type === 'area'
+          ? fact.area
+          : boxOf((fact as { rect: Rect }).rect, after.layout?.scale ?? 1);
+      return {
+        before: encodePng(crop(baseline, area)),
+        after: encodePng(crop(actual, area)),
+      };
+    }),
   };
 };

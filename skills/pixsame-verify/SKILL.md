@@ -5,7 +5,7 @@ description: Check what an edit changed on the rendered page, and that nothing e
 
 # Verify a visual change with pixsame
 
-`pixsame snap` compares a page with how it looked before you started and prints what is different as text: which elements changed, what moved and by how much, and whether anything changed that you did not mean to change. It is exact where looking at two screenshots is not, and it costs far fewer tokens.
+`pixsame snap` compares a page with how it looked before you started and prints what is different as text: which elements changed, what moved and by how much, and whether anything changed that you did not mean to change. It names the property and both values, where two screenshots leave a line height or a padding to be spotted by eye, and a check costs about a third of comparing two screenshots.
 
 It needs the page reachable at an address (the project's dev server, a Storybook story's iframe address, or a `file://` path) and Chrome installed.
 
@@ -36,7 +36,7 @@ It needs the page reachable at an address (the project's dev server, a Storybook
    - Exit code 1: lines marked `OUTSIDE:` changed and were not meant to. Fix the edit, then run the same command again. Do not widen `--only` to make the line go away unless that element really was meant to change.
    - Exit code 2: the command or the setup is wrong; the message says what to do.
 
-5. **Read every line.** Each is one fact. For a line that says pixels changed and the layout does not say why (a canvas, a picture), the command prints the paths of a before and an after crop: look at those two small images, not at a full screenshot.
+5. **Read every line.** Each is one fact. For a line that says pixels changed and the layout does not say why (a canvas, a picture), or that a look changed without naming a property, the command prints the paths of a before and an after crop: look at those two small images, not at a full screenshot. A line marked `(faint: …)` is a real change that is hard to see: a test would pass over it, a reviewer may not. A line marked `(from the page's layout alone: …)` is a change on an element whose pixels flicker between captures: the style values say it changed, no pixel was compared.
 
 6. **Repeat 3 to 5** until the output matches the intent. The comparison is always with the first capture, so the output shows the whole effect of your work so far.
 

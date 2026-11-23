@@ -19,6 +19,7 @@ import {
   compareShots,
   decodeUnstable,
   encodeUnstable,
+  hasCrop,
   unstableAreas,
   unstableBetween,
   type Unstable,
@@ -383,6 +384,7 @@ const snapOne = async ({
     before: { png: before, layout: readLayout(before) },
     after: { png: shot.png, layout: shot.layout },
     unstable,
+    ...(shots.length > 1 && { twin: shots[0].layout }),
     ...(flags.only.length > 0 && {
       only: flags.only.flatMap((mark) => shot.marks?.[mark] ?? []),
     }),
@@ -438,8 +440,7 @@ const text = (result: SnapResult, all: boolean, only: string[]): string[] => {
     let crop = 0;
     const withFiles = result.facts.map((fact) => {
       const mark = fact.outside ? 'OUTSIDE: ' : '';
-      if (fact.type !== 'area')
-        return { fact, line: `  - ${mark}${fact.text}` };
+      if (!hasCrop(fact)) return { fact, line: `  - ${mark}${fact.text}` };
       const files = result.files.crops[crop++];
       return {
         fact,

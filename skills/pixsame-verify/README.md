@@ -2,7 +2,7 @@
 
 An [agent skill](https://agentskills.io) that teaches a coding agent (Claude Code, Cursor, Codex, Copilot and others that read `SKILL.md`) to check its own visual changes with [`pixsame snap`](../../packages/cli/README.md#snap-url).
 
-Without it, an agent that edits a component takes a screenshot and looks at it, which misses most small changes and cannot tell that nothing else changed. With it, the agent captures the page before editing, edits, and reads what changed as text:
+Without it, an agent that edits a component takes a screenshot and looks at it. That finds most changes, tends to miss a line height or a padding, and cannot say that nothing else changed. With it, the agent captures the page before editing, edits, and reads what changed as text:
 
 ```
 http://localhost:3000/cart at 1280x800: 2 changes since the first capture, all on .checkout-button or caused by it:
@@ -11,6 +11,8 @@ http://localhost:3000/cart at 1280x800: 2 changes since the first capture, all o
 ```
 
 When something changed that the agent did not mean to change, the command exits with 1 and puts that line first, marked `OUTSIDE:`.
+
+In [our benchmark](../../benchmark/README.md), Claude Sonnet 5.5 in Claude Code found 94% of single-property changes from two screenshots and 99% from this output, at a third of the cost per check. That is one model, on ten pages the tool was never adjusted to.
 
 ## Install
 

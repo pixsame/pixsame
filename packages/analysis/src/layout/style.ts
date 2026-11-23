@@ -29,6 +29,33 @@ export const STYLE = [
   'margin-right',
   'margin-bottom',
   'margin-left',
+  'letter-spacing',
+  'font-style',
+  'text-align',
+  'text-transform',
+  'text-decoration-line',
+  'opacity',
+  'border-top-width',
+  'border-right-width',
+  'border-bottom-width',
+  'border-left-width',
+  'border-top-style',
+  'border-right-style',
+  'border-bottom-style',
+  'border-left-style',
+  'border-top-color',
+  'border-right-color',
+  'border-bottom-color',
+  'border-left-color',
+  'box-shadow',
+  'outline-style',
+  'outline-width',
+  'outline-color',
+  'background-image',
+  'transform',
+  'filter',
+  'outline-offset',
+  'order',
 ] as const;
 
 export type StyleProperty = (typeof STYLE)[number];
@@ -40,6 +67,10 @@ const INHERITED: string[] = [
   'font-weight',
   'line-height',
   'color',
+  'letter-spacing',
+  'font-style',
+  'text-align',
+  'text-transform',
 ];
 
 /** Styles whose change moves or resizes things without changing how the element itself is painted. */
@@ -59,7 +90,9 @@ export const SPACING: string[] = [
   'margin-left',
 ];
 
-/** Properties written as one when all their parts changed alike: four sides, four corners, two gaps. */
+const SIDES = ['top', 'right', 'bottom', 'left'];
+
+/** Properties written as one when their parts end up alike: four sides, four corners, two gaps. */
 const SHORTHANDS: [string, string[]][] = [
   [
     'border-radius',
@@ -76,11 +109,15 @@ const SHORTHANDS: [string, string[]][] = [
   ],
   ['margin', ['margin-top', 'margin-right', 'margin-bottom', 'margin-left']],
   ['gap', ['row-gap', 'column-gap']],
+  ...['width', 'style', 'color'].map((part): [string, string[]] => [
+    `border-${part}`,
+    SIDES.map((side) => `border-${side}-${part}`),
+  ]),
 ];
 
 /** One style of an element that has another value than before. */
 export type StyleChange = {
-  /** A property of `STYLE`, or a shorthand (`padding`, `margin`, `border-radius`, `gap`) when all its parts changed alike. */
+  /** A property of `STYLE`, or a shorthand (`padding`, `margin`, `border-radius`, `gap`, `border-width`, `border-style`, `border-color`) when its parts changed to one value; `before` then lists the parts when they differed (`0px 0px 1px 0px`). */
   property: string;
   before: string;
   after: string;
@@ -119,18 +156,35 @@ export const styleChanges = (
       changed.set(property, { property, before: before[i], after: after[i] });
     }
   });
-  for (const [shorthand, parts] of SHORTHANDS) {
-    const all = parts.map((part) => changed.get(part));
-    const [first] = all;
-    if (
-      first &&
-      all.every(
-        (one) => one?.before === first.before && one.after === first.after,
-      )
-    ) {
-      parts.forEach((part) => changed.delete(part));
-      changed.set(shorthand, { ...first, property: shorthand });
+  // the colour and style of a border or outline that is not drawn say nothing
+  const both = (property: StyleProperty, value: string) => {
+    const i = STYLE.indexOf(property);
+    return before[i] === value && after[i] === value;
+  };
+  for (const side of SIDES) {
+    if (both(`border-${side}-width` as StyleProperty, '0px')) {
+      changed.delete(`border-${side}-color`);
+      changed.delete(`border-${side}-style`);
     }
+  }
+  if (both('outline-style', 'none')) {
+    changed.delete('outline-color');
+    changed.delete('outline-width');
+    changed.delete('outline-offset');
+  }
+  for (const [shorthand, parts] of SHORTHANDS) {
+    // several parts changed and all of them are now alike: one line says it
+    if (parts.filter((part) => changed.has(part)).length < 2) continue;
+    const at = parts.map((part) => STYLE.indexOf(part as StyleProperty));
+    const [now] = at.map((i) => after[i]);
+    if (at.some((i) => after[i] !== now)) continue;
+    const was = at.map((i) => before[i]);
+    parts.forEach((part) => changed.delete(part));
+    changed.set(shorthand, {
+      property: shorthand,
+      before: was.every((value) => value === was[0]) ? was[0] : was.join(' '),
+      after: now,
+    });
   }
   return [...changed.values()].map((change) => {
     if (!INHERITED.includes(change.property)) return change;
@@ -144,11 +198,98 @@ export const styleChanges = (
   });
 };
 
+/**
+ * How far an element paints beyond its own box, in CSS pixels: its shadows
+ * (offset, blur and spread) and its outline. 0 when the snapshot has no styles.
+ */
+export const overflowOf = (node: LayoutNode): number => {
+  let reach = 0;
+  const shadow = styleOf(node, 'box-shadow');
+  if (shadow && shadow !== 'none') {
+    // colours hold commas of their own
+    for (const one of shadow.replace(/[a-z-]+\([^)]*\)/g, '').split(',')) {
+      if (one.includes('inset')) continue;
+      const [x = 0, y = 0, blur = 0, spread = 0] = (
+        one.match(/-?[\d.]+px/g) ?? []
+      ).map(Number.parseFloat);
+      reach = Math.max(
+        reach,
+        Math.max(Math.abs(x), Math.abs(y)) + blur + spread,
+      );
+    }
+  }
+  if ((styleOf(node, 'outline-style') ?? 'none') !== 'none') {
+    reach = Math.max(
+      reach,
+      (Number.parseFloat(styleOf(node, 'outline-width') ?? '0') || 0) +
+        Math.max(
+          0,
+          Number.parseFloat(styleOf(node, 'outline-offset') ?? '0') || 0,
+        ),
+    );
+  }
+  return reach;
+};
+
+/** Whether the element's own box lets what is behind it show: no background of its own. */
+export const seeThrough = (node: LayoutNode): boolean =>
+  !node.media &&
+  styleOf(node, 'background-color') === 'rgba(0, 0, 0, 0)' &&
+  styleOf(node, 'background-image') === 'none';
+
+/** The largest corner radius of the element in CSS pixels; 0 when square or unknown. */
+export const cornerOf = (node: LayoutNode): number =>
+  Math.max(
+    0,
+    ...(
+      [
+        'border-top-left-radius',
+        'border-top-right-radius',
+        'border-bottom-right-radius',
+        'border-bottom-left-radius',
+      ] as const
+    ).map((corner) => {
+      const value = styleOf(node, corner) ?? '';
+      const size = Number.parseFloat(value) || 0;
+      const most = Math.min(node.rect[2], node.rect[3]) / 2;
+      return Math.min(
+        most,
+        value.includes('%') ? (most * 2 * size) / 100 : size,
+      );
+    }),
+  );
+
+/**
+ * A computed transform in words: `matrix(0.99863, -0.052336, 0.052336, 0.99863, 0, 0)`
+ * is `rotate(-3deg)`. Empty when it is not a plain 2D matrix or does nothing.
+ */
+export const transformInWords = (value: string): string => {
+  const numbers = /^matrix\(([^)]+)\)$/.exec(value)?.[1].split(',').map(Number);
+  if (numbers?.length !== 6 || numbers.some(Number.isNaN)) return '';
+  const [a, b, c, d, x, y] = numbers;
+  const tidy = (n: number) => Number(n.toFixed(2));
+  const angle = tidy((Math.atan2(b, a) * 180) / Math.PI);
+  const sx = tidy(Math.hypot(a, b));
+  const sy = tidy(Math.hypot(c, d));
+  return [
+    ...(x !== 0 || y !== 0 ? [`translate(${tidy(x)}px, ${tidy(y)}px)`] : []),
+    ...(angle !== 0 ? [`rotate(${angle}deg)`] : []),
+    ...(sx !== 1 || sy !== 1
+      ? [sx === sy ? `scale(${sx})` : `scale(${sx}, ${sy})`]
+      : []),
+  ].join(' ');
+};
+
+const shown = (property: string, value: string) => {
+  const words = property === 'transform' ? transformInWords(value) : '';
+  return words ? `${value} (${words})` : value;
+};
+
 /** `border-radius 8px → 4px, color rgb(0, 0, 0) → rgb(200, 0, 0) (from body)`. */
 export const describeStyleChanges = (changes: StyleChange[]): string =>
   changes
     .map(
       ({ property, before, after, from }) =>
-        `${property} ${before} → ${after}${from ? ` (from ${from})` : ''}`,
+        `${property} ${shown(property, before)} → ${shown(property, after)}${from ? ` (from ${from})` : ''}`,
     )
     .join(', ');

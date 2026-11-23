@@ -39,7 +39,9 @@ export {
   type SnapshotInput,
 } from './layout/snapshot';
 export {
+  overflowOf,
   STYLE,
+  transformInWords,
   styleChanges,
   styleOf,
   type StyleChange,

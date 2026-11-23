@@ -104,6 +104,33 @@ export const snapshotLayout = ({
     'margin-right',
     'margin-bottom',
     'margin-left',
+    'letter-spacing',
+    'font-style',
+    'text-align',
+    'text-transform',
+    'text-decoration-line',
+    'opacity',
+    'border-top-width',
+    'border-right-width',
+    'border-bottom-width',
+    'border-left-width',
+    'border-top-style',
+    'border-right-style',
+    'border-bottom-style',
+    'border-left-style',
+    'border-top-color',
+    'border-right-color',
+    'border-bottom-color',
+    'border-left-color',
+    'box-shadow',
+    'outline-style',
+    'outline-width',
+    'outline-color',
+    'background-image',
+    'transform',
+    'filter',
+    'outline-offset',
+    'order',
   ];
   const SKIP = ['script', 'style', 'head', 'template', 'noscript'];
   const MEDIA = ['img', 'canvas', 'svg', 'video', 'iframe'];
@@ -189,7 +216,13 @@ export const snapshotLayout = ({
       }
     }
     node.paint = hash(paint);
-    node.style = STYLE.map((p) => cs.getPropertyValue(p)).join('|');
+    // a value is kept short (a background can be a whole picture as a data URI) and free of the separator
+    node.style = STYLE.map((p) => {
+      const value = String(cs.getPropertyValue(p)).replace(/\|/g, ' ');
+      return value.length > 160
+        ? `${value.slice(0, 120)}… #${hash(value)}`
+        : value;
+    }).join('|');
     const border = ['top', 'right', 'bottom', 'left'].some(
       (side) => parseFloat(cs.getPropertyValue(`border-${side}-width`)) > 0,
     );
