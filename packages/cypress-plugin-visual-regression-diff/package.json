@@ -70,7 +70,7 @@
     "@frsource/prettier-config": "^1.11.0",
     "@types/node": "20.19.43",
     "@types/tmp": "0.2.6",
-    "@vitest/coverage-v8": "5.1.0",
+    "@vitest/coverage-v8": "5.1.1",
     "cpy-cli": "7.0.0",
     "cypress": "16.1.0",
     "del-cli": "8.0.1",
@@ -80,7 +80,7 @@
     "tmp-promise": "3.0.3",
     "typescript": "6.0.3",
     "vite-tsconfig-paths": "6.1.1",
-    "vitest": "5.1.0"
+    "vitest": "5.1.1"
   },
   "keywords": [
     "Cypress",
