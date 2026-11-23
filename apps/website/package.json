@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@frsource/eslint-config": "1.86.5",
+    "@frsource/eslint-config": "1.86.6",
     "@frsource/prettier-config": "^1.47.12",
     "@nuxt/eslint": "1.17.0",
     "@playwright/test": "1.65.0",
