@@ -1,0 +1,43 @@
+{
+  "answer": "Hero heading: text changed from mixed case to uppercase (\"I DESIGN MAPS PEOPLE CAN READ ON A BUS.\"), and it now wraps onto two lines instead of one.\nHero heading: the top moved up, from about y=175 to about y=155 for the first line, and the block is now taller.\nHero subtitle: moved down from about y=221 to about y=242.\nHero buttons (\"Work with me\", \"Download CV\"): moved down by about 20px, from about y=266 to about y=286.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 373,
+    "cache_read_input_tokens": 9334,
+    "output_tokens": 375,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 373,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 172,
+        "cache_read_input_tokens": 6322,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0061834,
+  "turns": 3,
+  "durationMs": 7813,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

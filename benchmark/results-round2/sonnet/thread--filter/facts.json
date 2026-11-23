@@ -1,0 +1,43 @@
+{
+  "answer": "span#th-a1-best \"Accepted answer\": the badge looks blurred and faded after the change. Before, the text and the blue pill border were crisp and saturated. After, both are soft and pale. The text, size and position look the same.\ndiv#th-a1: a 93x1 px strip at x=373, y=344 changed. This is the bottom edge of the badge's outline, and it went from a sharp blue line to a blurred, light one. The page layout doesn't explain the change.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1434,
+    "cache_read_input_tokens": 10186,
+    "output_tokens": 833,
+    "output_tokens_details": {
+      "thinking_tokens": 47
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1434,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 172,
+        "cache_read_input_tokens": 3754,
+        "cache_creation_input_tokens": 709,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 709
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.015096599999999998,
+  "turns": 6,
+  "durationMs": 9208,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

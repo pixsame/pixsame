@@ -1,0 +1,43 @@
+{
+  "answer": "p#pf-bio: letter-spacing changed from normal to 0.96px, and its size changed from 704x24.8 to 704x49.6 (height grew by 24.8px, probably because the text now wraps to two lines)\ndiv#pf-acts (and the content it holds): moved down 12.4px (2 elements moved)\nh1#pf-title: moved up 12.4px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 2037,
+    "cache_read_input_tokens": 5113,
+    "output_tokens": 229,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2037,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 123,
+        "cache_read_input_tokens": 3443,
+        "cache_creation_input_tokens": 264,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 264
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.010957300000000001,
+  "turns": 2,
+  "durationMs": 3287,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

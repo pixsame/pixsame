@@ -1,0 +1,43 @@
+{
+  "answer": "a#prev \"Previous\": margin-left 347.625px → 335.625px, so it moved left by 12px and down by 6px\na#nextw \"Next week\": padding 8px 16px → 14px 22px (all four sides +6px for top/bottom/left/right), size 110x42.4 → 122x54.4\nh1#week \"Week 22, 27 May to\": moved down by 6px\ndiv#alert \"Two shifts on Satu\": moved down by 12px\ndiv#mon: moved down by 12px\nh3 \"Monday\": moved down by 12px\nOther elements (29 in total, including div#alert, div#mon and h3 \"Monday\"): moved down by 12px. The tool doesn't list the rest.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 740,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 333,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 740,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 229,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 368,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 368
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.006940999999999999,
+  "turns": 2,
+  "durationMs": 4373,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

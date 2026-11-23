@@ -1,0 +1,43 @@
+{
+  "answer": "span#rc-kind (\"Supper\"): filter changed from none to blur(2px), so the badge now looks blurred. The changed pixel region (70x23 px at x=138, y=91) is the same badge.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1079,
+    "cache_read_input_tokens": 10115,
+    "output_tokens": 515,
+    "output_tokens_details": {
+      "thinking_tokens": 74
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1079,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 68,
+        "cache_read_input_tokens": 3684,
+        "cache_creation_input_tokens": 424,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 424
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.010489500000000002,
+  "turns": 4,
+  "durationMs": 6899,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

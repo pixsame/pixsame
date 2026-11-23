@@ -1,0 +1,43 @@
+{
+  "answer": "div#fq-1: transform changed from none to rotate(-3deg), matrix(0.99863, -0.052336, 0.052336, 0.99863, 0, 0)\ndiv#fq-2: pixels changed in a 33x3 px region at x=204, y=392. The captured crops show a thin horizontal edge or border line that looks shifted or altered. The layout gives no reason for it, and it may be a side effect of the rotation on div#fq-1.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1126,
+    "cache_read_input_tokens": 10150,
+    "output_tokens": 657,
+    "output_tokens_details": {
+      "thinking_tokens": 137
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1126,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 186,
+        "cache_read_input_tokens": 3719,
+        "cache_creation_input_tokens": 436,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 436
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.012101,
+  "turns": 4,
+  "durationMs": 6934,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

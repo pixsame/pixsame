@@ -1,0 +1,43 @@
+{
+  "answer": "p#nl-lead: font-family changed from Georgia, \"Times New Roman\", serif to \"Courier New\", Courier, monospace; height grew from 24.8 to 49.6 px (width unchanged at 720)\ndiv#nl-form and its contents: moved down 24.8 px\nh2#nl-h: moved down 24.8 px\ndiv#nl-past and its contents: moved down 24.8 px\n12 other elements below p#nl-lead (not named in the output): moved down 24.8 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 272,
+    "cache_read_input_tokens": 6804,
+    "output_tokens": 267,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 272,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 162,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 272,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 272
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0044464000000000005,
+  "turns": 2,
+  "durationMs": 4783,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

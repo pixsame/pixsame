@@ -1,0 +1,43 @@
+{
+  "answer": "Hero heading: moved up about 6px (text baseline y≈175 → y≈169).\nHero subtitle: moved up about 6px (y≈221 → y≈215).\n\"Download CV\" button: larger, about 131×45px at x 283–414 and y 247–286 before, and about 143×51px at x 283–426 and y 241–292 after. Its top edge moved up about 6px and its bottom edge moved down about 6px.\n\"Download CV\" button label: shifted right about 6px (x≈303 → x≈309), so it is still centered in the wider button.\n\"Work with me\" button: no change in size or position (it is now vertically off-center relative to the taller Download CV button).",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 373,
+    "cache_read_input_tokens": 12719,
+    "output_tokens": 441,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 373,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 222,
+        "cache_read_input_tokens": 6322,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.007295900000000001,
+  "turns": 3,
+  "durationMs": 11465,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

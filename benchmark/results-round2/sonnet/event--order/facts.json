@@ -1,0 +1,43 @@
+{
+  "answer": "a#ev-buy \"Get tickets\": moved right by 171.8 px\na#ev-prog \"See the programme\": moved left by 113.4 px\na#ev-prog \"See the programme\" (region at x=241, y=246, 29x6 px): pixels changed. The before crop shows the end of \"tickets\" from the Get tickets link, and the after crop shows \"the pro\" from the programme link. This is the two links trading places, not a separate change.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1085,
+    "cache_read_input_tokens": 10165,
+    "output_tokens": 706,
+    "output_tokens_details": {
+      "thinking_tokens": 190
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1085,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 289,
+        "cache_read_input_tokens": 3733,
+        "cache_creation_input_tokens": 381,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 381
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0124285,
+  "turns": 4,
+  "durationMs": 6459,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

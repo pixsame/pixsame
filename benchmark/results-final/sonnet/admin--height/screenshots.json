@@ -1,0 +1,43 @@
+{
+  "answer": "Badge \"38 ACTIVE\": height grew from about 19px to about 43px (y 90–133, was 100–119), and the text moved from vertically centered to the top of the box.\nHeading \"Users\": moved down about 2px (y≈109 → 111).\nInvite user button: moved down 2px (top 90 → 92).\nStat cards row (Seats used, Pending invites, Without 2FA): moved down 4px (top 147 → 151). Card size and contents are unchanged.\nUsers table: moved down 4px (top 295 → 299).\nFooter (\"Showing 4 of 38\" and the Next page button): moved down 4px (y 517 → 521).",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3307,
+    "cache_read_input_tokens": 6396,
+    "output_tokens": 582,
+    "output_tokens_details": {
+      "thinking_tokens": 164
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 381,
+        "cache_read_input_tokens": 3384,
+        "cache_creation_input_tokens": 2935,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2935
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0196956,
+  "turns": 3,
+  "durationMs": 6930,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

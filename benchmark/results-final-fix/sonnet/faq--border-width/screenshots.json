@@ -1,0 +1,43 @@
+{
+  "answer": "Talk to someone card: gained a dark gray border of about 3px, with no border before.\nTalk to someone card: height grew from about 146px to about 152px (bottom edge moved from y\u2248361 to y\u2248367).\nTalk to someone card contents (heading, text, Call button): shifted about 3px right and 3px down, from the added border.\nPower cut card: shifted down about 6px (top edge from y\u2248375 to y\u2248381), because the card above is taller.\nPower cut card contents (heading and text): shifted down about 6px, with no horizontal change.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3310,
+    "cache_read_input_tokens": 6397,
+    "output_tokens": 383,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3310,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 180,
+        "cache_read_input_tokens": 3385,
+        "cache_creation_input_tokens": 2937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0177177,
+  "turns": 3,
+  "durationMs": 6378,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

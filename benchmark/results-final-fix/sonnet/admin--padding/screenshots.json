@@ -1,0 +1,43 @@
+{
+  "answer": "Invite user button: larger, about 121\u00d751px at x=1059\u20131180, y=90\u2013141. Before it was about 109\u00d739px at x=1071\u20131180, y=90\u2013129.\nInvite user button text: moved left and down, from about x=1090\u20131160, y=110 to x=1085\u20131154, y=116.\nUsers heading: moved down about 6px, from y\u2248109 to y\u2248115.\n\"38 ACTIVE\" badge: moved down about 6px, from y\u2248110 to y\u2248116. Size is unchanged.\nStat cards (Seats used, Pending invites, Without 2FA): moved down 12px, from top y=147 to y=159. Height is unchanged at about 129px.\nStat card contents (labels, numbers, progress bar): moved down 12px with the cards.\nUsers table panel: moved down 12px, from top y=295 to y=307.\nTable rows and header: moved down 12px with the panel.\n\"Showing 4 of 38\" text: moved down 12px, from y\u2248517 to y\u2248529.\n\"Next page\" button: moved down 12px, from y\u2248517 to y\u2248529. Size is unchanged.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3307,
+    "cache_read_input_tokens": 6396,
+    "output_tokens": 566,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 365,
+        "cache_read_input_tokens": 3384,
+        "cache_creation_input_tokens": 2935,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2935
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0195356,
+  "turns": 3,
+  "durationMs": 6573,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

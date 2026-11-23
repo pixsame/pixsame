@@ -1,0 +1,43 @@
+{
+  "answer": "Subtitle paragraph (\"Written by two botanists\u2026\"): text is now all uppercase, where before it was sentence case.\nSubtitle paragraph: it now wraps onto two lines, ending \"\u2026AND IT / ALWAYS WILL BE.\", where before it was one line. It is about 25px taller.\nSignup card: moved down about 25px, from top y\u2248239 to y\u2248264. Its size is unchanged.\n\"In the last three letters\" heading, the three letter rows and their thumbnails: all moved down about 25px (heading y\u2248439 to y\u2248464).\nFooter divider and \"Printed copies for libraries on request.\": moved down about 25px (divider y\u2248674 to y\u2248699).\nCard border and footer divider: the color looks slightly less tan and more grey. This is subtle, so I'm not certain of it.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3313,
+    "cache_read_input_tokens": 6398,
+    "output_tokens": 643,
+    "output_tokens_details": {
+      "thinking_tokens": 170
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3313,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 438,
+        "cache_read_input_tokens": 3386,
+        "cache_creation_input_tokens": 2939,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2939
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0203298,
+  "turns": 3,
+  "durationMs": 7333,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

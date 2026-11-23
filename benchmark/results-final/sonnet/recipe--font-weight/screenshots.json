@@ -1,0 +1,43 @@
+{
+  "answer": "Tip callout text: the body text \"A spoon of mustard at the end wakes it up.\" changed from regular weight to bold, so the whole line is now bold and the text runs wider, ending at about x=896 instead of x=848.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 372,
+    "cache_read_input_tokens": 9331,
+    "output_tokens": 274,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 372,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 73,
+        "cache_read_input_tokens": 6319,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0051691,
+  "turns": 3,
+  "durationMs": 6070,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

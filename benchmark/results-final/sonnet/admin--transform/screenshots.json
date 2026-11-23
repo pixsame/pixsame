@@ -1,0 +1,43 @@
+{
+  "answer": "Users table card: rotated by about -3° (counter-clockwise tilt) around its center, instead of sitting level.\nUsers table card: the top-right corner now overlaps the bottom edge of the \"Without 2FA\" stat card, at about y=268–277.\nUsers table card: the bottom-left corner now sits close to or touches the \"Showing 4 of 38\" text, at about y=505, where before there was a gap.\nTable header row (NAME/ROLE/LAST SEEN/2FA): tilted with the card, so the right side is higher. The NAME header moved from y≈318 to y≈344, and the 2FA header from y≈318 to y≈297.\nTable rows (names, roles, last seen, 2FA values): all tilted with the card. Left-column text sits lower than before, and right-column text sits higher.\nTable row divider lines: now slope upward to the right instead of running horizontal.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3304,
+    "cache_read_input_tokens": 6395,
+    "output_tokens": 490,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3304,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 291,
+        "cache_read_input_tokens": 3383,
+        "cache_creation_input_tokens": 2933,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2933
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0187635,
+  "turns": 3,
+  "durationMs": 4852,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

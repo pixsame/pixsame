@@ -1,0 +1,43 @@
+{
+  "answer": "Job listing cards (Bakery shift lead, Delivery cyclist, Bookkeeper): removed. Each card's border, white background, title, meta line and \"Read more\" button no longer show, and the \"NEW\" badge is gone from the first card. The area they occupied (y≈192–548) is now blank, so the Pay/Vote cards and the footnote stay at the same y positions.\nHeader nav links (\"What we do\", \"Work with us\", \"Contact\"): shifted up about 1px, from y≈31 to y≈30.\nHeader logo \"Millrace Co-op\": shifted up about 1px or less, and the text looks slightly different in weight and width.\nPage heading \"Work with us\": shifted up about 1px, from y≈111 to y≈110.\nIntro paragraph: shifted up about 1px, from y≈157 to y≈156.\nText rendering across the page (header, Pay/Vote cards, footnote): glyph rendering looks slightly different, with a different font smoothing or hinting. Positions and sizes are otherwise unchanged.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3310,
+    "cache_read_input_tokens": 6397,
+    "output_tokens": 650,
+    "output_tokens_details": {
+      "thinking_tokens": 105
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3310,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 447,
+        "cache_read_input_tokens": 3385,
+        "cache_creation_input_tokens": 2937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.020387699999999998,
+  "turns": 3,
+  "durationMs": 7284,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

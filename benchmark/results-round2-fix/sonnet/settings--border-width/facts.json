@@ -1,0 +1,43 @@
+{
+  "answer": "div#st-quiet: border added (width 0px → 3px, style none → solid, color rgb(16, 20, 24) → rgb(60, 60, 67)); height 146.3 → 152.3 (grew 6px), width stays 320\ndiv#st-chan (and the 5 elements it holds): moved down by 6px\nh2 \"Quiet hours\": width 280 → 274 (narrower by 6px), height unchanged at 26.4\np.dim \"Nothing is sent be…\": width 280 → 274 (narrower by 6px), height unchanged at 18.3\ndiv#st-hours \"22:00 to 07:30\": width 280 → 274 (narrower by 6px), height unchanged at 46.3",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 725,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 336,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 725,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 232,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 353,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 353
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0069110000000000005,
+  "turns": 2,
+  "durationMs": 3495,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

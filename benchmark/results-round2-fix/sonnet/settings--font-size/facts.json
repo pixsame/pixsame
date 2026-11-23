@@ -1,0 +1,43 @@
+{
+  "answer": "span#st-r2-d \"Answers to message\": font-size 12.6px → 14.6px, line-height 18.27px → 21.17px, resized 177.8x15 → 206.1x17\nspan.sw: margin-left 334.172px → 305.953px (decreased by 28.219px), also moved down 0.5px\nspan.icon: moved down 0.5px\ndiv#st-r3 (with its contents): moved down 1px\nhr: moved down 1px\ndiv#st-acts (with its contents): moved down 1px\nh4 \"Replies\": resized 177.8x20.3 → 206.1x20.3 (width increased by 28.3px, height unchanged)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 714,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 318,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 714,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 214,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 342,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 342
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.006687,
+  "turns": 2,
+  "durationMs": 3388,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

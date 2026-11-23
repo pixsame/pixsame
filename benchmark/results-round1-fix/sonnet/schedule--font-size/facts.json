@@ -1,0 +1,43 @@
+{
+  "answer": "a#nextw \"Next week\": font-size 14px → 16px, line-height 22.4px → 25.6px, resized 110x42.4 → 120.5x45.6\na#prev \"Previous\": margin-left 347.625px → 337.062px, moved left by 10.6px, moved down by 1.6px\nh1#week \"Week 22, 27 May to\": moved down by 1.6px\ndiv#alert \"Two shifts on Satu\": moved down by 3.2px\ndiv#days (and the elements it holds): moved down by 3.2px\np#legend \"Swaps need a day's\": moved down by 3.2px\n29 elements in total moved down by 3.2px, including div#alert, div#days and its contents, and p#legend",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 737,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 339,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 737,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 234,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 364,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 364
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.006989100000000001,
+  "turns": 2,
+  "durationMs": 4644,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "a#prev: margin-left 347.625px → 335.625px\na#prev: moved down 6px and left 12px\na#nextw: resized 110x42.4 → 122x54.4; padding 8px 16px → 14px 22px (top/bottom 8→14, left/right 16→22)\nh1#week: moved down 6px\ndiv#alert: moved down 12px\ndiv#days (and its contents): moved down 12px\np#legend: moved down 12px\n(29 elements in total moved down 12px, including div#alert, div#days with its children, and p#legend)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 751,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 288,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 751,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 183,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 378,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 378
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.006535100000000001,
+  "turns": 2,
+  "durationMs": 3610,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

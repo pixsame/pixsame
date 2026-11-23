@@ -1,0 +1,43 @@
+{
+  "answer": "span#pn-a-p \"£ 6\": moved down by 10 px and right by 14 px\nspan.fine \"a month\": pixels changed in a 9x16 px area at x=222, y=293. The \"a\" is now covered by the moved \"6\" from the price, so the text is overlapped.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1045,
+    "cache_read_input_tokens": 10132,
+    "output_tokens": 534,
+    "output_tokens_details": {
+      "thinking_tokens": 71
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1045,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 128,
+        "cache_read_input_tokens": 3702,
+        "cache_creation_input_tokens": 372,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 372
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0105452,
+  "turns": 4,
+  "durationMs": 9329,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

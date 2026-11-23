@@ -1,0 +1,43 @@
+{
+  "answer": "MOST PICKED badge: larger, with more padding. It grew from about 102×19 px to about 114×31 px, so it is wider (left edge moved from x≈673 to x≈661) and taller (now about y 220–251). The label text is slightly larger and sits lower, at about y 236 instead of 234.\nEstuary heading: moved down about 2px, from y≈234 to y≈236.\nEstuary price (\"£ 18 a month\"): moved down about 4px, from y≈282 to y≈286.\nEstuary feature list (Five sites, 60 GB, Phone support): moved down about 3–4px, so \"Five sites\" went from y≈328 to y≈332.\nChoose Estuary button: moved down about 4px, from y≈409–448 to y≈413–452.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3310,
+    "cache_read_input_tokens": 6397,
+    "output_tokens": 459,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3310,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 256,
+        "cache_read_input_tokens": 3385,
+        "cache_creation_input_tokens": 2937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0184777,
+  "turns": 3,
+  "durationMs": 6774,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

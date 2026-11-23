@@ -1,0 +1,43 @@
+{
+  "answer": "div#ad-s1: border-width changed 1px → 4px; resized 345.3x130.3 → 345.3x136.3\ndiv#ad-table (with its contents): moved down 6px\ndiv#ad-foot (with its contents): moved down 6px\nThe other elements in the 23 that moved down 6px: moved down 6px (the snapshot doesn't name them individually)\nspan#ad-s1-n \"38\": moved down 3px and right 3px\nspan.fine \"of 50\": moved down 3px and right 3px\nh3 \"Seats used\": resized 299.3x19.5 → 293.3x19.5 (6px narrower)\ndiv.meter: resized 299.3x8 → 293.3x8 (6px narrower)\nThe element inside div.meter: resized 6px narrower (the snapshot doesn't name it)\ndiv#ad-s2: resized 345.3x130.3 → 345.3x136.3\ndiv#ad-s3: resized 345.3x130.3 → 345.3x136.3",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 786,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 428,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 786,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 323,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 413,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 413
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.008075100000000002,
+  "turns": 2,
+  "durationMs": 5067,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

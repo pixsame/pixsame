@@ -1,0 +1,43 @@
+{
+  "answer": "span#pn-a-p \"£ 6\": font-family changed from \"Helvetica Neue\", Helvetica, Arial, sans-serif to \"Courier New\", Courier, monospace; size changed from 55.6x48 to 72x45 (wider by 16.4, shorter by 3)\nul#pn-a-l (and the elements it holds, 4 elements in total with a#pn-a-go): moved up by 2.8 px\na#pn-a-go \"Choose Rockpool\": moved up by 2.8 px\nspan.fine \"a month\": moved up by 5 px and right by 16.4 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 683,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 302,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 683,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 196,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 309,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 309
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0064031999999999995,
+  "turns": 2,
+  "durationMs": 3808,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

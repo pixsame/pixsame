@@ -1,0 +1,43 @@
+{
+  "answer": "div#fq-3: padding changed from 22px to 28px\ndiv#fq-4 (with its contents): moved down by 12px\ndiv#fq-base (\"Lantern Energy is \"): moved down by 12px\nstrong#fq-3-q (\"I am moving home. \"): moved down by 6px and right by 6px\n\nThe tool reported \"3 elements moved down by 12 px\" but named only two of them, div#fq-4 and div#fq-base. The third element isn't identified in the output.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 627,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 260,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 627,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 155,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 254,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 254
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0057591000000000005,
+  "turns": 2,
+  "durationMs": 4581,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

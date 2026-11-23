@@ -1,0 +1,43 @@
+{
+  "answer": "Delivery date heading (\"Thursday, before noon\"): font size larger, text width about 205px → 235px, and its centre moves from y≈238 to y≈240.\n\"IN TRANSIT\" badge: moved down about 2px (y≈226 → 228). Its size and colour are unchanged.\nProgress bar: moved down about 3px (y≈275 → 278). Its length and fill are unchanged.\nTimeline rows (Collected / Sorted / Out for delivery, with dots and times): each moved down about 3px (y 309/344/379 → 312/347/382). The spacing between rows is unchanged.\nTracking card: taller by about 4px, with the bottom border at y≈413 → 417.\n\"Delivering to\" and \"If you are out\" cards: moved down about 4px (top edge y≈434 → 438), with the text moving the same amount. Their size and style are unchanged.\n\"Change delivery\" and \"Something wrong?\" buttons: moved down about 3–4px (y≈548 → 551). Their size and style are unchanged.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3310,
+    "cache_read_input_tokens": 6397,
+    "output_tokens": 705,
+    "output_tokens_details": {
+      "thinking_tokens": 159
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3310,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 502,
+        "cache_read_input_tokens": 3385,
+        "cache_creation_input_tokens": 2937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0209377,
+  "turns": 3,
+  "durationMs": 6267,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

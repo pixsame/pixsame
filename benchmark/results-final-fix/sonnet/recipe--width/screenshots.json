@@ -1,0 +1,43 @@
+{
+  "answer": "Ingredients card: narrower, right edge moved from x\u2248460 to x\u2248412 (width 320\u2192272), and bottom edge moved from y\u2248547 to y\u2248524 (height 257\u2192234).\nMethod column: shifted left, starting x moved from 496 to 448, so it is 48px wider (644\u2192692).\nMethod heading: moved left from x=496 to x=448, same y.\nMethod list: moved left by 48px, and step 3 now fits on one line (\"\u2026forty minutes.\"), where before it wrapped \"minutes.\" onto a 4th line. The list is one line shorter.\nTip box: moved left from x=496 to x=448, widened from 644 to 692px, and moved up from y\u2248439\u2013491 to y\u2248414\u2013466 (25px).\nPrint recipe button: moved left from x=496 to x=448 and up from y\u2248508\u2013547 to y\u2248483\u2013522.\nSave for later link: moved left from x=625 to x=577 and up from y\u2248527 to y\u2248502.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 373,
+    "cache_read_input_tokens": 12719,
+    "output_tokens": 531,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 373,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 312,
+        "cache_read_input_tokens": 6322,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0080859,
+  "turns": 3,
+  "durationMs": 11025,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

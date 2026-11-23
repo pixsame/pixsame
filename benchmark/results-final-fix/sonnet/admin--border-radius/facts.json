@@ -1,0 +1,43 @@
+{
+  "answer": "div#ad-s1: border-radius changed from 0px to 10px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 1898,
+    "cache_read_input_tokens": 5072,
+    "output_tokens": 129,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1898,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 24,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 166,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 166
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0093972,
+  "turns": 2,
+  "durationMs": 3448,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

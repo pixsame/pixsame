@@ -1,0 +1,43 @@
+{
+  "answer": "Pay section (heading \"Pay\", level 3): removed. It was between the Bookkeeper listing and \"A vote\".\nPay section paragraph \"One rate for everyone after the first year, published every April.\": removed.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 1427,
+    "cache_read_input_tokens": 6445,
+    "output_tokens": 281,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1427,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 70,
+        "cache_read_input_tokens": 3409,
+        "cache_creation_input_tokens": 1054,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1054
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0091705,
+  "turns": 3,
+  "durationMs": 4683,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

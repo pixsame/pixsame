@@ -1,0 +1,43 @@
+{
+  "answer": "div#ev-fri: box-shadow changed from `rgba(0, 0, 0, 0.15) 0px 1px 3px 0px` to `rgba(0, 0, 0, 0.35) 0px 6px 16px 0px`. The shadow is darker, with a larger vertical offset and a larger blur.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 610,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 211,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 610,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 106,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 237,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 237
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0052011,
+  "turns": 2,
+  "durationMs": 4476,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

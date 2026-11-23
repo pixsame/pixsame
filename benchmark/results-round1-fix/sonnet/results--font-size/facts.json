@@ -1,0 +1,43 @@
+{
+  "answer": "a#find \"Search\": font-size 14px → 16px, line-height 22.4px → 25.6px, size 84.5x42.4 → 91.4x45.6\nspan#hits \"42 results\": margin-left 375.672px → 368.75px, moved down 1.6px\ninput#q: moved down 1.6px\ndiv.cols and its 21 contained elements: moved down 3.2px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 667,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 229,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 667,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 124,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 294,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 294
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0056091000000000005,
+  "turns": 2,
+  "durationMs": 2998,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

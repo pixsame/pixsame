@@ -1,0 +1,43 @@
+{
+  "answer": "a#addb \"Add to basket\": moved down by 10 px and right by 14 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 553,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 134,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 553,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 28,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 179,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 179
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0042032,
+  "turns": 2,
+  "durationMs": 2433,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

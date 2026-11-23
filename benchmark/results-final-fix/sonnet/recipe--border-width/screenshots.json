@@ -1,0 +1,43 @@
+{
+  "answer": "SUPPER badge: now has a dark grey/navy border about 3px thick, and the badge is larger, roughly 72\u00d725px against 66\u00d719px before. The label text sits about 3px further right.\nStats values row (\"Four\", \"1 hour\", \"About \u00a3 6\"): shifted down about 1px, at y\u2248259 against y\u2248258 before.\nIngredients list item \"2 tins of white beans\": shifted down about 1px.\nMethod step 2 (\"Pour in the cider\u2026\"): shifted down about 1px.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 2935,
+    "cache_read_input_tokens": 13087,
+    "output_tokens": 497,
+    "output_tokens_details": {
+      "thinking_tokens": 126
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2935,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 293,
+        "cache_read_input_tokens": 6319,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0180307,
+  "turns": 3,
+  "durationMs": 11319,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

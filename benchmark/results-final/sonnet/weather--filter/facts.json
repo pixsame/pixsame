@@ -1,0 +1,43 @@
+{
+  "answer": "div#wx-warn: filter changed from none to blur(2px)\nbody (x=838, y=88, 8x158 px region): a vertical orange bar looks sharp before and blurred with softer edges after. The page's layout doesn't explain it, so it is probably the same blur on #wx-warn.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1037,
+    "cache_read_input_tokens": 10117,
+    "output_tokens": 502,
+    "output_tokens_details": {
+      "thinking_tokens": 26
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1037,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 97,
+        "cache_read_input_tokens": 3686,
+        "cache_creation_input_tokens": 380,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 380
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.010191700000000001,
+  "turns": 4,
+  "durationMs": 5813,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

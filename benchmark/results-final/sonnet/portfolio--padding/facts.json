@@ -1,0 +1,43 @@
+{
+  "answer": "h1#pf-title: moved up by 6 px\np#pf-bio: moved up by 6 px\na#pf-cv (\"Download CV\"): resized from 130.5x39 to 142.5x51; padding changed from 11px 20px to 17px 26px (top/bottom 11→17, left/right 20→26)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 277,
+    "cache_read_input_tokens": 6804,
+    "output_tokens": 211,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 277,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 106,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 277,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 277
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.003906400000000001,
+  "turns": 2,
+  "durationMs": 5524,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

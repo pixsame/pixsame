@@ -1,0 +1,43 @@
+{
+  "answer": "SUN forecast card: narrower, right edge moved left from about x=938 to about x=909 (width about 191px to about 162px). This leaves a larger gap before the MON card, about 41px instead of 12px.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3313,
+    "cache_read_input_tokens": 6398,
+    "output_tokens": 275,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3313,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 70,
+        "cache_read_input_tokens": 3386,
+        "cache_creation_input_tokens": 2939,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2939
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0166498,
+  "turns": 3,
+  "durationMs": 4650,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

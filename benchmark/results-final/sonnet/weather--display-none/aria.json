@@ -1,0 +1,43 @@
+{
+  "answer": "Now in Whitby card: \"Wind 24 mph NE\" text removed\nNow in Whitby card: \"Rain 60%\" text removed\nNow in Whitby card: \"Sunset 20:47\" text removed",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 1583,
+    "cache_read_input_tokens": 6444,
+    "output_tokens": 279,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1583,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 70,
+        "cache_read_input_tokens": 3408,
+        "cache_creation_input_tokens": 1211,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1211
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.009774399999999999,
+  "turns": 3,
+  "durationMs": 4173,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

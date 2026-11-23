@@ -1,0 +1,43 @@
+{
+  "answer": "div#card: removed\nh1#hello: removed (text \"Welcome back\")\np#sub: removed (text \"Sign in to pick up\")\nspan.cap: removed (text \"Email\")\ninput#email: removed\nspan#pw-cap: removed (text \"Password\")\ninput.field: removed\na#go: removed (text \"Sign in\")\na#forgot: removed (text \"Forgot password?\")",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 657,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 231,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 657,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 125,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 283,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 283
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0055892,
+  "turns": 2,
+  "durationMs": 4064,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

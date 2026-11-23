@@ -1,0 +1,43 @@
+{
+  "answer": "a#older \"Older releases\": resized from 136.7x42.4 to 116x64.8; its text now wraps onto 2 lines (was 1)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 565,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 154,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 565,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 49,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 192,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 192
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0044511,
+  "turns": 2,
+  "durationMs": 2374,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

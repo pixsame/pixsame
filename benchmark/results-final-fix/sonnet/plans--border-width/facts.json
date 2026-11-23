@@ -1,0 +1,43 @@
+{
+  "answer": "div#pn-c: border-width increased 1px → 4px; resized 318.7x284.2 → 318.7x290.2\nspan.big \"£ 45\": moved down 3px and right 3px\nspan.fine \"a month\": moved down 3px and right 3px\ndiv#pn-note (and its contents): moved down 6px\ndiv#pn-a: resized 318.7x284.2 → 318.7x290.2 (taller by 6px)\ndiv#pn-b: resized 318.7x284.2 → 318.7x290.2 (taller by 6px)\nh2#pn-c-h \"Open sea\": narrowed 272.7x27.3 → 266.7x27.3\nli \"Unlimited sites\": narrowed 250.7x21.7 → 244.7x21.7\nli \"250 GB\": narrowed 250.7x21.7 → 244.7x21.7\nli \"A named engineer\": narrowed 250.7x21.7 → 244.7x21.7\na#pn-c-go \"Choose Open sea\": narrowed 272.7x39 → 266.7x39",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 872,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 449,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 872,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 344,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 499,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 499
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0086291,
+  "turns": 2,
+  "durationMs": 4063,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

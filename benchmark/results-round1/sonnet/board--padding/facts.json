@@ -1,0 +1,43 @@
+{
+  "answer": "h3#h-todo \"To do · 3\", div#t1, p \"Write the pricing \", and 21 other elements: moved down by 12 px\nh1#name \"Website relaunch\": moved down by 6 px\nspan#sprint \"Sprint 14\": moved down by 6 px\na#add \"Add task\": resized 97.5x42.4 → 109.5x54.4 (width +12, height +12)\na#add \"Add task\": padding-top 8px → 14px\na#add \"Add task\": padding-right 16px → 22px\na#add \"Add task\": padding-bottom 8px → 14px\na#add \"Add task\": padding-left 16px → 22px\na#add \"Add task\": margin-left 637.359px → 625.359px (moved left by 12 px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 710,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 351,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 710,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 245,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 336,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 336
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0070012,
+  "turns": 2,
+  "durationMs": 3021,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

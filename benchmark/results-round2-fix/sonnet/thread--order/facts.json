@@ -1,0 +1,43 @@
+{
+  "answer": "div#th-q: CSS order changed from 0 to 99, so it moves to the end of its container\ndiv#th-q (with its contents, 4 elements in all): moved down by 240.2 px\ndiv#th-a1 and div#th-a2 (with their contents, 11 elements in all): moved up by 120.1 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 611,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 283,
+    "output_tokens_details": {
+      "thinking_tokens": 76
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 611,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 178,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 238,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 238
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005925100000000001,
+  "turns": 2,
+  "durationMs": 3579,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

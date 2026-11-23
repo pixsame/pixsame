@@ -1,0 +1,43 @@
+{
+  "answer": "span#jb-3-m \"Two days a week · \": font-weight changed 400 → 700; size changed 208x15 → 220.5x16\na.go \"Read more\": margin-left changed 620.875px → 608.422px (moved left)\nh2 \"Bookkeeper\": width changed 208 → 220.5 (height unchanged at 27.3)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 626,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 220,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 626,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 115,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 253,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 253
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005355100000000001,
+  "turns": 2,
+  "durationMs": 4161,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

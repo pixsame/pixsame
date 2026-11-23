@@ -1,0 +1,43 @@
+{
+  "answer": "div#pn-note: background-image changed from none to linear-gradient(135deg, rgb(255, 224, 138), rgb(255, 138, 138))",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 569,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 158,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 569,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 52,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 195,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 195
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.004507199999999999,
+  "turns": 2,
+  "durationMs": 2249,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

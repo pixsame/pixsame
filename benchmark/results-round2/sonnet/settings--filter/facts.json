@@ -1,0 +1,43 @@
+{
+  "answer": "#st-list: appears blurred in the after state (text, toggles, divider and buttons are all softened); the layout and positions are unchanged.\na#st-save \"Save changes\": text and button edges are blurred after (199x37 px at x=170, y=365).\nhr: the divider line is blurred or softer after (600x1 px at x=170, y=339).\nspan#st-sw1 (Mentions toggle): blurred after (40x23 px at x=730, y=176).\nspan.sw (Replies toggle): blurred after (40x23 px at x=730, y=228).\nWeekly digest toggle: blurred after (40x23 px at x=730, y=281).\nWeekly digest description text (\"A summary every Monday morning\"): blurred after (39x14 px at x=314, y=377).",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 2824,
+    "cache_read_input_tokens": 10720,
+    "output_tokens": 1169,
+    "output_tokens_details": {
+      "thinking_tokens": 26
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2824,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 254,
+        "cache_read_input_tokens": 4289,
+        "cache_creation_input_tokens": 1564,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1564
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.02407,
+  "turns": 8,
+  "durationMs": 11482,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

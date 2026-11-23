@@ -1,0 +1,43 @@
+{
+  "answer": "a#fq-go \"Search\": resized from 86.7x39 to 86.7x63 (height +24 px, width unchanged)\ndiv#fq-box \"Search for a meter\": moved down by 8.7 px\ndiv.two and its contents (18 elements, including div#fq-base \"Lantern Energy is \"): moved down by 17.3 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 627,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 215,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 627,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 110,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 254,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 254
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005309100000000001,
+  "turns": 2,
+  "durationMs": 4261,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

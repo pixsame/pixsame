@@ -1,0 +1,43 @@
+{
+  "answer": "h1#ad-title \"Users\": font-style changed from normal to italic; size changed from 77.8x32.2 to 76.8x32.2\na#ad-invite \"Invite user\": margin-left changed from 790.516px to 791.531px\nspan#ad-count \"38 active\": moved left by 1px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 623,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 203,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 623,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 98,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 250,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 250
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005173100000000001,
+  "turns": 2,
+  "durationMs": 3456,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

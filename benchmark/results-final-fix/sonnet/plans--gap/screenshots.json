@@ -1,0 +1,43 @@
+{
+  "answer": "Rockpool price (\"\u00a3 6 a month\"): moved down about 22px (y\u2248291 \u2192 313).\nRockpool feature list: moved down about 24px (first item y\u2248337 \u2192 361).\nRockpool \"Choose Rockpool\" button: moved down about 36px (y\u2248438 \u2192 474).\nRockpool card: taller, bottom edge moved from y\u2248480 to y\u2248516 (about 36px).\nEstuary card: taller, bottom edge moved from y\u2248480 to y\u2248516. Its content positions are unchanged, so there is about 68px of empty space below the button.\nOpen sea card: taller, bottom edge moved from y\u2248480 to y\u2248516. Its content positions are unchanged, so there is about 59px of empty space below the button.\nCharities and schools banner: moved down about 36px (y\u2248504\u2013557 \u2192 540\u2013593).",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3310,
+    "cache_read_input_tokens": 6397,
+    "output_tokens": 480,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3310,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 277,
+        "cache_read_input_tokens": 3385,
+        "cache_creation_input_tokens": 2937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.018687699999999998,
+  "turns": 3,
+  "durationMs": 5698,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "a#ad-invite \"Invite user\": margin-left decreased from 790.516px to 772.375px\na#ad-invite \"Invite user\": text-transform changed from none to uppercase\na#ad-invite \"Invite user\": width increased from 109.5px to 127.6px (height unchanged at 39px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 576,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 206,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 576,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 101,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 203,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 203
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005015100000000001,
+  "turns": 2,
+  "durationMs": 3441,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

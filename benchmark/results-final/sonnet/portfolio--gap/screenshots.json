@@ -1,0 +1,43 @@
+{
+  "answer": "Work grid gap: increased from about 22px to about 34px between cards (the card columns are 140–459, 481–799 and 821–1140 before, and 140–451, 485–795 and 829–1140 after).\nWork cards (all three): width decreased from about 319px to about 311px each.\nSecond work card (image, title, caption): moved right from x≈481 to x≈485.\nThird work card (image, title, caption): moved right from x≈821 to x≈829.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 9707,
+    "output_tokens": 353,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 150,
+        "cache_read_input_tokens": 6322,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.004508700000000001,
+  "turns": 3,
+  "durationMs": 9945,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

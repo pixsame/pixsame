@@ -1,0 +1,43 @@
+{
+  "answer": "Play button: gained a gray border of about 3px, so it grew from about 68×39 to about 74×45 px. Its x-range went from 396–464 to 396–470, and its top edge moved from y≈247 to y≈247 with a bottom edge near y≈292 instead of 286. The \"Play\" label moved from (430,267) to (433,270).\nShuffle button: moved right by about 6px (x 476–563 to 482–569) and down by about 3px (y 247–286 to 250–289). Its size didn't change.\nShare link: moved right by about 6px (x≈575 to 581) and down by about 3px (y≈266 to 269).\nShare link color: slightly dimmer or darker red than before.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3307,
+    "cache_read_input_tokens": 6396,
+    "output_tokens": 432,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 231,
+        "cache_read_input_tokens": 3384,
+        "cache_creation_input_tokens": 2935,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2935
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0181956,
+  "turns": 3,
+  "durationMs": 5447,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

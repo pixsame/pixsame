@@ -1,0 +1,43 @@
+{
+  "answer": "Call button (\"Call 0800 555 0142\"): taller, with its bottom edge moving from about y=347 to y=353 (height about 39px \u2192 45px). The text is now centered lower, at about y=331 instead of y=328.\n\"Talk to someone\" card: taller by about 6px, with its bottom edge moving from about y=361 to y=367.\n\"Power cut?\" card: shifted down by about 6px, with its top edge moving from about y=375 to y=381 and its bottom edge from about y=450 to y=456. Its heading and text moved down by the same amount (heading y=398 \u2192 404, text y=424 \u2192 430). The card's height is unchanged.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3310,
+    "cache_read_input_tokens": 6397,
+    "output_tokens": 491,
+    "output_tokens_details": {
+      "thinking_tokens": 74
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3310,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 288,
+        "cache_read_input_tokens": 3385,
+        "cache_creation_input_tokens": 2937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0187977,
+  "turns": 3,
+  "durationMs": 6421,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

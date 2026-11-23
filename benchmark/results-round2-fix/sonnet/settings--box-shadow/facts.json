@@ -1,0 +1,43 @@
+{
+  "answer": "div#st-list: box-shadow changed from `rgba(0, 0, 0, 0.15) 0px 1px 3px 0px` to `rgba(0, 0, 0, 0.35) 0px 6px 16px 0px` (darker, offset down from 1px to 6px, blur increased from 3px to 16px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 588,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 212,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 588,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 108,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 216,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 216
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005123000000000001,
+  "turns": 2,
+  "durationMs": 3563,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

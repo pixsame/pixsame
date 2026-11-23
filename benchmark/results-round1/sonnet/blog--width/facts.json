@@ -1,0 +1,43 @@
+{
+  "answer": "h2 \"What the offcuts b…\": resized from 682x26 to 574x26 (width narrower by 108px, height unchanged)\np.small \"5 May · 4 min read\": resized from 682x19.2 to 574x19.2 (width narrower by 108px, height unchanged)\np \"Keep the failures …\": resized from 682x24 to 574x24 (width narrower by 108px, height unchanged)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 608,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 241,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 608,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 135,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 234,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 234
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0054932,
+  "turns": 2,
+  "durationMs": 3665,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

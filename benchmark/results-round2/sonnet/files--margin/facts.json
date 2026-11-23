@@ -1,0 +1,43 @@
+{
+  "answer": "div#fl-info: margin-top increased from 0px to 14px\nh2 \"Details\": moved down by 14px\np#fl-info-d: moved down by 14px\ndiv#fl-quota: moved down by 14px\n2 other elements (truncated in the tool output as \"…\"): moved down by 14px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 586,
+    "cache_read_input_tokens": 6429,
+    "output_tokens": 201,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 586,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 98,
+        "cache_read_input_tokens": 3400,
+        "cache_creation_input_tokens": 215,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 215
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0050049000000000005,
+  "turns": 2,
+  "durationMs": 6435,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

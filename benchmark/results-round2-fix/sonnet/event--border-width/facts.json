@@ -1,0 +1,43 @@
+{
+  "answer": "span#ev-tag: border-width 1px → 4px; resized 138.7x23.3 → 144.7x29.3\nh1#ev-title, p#ev-lead, div#ev-cta (and contents), plus others (22 elements in total): moved down 6px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 634,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 193,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 634,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 87,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 260,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 260
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0051172,
+  "turns": 2,
+  "durationMs": 2902,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

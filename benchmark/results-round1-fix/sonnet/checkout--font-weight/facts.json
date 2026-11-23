@@ -1,0 +1,43 @@
+{
+  "answer": "a#back \"Back to basket\": font-weight changed 400 → 700, and its size changed from 111.3x18 to 124x18 (wider by 12.7px).",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 555,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 159,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 555,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 54,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 182,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 182
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.004461100000000001,
+  "turns": 2,
+  "durationMs": 3740,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

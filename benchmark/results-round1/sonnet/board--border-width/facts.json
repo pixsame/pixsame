@@ -1,0 +1,43 @@
+{
+  "answer": "a#add \"Add task\": margin-left 637.359px → 631.359px (moved left 6px), border-width 2px → 5px, size 97.5x42.4 → 103.5x48.4 (wider by 6px, taller by 6px)\nh3#h-todo \"To do · 3\", div#t1, p \"Write the pricing \", and 21 other elements: moved down 6px\nh1#name \"Website relaunch\": moved down 3px\nspan#sprint \"Sprint 14\": moved down 3px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 669,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 267,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 669,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 162,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 296,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 296
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005997100000000001,
+  "turns": 2,
+  "durationMs": 2758,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

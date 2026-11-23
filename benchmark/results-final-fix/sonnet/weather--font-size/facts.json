@@ -1,0 +1,43 @@
+{
+  "answer": "p#wx-warn-t: font-size increased 14px → 16px, line-height increased 21.7px → 24.8px, and the element grew from 263x43.4 to 263x49.6 (height +6.2px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 582,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 175,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 582,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 71,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 210,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 210
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0047290000000000006,
+  "turns": 2,
+  "durationMs": 3918,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

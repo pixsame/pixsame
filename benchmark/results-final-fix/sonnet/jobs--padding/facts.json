@@ -1,0 +1,43 @@
+{
+  "answer": "p#jb-note: moved down by 12px\ndiv#jb-pay: resized 482x73.2 → 488x85.2; padding changed 14px 16px → 20px 22px (top/bottom 14→20, left/right 16→22); 2 child elements inside it resized with it\ndiv#jb-vote: resized 482x73.2 → 476x85.2; 2 child elements inside it resized with it",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 678,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 234,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 678,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 130,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 306,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 306
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005703,
+  "turns": 2,
+  "durationMs": 3076,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "Submit button (\"Send me the letter\"): label changed from upright bold to italic bold, and the button grew about 1px wider to the left (left edge x≈814 → 813).\nEmail input: right edge moved about 1px left (x≈802 → 801), so the field is slightly narrower.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3304,
+    "cache_read_input_tokens": 6395,
+    "output_tokens": 292,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3304,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 93,
+        "cache_read_input_tokens": 3383,
+        "cache_creation_input_tokens": 2933,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2933
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0167835,
+  "turns": 3,
+  "durationMs": 4304,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

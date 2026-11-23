@@ -1,0 +1,43 @@
+{
+  "answer": "div#ad-s2: outline-style changed none → solid, outline-color changed rgb(15, 23, 42) → rgb(200, 30, 30), outline-offset changed 0px → 2px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 576,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 170,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 576,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 66,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 204,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 204
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.004654999999999999,
+  "turns": 2,
+  "durationMs": 3836,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

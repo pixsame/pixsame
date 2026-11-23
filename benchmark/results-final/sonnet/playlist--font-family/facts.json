@@ -1,0 +1,43 @@
+{
+  "answer": "h1#pl-title: font-family changed from \"Helvetica Neue\", Helvetica, Arial, sans-serif to \"Courier New\", Courier, monospace; width changed from 359.2 to 496.9 (height unchanged at 41.4)\np#pl-desc: width increased from 359.2 to 496.9 (height unchanged at 24.8)\np#pl-meta: width increased from 359.2 to 496.9 (height unchanged at 18.2)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 686,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 260,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 686,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 155,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 313,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 313
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005995100000000001,
+  "turns": 2,
+  "durationMs": 3488,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

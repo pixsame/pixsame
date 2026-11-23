@@ -1,0 +1,43 @@
+{
+  "answer": "a#ad-invite \"Invite user\": font-family changed from \"Helvetica Neue\", Helvetica, Arial, sans-serif to \"Courier New\", Courier, monospace\na#ad-invite \"Invite user\": margin-left changed from 790.516px to 767.578px (moved left by about 22.9px)\na#ad-invite \"Invite user\": size changed from 109.5x39 to 132.4x38 (wider by 22.9px, shorter by 1px)\ndiv#ad-stats and its contents: moved up by 1px\ndiv#ad-table and its contents: moved up by 1px\ndiv#ad-foot and its contents: moved up by 1px\nh1#ad-title \"Users\": moved up by 0.5px\nspan#ad-count \"38 active\": moved up by 0.5px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 710,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 362,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 710,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 256,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 336,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 336
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0071112,
+  "turns": 2,
+  "durationMs": 3651,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

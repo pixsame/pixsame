@@ -1,0 +1,43 @@
+{
+  "answer": "span#rc-kind \"Supper\": font-family changed from \"Helvetica Neue\", Helvetica, Arial, sans-serif to \"Courier New\", Courier, monospace; size changed from 65.8x19 to 60.4x18",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 374,
+    "cache_read_input_tokens": 6651,
+    "output_tokens": 184,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 374,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 78,
+        "cache_read_input_tokens": 3622,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0040091,
+  "turns": 2,
+  "durationMs": 4878,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

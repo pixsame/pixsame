@@ -1,0 +1,43 @@
+{
+  "answer": "div#wx-stats: gap increased from 26px to 38px\nspan.fine \"Rain 60%\": moved right by 12px\nspan.fine \"Sunset 20:47\": moved right by 24px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 600,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 169,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 600,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 64,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 227,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 227
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.004741100000000001,
+  "turns": 2,
+  "durationMs": 3355,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "div#r1: moved down 10 px and right 14 px\nh2#r1-v \"2.4.0\": moved down 10 px and right 14 px\nspan#r1-tag \"Latest\": moved down 10 px and right 14 px\n14 more elements (17 in total): each moved down 10 px and right 14 px. snap.txt truncates the list with \"…\" and doesn't name them.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 573,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 297,
+    "output_tokens_details": {
+      "thinking_tokens": 69
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 573,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 192,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 200,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 200
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005913100000000001,
+  "turns": 2,
+  "durationMs": 4702,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

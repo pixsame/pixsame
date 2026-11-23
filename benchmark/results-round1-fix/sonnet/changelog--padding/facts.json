@@ -1,0 +1,43 @@
+{
+  "answer": "div#r1: padding changed from 16px 18px to 22px 24px (top 16→22, right 18→24, bottom 16→22, left 18→24)\nspan.small \"21 May\": margin-left 550.766px → 538.766px (decreased by 12px); moved down 6px and left 6px\ndiv#r2 (with its contents): moved down 12px\ndiv#r3 (with its contents): moved down 12px\np (with its contents): moved down 12px\n(11 elements in total moved down 12px, including div#r2, div#r3 and p with their contents. Only these three are named in the capture.)\nh2#r1-v \"2.4.0\": moved down 6px and right 6px\nspan#r1-tag \"Latest\": moved down 6px and right 6px\nli \"Tables can be past\": resized 726x24 → 714x24 (width decreased by 12px)\nli#r1-b \"Export keeps footn\": resized 726x24 → 714x24 (width decreased by 12px)\nli \"Search no longer s\": resized 726x24 → 714x24 (width decreased by 12px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 817,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 450,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 817,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 346,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 445,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 445
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.008419,
+  "turns": 2,
+  "durationMs": 4157,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "h1#fl-path \"Projects / Harbour\": font-size increased 28px → 30px, line-height increased 40.6px → 43.5px, size grew 321.5x40.6 → 345.3x43.5\na#fl-up \"Upload\": margin-left decreased 455.266px → 431.406px, moved down 1.5px\na#fl-new \"New folder\": moved down 1.5px\ndiv.split (and its 23 contained elements): moved down 2.9px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 685,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 256,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 685,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 152,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 313,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 313
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005951,
+  "turns": 2,
+  "durationMs": 3013,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

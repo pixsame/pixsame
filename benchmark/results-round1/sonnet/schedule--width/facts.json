@@ -1,0 +1,43 @@
+{
+  "answer": "div#mon: height increased 115.4 → 131.6 px (width unchanged at 235.5)\ndiv#tue: height increased 115.4 → 131.6 px (width unchanged at 235.5)\ndiv.panel: height increased 115.4 → 131.6 px (width unchanged at 235.5)\nspan#wed-who \"Asha, Dilys\": resized 85x21.2 → 72x40.4, and its text now wraps onto 2 lines (was 1)\n12 elements, including div.panel, h3 \"Friday\" and p.small \"Watering\": moved down 16.2 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 703,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 297,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 703,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 191,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 329,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 329
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0064332,
+  "turns": 2,
+  "durationMs": 4288,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

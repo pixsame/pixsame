@@ -1,0 +1,43 @@
+{
+  "answer": "div#fl-f2: gap changed from 10px to 22px\nspan#fl-f2-s \"1.8 MB\": margin-left changed from 430.859px to 406.859px (moved 24px left)\nspan \"load-calculations.\": moved right by 12px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 605,
+    "cache_read_input_tokens": 6433,
+    "output_tokens": 190,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 605,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 83,
+        "cache_read_input_tokens": 3404,
+        "cache_creation_input_tokens": 230,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 230
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0049713,
+  "turns": 2,
+  "durationMs": 3609,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

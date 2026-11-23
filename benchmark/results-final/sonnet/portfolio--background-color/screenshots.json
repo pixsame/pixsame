@@ -1,0 +1,43 @@
+{
+  "answer": "Second work card thumbnail (Ferry timetable, Volta Lake): background color changed from beige (~#E6D9D0) to yellow (~#FFDE89).",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3313,
+    "cache_read_input_tokens": 6398,
+    "output_tokens": 262,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3313,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 57,
+        "cache_read_input_tokens": 3386,
+        "cache_creation_input_tokens": 2939,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2939
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0165198,
+  "turns": 3,
+  "durationMs": 4060,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

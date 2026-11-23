@@ -1,0 +1,43 @@
+{
+  "answer": "a#pf-cv \"Download CV\": font-style changed from normal to italic; width changed from 130.5px to 130.3px (height unchanged at 39px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 556,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 157,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 556,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 53,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 184,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 184
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.004445,
+  "turns": 2,
+  "durationMs": 4036,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

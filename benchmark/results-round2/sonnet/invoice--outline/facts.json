@@ -1,0 +1,43 @@
+{
+  "answer": "div#iv-to: outline changed from none to solid, and the outline color changed from rgb(16, 20, 24) to rgb(200, 30, 30). It now shows as a red border around the \"To\" block.\ndiv#iv-sheet: pixels changed in a 390x93 px area at x=645, y=183. This is the same red outline drawn around the \"To\" address block (Brightwater Schools Trust, Accounts, Hull). The text and the dashed border are unchanged.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1153,
+    "cache_read_input_tokens": 10138,
+    "output_tokens": 545,
+    "output_tokens_details": {
+      "thinking_tokens": 26
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1153,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 153,
+        "cache_read_input_tokens": 3708,
+        "cache_creation_input_tokens": 474,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 474
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0110878,
+  "turns": 4,
+  "durationMs": 5090,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

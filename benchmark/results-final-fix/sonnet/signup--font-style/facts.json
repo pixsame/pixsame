@@ -1,0 +1,43 @@
+{
+  "answer": "a#nl-go \"Send me the letter\": font-style changed from normal to italic, and its size changed from 162.6x39 to 163.9x39\ndiv#nl-input \"you@example.org\": width changed from 499.4 to 498.1 (height unchanged at 49.7)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 598,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 194,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 598,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 89,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 225,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 225
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.004983100000000001,
+  "turns": 2,
+  "durationMs": 2658,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

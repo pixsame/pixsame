@@ -1,0 +1,43 @@
+{
+  "answer": "span#ev-act2 \"The Lanterns\": font-size increased 14px → 16px, line-height increased 20.3px → 23.2px, size grew 276x20.3 → 276x23.2\nspan \"DJ Halyard\": moved down by 2.9px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 609,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 190,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 609,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 85,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 236,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 236
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0049871,
+  "turns": 2,
+  "durationMs": 4312,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "div.panel (and contents, including div#sat; 12 elements in total): moved down by 16.2 px\ndiv#mon: resized 235.5x115.4 → 235.5x131.6 (height +16.2 px)\ndiv#tue: resized 235.5x115.4 → 235.5x131.6 (height +16.2 px)\nspan#wed-who: resized 85x21.2 → 72x40.4, and the text \"Asha, Dilys\" now wraps onto 2 lines (was 1)\ndiv.panel: resized 235.5x115.4 → 235.5x131.6 (height +16.2 px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 710,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 302,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 710,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 197,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 337,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 337
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.006511100000000001,
+  "turns": 2,
+  "durationMs": 4191,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "Tracking card (white box, 210\u20131070 \u00d7 176\u2013413): removed. The area is now blank and the layout below doesn't move.\n\"EXPECTED\" label: removed with the card.\n\"Thursday, before noon\": removed with the card.\n\"IN TRANSIT\" badge: removed with the card.\nProgress bar (purple fill to about 63% on a light track): removed with the card.\nTimeline entries (\"Collected in Bristol / Mon 09:14\", \"Sorted at the Midlands hub / Tue 22:40\", \"Out for delivery / Not yet\") and their tan dots: removed with the card.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 3288,
+    "cache_read_input_tokens": 11241,
+    "output_tokens": 318,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3288,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 198,
+        "cache_read_input_tokens": 4843,
+        "cache_creation_input_tokens": 1457,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1457
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0178481,
+  "turns": 3,
+  "durationMs": 5820,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

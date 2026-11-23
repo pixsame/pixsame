@@ -1,0 +1,43 @@
+{
+  "answer": "h2 \"Your order\": resized 262x26 → 263x39.7 (wider by 1, taller by 13.7); still 1 line\nspan \"Alto sax reeds, bo\": resized 189x24 → 190x33.9 (wider by 1, taller by 9.9); still 1 line\nspan.end \"€ 28.00\": resized 58.4x24 → 59.6x27 (wider by 1.2, taller by 3); still 1 line\nspan \"Cork grease\": resized 90.6x24 → 91.7x28.7 (wider by 1.1, taller by 4.7); still 1 line\nspan.end \"€ 4.50\": resized 48.9x24 → 50.1x26.5 (wider by 1.2, taller by 2.5); still 1 line\nhr.rule: resized 262x1 → 261.7x14.7 (narrower by 0.3, taller by 13.7)\nstrong \"Total\": resized 42.5x24 → 43.7x26.2 (wider by 1.2, taller by 2.2); still 1 line\nstrong#total \"€ 32.50\": resized 63.9x24 → 65x27.3 (wider by 1.1, taller by 3.3); still 1 line",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 880,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 494,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 880,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 389,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 507,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 507
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0091111,
+  "turns": 2,
+  "durationMs": 4964,
+  "model": "claude-sonnet-5-5",
+  "hit": false,
+  "judge": "sonnet"
+}

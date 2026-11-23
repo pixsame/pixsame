@@ -1,0 +1,43 @@
+{
+  "answer": "a#nextw \"Next week\": font-family changed from Verdana, Geneva, sans-serif to \"Courier New\", Courier, monospace; width increased from 110 to 111.6 (height unchanged at 42.4)\na#prev \"Previous\": margin-left decreased from 347.625px to 345.969px, so it moved left by about 1.6px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 640,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 220,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 640,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 115,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 267,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 267
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0054111,
+  "turns": 2,
+  "durationMs": 3357,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

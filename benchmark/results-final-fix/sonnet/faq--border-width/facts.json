@@ -1,0 +1,43 @@
+{
+  "answer": "div#fq-call: border-width 0px → 3px, border-style none → solid, border-color rgb(43, 33, 24) → rgb(60, 60, 67); size 280x145.9 → 280x151.9\ndiv#fq-out (and the 2 elements it holds): moved down 6px\na#fq-call-go \"Call 0800 555 0142\": moved down 3px and right 3px\nh3 \"Talk to someone\": width 248 → 242 (height unchanged at 19.5)\np#fq-call-t \"Lines are open 8 t\": width 248 → 242 (height unchanged at 43.4)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 738,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 305,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 738,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 200,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 365,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 365
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0066531,
+  "turns": 2,
+  "durationMs": 3975,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

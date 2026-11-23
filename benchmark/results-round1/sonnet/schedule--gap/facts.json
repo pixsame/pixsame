@@ -1,0 +1,43 @@
+{
+  "answer": "div#days: gap 14px → 26px\nspan.pill \"Bram\": moved down 12px and right 3px\np#legend \"Swaps need a day's\": moved down 12px\nspan#wed-who \"Asha, Dilys\": moved right 6px\nspan.pill \"Chidi\": moved right 9px\nspan.small \"Nobody yet\": moved down 12px and right 3px\nh3 \"Monday\": resized 197.5x24 → 188.5x24\np.small \"Watering\" (Monday): resized 197.5x19.2 → 188.5x19.2\nh3#tue-h \"Tuesday\": resized 197.5x24 → 188.5x24\np.small \"Seed trays\": resized 197.5x19.2 → 188.5x19.2\nh3 \"Wednesday\": resized 197.5x24 → 188.5x24\np.small \"Market stall\": resized 197.5x19.2 → 188.5x19.2\nh3 \"Thursday\": resized 197.5x24 → 188.5x24\np.small \"Compost turn\": resized 197.5x19.2 → 188.5x19.2\nh3 \"Friday\": resized 197.5x24 → 188.5x24\np.small \"Watering\" (Friday): resized 197.5x19.2 → 188.5x19.2\nh3 \"Saturday\": resized 197.5x24 → 188.5x24\np#sat-task \"Open day, two shif\": resized 197.5x19.2 → 188.5x19.2\nh3 \"Sunday\": resized 197.5x24 → 188.5x24\np.small \"Closed\": resized 197.5x19.2 → 188.5x19.2",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 1156,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 635,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1156,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 531,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 784,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 784
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.011625,
+  "turns": 2,
+  "durationMs": 5441,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

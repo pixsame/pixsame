@@ -1,0 +1,43 @@
+{
+  "answer": "a#pl-play \"Play\": resized from 68.3x39 to 68.3x45 (height +6px), line-height changed from normal to 23px\na#pl-shuffle \"Shuffle\": moved down 3px\na#pl-share \"Share\": moved down 3px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 602,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 193,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 602,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 88,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 229,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 229
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.004989100000000001,
+  "turns": 2,
+  "durationMs": 3896,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

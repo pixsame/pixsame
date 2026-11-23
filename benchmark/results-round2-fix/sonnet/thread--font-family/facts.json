@@ -1,0 +1,43 @@
+{
+  "answer": "p#th-a1-t: font-family changed from \"Trebuchet MS\", Tahoma, sans-serif to \"Courier New\", Courier, monospace; height grew from 20.3 to 40.6 px (width stays 716)\ndiv#th-a2 (with its contents): moved down 20.3 px\ndiv#th-reply (with its contents): moved down 20.3 px\ndiv#th-end (with its contents): moved down 20.3 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 653,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 248,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 653,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 142,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 279,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 279
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0057432,
+  "turns": 2,
+  "durationMs": 3122,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

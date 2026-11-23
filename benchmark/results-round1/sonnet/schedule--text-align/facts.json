@@ -1,0 +1,43 @@
+{
+  "answer": "div#alert \"Two shifts on Saturday still need cover.\": the text moved right by about 657px on the same line (y=146). Its start went from x≈166 to x≈823, and its end from x≈459 to x≈1116. The text content is unchanged.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 2433,
+    "cache_read_input_tokens": 10484,
+    "output_tokens": 1517,
+    "output_tokens_details": {
+      "thinking_tokens": 261
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2433,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 331,
+        "cache_read_input_tokens": 4053,
+        "cache_creation_input_tokens": 1409,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1409
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.025962400000000004,
+  "turns": 10,
+  "durationMs": 11871,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

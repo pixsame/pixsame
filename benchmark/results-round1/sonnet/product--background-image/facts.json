@@ -1,0 +1,43 @@
+{
+  "answer": "div#ship: background changed from plain white to a horizontal gradient running left to right, from light yellow/orange (about #ffd980) on the left to salmon/coral pink (about #ff8a80) on the right. The border looks slightly darker or more saturated. The text and layout are unchanged.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1118,
+    "cache_read_input_tokens": 10063,
+    "output_tokens": 489,
+    "output_tokens_details": {
+      "thinking_tokens": 19
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1118,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 95,
+        "cache_read_input_tokens": 3632,
+        "cache_creation_input_tokens": 515,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 515
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.010380300000000002,
+  "turns": 4,
+  "durationMs": 6663,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

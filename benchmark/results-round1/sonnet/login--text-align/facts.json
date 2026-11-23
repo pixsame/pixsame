@@ -1,0 +1,43 @@
+{
+  "answer": "p#sub (\"Sign in to pick up where you left off.\"): the text moved right, from left-aligned at x≈478 to right-aligned within the same 323x11 px area. The wording, color and size look the same.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1027,
+    "cache_read_input_tokens": 10101,
+    "output_tokens": 467,
+    "output_tokens_details": {
+      "thinking_tokens": 24
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1027,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 68,
+        "cache_read_input_tokens": 3670,
+        "cache_creation_input_tokens": 386,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 386
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0098001,
+  "turns": 4,
+  "durationMs": 7690,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

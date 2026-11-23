@@ -1,0 +1,43 @@
+{
+  "answer": "a#nextw \"Next week\": font-size increased from 14px to 16px\na#nextw \"Next week\": line-height increased from 22.4px to 25.6px\na#nextw \"Next week\": size grew from 110x42.4 to 120.5x45.6\na#prev \"Previous\": margin-left decreased from 347.625px to 337.062px, so it moved left by about 10.6px\na#prev \"Previous\": moved down by 1.6px\na#prev \"Previous\": the rendered pixels changed in a 66x8 px area at x=924, y=92. In the crops, the pill's rounded left edge is visible before, and a right-edge curve is visible after. This follows the shift in position.\nh1#week \"Week 22, 27 May to\": moved down by 1.6px\ndiv#alert \"Two shifts on Satu\", div#mon, h3 \"Monday\" and 26 other elements: moved down by 3.2px",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1219,
+    "cache_read_input_tokens": 10309,
+    "output_tokens": 749,
+    "output_tokens_details": {
+      "thinking_tokens": 78
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1219,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 346,
+        "cache_read_input_tokens": 3878,
+        "cache_creation_input_tokens": 370,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 370
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0134089,
+  "turns": 4,
+  "durationMs": 8275,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

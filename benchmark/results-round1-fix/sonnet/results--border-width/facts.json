@@ -1,0 +1,43 @@
+{
+  "answer": "div#h2: border-width 1px → 4px; resized 750x150.4 → 750x156.4\ndiv#h3 (and the 3 other elements it holds, 4 in total): moved down 6px\nspan#h2-avail \"Available now\": moved down 3px and right 3px\nh2 \"Energy from the se…\": resized 712x26 → 706x26\np#h2-meta \"M. Adeyemi, L. Ros…\": resized 712x19.2 → 706x19.2\np \"An engineer's surv…\": resized 712x24 → 706x24",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 718,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 284,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 718,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 179,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 345,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 345
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.006363100000000001,
+  "turns": 2,
+  "durationMs": 4347,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

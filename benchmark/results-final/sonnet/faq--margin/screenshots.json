@@ -1,0 +1,43 @@
+{
+  "answer": "FAQ list (first card): moved down 4px, top edge y=252 → 256, so the gap below the \"Asked most often\" heading grew from about 23px to 27px. Height is unchanged at about 130px.\nFAQ cards 2–4: each moved down 4px (392→396, 474→478, 555→559). Their heights and spacing are unchanged.\nFooter: moved down 4px (divider line y=659 → 663, text y=688 → 692).",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3307,
+    "cache_read_input_tokens": 6396,
+    "output_tokens": 350,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 149,
+        "cache_read_input_tokens": 3384,
+        "cache_creation_input_tokens": 2935,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2935
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0173756,
+  "turns": 3,
+  "durationMs": 7295,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

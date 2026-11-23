@@ -1,0 +1,43 @@
+{
+  "answer": "Call button (\"Call 0800 555 0142\"): removed from the \"Talk to someone\" card; it was an outlined orange button at about y=308\u2013347 and is no longer shown.\n\"Talk to someone\" card: height shrank from about 146px to about 107px (bottom edge moved from y\u2248361 to y\u2248322). Empty space remains below the text.\n\"Power cut?\" card: moved up about 39px (top from y\u2248375 to y\u2248336, bottom from y\u2248450 to y\u2248411). Its size and text are unchanged.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3307,
+    "cache_read_input_tokens": 6396,
+    "output_tokens": 371,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 170,
+        "cache_read_input_tokens": 3384,
+        "cache_creation_input_tokens": 2935,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2935
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0175856,
+  "turns": 3,
+  "durationMs": 5730,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

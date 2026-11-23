@@ -1,0 +1,43 @@
+{
+  "answer": "div#wx-warn: padding increased from 14px to 20px on top and bottom, and from 16px to 22px on left and right\nh3#wx-warn-h (\"Yellow warning\"): width shrank from 263px to 251px (height unchanged at 19.5px)\np#wx-warn-t (\"Gusts to 50 mph on\"): width shrank from 263px to 251px (height unchanged at 43.4px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 660,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 243,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 660,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 138,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 287,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 287
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005721100000000001,
+  "turns": 2,
+  "durationMs": 3900,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

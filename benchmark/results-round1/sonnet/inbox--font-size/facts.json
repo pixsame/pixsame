@@ -1,0 +1,43 @@
+{
+  "answer": "a#reply \"Reply\": font-size 14px → 16px, line-height 22.4px → 25.6px, size 74.6x42.4 → 80.1x45.6\na#archive \"Archive\": margin-left 355.031px → 349.531px, moved down 1.6px\na.action \"Forward\": moved down 1.6px and right 5.5px\na.action \"Forward\": text pixels changed in a 59x11 px area at x=617, y=296. The layout doesn't explain this. In the after image the text looks slightly lighter and thinner than before, and it sits further right.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1178,
+    "cache_read_input_tokens": 10254,
+    "output_tokens": 723,
+    "output_tokens_details": {
+      "thinking_tokens": 159
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1178,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 304,
+        "cache_read_input_tokens": 3822,
+        "cache_creation_input_tokens": 385,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 385
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0129794,
+  "turns": 4,
+  "durationMs": 8559,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

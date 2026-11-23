@@ -1,0 +1,43 @@
+{
+  "answer": "a#wz-next \"Continue\": font-family changed from \"Trebuchet MS\", Tahoma, sans-serif to \"Courier New\", Courier, monospace; width increased from 91.1 to 99.2 (height unchanged at 36)\na#wz-skip \"Skip for now\": margin-left decreased from 343.812px to 335.656px; moved left by about 8.1px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 655,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 230,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 655,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 125,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 282,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 282
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005571100000000001,
+  "turns": 2,
+  "durationMs": 3940,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

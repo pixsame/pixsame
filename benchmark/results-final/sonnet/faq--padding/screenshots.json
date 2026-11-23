@@ -1,0 +1,43 @@
+{
+  "answer": "I am moving home FAQ item: taller, with height going from about 71px to 83px (bottom edge moves from y≈545 to y≈557).\nI am moving home FAQ item text: shifted right about 6px (x≈223 to x≈229) and down about 6px (y≈509 to y≈515).\nCan I pay monthly FAQ item: shifted down about 12px (y≈555–627 to y≈567–639), with its text moving from y≈590 to y≈602.\nFooter: shifted down about 12px (border from y≈659 to y≈671, text from y≈688 to y≈700).",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3313,
+    "cache_read_input_tokens": 6398,
+    "output_tokens": 400,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3313,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 195,
+        "cache_read_input_tokens": 3386,
+        "cache_creation_input_tokens": 2939,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2939
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0178998,
+  "turns": 3,
+  "durationMs": 5690,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

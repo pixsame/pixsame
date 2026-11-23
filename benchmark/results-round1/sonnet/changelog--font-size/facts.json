@@ -1,0 +1,43 @@
+{
+  "answer": "h1#cl-title \"What changed\": font-size increased 30px → 32px, line-height increased 37.5px → 40px, size grew 764x37.5 → 764x40\np#cl-sub \"Every release, new\", div#r1, h2#r1-v \"2.4.0\" and 16 other elements (19 in total): moved down 2.5px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 624,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 216,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 624,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 112,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 252,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 252
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005307,
+  "turns": 2,
+  "durationMs": 3359,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "a#find \"Search\": font-size changed 14px → 16px, line-height 22.4px → 25.6px, size changed 84.5x42.4 → 91.4x45.6\nspan#hits \"42 results\": margin-left changed 375.672px → 368.75px (shifted left 6.922px)\nspan#hits \"42 results\": moved down 1.6px\ninput#q: moved down 1.6px\ndiv#filters: moved down 3.2px\nh3 \"Format\": moved down 3.2px\nli \"Book (31)\": moved down 3.2px\n21 elements in total (including the three above) moved down 3.2px; the snap output names only those three and elides the rest",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 679,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 315,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 679,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 210,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 306,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 306
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.006517100000000001,
+  "turns": 2,
+  "durationMs": 4770,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

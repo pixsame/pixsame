@@ -130,3 +130,4 @@ packages/cli/skills
 
 # benchmark: rebuilt by `pnpm generate`
 benchmark/cases
+benchmark/cases-*

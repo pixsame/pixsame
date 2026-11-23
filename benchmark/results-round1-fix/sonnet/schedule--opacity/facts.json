@@ -1,0 +1,43 @@
+{
+  "answer": "p#legend: opacity changed from 1 to 0.55",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 547,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 127,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 547,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 21,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 173,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 173
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0041092,
+  "turns": 2,
+  "durationMs": 2322,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "div#iv-acts: gap increased from 10px to 22px\na#iv-void \"Void invoice\": margin-left decreased from 428.703px to 404.703px\na#iv-pdf \"Download PDF\": moved right by 12px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 608,
+    "cache_read_input_tokens": 6433,
+    "output_tokens": 185,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 608,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 78,
+        "cache_read_input_tokens": 3404,
+        "cache_creation_input_tokens": 233,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 233
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0049333,
+  "turns": 2,
+  "durationMs": 2502,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

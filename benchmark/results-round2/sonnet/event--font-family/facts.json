@@ -1,0 +1,43 @@
+{
+  "answer": "a#ev-buy \"Get tickets\": font-family changed from \"Trebuchet MS\", Tahoma, sans-serif to \"Courier New\", Courier, monospace; width grew from 103.4 to 124.4 px (height unchanged at 36)\na#ev-prog \"See the programme\": moved right by 21 px (a consequence of the wider a#ev-buy button)",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1576,
+    "cache_read_input_tokens": 10316,
+    "output_tokens": 815,
+    "output_tokens_details": {
+      "thinking_tokens": 67
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1576,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 124,
+        "cache_read_input_tokens": 3886,
+        "cache_creation_input_tokens": 719,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 719
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.015497599999999999,
+  "turns": 6,
+  "durationMs": 6584,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

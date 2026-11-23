@@ -1,0 +1,43 @@
+{
+  "answer": "h1#fl-path \"Projects / Harbour\": font-family changed from \"Trebuchet MS\", Tahoma, sans-serif to \"Courier New\", Courier, monospace; width grew from 321.5 to 407.6 (height unchanged at 40.6)\na#fl-up \"Upload\": margin-left decreased from 455.266px to 369.172px (shifted left by about 86.1px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 628,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 237,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 628,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 132,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 255,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 255
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005533100000000001,
+  "turns": 2,
+  "durationMs": 2921,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "div#wz-p1 (with its 2 child elements): removed\np#wz-foot: moved up by 66 px\ndiv#wz-nav (with its contents): moved up by 66 px\ndiv#wz-p2 (with its contents): moved up by 66 px\nOther elements (10 moved in total, the tool listed only 3): moved up by 66 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 610,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 219,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 610,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 114,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 237,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 237
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0052811,
+  "turns": 2,
+  "durationMs": 3104,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "div#th-a1, span.icon, strong#th-a1-who \"Dilys\", and 8 more elements (11 in total): moved up by 120.1 px\ndiv#th-q, p#th-q-t \"The frost came lat\", a#th-up \"Useful · 14\", and 1 more element (4 in total): moved down by 240.2 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 619,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 240,
+    "output_tokens_details": {
+      "thinking_tokens": 27
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 619,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 136,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 247,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 247
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005527000000000001,
+  "turns": 2,
+  "durationMs": 4524,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "span#wx-temp: font-family changed from \"Helvetica Neue\", Helvetica, Arial, sans-serif to \"Courier New\", Courier, monospace; size changed from 60.5x40 to 72x40 (width +11.5px)\ndiv (2 elements, contents move with it): moved right by 11.5px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 614,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 208,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 614,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 104,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 242,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 242
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005187000000000001,
+  "turns": 2,
+  "durationMs": 7833,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

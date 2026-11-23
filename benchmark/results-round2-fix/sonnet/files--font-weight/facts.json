@@ -1,0 +1,43 @@
+{
+  "answer": "a#fl-up \"Upload\": font-weight changed from 700 to 400\na#fl-up \"Upload\": margin-left changed from 455.266px to 456.859px (moved right by about 1.6px)\na#fl-up \"Upload\": width shrank from 77.3px to 75.7px (height unchanged at 36px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 572,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 211,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 572,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 107,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 200,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 200
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005049,
+  "turns": 2,
+  "durationMs": 3120,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "ul#list (with its 16 elements): moved down by 7.2 px\nh2 \"Inbox\": moved down by 3.6 px\nspan#unread \"3 unread\": resized from 72x21.2 to 84x33.2 px\nspan#unread \"3 unread\": padding changed from 1px to 7px on top and bottom, and from 9px to 15px on left and right\nspan#unread \"3 unread\": margin-left changed from 175.891px to 163.891px (moved left by 12 px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 672,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 262,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 672,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 157,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 299,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 299
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0059591,
+  "turns": 2,
+  "durationMs": 6520,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

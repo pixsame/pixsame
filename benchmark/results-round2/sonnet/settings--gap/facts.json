@@ -1,0 +1,43 @@
+{
+  "answer": "div#st-list: gap changed from 12px to 24px\nspan.icon, h4 \"Replies\", span#st-r2-d \"Answers to message\", and 1 more element (4 in total): moved down by 12px\nspan.icon, h4 \"Weekly digest\", span.dim \"A summary every Mo\", and 1 more element (4 in total): moved down by 24px\nhr: moved down by 36px\na#st-save \"Save changes\", a#st-reset \"Reset\": moved down by 48px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 694,
+    "cache_read_input_tokens": 6431,
+    "output_tokens": 263,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 694,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 158,
+        "cache_read_input_tokens": 3402,
+        "cache_creation_input_tokens": 321,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 321
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.006057100000000001,
+  "turns": 2,
+  "durationMs": 4300,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

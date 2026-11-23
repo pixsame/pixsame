@@ -1,0 +1,43 @@
+{
+  "answer": "div#pn-a: gap changed from 14px to 26px\nul#pn-a-l (and its contents): moved down 24px\na#pn-a-go \"Choose Rockpool\": moved down 36px\ndiv#pn-note (and its contents): moved down 36px\ndiv (2 elements, with their contents): moved down 12px\ndiv#pn-b: resized from 318.7x284.2 to 318.7x320.2 (height +36px)\ndiv#pn-c: resized from 318.7x284.2 to 318.7x320.2 (height +36px)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 703,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 282,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 703,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 178,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 331,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 331
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.006283,
+  "turns": 2,
+  "durationMs": 4062,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

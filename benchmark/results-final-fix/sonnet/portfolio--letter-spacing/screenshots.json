@@ -1,0 +1,43 @@
+{
+  "answer": "Hero subtitle: text now wraps onto two lines (\"anywhere.\" on the second line), with slightly wider letter-spacing and a larger line-height. Before, it was a single line.\nHero heading: moved up from y≈175 to y≈163 (about 12px higher).\nHero subtitle position: moved up from y≈221 to y≈208 for the first line.\nHero buttons (\"Work with me\", \"Download CV\"): moved down from y≈266 to y≈278 (about 12px lower).",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3307,
+    "cache_read_input_tokens": 6396,
+    "output_tokens": 366,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3307,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 165,
+        "cache_read_input_tokens": 3384,
+        "cache_creation_input_tokens": 2935,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2935
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.017535600000000002,
+  "turns": 3,
+  "durationMs": 4010,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

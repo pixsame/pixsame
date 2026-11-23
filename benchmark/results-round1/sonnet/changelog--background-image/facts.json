@@ -1,0 +1,43 @@
+{
+  "answer": "div#r1: background changed from plain white/none to a diagonal gradient, yellow-orange (#ffdd88-ish) at top-left to salmon/pink-red (#ff8888-ish) at bottom-right\nspan#r1-tag \"Latest\": its surroundings now show the gradient instead of white, so the badge's edge pixels changed. The badge keeps its light-lavender fill and purple text, and its size and position are unchanged.",
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 1754,
+    "cache_read_input_tokens": 10188,
+    "output_tokens": 801,
+    "output_tokens_details": {
+      "thinking_tokens": 16
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1754,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 144,
+        "cache_read_input_tokens": 3757,
+        "cache_creation_input_tokens": 1026,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1026
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0160568,
+  "turns": 6,
+  "durationMs": 7267,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

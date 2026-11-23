@@ -1,0 +1,43 @@
+{
+  "answer": "div#ad-stats: gap increased from 22px to 34px\nspan.big \"4\": moved right by 4px\nspan.big \"6\": moved right by 8px\ndiv#ad-s1: resized from 345.3x130.3 to 337.3x130.3 (width decreased by 8px), and 3 elements inside it resized with it\ndiv#ad-s2: resized from 345.3x130.3 to 337.3x130.3 (width decreased by 8px), and 1 element inside it resized with it\ndiv#ad-s3: resized from 345.3x130.3 to 337.3x130.3 (width decreased by 8px), and 1 element inside it resized with it",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 721,
+    "cache_read_input_tokens": 6432,
+    "output_tokens": 316,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 721,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 210,
+        "cache_read_input_tokens": 3403,
+        "cache_creation_input_tokens": 347,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 347
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0066952,
+  "turns": 2,
+  "durationMs": 4273,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

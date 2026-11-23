@@ -1,0 +1,43 @@
+{
+  "answer": "div#wz-card, h1#wz-title, p#wz-help and 14 other elements: moved down by 5.8 px\nspan#wz-s1 \"1 Workspace\": moved down by 2.9 px\nspan#wz-s3 \"3 Billing\": moved down by 2.9 px\nspan#wz-s2 \"2 Team\": resized from 59.7x23.3 to 59.7x29 (height +5.7 px); line-height changed from 17.255px to 23px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 674,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 257,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 674,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 153,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 302,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 302
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005917,
+  "turns": 2,
+  "durationMs": 4128,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

@@ -1,0 +1,43 @@
+{
+  "answer": "a#nl-go \"Send me the letter\": height increased from 39px to 45px (width unchanged at 162.6px); line-height changed from normal to 23px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 373,
+    "cache_read_input_tokens": 6618,
+    "output_tokens": 157,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 373,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 52,
+        "cache_read_input_tokens": 3589,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0037318000000000004,
+  "turns": 2,
+  "durationMs": 4407,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

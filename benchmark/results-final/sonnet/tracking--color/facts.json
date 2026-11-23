@@ -1,0 +1,43 @@
+{
+  "answer": "span#tr-state \"In transit\": color changed from rgb(255, 255, 255) to rgb(179, 38, 30)",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 553,
+    "cache_read_input_tokens": 6429,
+    "output_tokens": 145,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 553,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 42,
+        "cache_read_input_tokens": 3400,
+        "cache_creation_input_tokens": 182,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 182
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0043129,
+  "turns": 2,
+  "durationMs": 2446,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

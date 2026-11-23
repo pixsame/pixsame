@@ -1,0 +1,43 @@
+{
+  "answer": "h1#ad-title \"Users\": moved down by 2 px\na#ad-invite \"Invite user\": moved down by 2 px\nspan#ad-count \"38 active\": resized from 78.2x19 to 78.2x43 (height increased by 24 px)\ndiv#ad-stats (and its contents): moved down by 4 px\ndiv#ad-table (and its contents): moved down by 4 px\ndiv#ad-foot (and its contents): moved down by 4 px",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 645,
+    "cache_read_input_tokens": 6430,
+    "output_tokens": 252,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 645,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 148,
+        "cache_read_input_tokens": 3401,
+        "cache_creation_input_tokens": 273,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 273
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.005751000000000001,
+  "turns": 2,
+  "durationMs": 3925,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}

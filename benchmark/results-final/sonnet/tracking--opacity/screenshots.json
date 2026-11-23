@@ -1,0 +1,43 @@
+{
+  "answer": "Tracking card (whole card): faded, reduced opacity (about 55%), so its contents look lighter.\nTracking card background: white to a faint off-white (#fbfafd-ish).\nTracking card border: lighter lavender.\n\"EXPECTED\" label: dark brown to mid grey-brown.\n\"Thursday, before noon\": dark brown to mid grey-brown.\n\"IN TRANSIT\" badge: deep purple to light purple, text still white.\nProgress bar fill: deep purple to light purple, same width.\nProgress bar track: lavender to a lighter lavender.\nTimeline dots: tan to a paler beige.\nTimeline labels (\"Collected in Bristol\", \"Sorted at the Midlands hub\", \"Out for delivery\"): dark to grey.\nTimeline times (\"Mon 09:14\", \"Tue 22:40\", \"Not yet\"): purple-grey to a lighter grey-purple.",
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 3310,
+    "cache_read_input_tokens": 6397,
+    "output_tokens": 509,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3310,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 306,
+        "cache_read_input_tokens": 3385,
+        "cache_creation_input_tokens": 2937,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2937
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "costUsd": 0.0189777,
+  "turns": 3,
+  "durationMs": 4874,
+  "model": "claude-sonnet-5-5",
+  "hit": true,
+  "judge": "sonnet"
+}
