@@ -566,7 +566,14 @@ afterEach(() => {
 after(() => {
   if (!top) return null;
 
-  Cypress.$(top.document.body)
+  // Since Cypress 16 the command log lives in its own frame: a click on the
+  // link never reaches the top document, and following the link would take
+  // that frame away from the log.
+  const reporter = top.document.querySelector<HTMLIFrameElement>(
+    'iframe#reporter-frame',
+  )?.contentDocument?.body;
+
+  Cypress.$([top.document.body, ...(reporter ? [reporter] : [])])
     .off('click', `a[href^="${LINK_PREFIX}"]`)
     .on('click', `a[href^="${LINK_PREFIX}"]`, function (e) {
       e.preventDefault();
