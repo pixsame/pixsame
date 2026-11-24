@@ -52,6 +52,8 @@ type FactBody =
       elements: number;
       /** The first of them, outermost first. */
       first: string[];
+      /** Where each of `first` is now, in CSS pixels. */
+      rects?: Rect[];
       text: string;
     }
   /** An element that kept its content and position and changed its size or line breaks. */
@@ -388,6 +390,7 @@ const moveFacts = (
         type: 'move' as const,
         ...move,
         first,
+        rects: [...movers.keys()].slice(0, FIRST_NAMES).map(({ rect }) => rect),
         text: `${move.elements === 1 ? '1 element' : `${move.elements} elements`} moved ${direction(move.dx, move.dy)}: ${first.join(', ')}${movers.size > first.length ? ', …' : ''}`,
       };
     });

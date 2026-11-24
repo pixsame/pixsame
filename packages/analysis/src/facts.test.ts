@@ -54,6 +54,7 @@ describe('facts', () => {
         dy: 12,
         elements: 1,
         first: ['div.card'],
+        rects: [card(52).rect],
         text: '1 element moved down by 12 px: div.card',
       },
     ]);

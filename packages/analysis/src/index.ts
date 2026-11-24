@@ -1,4 +1,12 @@
 export { analyze, type AnalyzeInput } from './analyze';
+export {
+  drawPins,
+  pinsOf,
+  PIN_COLORS,
+  type Pin,
+  type PinKind,
+  type Pins,
+} from './pins';
 export { analysisOf, bundle, type Bundle, type BundleEntry } from './bundle';
 export { descriptions, type Descriptions } from './describe';
 export { facts, type Fact, type FactsInput } from './facts';

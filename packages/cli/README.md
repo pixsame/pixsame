@@ -63,15 +63,18 @@ Opens a page to look at the failed comparisons of the last run and replace basel
 npx pixsame review
 ```
 
-It finds the manifests below `dir` (default: here), serves the page on `127.0.0.1` and opens it. For each failed comparison the page shows the sentence that says what changed, the baseline, actual and diff images (side by side, as a diff, or with a slider) and a **Replace baseline** button. The button copies the actual image over the baseline, deletes the actual and diff files and marks the entry `approved` in its manifest, like `visual-regression-compare approve`. Review the changed images and commit them. A baseline that changed since the run is not replaced.
+It finds the manifests below `dir` (default: here), serves the page on `127.0.0.1` and opens it. For each failed comparison the page shows the sentence that says what changed, the baseline, actual and diff images (side by side, as a diff, or with a slider) and a **Replace baseline** button. When the run recorded what changed element by element, each change is a numbered pin on the images and a line in a list above them: hover either one to see the element outlined. Changes that start at the same corner share one pin. Changes with no place on the image are under "Other findings". The button copies the actual image over the baseline, deletes the actual and diff files and marks the entry `approved` in its manifest, like `visual-regression-compare approve`. Review the changed images and commit them. A baseline that changed since the run is not replaced.
 
 The page is reachable only from this machine, at an address with a random token that the command prints, and it is gone when you press Ctrl-C.
 
 | Option              | What it does                                                  |
 | ------------------- | ------------------------------------------------------------- |
 | `--no-open`         | Print the address, don't open a browser                       |
+| `--out <file>`      | Write the page as one HTML file instead of serving it         |
 | `--port <n>`        | Serve on this port (default: a free one)                      |
 | `--repo-root <dir>` | The repository the manifests' paths belong to (default: here) |
+
+`npx pixsame review --out report.html` writes the same page as one file with the images inside it: a report of the failed comparisons to keep or to upload from CI, for a Playwright or a Cypress run alike. It shows the pins and the lists, and has no **Replace baseline** button.
 
 Run it from the repository root. When the manifest's project is outside the directory you run it in, the page says so and asks for `--repo-root`.
 

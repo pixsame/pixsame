@@ -92,6 +92,8 @@ export type Analysis = {
   facts?: Fact[];
   /** How many facts did not fit in `facts`. */
   factsOmitted?: number;
+  /** Image pixels per CSS pixel of the screenshot: the rectangles in `facts` times this are places on the image. */
+  scale?: number;
   /** Entries with the same key changed in the same way. */
   bundleKey: string;
 };

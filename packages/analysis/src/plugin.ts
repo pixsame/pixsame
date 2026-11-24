@@ -152,7 +152,10 @@ export const analysisPlugin = ({
           layout: slot.layout,
           ...(sizes && { sizes }),
         });
-        if (found.length > 0) analysis.facts = found.slice(0, MAX_FACTS);
+        if (found.length > 0) {
+          analysis.facts = found.slice(0, MAX_FACTS);
+          analysis.scale = slot.layout.actual.scale;
+        }
         if (found.length > MAX_FACTS)
           analysis.factsOmitted = found.length - MAX_FACTS;
       }

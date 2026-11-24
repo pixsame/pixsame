@@ -1,8 +1,9 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import { defaults, type Io } from './io';
 import { findBaselines, type Report } from './baselines';
 import { init, INIT_HELP } from './init';
-import { startReview } from './review';
+import { reviewReport, startReview } from './review';
 import { snap, SNAP_HELP } from './snap/snap';
 import {
   cypressVersionOf,
@@ -31,6 +32,8 @@ Commands:
                        replace baselines
     --port <n>         Port to serve on (default: a free one)
     --no-open          Print the address, do not open a browser
+    --out <file>       Write the page as one HTML file instead (a report to
+                       keep; it cannot replace baselines)
     --repo-root <dir>  The repository the manifests' paths belong to (default: here)
 
 ${SNAP_HELP}
@@ -253,9 +256,11 @@ const review = async (args: string[], io: Io): Promise<number> => {
   let port: number | undefined;
   let repoRoot: string | undefined;
   let open = true;
+  let out: string | undefined;
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
     if (arg === '--no-open') open = false;
+    else if (arg === '--out') out = args[++i];
     else if (arg === '--port') port = Number(args[++i]);
     else if (arg === '--repo-root') repoRoot = args[++i];
     else if (arg.startsWith('--')) {
@@ -266,6 +271,29 @@ const review = async (args: string[], io: Io): Promise<number> => {
   if (port !== undefined && !(port >= 0 && port < 65536)) {
     io.out('--port needs a number from 0 to 65535.');
     return 2;
+  }
+  if (out !== undefined) {
+    if (!out || out.startsWith('--')) {
+      io.out('--out needs a file name, e.g. --out report.html');
+      return 2;
+    }
+    try {
+      const { html, count } = reviewReport(
+        (roots.length > 0 ? roots : ['.']).map((root) =>
+          path.resolve(io.cwd, root),
+        ),
+      );
+      const file = path.resolve(io.cwd, out);
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, html);
+      io.out(
+        `${count === 0 ? 'No failed comparisons' : `${count} failed comparison${count === 1 ? '' : 's'}`} written to ${path.relative(io.cwd, file) || file}`,
+      );
+      return 0;
+    } catch (error) {
+      io.out(error instanceof Error ? error.message : String(error));
+      return 2;
+    }
   }
   try {
     const session = await startReview({

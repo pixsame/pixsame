@@ -9,6 +9,8 @@ import {
   factLines,
   facts,
   overflowOf,
+  drawPins,
+  pinsOf,
   STYLE,
   transformInWords,
   styleChanges,
@@ -828,6 +830,107 @@ describe('facts with style values', () => {
       expect(lines).toHaveLength(12);
       expect(lines[11]).toBe('  - and 15 more');
       expect(factLines({})).toBe('');
+    });
+  });
+
+  describe('pins', () => {
+    const move = {
+      type: 'move' as const,
+      dx: 0,
+      dy: 12,
+      elements: 2,
+      first: ['div#row with what it holds'],
+      rects: [[20, 52, 100, 50] as Rect],
+      text: '2 elements moved down by 12 px: div#row with what it holds',
+    };
+    const found = [
+      {
+        type: 'element' as const,
+        kinds: ['removed' as const],
+        element: 'div.promo',
+        rect: [20, 10, 100, 20] as Rect,
+        text: 'removed div.promo',
+      },
+      move,
+      {
+        type: 'size' as const,
+        before: { width: 200, height: 120 },
+        after: { width: 200, height: 132 },
+        text: 'the screenshot changed size 200x120 → 200x132',
+      },
+    ];
+
+    it('places each fact that has a place, in image pixels', () => {
+      const { pins, rest } = pinsOf({ facts: found, scale: 2 });
+      expect(pins).toEqual([
+        {
+          number: 1,
+          kind: 'removed',
+          side: 'baseline',
+          boxes: [{ x: 40, y: 20, width: 200, height: 40 }],
+          text: 'removed div.promo',
+        },
+        {
+          number: 2,
+          kind: 'moved',
+          side: 'actual',
+          boxes: [{ x: 40, y: 104, width: 200, height: 100 }],
+          moved: { dx: 0, dy: 24 },
+          text: move.text,
+        },
+      ]);
+      expect(rest).toEqual(['the screenshot changed size 200x120 → 200x132']);
+    });
+
+    it('gives changes at the same corner one pin', () => {
+      const at = (rect: Rect, text: string) => ({
+        type: 'style' as const,
+        element: 'a',
+        rect,
+        styles: [],
+        text,
+      });
+      const { pins } = pinsOf({
+        facts: [
+          { ...found[0], rect: [20, 10, 100, 20] as Rect },
+          at([24, 14, 60, 12], 'a: color red → blue'),
+          at([20, 60, 60, 12], 'p: color red → blue'),
+        ],
+      });
+      expect(
+        pins.map(({ number, side, text }) => [number, side, text]),
+      ).toEqual([
+        [1, 'both', 'removed div.promo; a: color red → blue'],
+        [2, 'both', 'p: color red → blue'],
+      ]);
+      // both boxes are outlined
+      expect(pins[0].boxes).toHaveLength(2);
+    });
+
+    it('says how many did not fit', () => {
+      const { pins, rest } = pinsOf({ facts: found, factsOmitted: 3 }, 1);
+      expect(pins).toHaveLength(1);
+      expect(rest).toEqual([
+        'the screenshot changed size 200x120 → 200x132',
+        '4 more changes are not shown.',
+      ]);
+      expect(pinsOf({})).toEqual({ pins: [], rest: [] });
+    });
+
+    it('draws the pins of one side on a copy of the image', () => {
+      const { pins } = pinsOf({ facts: found });
+      const before = image(200, 132);
+      const pixel = (from: { data: ArrayLike<number> }, x: number, y: number) =>
+        Array.from({ length: 3 }, (_, c) => from.data[(y * 200 + x) * 4 + c]);
+      const drawn = drawPins(before, pins);
+      // the outline of the moved row, in its colour; the image given is untouched
+      expect(pixel(drawn, 60, 52)).toEqual([37, 99, 235]);
+      expect(pixel(before, 60, 52)).toEqual([255, 255, 255]);
+      // the removed element is only on the baseline
+      expect(pixel(drawn, 60, 10)).toEqual([255, 255, 255]);
+      expect(pixel(drawPins(before, pins, 'baseline'), 60, 10)).toEqual([
+        220, 38, 38,
+      ]);
     });
   });
 });

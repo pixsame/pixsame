@@ -336,5 +336,24 @@ describe('compareImages with the layout of both pages', () => {
     expect(result.entry.extra?.pixsame?.analysis).toMatchObject({
       facts: [{ type: 'element', element: 'div.card' }],
     });
+    // the same change as a pin, and drawn on the screenshot
+    expect(result.pins).toEqual({
+      pins: [
+        {
+          number: 1,
+          kind: 'changed',
+          side: 'both',
+          boxes: [{ x: 20, y: 20, width: 100, height: 40 }],
+          text: 'look changed on div.card',
+        },
+      ],
+      rest: [],
+    });
+    const { data } = await sharp(result.imgChanges as Buffer)
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    expect([
+      ...data.subarray((20 * 200 + 60) * 4, (20 * 200 + 60) * 4 + 3),
+    ]).toEqual([217, 119, 6]);
   });
 });

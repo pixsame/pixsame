@@ -364,6 +364,8 @@ Cypress.Commands.add(
                       imgNewBase64: res.imgNewBase64,
                       imgOldBase64: res.imgOldBase64,
                       error: res.error,
+                      pins: res.pins,
+                      rest: res.rest,
                     }),
                   ),
                 )})`
@@ -406,6 +408,8 @@ Cypress.Commands.add(
             imgDiffBase64: res.imgDiffBase64 ?? '',
             message: res.message ?? '',
             description: res.description,
+            pins: res.pins,
+            rest: res.rest,
             oldBaseline: res.oldBaseline,
             deferred,
           };

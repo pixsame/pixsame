@@ -2,10 +2,17 @@
  * The review page: one self-contained document, no external requests. Texts
  * from the manifests reach the page through `textContent` only.
  */
-export const reviewPage = (base: string) => `<!doctype html>
+export const reviewPage = (
+  base: string,
+  /**
+   * For a report in one file: the items with their images as data URIs
+   * (`data`). The page then asks no server for anything and replaces nothing.
+   */
+  embedded?: unknown[],
+) => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>pixsame review</title>
+<title>${embedded ? 'pixsame report' : 'pixsame review'}</title>
 <style>
   :root { --bg:#f8f8f6; --panel:#fff; --ink:#1c1c1a; --mute:#6b6b66; --line:#e3e3dd; --accent:#2f6fed; --good:#1f8a4c; --warn:#8a5a00; --warnbg:#fff4d6; }
   @media (prefers-color-scheme: dark) { :root { --bg:#161615; --panel:#1f1f1d; --ink:#ececE8; --mute:#9a9a93; --line:#2f2f2c; --accent:#6f9bff; --good:#4cc47e; --warn:#f0c869; --warnbg:#3a2f12; } }
@@ -36,26 +43,74 @@ export const reviewPage = (base: string) => `<!doctype html>
   img { max-width:100%; height:auto; display:block; border:1px solid var(--line); background:repeating-conic-gradient(#ddd 0 25%, #fff 0 50%) 0 0 / 16px 16px; }
   .slider { position:relative; max-width:100%; display:inline-block; } .slider img.top { position:absolute; inset:0; }
   .slider input { width:100%; margin-top:8px; }
+  .shot { position:relative; display:inline-block; max-width:100%; vertical-align:top; }
+  .box { position:absolute; display:none; border:2px solid var(--pin); pointer-events:none; box-shadow:0 0 0 1px #fff; }
+  .box.on { display:block; } .box.unexplained { border-style:dashed; }
+  .pin { position:absolute; transform:translate(-30%,-60%); min-width:22px; height:22px; padding:0 6px; border:2px solid #fff; border-radius:11px; background:var(--pin); color:#fff; font:700 12px/18px system-ui,sans-serif; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.4); }
+  .pin.on, .pin:focus-visible { outline:2px solid var(--pin); outline-offset:1px; }
+  .changed { --pin:#d97706; } .added { --pin:#16a34a; } .removed { --pin:#dc2626; } .moved { --pin:#2563eb; } .resized { --pin:#7c3aed; } .unexplained { --pin:#db2777; }
+  .changes { margin:0 0 12px; padding:0; list-style:none; }
+  .changes li { display:flex; gap:8px; align-items:baseline; padding:4px 8px; border-radius:5px; word-break:break-word; }
+  .changes li.on { background:var(--panel); box-shadow:inset 0 0 0 1px var(--line); }
+  .changes .num { flex:none; min-width:22px; height:22px; border-radius:11px; background:var(--pin); color:#fff; font:700 12px/22px system-ui,sans-serif; text-align:center; }
+  .toggle { display:inline-flex; gap:6px; align-items:center; color:var(--mute); font-size:13px; cursor:pointer; }
+  .hide-pins .pin, .hide-pins .box { display:none; }
+  .other { margin:0 0 12px; } .other summary { cursor:pointer; color:var(--mute); } .other ul { margin:6px 0 0; padding-left:20px; }
 </style></head>
 <body>
-<header><h1>pixsame review</h1><span id="count"></span></header>
+<header><h1>${embedded ? 'pixsame report' : 'pixsame review'}</h1><span id="count"></span></header>
 <div class="layout"><nav id="list" aria-label="Comparisons"></nav><main id="detail"></main></div>
 <script>
 (() => {
   const BASE = ${JSON.stringify(base)};
+  const DATA = ${embedded ? JSON.stringify(embedded).replace(/</g, '\\u003c') : 'null'};
   const $ = (sel) => document.querySelector(sel);
   const el = (tag, props = {}, ...kids) => {
     const node = Object.assign(document.createElement(tag), props);
     node.append(...kids.filter((k) => k !== undefined && k !== null));
     return node;
   };
-  let items = [], current = 0, view = 'side', error = '';
-  const img = (item, kind) => BASE + '/img/' + item.id + '/' + kind + '?t=' + item.status;
-  const fig = (item, kind, caption) => el('figure', {}, el('figcaption', { textContent: caption }), el('img', { src: img(item, kind), alt: caption }));
+  let items = [], current = 0, view = 'side', error = '', showPins = true;
+  const img = (item, kind) => DATA ? item.data[kind] : BASE + '/img/' + item.id + '/' + kind + '?t=' + item.status;
+  const KINDS = ['changed', 'added', 'removed', 'moved', 'resized', 'unexplained'];
+  const kindOf = (pin) => (KINDS.includes(pin.kind) ? pin.kind : 'changed');
+  // one change lit up everywhere it shows: its number, its outline, its line in the list
+  const light = (number) => document.querySelectorAll('[data-pin]').forEach((node) => node.classList.toggle('on', node.dataset.pin === String(number)));
+  const lit = (node, number) => {
+    node.dataset.pin = number;
+    node.onmouseenter = node.onfocus = () => light(number);
+    node.onmouseleave = node.onblur = () => light(null);
+    return node;
+  };
+  const percent = (box, w, h) => ({ left: (box.x / w) * 100 + '%', top: (box.y / h) * 100 + '%', width: (box.width / w) * 100 + '%', height: (box.height / h) * 100 + '%' });
+  // an image with the changes that are true for it pinned where they are
+  const shot = (item, kind, caption) => {
+    const image = el('img', { src: img(item, kind), alt: caption });
+    const wrap = el('div', { className: 'shot' }, image);
+    const pins = (item.pins || []).filter((pin) => kind === 'diff' || pin.side === 'both' || pin.side === kind);
+    image.onload = () => {
+      const w = image.naturalWidth, h = image.naturalHeight;
+      for (const pin of pins) {
+        pin.boxes.forEach((box, i) => {
+          const at = percent(box, w, h);
+          const outline = el('div', { className: 'box ' + kindOf(pin) });
+          outline.dataset.pin = pin.number;
+          Object.assign(outline.style, at);
+          wrap.append(outline);
+          if (i > 0) return;
+          const badge = lit(el('button', { type: 'button', className: 'pin ' + kindOf(pin), textContent: String(pin.number), title: pin.text }), pin.number);
+          Object.assign(badge.style, { left: at.left, top: at.top });
+          wrap.append(badge);
+        });
+      }
+    };
+    return wrap;
+  };
+  const fig = (item, kind, caption) => el('figure', {}, el('figcaption', { textContent: caption }), shot(item, kind, caption));
 
   const renderList = () => {
     const open = items.filter((i) => !i.approved).length;
-    $('#count').textContent = items.length === 0 ? '' : open + ' to review, ' + (items.length - open) + ' replaced';
+    $('#count').textContent = items.length === 0 ? '' : DATA ? items.length + ' failed' : open + ' to review, ' + (items.length - open) + ' replaced';
     $('#list').replaceChildren(...items.map((item, index) => {
       const button = el('button', { type: 'button' },
         el('div', { className: 'name', textContent: item.name }),
@@ -92,6 +147,11 @@ export const reviewPage = (base: string) => `<!doctype html>
       tab.onclick = () => { view = id; render(); };
       return tab;
     }));
+    const pinToggle = () => {
+      const box = el('input', { type: 'checkbox', checked: showPins });
+      box.onchange = () => { showPins = box.checked; main.classList.toggle('hide-pins', !showPins); };
+      return el('label', { className: 'toggle' }, box, 'Show changes');
+    };
     const replace = el('button', { type: 'button', className: 'replace', textContent: item.approved ? 'Baseline replaced' : 'Replace baseline', disabled: item.approved || !item.images.includes('actual') });
     replace.onclick = async () => {
       replace.disabled = true; error = '';
@@ -107,11 +167,15 @@ export const reviewPage = (base: string) => `<!doctype html>
       el('p', { className: 'says', textContent: item.description || item.message || item.status }),
       ...(item.oldBaseline ? [el('p', { className: 'notice', textContent: 'This baseline was saved before page layouts were recorded, so the sentence above comes from the pixels only. Run npx pixsame baselines --update to add the layouts.' })] : []),
       ...(error ? [el('p', { className: 'error', textContent: error })] : []),
-      el('div', { className: 'bar' }, tabs, replace),
+      ...(item.pins && item.pins.length ? [el('ol', { className: 'changes' }, ...item.pins.map((pin) => lit(el('li', { className: kindOf(pin), tabIndex: 0 }, el('span', { className: 'num', textContent: String(pin.number) }), el('span', { textContent: pin.text })), pin.number)))] : []),
+      ...(item.rest && item.rest.length ? [el('details', { className: 'other', open: !(item.pins && item.pins.length) }, el('summary', { textContent: 'Other findings (' + item.rest.length + ')' }), el('ul', {}, ...item.rest.map((text) => el('li', { textContent: text }))))] : []),
+      el('div', { className: 'bar' }, tabs, ...(item.pins && item.pins.length ? [pinToggle()] : []), ...(DATA ? [] : [replace])),
       body(item));
+    main.classList.toggle('hide-pins', !showPins);
   };
 
-  fetch(BASE + '/api/items').then((r) => r.json()).then((list) => { items = list; current = Math.max(0, items.findIndex((i) => !i.approved)); render(); });
+  const start = (list) => { items = list; current = Math.max(0, items.findIndex((i) => !i.approved)); render(); };
+  if (DATA) start(DATA); else fetch(BASE + '/api/items').then((r) => r.json()).then(start);
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown' && current < items.length - 1) { current++; render(); }
     if (e.key === 'ArrowUp' && current > 0) { current--; render(); }

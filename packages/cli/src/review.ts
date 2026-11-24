@@ -3,7 +3,13 @@ import fs from 'node:fs';
 import http from 'node:http';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
-import { ANALYSIS_VERSION, layoutVersionOf } from '@pixsame/analysis';
+import {
+  ANALYSIS_VERSION,
+  layoutVersionOf,
+  pinsOf,
+  type Analysis,
+  type Pin,
+} from '@pixsame/analysis';
 import type { approve as Approve } from 'visual-regression-compare' with {
   'resolution-mode': 'import',
 };
@@ -27,6 +33,10 @@ export type Item = {
   /** The analysis label and sentence, when the run recorded them. */
   label?: string;
   description?: string;
+  /** The changes that have a place on the screenshot, numbered. */
+  pins: Pin[];
+  /** The changes that have none, and how many more there were, in words. */
+  rest: string[];
   /** The baseline has no page layout of this version, so the description came from pixels. */
   oldBaseline: boolean;
   approved: boolean;
@@ -64,11 +74,11 @@ export const loadItems = (roots: string[]): Source[] => {
       }
       const analysis = (
         entry.extra as
-          | {
-              pixsame?: { analysis?: { label?: string; description?: string } };
-            }
-          | undefined
+          { pixsame?: { analysis?: Partial<Analysis> } } | undefined
       )?.pixsame?.analysis;
+      const { pins, rest } = pinsOf(
+        Array.isArray(analysis?.facts) ? (analysis as Analysis) : {},
+      );
       const baselineBytes =
         files.baseline && fs.existsSync(files.baseline)
           ? fs.readFileSync(files.baseline)
@@ -87,6 +97,8 @@ export const loadItems = (roots: string[]): Source[] => {
           message: entry.message ?? '',
           label: analysis?.label,
           description: analysis?.description,
+          pins,
+          rest,
           oldBaseline:
             baselineBytes !== undefined &&
             layoutVersionOf(baselineBytes) !== ANALYSIS_VERSION,
@@ -118,6 +130,27 @@ const send = (
     'referrer-policy': 'no-referrer',
   });
   res.end(body);
+};
+
+/**
+ * The review page as one file to keep or to attach to a CI run: the failed
+ * comparisons below `roots` with their images inside it. It shows the same
+ * pins and lists; it cannot replace a baseline.
+ */
+export const reviewReport = (
+  roots: string[],
+): { html: string; count: number } => {
+  const sources = loadItems(roots.map((root) => path.resolve(root)));
+  const embedded = sources.map(({ item, files }) => ({
+    ...item,
+    data: Object.fromEntries(
+      item.images.map((kind) => [
+        kind,
+        `data:image/png;base64,${fs.readFileSync(files[kind] as string).toString('base64')}`,
+      ]),
+    ),
+  }));
+  return { html: reviewPage('', embedded), count: sources.length };
 };
 
 export type Review = {

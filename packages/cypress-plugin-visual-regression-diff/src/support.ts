@@ -10,7 +10,7 @@ import {
   OVERLAY_CLASS,
   TASK,
 } from './constants';
-import type { PendingDiffRecord } from './types';
+import type { OverlayPin, PendingDiffRecord } from './types';
 
 const CAROUSEL_CLASS = 'cp-visual-regression-diff-carousel';
 
@@ -48,6 +48,8 @@ export const generateOverlayTemplate = ({
   imgDiffBase64,
   wasImageNotUpdatedYet,
   error,
+  pins,
+  rest,
 }: {
   title: string;
   imgNewBase64: string;
@@ -55,6 +57,8 @@ export const generateOverlayTemplate = ({
   imgDiffBase64: string;
   wasImageNotUpdatedYet: boolean;
   error: boolean;
+  pins?: OverlayPin[];
+  rest?: string[];
 }) => `<div class="${OVERLAY_CLASS}" style="position:fixed;z-index:100000;top:0;bottom:0;left:0;right:0;display:flex;flex-flow:column;background:#1a202c;font-family:sans-serif">
   <header style="background:#2d3748;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0">
     <div style="display:flex;align-items:center;gap:12px">
@@ -64,7 +68,7 @@ export const generateOverlayTemplate = ({
     <button type="button" data-type="close" style="background:transparent;border:1px solid #4a5568;color:#a0aec0;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:.85em">✕ Close</button>
   </header>
   <div data-diff-base64="${imgDiffBase64}" style="flex:1;overflow:auto;padding:20px;color:#fff">
-    ${generateDiffPanelHTML({ imgNewBase64, imgOldBase64 })}
+    ${generateDiffPanelHTML({ imgNewBase64, imgOldBase64, pins, rest })}
   </div>
   <div style="background:#1a202c;padding:0 16px 10px;display:flex;justify-content:flex-end;flex-shrink:0">
     <button data-type="see-diff" style="background:#4a5568;border:none;color:#fff;padding:6px 14px;border-radius:4px;cursor:pointer;font-size:.85em">See diff image →</button>
@@ -85,23 +89,127 @@ export const generateOverlayTemplate = ({
 </div>`;
 
 /* c8 ignore start */
+const PIN_COLORS: Record<string, string> = {
+  changed: '#d97706',
+  added: '#16a34a',
+  removed: '#dc2626',
+  moved: '#2563eb',
+  resized: '#7c3aed',
+  unexplained: '#db2777',
+};
+const pinColor = (kind: string) => PIN_COLORS[kind] ?? PIN_COLORS.changed;
+const escapeHTML = (text: string) =>
+  text.replace(
+    /[&<>"']/g,
+    (char) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[
+        char
+      ] as string,
+  );
+/** The image a change is looked at on: a removed element is only on the old one. */
+const sideOf = ({ side }: OverlayPin) =>
+  side === 'baseline' ? 'baseline' : 'actual';
+
+// which image shows and which change is lit are attributes; the rest is CSS
+const PANEL_STYLE = `<style>
+  [data-pix-panel] [data-pix-old] { opacity:1; }
+  [data-pix-panel] [data-pix-new] { opacity:0; }
+  [data-pix-panel][data-side="actual"] [data-pix-old] { opacity:0; }
+  [data-pix-panel][data-side="actual"] [data-pix-new] { opacity:1; }
+  [data-pix-panel] [data-pin-side="actual"] { display:none; }
+  [data-pix-panel][data-side="actual"] [data-pin-side="actual"] { display:block; }
+  [data-pix-panel][data-side="actual"] [data-pin-side="baseline"] { display:none; }
+  [data-pix-root][data-pins="off"] [data-pix-pins] { display:none; }
+  [data-pix-box] { visibility:hidden; }
+  ${Array.from({ length: 10 }, (_, i) => i + 1)
+    .map(
+      (n) =>
+        `[data-pix-root][data-lit="${n}"] [data-pix-box="${n}"] { visibility:visible; } [data-pix-root][data-lit="${n}"] [data-pix-line="${n}"] { background:#2d3748; }`,
+    )
+    .join(' ')}
+</style>`;
+
+const LIGHT = (number: number, side?: string) =>
+  `var r=this.closest('[data-pix-root]');r.dataset.lit='${number}';${side ? `r.querySelector('[data-pix-panel]').dataset.side='${side}'` : ''}`;
+const UNLIGHT = (restore: boolean) =>
+  `var r=this.closest('[data-pix-root]');delete r.dataset.lit;${restore ? `r.querySelector('[data-pix-panel]').dataset.side='baseline'` : ''}`;
+
+const pinsHTML = (pins: OverlayPin[]) =>
+  pins
+    .map((pin) => {
+      const color = pinColor(pin.kind);
+      // a change on both images shows on whichever is up
+      const side = pin.side === 'both' ? '' : ` data-pin-side="${pin.side}"`;
+      const boxes = pin.boxes
+        .map(
+          ({ left, top, width, height }) =>
+            `<div data-pix-box="${pin.number}" style="position:absolute;left:${left}%;top:${top}%;width:${width}%;height:${height}%;box-sizing:border-box;border:2px ${pin.kind === 'unexplained' ? 'dashed' : 'solid'} ${color};box-shadow:0 0 0 1px #fff;pointer-events:none"></div>`,
+        )
+        .join('');
+      const [first] = pin.boxes;
+      const badge = first
+        ? `<button type="button" title="${escapeHTML(pin.text)}" onmouseenter="${LIGHT(pin.number)}" onmouseleave="${UNLIGHT(false)}" style="position:absolute;left:${first.left}%;top:${first.top}%;transform:translate(-30%,-60%);min-width:22px;height:22px;padding:0 6px;border:2px solid #fff;border-radius:11px;background:${color};color:#fff;font:700 12px/18px sans-serif;cursor:default;box-shadow:0 1px 3px rgba(0,0,0,.4)">${pin.number}</button>`
+        : '';
+      return `<div${side}>${boxes}${badge}</div>`;
+    })
+    .join('');
+
 const generateDiffPanelHTML = ({
   imgNewBase64,
   imgOldBase64,
-}: Pick<PendingDiffRecord, 'imgNewBase64' | 'imgOldBase64'>) =>
-  `<div style="display:flex;justify-content:center;align-items:flex-start;gap:15px;flex-wrap:wrap">
+  pins = [],
+  rest = [],
+}: Pick<
+  PendingDiffRecord,
+  'imgNewBase64' | 'imgOldBase64' | 'pins' | 'rest'
+>) =>
+  `<div data-pix-root style="display:flex;justify-content:center;align-items:flex-start;gap:16px">${PANEL_STYLE}
     <div
-      style="position:relative;background:#fff;border:solid 15px #fff;overflow:hidden;color:#1a202c"
-      onmouseover="this.querySelector('div').style.opacity=0,this.querySelector('img').style.opacity=1"
-      onmouseleave="this.querySelector('div').style.opacity=1,this.querySelector('img').style.opacity=0"
+      data-pix-panel data-side="baseline"
+      style="position:relative;flex:0 1 auto;min-width:0;background:#fff;border:solid 15px #fff;overflow:hidden;color:#1a202c"
+      onmouseover="this.dataset.side='actual'"
+      onmouseleave="this.dataset.side='baseline'"
     >
       <h3 style="margin:0 0 8px">New screenshot (hover off to see old one):</h3>
-      <img style="min-width:200px;max-width:100%;opacity:0" src="data:image/png;base64,${imgNewBase64}" />
-      <div style="position:absolute;top:0;left:0;width:100%;background:#fff">
+      <div style="position:relative;display:inline-block;max-width:100%">
+        <img data-pix-new style="display:block;min-width:200px;max-width:100%" src="data:image/png;base64,${imgNewBase64}" />
+        <div data-pix-pins style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:2">${pinsHTML(pins)}</div>
+      </div>
+      <div data-pix-old style="position:absolute;top:0;left:0;width:100%;background:#fff">
         <h3 style="margin:0 0 8px">Old screenshot (hover to see new one):</h3>
-        <img style="min-width:200px;max-width:100%" src="data:image/png;base64,${imgOldBase64}" />
+        <img style="display:block;min-width:200px;max-width:100%" src="data:image/png;base64,${imgOldBase64}" />
       </div>
     </div>
+    ${
+      pins.length + rest.length > 0
+        ? `<div style="flex:0 0 320px;position:sticky;top:0;font-size:.85em;color:#e2e8f0">`
+        : ''
+    }
+    ${
+      pins.length > 0
+        ? `<div>
+      <label style="display:flex;align-items:center;gap:6px;color:#a0aec0;margin:0 0 6px;cursor:pointer;user-select:none">
+        <input type="checkbox" checked onchange="this.closest('[data-pix-root]').dataset.pins=this.checked?'on':'off'" style="cursor:pointer" />
+        Show changes on the image
+      </label>
+      <ol style="list-style:none;margin:0;padding:0">${pins
+        .map(
+          (pin) =>
+            `<li data-pix-line="${pin.number}" onmouseenter="${LIGHT(pin.number, sideOf(pin))}" onmouseleave="${UNLIGHT(true)}" style="display:flex;gap:8px;align-items:baseline;padding:4px 8px;border-radius:4px;word-break:break-word"><span style="flex:none;min-width:22px;height:22px;border-radius:11px;background:${pinColor(pin.kind)};color:#fff;font:700 12px/22px sans-serif;text-align:center">${pin.number}</span><span>${escapeHTML(pin.text)}</span></li>`,
+        )
+        .join('')}</ol>
+    </div>`
+        : ''
+    }
+    ${
+      rest.length > 0
+        ? `<details${pins.length > 0 ? '' : ' open'} style="margin-top:10px;color:#a0aec0">
+      <summary style="cursor:pointer;user-select:none">Other findings (${rest.length})</summary>
+      <ul style="margin:6px 0 0;padding-left:20px;color:#e2e8f0">${rest.map((text) => `<li>${escapeHTML(text)}</li>`).join('')}</ul>
+    </details>`
+        : ''
+    }
+    ${pins.length + rest.length > 0 ? '</div>' : ''}
   </div>`;
 
 const generateFABTemplate = () =>
@@ -144,10 +252,6 @@ const generateCarouselTemplate = () =>
           <span data-carousel-counter style="font-size:.8em;color:#a0aec0;display:block;visibility:hidden">Image</span>
           <span data-carousel-title style="font-weight:600;color:#fff;font-size:.95em;visibility:hidden">placeholder</span>
           <span data-carousel-description style="font-size:.8em;color:#cbd5e0;display:none"></span>
-          <details data-carousel-message style="font-size:.8em;color:#a0aec0;display:none;margin-top:2px">
-            <summary style="cursor:pointer;user-select:none">Full message</summary>
-            <pre style="margin:6px 0 0;padding:8px 10px;background:#1a202c;border-radius:4px;color:#e2e8f0;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;overflow:auto;max-height:30vh;max-width:70vw"></pre>
-          </details>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:12px">
@@ -263,11 +367,6 @@ function openCarousel(
       .find('[data-carousel-description]')
       .text(diff.description ?? '')
       .css('display', diff.description ? 'block' : 'none');
-    // the whole failure message, with every change it lists; closed for each image
-    const messageEl = carouselEl.find('[data-carousel-message]');
-    messageEl.css('display', diff.message ? 'block' : 'none');
-    messageEl.removeAttr('open');
-    messageEl.find('pre').text(diff.message);
     (carouselEl.find('[data-type="prev"]')[0] as HTMLButtonElement).disabled =
       index === 0;
     (carouselEl.find('[data-type="next"]')[0] as HTMLButtonElement).disabled =
@@ -329,7 +428,6 @@ function openCarousel(
     carouselEl.find('[data-carousel-counter]').css('visibility', 'hidden');
     carouselEl.find('[data-carousel-title]').css('visibility', 'hidden');
     carouselEl.find('[data-carousel-description]').css('display', 'none');
-    carouselEl.find('[data-carousel-message]').css('display', 'none');
     carouselEl
       .find(
         '[data-see-diff-row],[data-type="skip"],[data-type="replace"],[data-replaced-info],[data-type="prev"],[data-type="next"]',
@@ -482,6 +580,8 @@ after(() => {
         imgNewBase64,
         imgOldBase64,
         error,
+        pins,
+        rest,
       } = JSON.parse(
         decodeURIComponent(
           Base64.decode(
@@ -506,6 +606,8 @@ after(() => {
             imgDiffBase64,
             error,
             wasImageNotUpdatedYet,
+            pins,
+            rest,
           }),
         ).appendTo(top.document.body);
 

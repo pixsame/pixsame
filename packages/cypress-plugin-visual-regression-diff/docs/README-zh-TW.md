@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 307e1b8710035fb5
+source: 3fe7bc3e2013feea
 ---
 
 ## 快速開始
@@ -250,7 +250,7 @@ npx cypress run --env "pluginVisualRegressionCleanupUnusedImages=true"
 - 所有路徑都相對於 `projectRoot`，並使用 `/` 作為分隔符號；當 `imagesPath` 是絕對路徑時，路徑可能指向專案之外（`../…`）。`projectRoot` 是 Cypress 專案，不一定是 repository 的根目錄：`ci.workspace` 是 checkout 目錄，所以 `relative(ci.workspace, projectRoot)` 就是 repository 內的路徑前綴。
 - `failed` 與 `missing-baseline` 是需要人工處理的條目：把 `images.actual.path` 複製到 `images.baseline.path` 即可核准它們。
 - `baselineWritten` 表示該張截圖的工作樹是否有變更，與 `status` 無關。
-- 比對發現差異的項目帶有 `extra.pixsame.analysis`（除非關閉了 `analysis`）：一個 `label`（`content-change`、`moved`、`moved-and-changed`、`noise-like`、`size-change` 或 `cross-os`）、一句話的 `description`、發生變化的 `regions` 及其邊框，以及一個 `bundleKey`，以相同方式變化的項目其值相同。`@pixsame/analysis` 中的 `bundle()` 會依它將項目分組。當基準圖帶有頁面版面快照時，`layout` 會列出發生移動的元素（`moves`，單位為 CSS 像素），並指出發生了什麼變化（`causes`，例如 `added div.promo "Free shipping"`），`facts` 則逐條列出每一處變化，依元素和發生變化的樣式給出（`button.checkout "Checkout": border-radius 8px → 4px`），最多二十條；前十條會印在失敗訊息下方。沒有快照時，`pixels` 只根據像素列出找到的移動，而且只在答案明確時才給出：沒有明顯移動的截圖不會得到任何關於移動的結論。如果基準圖和截圖來自不同的作業系統，而版面只顯示由此造成的差異（另一種字型、位置略有不同的文字），標籤為 `cross-os`。
+- 比對發現差異的項目帶有 `extra.pixsame.analysis`（除非關閉了 `analysis`）：一個 `label`（`content-change`、`moved`、`moved-and-changed`、`noise-like`、`size-change` 或 `cross-os`）、一句話的 `description`、發生變化的 `regions` 及其邊框，以及一個 `bundleKey`，以相同方式變化的項目其值相同。`@pixsame/analysis` 中的 `bundle()` 會依它將項目分組。當基準圖帶有頁面版面快照時，`layout` 會列出發生移動的元素（`moves`，單位為 CSS 像素），並指出發生了什麼變化（`causes`，例如 `added div.promo "Free shipping"`），`facts` 則逐條列出每一處變化，依元素和發生變化的樣式給出（`button.checkout "Checkout": border-radius 8px → 4px`），最多二十條；前十條會印在失敗訊息下方，並在審查浮層和 `npx pixsame review` 中以編號標示在圖片上：將滑鼠停在編號或清單中對應的那一行上，即可看到該元素的外框。在圖片上沒有位置的內容列在「Other findings」下。沒有快照時，`pixels` 只根據像素列出找到的移動，而且只在答案明確時才給出：沒有明顯移動的截圖不會得到任何關於移動的結論。如果基準圖和截圖來自不同的作業系統，而版面只顯示由此造成的差異（另一種字型、位置略有不同的文字），標籤為 `cross-os`。
 - 每個條目都帶有自己的 `platform` 與 `viewport`，因此把多份清單串接後，仍能分辨來自不同機器矩陣的條目。條目上的 `options` 是 `matchImage` 確切的輸入（`imagesPath` 保留未展開的 token）；`comparison` 則是結果。
 - `platform` 是測試執行的位置，`renderer` 是像素的來源。目前每張截圖都是由 Cypress 驅動的瀏覽器拍攝的，所以 `renderer.backend` 是 `native`，而 `renderer.browser` 會重複 `platform.browser.name`。這個欄位的存在，是為了讓本機瀏覽器以外的算繪器（固定版本的 Docker 映像、託管的算繪器）能以 `rendererVersion` 與 `imageDigest` 表明身分，也讓不得不退回本機瀏覽器的執行能以 `renderer.fallback: true` 標記。請把算繪器不同的條目視為不同的基準影像。
 - `hashes` 保存 `images` 中每個實際存在於磁碟上的檔案的 sha256。可以用來略過重新上傳未變更的基準影像、檢查 artifact 是否與清單相符，或找出產生完全相同像素的兩個條目。
