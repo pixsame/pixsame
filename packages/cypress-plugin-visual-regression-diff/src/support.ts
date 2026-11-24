@@ -144,6 +144,10 @@ const generateCarouselTemplate = () =>
           <span data-carousel-counter style="font-size:.8em;color:#a0aec0;display:block;visibility:hidden">Image</span>
           <span data-carousel-title style="font-weight:600;color:#fff;font-size:.95em;visibility:hidden">placeholder</span>
           <span data-carousel-description style="font-size:.8em;color:#cbd5e0;display:none"></span>
+          <details data-carousel-message style="font-size:.8em;color:#a0aec0;display:none;margin-top:2px">
+            <summary style="cursor:pointer;user-select:none">Full message</summary>
+            <pre style="margin:6px 0 0;padding:8px 10px;background:#1a202c;border-radius:4px;color:#e2e8f0;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;overflow:auto;max-height:30vh;max-width:70vw"></pre>
+          </details>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:12px">
@@ -259,6 +263,11 @@ function openCarousel(
       .find('[data-carousel-description]')
       .text(diff.description ?? '')
       .css('display', diff.description ? 'block' : 'none');
+    // the whole failure message, with every change it lists; closed for each image
+    const messageEl = carouselEl.find('[data-carousel-message]');
+    messageEl.css('display', diff.message ? 'block' : 'none');
+    messageEl.removeAttr('open');
+    messageEl.find('pre').text(diff.message);
     (carouselEl.find('[data-type="prev"]')[0] as HTMLButtonElement).disabled =
       index === 0;
     (carouselEl.find('[data-type="next"]')[0] as HTMLButtonElement).disabled =
@@ -320,6 +329,7 @@ function openCarousel(
     carouselEl.find('[data-carousel-counter]').css('visibility', 'hidden');
     carouselEl.find('[data-carousel-title]').css('visibility', 'hidden');
     carouselEl.find('[data-carousel-description]').css('display', 'none');
+    carouselEl.find('[data-carousel-message]').css('display', 'none');
     carouselEl
       .find(
         '[data-see-diff-row],[data-type="skip"],[data-type="replace"],[data-replaced-info],[data-type="prev"],[data-type="next"]',

@@ -224,7 +224,20 @@ export const has = (pair: Pair, kinds: Kind[]) =>
   pair.kinds.some((kind) => kinds.includes(kind));
 
 /** Which elements are which in two snapshots, and what happened to each. */
+// one comparison is described more than once (a sentence, then the facts):
+// the same two snapshots give the same answer, which nobody changes
+const known = new WeakMap<Layout, WeakMap<Layout, LayoutDiff>>();
+
 export const diffLayouts = (before: Layout, after: Layout): LayoutDiff => {
+  const seen = known.get(before)?.get(after);
+  if (seen) return seen;
+  const made = diffNew(before, after);
+  if (!known.has(before)) known.set(before, new WeakMap());
+  known.get(before)?.set(after, made);
+  return made;
+};
+
+const diffNew = (before: Layout, after: Layout): LayoutDiff => {
   const pairs: Pair[] = [];
   match(before.root, after.root, pairs);
   const areaA: Area = [before.size.width, before.size.height];

@@ -2,14 +2,19 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
+  analysisPlugin,
+  captureComparison,
   decodeLayout,
   encodeLayout,
+  factLines,
   facts,
   overflowOf,
   STYLE,
   transformInWords,
   styleChanges,
   styleOf,
+  withAnalysis,
+  type Analysis,
   type Layout,
   type LayoutNode,
   type Rect,
@@ -725,5 +730,104 @@ describe('facts with style values', () => {
         layout: { baseline: layout([card({})]), actual: layout([card({})]) },
       }),
     ).toEqual([]);
+  });
+
+  describe('the facts of a failed comparison', () => {
+    type Extra = Record<string, Record<string, unknown>>;
+    type Decided = { status: string; message: string };
+    const hooksOf = () => {
+      const hooks: Record<string, unknown> = {};
+      analysisPlugin().setup({
+        on: (event: string, fn: unknown) => {
+          hooks[event] = fn;
+        },
+      });
+      return hooks as {
+        afterCompare: (
+          ctx: { input: { extra?: Extra } },
+          measurement: Record<string, unknown>,
+        ) => void;
+        decide: (ctx: unknown, decision: Decided) => Decided;
+      };
+    };
+    const baseline = draw([[40, 50, BLUE]]);
+    const actual = draw([[40, 50, YELLOW]]);
+    const diff = paint(
+      image(W, H, [240, 240, 240]),
+      { x: 20, y: 40, width: 100, height: 50 },
+      [255, 0, 0],
+    );
+    const measurement = {
+      kind: 'compared',
+      baselineSize: { width: W, height: H },
+      actualSize: { width: W, height: H },
+      result: { diffPixels: 5000 },
+    };
+    const layouts = {
+      baseline: layout([
+        box('card', 40, 50, {
+          style: style({ 'background-color': 'rgb(30, 90, 200)' }),
+        }),
+      ]),
+      actual: layout([
+        box('card', 40, 50, {
+          paint: 'yellow',
+          style: style({ 'background-color': 'rgb(240, 200, 0)' }),
+        }),
+      ]),
+    };
+
+    it('keeps them with the entry and prints them under the message', async () => {
+      const { afterCompare, decide } = hooksOf();
+      const ctx: { input: { extra?: Extra } } = { input: {} };
+      await withAnalysis(
+        async () => {
+          captureComparison(baseline, actual, diff);
+          afterCompare(ctx, measurement);
+          const { message } = decide(
+            {},
+            { status: 'failed', message: '5000 pixels differ.' },
+          );
+          expect(message.split('\n').slice(1)).toEqual([
+            'What changed:',
+            '  - div.card: background-color rgb(30, 90, 200) → rgb(240, 200, 0)',
+          ]);
+          expect(message.startsWith('5000 pixels differ. ')).toBe(true);
+        },
+        { layout: layouts },
+      );
+      const analysis = ctx.input.extra?.pixsame.analysis as Analysis;
+      expect(analysis.facts).toMatchObject([
+        { type: 'element', element: 'div.card' },
+      ]);
+    });
+
+    it('leaves them out without a layout on both sides', async () => {
+      const { afterCompare, decide } = hooksOf();
+      const ctx: { input: { extra?: Extra } } = { input: {} };
+      await withAnalysis(async () => {
+        captureComparison(baseline, actual, diff);
+        afterCompare(ctx, measurement);
+        expect(
+          decide({}, { status: 'failed', message: '5000 pixels differ.' })
+            .message,
+        ).not.toContain('What changed');
+      });
+      expect(
+        (ctx.input.extra?.pixsame.analysis as Analysis).facts,
+      ).toBeUndefined();
+    });
+
+    it('prints ten lines and counts the rest', () => {
+      const fact = (i: number) =>
+        ({ type: 'pixels', label: 'x', text: `change ${i}` }) as const;
+      const lines = factLines({
+        facts: Array.from({ length: 20 }, (_, i) => fact(i)),
+        factsOmitted: 5,
+      }).split('\n');
+      expect(lines).toHaveLength(12);
+      expect(lines[11]).toBe('  - and 15 more');
+      expect(factLines({})).toBe('');
+    });
   });
 });

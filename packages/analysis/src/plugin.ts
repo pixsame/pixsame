@@ -1,11 +1,34 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { analyze } from './analyze';
 import type { Descriptions } from './describe';
+import { facts } from './facts';
 import { maskFromPixelmatchDiff } from './regions';
 import type { Environment, Layout } from './layout/types';
 import type { Analysis, RgbaImage, Size } from './types';
 
 type Color = [number, number, number];
+
+/** As many facts are kept with an entry. */
+const MAX_FACTS = 20;
+/** As many of them are printed in the message of a failed comparison. */
+const MAX_LINES = 10;
+
+/**
+ * The facts of an analysis as lines for a failure message: `""` when there
+ * are none.
+ */
+export const factLines = ({
+  facts: found = [],
+  factsOmitted = 0,
+}: Pick<Analysis, 'facts' | 'factsOmitted'>): string => {
+  if (found.length === 0) return '';
+  const more = found.length - MAX_LINES + factsOmitted;
+  return [
+    'What changed:',
+    ...found.slice(0, MAX_LINES).map(({ text }) => `  - ${text}`),
+    ...(more > 0 ? [`  - and ${more} more`] : []),
+  ].join('\n');
+};
 type Captured = { baseline: RgbaImage; actual: RgbaImage; mask: Uint8Array };
 
 /** One comparison's hand-over point between the engine (which has the pixels) and the hook (which has the entry). */
@@ -83,7 +106,7 @@ export type AnalysisPlugin = {
 /**
  * A `visual-regression-compare` plugin: after a comparison that found
  * differences it writes the analysis to the entry's `extra.pixsame.analysis`,
- * and a failed comparison's message ends with the description. It needs `withAnalysis` around the call and `captureComparison` in the
+ * and a failed comparison's message ends with the description and, when the page's layout is known on both sides, with one line per change. It needs `withAnalysis` around the call and `captureComparison` in the
  * engine; pass or fail is not touched.
  */
 export const analysisPlugin = ({
@@ -102,19 +125,37 @@ export const analysisPlugin = ({
       ) {
         return;
       }
+      const sizes = measurement.baselineSize &&
+        measurement.actualSize && {
+          baseline: measurement.baselineSize,
+          actual: measurement.actualSize,
+        };
       const analysis: Analysis = analyze({
         ...captured,
         layout: slot.layout,
         environment: slot.environment,
         descriptions,
-        ...(measurement.baselineSize &&
-          measurement.actualSize && {
-            sizes: {
-              baseline: measurement.baselineSize,
-              actual: measurement.actualSize,
-            },
-          }),
+        ...(sizes && { sizes }),
       });
+      // with the page's layout on both sides: each change by element and by
+      // style. Only pixels that count for the test are looked at. On another
+      // system every line of text sits a little differently, which the
+      // description says in one sentence.
+      if (
+        slot.layout &&
+        slot.layout.baseline.size.width > 0 &&
+        slot.layout.actual.size.width > 0 &&
+        analysis.label !== 'cross-os'
+      ) {
+        const found = facts({
+          ...captured,
+          layout: slot.layout,
+          ...(sizes && { sizes }),
+        });
+        if (found.length > 0) analysis.facts = found.slice(0, MAX_FACTS);
+        if (found.length > MAX_FACTS)
+          analysis.factsOmitted = found.length - MAX_FACTS;
+      }
       slot.analysis = analysis;
       ctx.input.extra = {
         ...ctx.input.extra,
@@ -123,12 +164,12 @@ export const analysisPlugin = ({
     });
     api.on('decide', (_ctx, decision) => {
       const analysis = comparison.getStore()?.analysis;
-      return analysis && decision.status === 'failed'
-        ? {
-            ...decision,
-            message: `${decision.message} ${analysis.description}`,
-          }
-        : decision;
+      if (!analysis || decision.status !== 'failed') return decision;
+      const lines = factLines(analysis);
+      return {
+        ...decision,
+        message: `${decision.message} ${analysis.description}${lines && `\n${lines}`}`,
+      };
     });
   },
 });

@@ -94,6 +94,8 @@ const owners = (
   const owner = new Int32Array(w * h).fill(-1);
   const under = new Int32Array(w * h).fill(-1);
   const items: Item[] = [];
+  // for each item, whether what is behind it shows through
+  const clear: boolean[] = [];
   const fill = ([x, y, bw, bh]: Rect, item: Item, grow = 0) => {
     const x0 = Math.max(0, Math.floor((x - grow) * scale));
     const y0 = Math.max(0, Math.floor((y - grow) * scale));
@@ -101,13 +103,16 @@ const owners = (
     const y1 = Math.min(h, Math.ceil((y + bh + grow) * scale));
     if (x1 <= x0 || y1 <= y0) return;
     const index = items.push(item) - 1;
+    clear.push(!!item.line);
     for (let yy = y0; yy < y1; yy++) {
       // what is under a see-through item (a line of text, a box without a
       // background) is still what shows under the next one
-      for (let at = yy * w + x0; at < yy * w + x1; at++) {
-        if (!items[owner[at]]?.line) under[at] = owner[at];
+      const end = yy * w + x1;
+      for (let at = yy * w + x0; at < end; at++) {
+        const top = owner[at];
+        if (top < 0 || !clear[top]) under[at] = top;
+        owner[at] = index;
       }
-      owner.fill(index, yy * w + x0, yy * w + x1);
     }
   };
   const lineOf = (line: Rect, item: Item) =>
@@ -202,6 +207,8 @@ const owners = (
   return { owner, under, items };
 };
 
+const mapped = new WeakMap<LayoutDiff, { key: string; A: Owners; B: Owners }>();
+
 /** The share of differing pixels in each state of the check. */
 export type Shares = Record<
   'verified' | 'approx' | 'trust' | 'changed' | 'doubt',
@@ -280,8 +287,18 @@ export const checkAgainstPixels = ({
     if (pair.a) pairA.set(pair.a, pair);
     if (pair.b) pairB.set(pair.b, pair);
   }
-  const A = owners(before.root, 'a', pairA, w, h, scaleA);
-  const B = owners(after.root, 'b', pairB, w, h, scaleB);
+  // the maps are the same for every check of this diff at this size
+  const key = `${w}x${h}@${scaleA},${scaleB}`;
+  let maps = mapped.get(diff);
+  if (maps?.key !== key) {
+    maps = {
+      key,
+      A: owners(before.root, 'a', pairA, w, h, scaleA),
+      B: owners(after.root, 'b', pairB, w, h, scaleB),
+    };
+    mapped.set(diff, maps);
+  }
+  const { A, B } = maps;
 
   // does `from` at (x, y) equal `to` at (x, y) + sign * d?
   const check = (

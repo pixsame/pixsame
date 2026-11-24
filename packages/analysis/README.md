@@ -10,7 +10,7 @@ A pixel diff gives you one number. This package turns the same comparison into s
 - one sentence describing it;
 - a key that is equal for screenshots that changed in the same way, so one change showing in 14 screenshots is one thing to decide.
 
-It never decides whether a comparison passes. `@pixsame/cypress-plugin-visual-regression-diff` and `@pixsame/playwright-visual-regression-diff` use it out of the box and record the result in the run manifest under `extra.pixsame.analysis`.
+It never decides whether a comparison passes. `@pixsame/cypress-plugin-visual-regression-diff` and `@pixsame/playwright-visual-regression-diff` use it out of the box and record the result in the run manifest under `extra.pixsame.analysis`. When the page's layout is known for the baseline and the screenshot, the analysis also holds the `facts()` of the comparison (twenty at most, `factsOmitted` counts the rest) and a failed comparison's message lists the first ten under the description; `factLines()` gives those lines. Only pixels that count for the test are looked at there: a change under the threshold is not reported.
 
 ## Use it on two images
 

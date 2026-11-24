@@ -5,6 +5,7 @@ export { facts, type Fact, type FactsInput } from './facts';
 export { regionHash } from './hash';
 export {
   analysisPlugin,
+  factLines,
   captureComparison,
   withAnalysis,
   type AnalysisPlugin,
