@@ -131,3 +131,5 @@ packages/cli/skills
 # benchmark: rebuilt by `pnpm generate`
 benchmark/cases
 benchmark/cases-*
+# one file per answer while a run is going; `node pack.mjs` makes the answers.jsonl that is kept
+benchmark/results*/*/*/
