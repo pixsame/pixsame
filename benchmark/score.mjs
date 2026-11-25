@@ -12,11 +12,11 @@
 //
 // Verdicts are saved next to the answers, so scoring again costs nothing.
 
-import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { askClaude } from "./ask.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const arg = (name, fallback) => {
@@ -66,46 +66,23 @@ Extra lines in the answer do not matter either way.
 
 Reply with one word: HIT or MISS.`;
 
-const ask = (prompt) =>
-  new Promise((resolve) => {
-    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "pixsame-bench-judge-"));
-    const child = spawn(
-      "claude",
-      [
-        "-p",
-        prompt,
-        "--model",
-        judge,
-        "--output-format",
-        "json",
-        "--safe-mode",
-        "--tools",
-        "",
-        "--strict-mcp-config",
-        "--disable-slash-commands",
-        "--no-session-persistence",
-      ],
-      { cwd, stdio: ["ignore", "pipe", "pipe"] },
-    );
-    let stdout = "";
-    child.stdout.on("data", (chunk) => (stdout += chunk));
-    child.on("error", () => resolve(undefined));
-    child.on("close", () => {
-      fs.rmSync(cwd, { recursive: true, force: true });
-      try {
-        const word = String(JSON.parse(stdout).result).trim().toUpperCase();
-        resolve(
-          word.startsWith("HIT")
-            ? true
-            : word.startsWith("MISS")
-              ? false
-              : undefined,
-        );
-      } catch {
-        resolve(undefined);
-      }
-    });
-  });
+/** The judge's verdict: true for HIT, false for MISS, undefined when it gave neither. */
+const ask = async (prompt) => {
+  const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "pixsame-bench-judge-"));
+  try {
+    const result = await askClaude({ cwd, prompt, model: judge });
+    const word = String(result.answer ?? "")
+      .trim()
+      .toUpperCase();
+    return word.startsWith("HIT")
+      ? true
+      : word.startsWith("MISS")
+        ? false
+        : undefined;
+  } finally {
+    fs.rmSync(cwd, { recursive: true, force: true });
+  }
+};
 
 const rows = [];
 const pending = [];

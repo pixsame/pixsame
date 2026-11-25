@@ -13,7 +13,10 @@
     "node": ">=20.9.0"
   },
   "dependencies": {
+    "@pixsame/analysis": "workspace:*",
+    "hyparquet": "^1.33.1",
     "pixsame": "workspace:*",
-    "playwright-core": "1.65.0"
+    "playwright-core": "1.65.0",
+    "visual-regression-compare": "1.0.0-beta.4"
   }
 }

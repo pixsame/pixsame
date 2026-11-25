@@ -12,11 +12,11 @@
 // Answers are saved one file per case and arm; a second run skips what is
 // there, so an interrupted run can be continued.
 
-import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { askClaude } from "./ask.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const arg = (name, fallback) => {
@@ -47,53 +47,7 @@ export const PROMPTS = {
   facts: `A web page was captured before and after a code change. A comparison tool (pixsame snap) already compared the two captures; its output is snap.txt in the current directory; read it. ${TASK}`,
 };
 
-const ask = (cwd, prompt) =>
-  new Promise((resolve) => {
-    const child = spawn(
-      "claude",
-      [
-        "-p",
-        prompt,
-        "--model",
-        model,
-        "--output-format",
-        "json",
-        // no project or user instructions, skills, hooks or MCP servers: the model and the files only
-        "--safe-mode",
-        "--tools",
-        "Read",
-        "--allowedTools",
-        "Read",
-        "--strict-mcp-config",
-        "--disable-slash-commands",
-        "--no-session-persistence",
-      ],
-      { cwd, stdio: ["ignore", "pipe", "pipe"] },
-    );
-    let stdout = "";
-    let stderr = "";
-    child.stdout.on("data", (chunk) => (stdout += chunk));
-    child.stderr.on("data", (chunk) => (stderr += chunk));
-    child.on("error", (error) => resolve({ error: String(error) }));
-    child.on("close", (code) => {
-      try {
-        const answer = JSON.parse(stdout);
-        if (answer.is_error || answer.subtype !== "success") {
-          return resolve({ error: answer.result ?? answer.subtype ?? "error" });
-        }
-        resolve({
-          answer: answer.result,
-          usage: answer.usage,
-          costUsd: answer.total_cost_usd,
-          turns: answer.num_turns,
-          durationMs: answer.duration_ms,
-          model: Object.keys(answer.modelUsage ?? {})[0],
-        });
-      } catch {
-        resolve({ error: `exit ${code}: ${(stderr || stdout).slice(0, 400)}` });
-      }
-    });
-  });
+const ask = (cwd, prompt) => askClaude({ cwd, prompt, model, read: true });
 
 const jobs = [];
 for (const id of fs.readdirSync(casesDir).sort()) {

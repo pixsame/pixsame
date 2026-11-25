@@ -1,0 +1,87 @@
+# DiffSpot — Official LLM Judge Prompt (v2.0, iter19-stable)
+#
+# Locked alongside the v1 dataset release. Reproduced verbatim in the paper
+# appendix. Any change to this file MUST bump diffspot.judge.JUDGE_VERSION.
+#
+# Source: 07b_judge_vlm_v2.py (web-diff project, 2026-04-14), validated by
+# decisions/012-v2-judge-prompt-design.md (2026-04-18). Cross-judge agreement
+# (gpt-oss-120b vs Kimi-K2.5 vs Qwen3.5-397B) gives Kendall tau = 1.000 on
+# model rankings, confirming the prompt is stable.
+#
+# Default judge model: gpt-oss-120b
+# Sampling: temperature=0.0, max_tokens=16384, reasoning_effort="high"
+#
+# Template variables filled in at runtime:
+#   {gt_json}      -- structured GT mutation list (operator, target, before/after)
+#   {gt_answer}    -- natural-language GT description
+#   {vlm_response} -- the model's free-form prediction string
+#
+# >>> PROMPT BEGINS BELOW THIS LINE >>>
+
+You are a judge evaluating whether a Vision-Language Model (VLM) correctly identified visual differences between two webpage screenshots.
+
+## Ground Truth Changes (structured)
+The following changes were actually made to the webpage:
+{gt_json}
+
+## Ground Truth Answer (natural language)
+This is the correct answer describing the visual changes in human-readable language:
+{gt_answer}
+
+## VLM Response
+The VLM was shown both screenshots and asked to find all visual differences. Here is the VLM's response:
+---
+{vlm_response}
+---
+
+## Your Task
+For each ground truth change, determine if the VLM correctly identified it. Use BOTH the structured GT and the natural language answer as reference.
+
+### Verdict definitions
+- "correct": VLM described this change accurately — the location AND nature of change semantically match. Does NOT need to use the same words or technical terms.
+- "partial": VLM mentioned something related — noticed a change in the right area but was imprecise about what changed, OR correctly described the visual effect but attributed it to the wrong cause.
+- "missed": VLM did not mention this change at all, and nothing in the VLM response can reasonably be linked to this GT change.
+
+### CRITICAL: Match by visual effect, not technical description
+A CSS change often manifests as a different visual effect than its technical name suggests. The VLM sees PIXELS, not code — judge by whether the VLM accurately described what it SAW, not whether it matched the technical GT description.
+
+**Core principle: If the VLM's description is a truthful account of what a human would see, it is "correct" — even if the wording differs completely from the GT.**
+
+Example: GT says "border-color changed from yellow-600 to yellow-100" and GT answer says "the line became lighter". But on a dark background, yellow-600 is nearly invisible while yellow-100 (near-white) stands out — so the actual visual effect is "a white line appeared". If the VLM says "a white horizontal line appeared that was not present before", this is **correct** — the VLM accurately described the real visual effect. Do NOT mark this as "partial" just because the GT says "became lighter" while the VLM says "appeared".
+
+You MUST count these as "correct" (NOT "partial" or "missed"):
+
+- **color/border-color change where contrast with background flips visibility** → VLM says "element appeared/disappeared" or "a line/border appeared/disappeared" → **correct** (the color change made a previously invisible element visible, or vice versa)
+- **justify/alignment change** → VLM says "elements moved to the right/left" or "items are more spread out" or "spacing between items changed" → **correct**
+- **font-weight change** → VLM says "text looks thinner/lighter" or "text appears faded" or "text is bolder/darker" → **correct**
+- **letter-spacing change** → VLM says "text is more spread out" or "text looks wider" or "element position shifted" (because wider text shifts layout) → **correct**. **Very large letter-spacing can look visually identical to inserted spaces** — if VLM says the word "FITNESS" became "FIT NESS" (split into two words) or describes letter-spacing as "spaces appeared between letters" or "word was split", mark as **correct** (this is the actual visual effect of large letter-spacing). Likewise, very small/negative letter-spacing making adjacent words run together ("helloworld" from "hello world") should be **correct**.
+- **line-height change** → VLM says "text block is taller/shorter" or "more/less space between lines" or "paragraph looks more compact" → **correct**
+- **opacity change** → VLM says "element is faded" or "element looks lighter" or "element appears dimmed" → **correct**. If VLM says "element was removed/disappeared" when opacity is very low → **correct** (this IS what it looks like visually)
+- **grid layout column change** → VLM says "items are arranged differently" or "more/fewer items per row" or "cards are narrower/wider" or "headline wraps differently" → **correct**
+- **rounded corners change** → VLM says "shape changed" or "box looks more square/circular" → **correct**
+- **border-style change** (solid↔dashed↔dotted↔double) → VLM says "border looks different" or "outline style changed" → **correct**
+- **position/translate change** → VLM says "element moved/shifted" in approximately the right direction → **correct**
+- **position/translate change causing overlap or disappearance** → VLM says "element is missing" or "text is cut off" or "elements are overlapping" or "text is hidden" → **correct** (the VLM accurately described the visual consequence)
+- **spacing/padding change** → VLM says "more/less space" or "gap changed" or "element moved" (because margin change shifts position) → **correct**
+- **Any mutation causing secondary visual effects** → If a mutation causes text wrapping, element overlap, content being pushed off-screen, or layout reflow, and the VLM describes these secondary effects, mark as **correct** if the description is visually accurate, or **partial** if it's vague.
+
+### When to use "partial" vs "correct"
+- **correct**: VLM identified the right area AND described what it saw accurately (even if wording differs from GT)
+- **partial**: VLM noticed something in the right area but the description is vague or imprecise (e.g., "something changed in the header" without specifying what)
+
+### When in doubt, prefer "correct" over "partial", and "partial" over "missed"
+If the VLM described ANY visual change that could plausibly be caused by the GT mutation (even indirectly), mark it as at least "partial". If the description matches the actual visual effect (even if not the technical cause), mark it as "correct". This includes cases where:
+- The VLM describes a CONSEQUENCE of the change (e.g., "text overlaps" when position was shifted) → **correct**
+- The VLM says an element "appeared" or "disappeared" due to a color/opacity/visibility change → **correct**
+- The VLM identifies the correct AREA of change but is vague about what changed → **partial**
+
+Also check for hallucinations — differences the VLM claimed to see that don't match ANY ground truth change.
+
+Return ONLY valid JSON (no markdown fences):
+{
+  "mutations": [
+    {"gt": "description of GT change", "type": "mutation_type", "verdict": "correct/partial/missed", "vlm_match": "relevant quote from VLM response or empty"}
+  ],
+  "hallucinations": ["description of hallucinated difference"],
+  "summary": {"correct": 0, "partial": 0, "missed": 0, "hallucinated": 0}
+}

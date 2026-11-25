@@ -254,12 +254,21 @@ importers:
 
   benchmark:
     dependencies:
+      '@pixsame/analysis':
+        specifier: workspace:*
+        version: link:../packages/analysis
+      hyparquet:
+        specifier: ^1.33.1
+        version: 1.33.1
       pixsame:
         specifier: workspace:*
         version: link:../packages/cli
       playwright-core:
         specifier: 1.65.0
         version: 1.65.0
+      visual-regression-compare:
+        specifier: 1.0.0-beta.4
+        version: 1.0.0-beta.4
 
   examples/next:
     dependencies:
@@ -6521,6 +6530,9 @@ packages:
   human-signals@5.0.0:
     resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
     engines: {node: '>=16.17.0'}
+
+  hyparquet@1.33.1:
+    resolution: {integrity: sha512-D623q+KpogNTsmb0sdWXKsi1zrgQTFf2A6MX0vKZChuG7kjA/O+ps7DDfSgGf0rs8SfFP7UqrsDYypxVmmgqZA==}
 
   hyperdyperid@1.2.0:
     resolution: {integrity: sha512-Y93lCzHYgGWdrJ66yIktxiaGULYc6oGiABxhcO5AufBeOyoIdZF7bIfLaOrbM0iGIOXQQgxxRrFEnb+Y6w1n4A==}
@@ -17662,6 +17674,8 @@ snapshots:
   human-signals@2.1.0: {}
 
   human-signals@5.0.0: {}
+
+  hyparquet@1.33.1: {}
 
   hyperdyperid@1.2.0: {}
 

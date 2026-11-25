@@ -23,7 +23,8 @@ if (!model) {
 }
 const dir = path.resolve(here, arg("out", "results"), model);
 const packed = path.join(dir, "answers.jsonl");
-const ARMS = ["screenshots", "aria", "facts"];
+// `pixels` is the second arm of the DiffSpot run (--out diffspot/results-test)
+const ARMS = ["screenshots", "aria", "facts", "pixels"];
 
 if (process.argv.includes("--unpack")) {
   const lines = fs.readFileSync(packed, "utf8").split("\n").filter(Boolean);

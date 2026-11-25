@@ -87,7 +87,7 @@ The task, word for word in [`run.mjs`](run.mjs): list every visual difference, o
 - **One agent family.** The answers so far come from Claude models through Claude Code. Nothing here says how other agents do.
 - **Small pages.** Forty to eighty elements each. A real application page is larger, which makes screenshots harder to compare and accessibility snapshots longer. Neither is measured.
 - **Single edits.** One property on one element. A real change touches several.
-- **Our pages, our tool.** We wrote both, and the tool was changed after the pilot and after rounds 1 and 2 (see above). The final pages are the only ones it was not changed for; what it gets wrong there stays in the results.
+- **Our pages, our tool.** We wrote both, and the tool was changed after the pilot and after rounds 1 and 2 (see above). The final pages are the only ones it was not changed for; what it gets wrong there stays in the results. For screenshots of real pages from a benchmark we did not write, see [`diffspot/`](diffspot/README.md): it ships no pages, so only pixsame's comparison of pixels runs there, not `snap`.
 - **One CSS property at a time.** Every kind of change here is one the tool can now name or point to. A change made another way (new markup, a script, an image) is not measured.
 - **The accessibility arm cannot see styles.** A snapshot of roles and text holds no colours or sizes, so it is expected to find almost none of these changes. It is here because agents do verify with it.
 - **A judge model can be wrong.** The verdicts are saved in the result files for anyone to check.
