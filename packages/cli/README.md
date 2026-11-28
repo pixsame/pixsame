@@ -163,7 +163,7 @@ It is what the Stop hook runs (see `init --hook` below): an agent that captured 
 
 The [`pixsame-verify`](../../skills/pixsame-verify) skill, shipped in this package under `skills/`, teaches an agent the loop: capture before editing, edit, capture with `--only`, fix what is marked `OUTSIDE:`, and paste `pixsame snap --report` into the pull request. `pixsame init` installs it.
 
-How much this helps is measured in the [benchmark](../../benchmark/README.md): on ten pages `snap` was never adjusted to, Claude Sonnet 5.5 in Claude Code found 94% of single-property changes from two screenshots and 99% from the `snap` output, at a third of the cost per check. Screenshots mostly missed line height and padding. It is one model and one kind of change (a single CSS property), so read it as that.
+How much this helps is measured in the [benchmark](../../benchmark/README.md): on ten pages `snap` was never adjusted to, Claude Sonnet 5.5 in Claude Code found 94% of single-property changes from two screenshots and 99% from the `snap` output, at a third of the cost per check. Screenshots mostly missed line height and padding. Gemini 4 Carbon, asked later about the same pages, found 92% and 100%. It is two models and one kind of change (a single CSS property), so read it as that.
 
 ## `init`
 

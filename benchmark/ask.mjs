@@ -1,7 +1,8 @@
 // One question to one model, as a coding agent would get it: Claude Code in
 // headless mode, in a directory that holds the files of the question and
 // nothing else, with no project or user instructions, skills, hooks or MCP
-// servers.
+// servers. A Gemini model is asked through the Gemini API, with those files
+// attached.
 
 import { spawn } from "node:child_process";
 import fs from "node:fs";

@@ -12,7 +12,7 @@ http://localhost:3000/cart at 1280x800: 2 changes since the first capture, all o
 
 When something changed that the agent did not mean to change, the command exits with 1 and puts that line first, marked `OUTSIDE:`.
 
-In [our benchmark](../../benchmark/README.md), Claude Sonnet 5.5 in Claude Code found 94% of single-property changes from two screenshots and 99% from this output, at a third of the cost per check. That is one model, on ten pages the tool was never adjusted to.
+In [our benchmark](../../benchmark/README.md), Claude Sonnet 5.5 in Claude Code found 94% of single-property changes from two screenshots and 99% from this output, at a third of the cost per check, on ten pages the tool was never adjusted to. Gemini 4 Carbon, asked later about the same pages, found 92% and 100%.
 
 ## Install
 

@@ -4,6 +4,23 @@ A coding agent that edits a component has three ways to check the result: look a
 
 Everything needed to run it again is here: the pages, the changes, the harness and the raw answers.
 
+## In short
+
+Two models, two sets of pages. The first set is ours (290 changed pages, 29 kinds of change), the second is [DiffSpot](diffspot/README.md), a benchmark of real web pages we did not write (234 changed pairs). Each cell is the number of changes the model did **not** find:
+
+| Model             | Our pages: two screenshots | Our pages: `pixsame snap` | DiffSpot: two screenshots | DiffSpot: with pixsame |
+| ----------------- | -------------------------- | ------------------------- | ------------------------- | ---------------------- |
+| Claude Sonnet 5.5 | 18 missed (94% found)      | 3 missed (99%)            | 28 missed (88%)           | 15 missed (94%)        |
+| Gemini 4 Carbon   | 24 missed (92% found)      | 0 missed (100%)           | 34 missed (85%)           | 12 missed (95%)        |
+
+- **Both models miss far fewer changes with pixsame**, on our pages and on pages we had no hand in.
+- **`snap` output is also the cheapest thing to read**: a third of the cost of two screenshots for Claude ($0.0049 against $0.0158 per answer), under a fifth for Gemini ($0.0032 against $0.0178).
+- **It stops invented differences.** On DiffSpot's unchanged pairs Gemini listed a difference on 13 of 36 from the screenshots, and on none once pixsame said that no pixel differs. Claude invented none either way.
+- The two DiffSpot columns are not `snap`: DiffSpot ships screenshots and no pages, so only pixsame's comparison of pixels can run there.
+- Claude's row on our pages is the frozen run; Gemini was run later, on the same pages with the code as it is [after the fixes](#after-the-final-run), where Claude misses 17 and 0.
+
+The rest of this page is how these numbers were reached and what they do not show.
+
 ## Result
 
 On ten pages the tool was never adjusted to, with 29 kinds of change (290 changed pages and 30 unchanged ones per arm), Claude Sonnet 5.5 in Claude Code:
@@ -89,7 +106,7 @@ The same 320 cases, with the same `snap` output, given to Gemini 4 Carbon and ju
 
 The task, word for word in [`run.mjs`](run.mjs): list every visual difference, one per line, with the direction or the values; reply `NO DIFFERENCE` if there is none.
 
-**The agent** is Claude Code in headless mode with only the Read tool, started in an empty directory that holds that arm's files and nothing else, with no project instructions, skills, hooks or MCP servers, at its default effort. That is a real agent, not a bare model call, so each call also carries Claude Code's own instructions. They are the same in every arm; the table says how large they are.
+**The agent** is Claude Code in headless mode with only the Read tool, started in an empty directory that holds that arm's files and nothing else, with no project instructions, skills, hooks or MCP servers, at its default effort. That is a real agent, not a bare model call, so each call also carries Claude Code's own instructions. They are the same in every arm; the table says how large they are. Gemini is the exception: it is a bare model call through the Gemini API, with the arm's files attached to the question.
 
 **Scoring** ([`score.mjs`](score.mjs)):
 
@@ -98,7 +115,7 @@ The task, word for word in [`run.mjs`](run.mjs): list every visual difference, o
 
 ## What it does not show
 
-- **One agent family.** The answers so far come from Claude models through Claude Code. Nothing here says how other agents do.
+- **Two models, one agent.** The answers come from Claude Sonnet 5.5 through Claude Code and from Gemini 4 Carbon through its API. Nothing here says how other models do, or how Gemini does inside an agent of its own.
 - **Small pages.** Forty to eighty elements each. A real application page is larger, which makes screenshots harder to compare and accessibility snapshots longer. Neither is measured.
 - **Single edits.** One property on one element. A real change touches several.
 - **Our pages, our tool.** We wrote both, and the tool was changed after the pilot and after rounds 1 and 2 (see above). The final pages are the only ones it was not changed for; what it gets wrong there stays in the results. For screenshots of real pages from a benchmark we did not write, see [`diffspot/`](diffspot/README.md): it ships no pages, so only pixsame's comparison of pixels runs there, not `snap`.
@@ -108,7 +125,7 @@ The task, word for word in [`run.mjs`](run.mjs): list every visual difference, o
 
 ## Run it
 
-It needs Node 20.9 or later, Google Chrome, and [Claude Code](https://claude.com/claude-code) signed in (a subscription or an API key; the answers count against it).
+It needs Node 20.9 or later, Google Chrome, and [Claude Code](https://claude.com/claude-code) signed in (a subscription or an API key; the answers count against it). The judge runs through Claude Code too, whichever model answers.
 
 ```bash
 pnpm install && pnpm build        # at the repository root

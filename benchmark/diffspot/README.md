@@ -15,6 +15,17 @@ What can run is the part of pixsame that needs no page: the comparison of the pi
 | `screenshots` | `before.png` and `after.png`                                                               |
 | `pixels`      | the same two screenshots, `pixsame.txt` (the areas where pixels changed) and a crop of each |
 
+## In short
+
+270 pairs (234 changed, 36 unchanged), two models, the same judge:
+
+| Model             | Changes found from two screenshots | With pixsame's pixels | Wrong answers on all 270 pairs |
+| ----------------- | ---------------------------------- | --------------------- | ------------------------------ |
+| Claude Sonnet 5.5 | 88% (206 of 234)                   | 94% (219 of 234)      | 28 → 15                        |
+| Gemini 4 Carbon   | 85% (200 of 234)                   | 95% (222 of 234)      | 47 → 12                        |
+
+With pixsame's output Claude gets about half as many pairs wrong and Gemini about a quarter. Gemini's 47 include 13 unchanged pairs on which it listed a difference; with pixsame it listed none.
+
 ## Result
 
 270 pairs (six of each kind at each difficulty, and 36 unchanged), Claude Sonnet 5.5 in Claude Code, judged by Claude Sonnet 5.5 with DiffSpot's judge prompt:

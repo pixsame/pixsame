@@ -4,7 +4,9 @@
 // only the Read tool, in an empty directory that holds that arm's files and
 // nothing else. So the numbers are those of a real agent, on your Claude
 // subscription or API key, and every call carries the same fixed overhead of
-// the agent's own instructions.
+// the agent's own instructions. A model whose name starts with `gemini` is
+// asked through the Gemini API instead (GEMINI_API_KEY), with the arm's files
+// attached to the question.
 //
 //   node run.mjs --model sonnet [--pages landing] [--arms screenshots,aria,facts]
 //                [--concurrency 4] [--cases cases] [--out results] [--limit 20]
