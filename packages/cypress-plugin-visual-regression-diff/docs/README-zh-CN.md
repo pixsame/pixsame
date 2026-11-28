@@ -1,6 +1,6 @@
 ---
 reviewed: false
-source: 7ff9901cabbdc825
+source: 3fe7bc3e2013feea
 ---
 
 ## 快速开始
@@ -250,7 +250,7 @@ npx cypress run --env "pluginVisualRegressionCleanupUnusedImages=true"
 - 所有路径都相对于 `projectRoot`，并使用 `/` 作为分隔符；当 `imagesPath` 为绝对路径时，它们可能指向项目之外（`../…`）。`projectRoot` 是 Cypress 项目目录，不一定是仓库根目录：`ci.workspace` 是 checkout 目录，因此 `relative(ci.workspace, projectRoot)` 即为仓库内的路径前缀。
 - `failed` 和 `missing-baseline` 是需要人工处理的条目：将 `images.actual.path` 复制覆盖到 `images.baseline.path` 即可批准它们。
 - `baselineWritten` 表示该截图是否改动了工作区，与 `status` 无关。
-- 比较发现差异的条目带有 `extra.pixsame.analysis`（除非关闭了 `analysis`）：一个 `label`（`content-change`、`moved`、`moved-and-changed`、`noise-like`、`size-change` 或 `cross-os`）、一句话的 `description`、发生变化的 `regions` 及其边框，以及一个 `bundleKey`，以相同方式变化的条目其值相同。`@pixsame/analysis` 中的 `bundle()` 会按它对条目分组。当基准图带有页面布局快照时，`layout` 会列出发生移动的元素（`moves`，单位为 CSS 像素），并指出发生了什么变化（`causes`，例如 `added div.promo "Free shipping"`）。没有快照时，`pixels` 只根据像素列出找到的移动，而且只在答案明确时才给出：没有明显移动的截图不会得到任何关于移动的结论。如果基准图和截图来自不同的操作系统，而布局只显示由此造成的差异（另一种字体、位置略有不同的文本），标签为 `cross-os`。
+- 比较发现差异的条目带有 `extra.pixsame.analysis`（除非关闭了 `analysis`）：一个 `label`（`content-change`、`moved`、`moved-and-changed`、`noise-like`、`size-change` 或 `cross-os`）、一句话的 `description`、发生变化的 `regions` 及其边框，以及一个 `bundleKey`，以相同方式变化的条目其值相同。`@pixsame/analysis` 中的 `bundle()` 会按它对条目分组。当基准图带有页面布局快照时，`layout` 会列出发生移动的元素（`moves`，单位为 CSS 像素），并指出发生了什么变化（`causes`，例如 `added div.promo "Free shipping"`），`facts` 则逐条列出每一处变化，按元素和发生变化的样式给出（`button.checkout "Checkout": border-radius 8px → 4px`），最多二十条；前十条会打印在失败消息下方，并在审查浮层和 `npx pixsame review` 中以编号标注在图片上：将鼠标悬停在编号或列表中对应的行上，即可看到该元素的轮廓。在图片上没有位置的内容列在“Other findings”下。没有快照时，`pixels` 只根据像素列出找到的移动，而且只在答案明确时才给出：没有明显移动的截图不会得到任何关于移动的结论。如果基准图和截图来自不同的操作系统，而布局只显示由此造成的差异（另一种字体、位置略有不同的文本），标签为 `cross-os`。
 - 每个条目都带有自己的 `platform` 和 `viewport`，因此在拼接多份清单后，仍能区分来自机器矩阵中不同机器的条目。条目上的 `options` 是 `matchImage` 的精确输入（`imagesPath` 保留未展开的变量）；`comparison` 是比对结果。
 - `platform` 是测试运行的位置，`renderer` 是像素的来源。目前每张截图都由 Cypress 驱动的浏览器拍摄，因此 `renderer.backend` 为 `native`，`renderer.browser` 与 `platform.browser.name` 相同。该字段的存在是为了让本地浏览器以外的渲染器（固定版本的 Docker 镜像、托管渲染器）能通过 `rendererVersion` 和 `imageDigest` 标识自己，也为了让不得不回退到本地浏览器的运行能用 `renderer.fallback: true` 标记出来。请将渲染器不同的条目视为不同的基线。
 - `hashes` 保存 `images` 中每个在磁盘上存在的文件的 sha256。可用它跳过重新上传未变化的基线、检查 artifact 是否与清单一致，或找出产生了完全相同像素的两个条目。

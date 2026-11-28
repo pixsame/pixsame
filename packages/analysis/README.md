@@ -10,7 +10,7 @@ A pixel diff gives you one number. This package turns the same comparison into s
 - one sentence describing it;
 - a key that is equal for screenshots that changed in the same way, so one change showing in 14 screenshots is one thing to decide.
 
-It never decides whether a comparison passes. `@pixsame/cypress-plugin-visual-regression-diff` and `@pixsame/playwright-visual-regression-diff` use it out of the box and record the result in the run manifest under `extra.pixsame.analysis`.
+It never decides whether a comparison passes. `@pixsame/cypress-plugin-visual-regression-diff` and `@pixsame/playwright-visual-regression-diff` use it out of the box and record the result in the run manifest under `extra.pixsame.analysis`. When the page's layout is known for the baseline and the screenshot, the analysis also holds the `facts()` of the comparison (twenty at most, `factsOmitted` counts the rest) and a failed comparison's message lists the first ten under the description; `factLines()` gives those lines. `pinsOf()` turns the facts into numbered pins with their boxes in image pixels (and the facts that have no place, as sentences), and `drawPins()` draws them on a copy of the screenshot without any font or image library. Only pixels that count for the test are looked at there: a change under the threshold is not reported.
 
 ## Use it on two images
 
@@ -96,9 +96,26 @@ await withAnalysis(() => comparer.compare(input), {
 });
 ```
 
-The layout is stored in an `iTXt` chunk of the PNG as columnar JSON, deflated (about 6 to 40 KB for a real page). **The chunk's keyword carries the analysis version**: `pixsame-layout-v2`. `ANALYSIS_VERSION` is raised by any change that makes stored data wrong or unreadable (the snapshot, its encoding, how it is read), so a baseline stamped by an older version is recognised without decoding it and that comparison falls back to the pixels alone. `readLayout` only returns a layout of the current version, `layoutVersionOf` tells a stale one from none, and `writeLayout` drops layouts of any other version.
+The layout is stored in an `iTXt` chunk of the PNG as columnar JSON, deflated (about 6 to 40 KB for a real page). **The chunk's keyword carries the analysis version**: `pixsame-layout-v4`. `ANALYSIS_VERSION` is raised by any change that makes stored data wrong or unreadable (the snapshot, its encoding, how it is read), so a baseline stamped by an older version is recognised without decoding it and that comparison falls back to the pixels alone. `readLayout` only returns a layout of the current version, `layoutVersionOf` tells a stale one from none, and `writeLayout` drops layouts of any other version.
 
 **Large pages.** A snapshot costs about 70 microseconds an element, so a page with more than 3000 elements (`cullAbove`) is snapshotted without the elements that lie outside `area` or outside an ancestor that clips them: the rows of a long list or data grid that are scrolled out of view. They explain no pixel of the screenshot. On a grid of 380,000 elements this takes the snapshot from 27 seconds to 0.2 seconds.
+
+### Style values
+
+Each element of a snapshot also carries the computed values of a fixed list of styles (`STYLE`: font family, size, weight and style, line height, letter spacing, text alignment, case and decoration, colour, background colour and image, opacity, filter, transform, border width, style and colour, the four border radii, box shadow, outline, padding, row and column gap, margin, flex order; a value longer than 160 characters is cut and ends with a hash of the whole). They let a change be named instead of only noticed:
+
+```ts
+import { facts, styleChanges } from '@pixsame/analysis';
+
+facts({ baseline, actual, mask, layout });
+// [{ type: 'element', element: 'button.checkout "Checkout"',
+//    styles: [{ property: 'border-radius', before: '8px', after: '4px' }],
+//    text: 'button.checkout "Checkout": border-radius 8px → 4px' }, …]
+```
+
+`facts()` returns everything that differs, one fact each: changed elements (one that came or went counts once with all it holds), elements with a style change that shows only around or inside them, moves grouped by offset and named by the outermost element that moved, resizes (a width change named on the outermost element, a height change on the innermost one, whether or not what it holds moved with it) and areas the layout cannot explain. Sides or corners that end up alike are written as one (`padding`, `margin`, `border-radius`, `gap`, `border-width`, `border-style`, `border-color`), the colour of a border or outline that is not drawn is left out, and a style an element only inherited is marked with the ancestor it came from. A shadow or outline counts as part of its element, and so does everything inside an element whose opacity, filter or transform changed; text and boxes without a background are not doubted when what is behind them changed. A transform is also said in words (`rotate(-3deg)`). Given `faint` (every pixel that differs at all, next to the `mask` of those that count), changes the layout names are reported when only such pixels show them, marked `faint`. Given `unseen` (the pixels left out of both masks because they change by themselves), a change the layout names on an element that lies there is reported from the layout alone, marked `unseen`. With `only` (rectangles of the elements that were meant to change) every fact says whether it is `outside` them. The failure description of `analyze()` names the first values in the same way.
+
+A style outside the list still shows as a changed look, through the `paint` hash. The values add about 15% to the stored layout (0.4 to 1.7 KB on the pages measured).
 
 ## Screenshots from different systems
 

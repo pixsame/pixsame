@@ -91,6 +91,8 @@ test.describe('matchImage', () => {
       'changing card_#1-expected.png',
       'changing card_#1-actual.png',
       'changing card_#1-diff.png',
+      'changing card_#1-changes.png',
+      'pixsame: what changed',
       'pixsame: review and replace baselines',
     ]);
     fs.rmSync(path.join(dir, 'changing card_#1.actual.png'));

@@ -1,0 +1,181 @@
+{
+  "model": "sonnet",
+  "judge": "sonnet",
+  "cases": 270,
+  "arms": {
+    "screenshots": {
+      "answers": 270,
+      "changed": [
+        206,
+        234
+      ],
+      "unchanged": [
+        36,
+        36
+      ],
+      "all": [
+        242,
+        270
+      ],
+      "tiers": {
+        "easy": [
+          72,
+          78
+        ],
+        "medium": [
+          67,
+          78
+        ],
+        "hard": [
+          67,
+          78
+        ]
+      },
+      "operators": {
+        "border": [
+          15,
+          18
+        ],
+        "color": [
+          14,
+          18
+        ],
+        "font_size": [
+          18,
+          18
+        ],
+        "font_weight": [
+          18,
+          18
+        ],
+        "gradient": [
+          14,
+          18
+        ],
+        "justify": [
+          18,
+          18
+        ],
+        "letter_spacing": [
+          17,
+          18
+        ],
+        "line_height": [
+          15,
+          18
+        ],
+        "opacity": [
+          16,
+          18
+        ],
+        "position": [
+          18,
+          18
+        ],
+        "rounded": [
+          11,
+          18
+        ],
+        "spacing": [
+          15,
+          18
+        ],
+        "text": [
+          17,
+          18
+        ]
+      },
+      "costUsd": 0.01832864259259259,
+      "turns": 3
+    },
+    "pixels": {
+      "answers": 270,
+      "changed": [
+        219,
+        234
+      ],
+      "unchanged": [
+        36,
+        36
+      ],
+      "all": [
+        255,
+        270
+      ],
+      "tiers": {
+        "easy": [
+          75,
+          78
+        ],
+        "medium": [
+          72,
+          78
+        ],
+        "hard": [
+          72,
+          78
+        ]
+      },
+      "operators": {
+        "border": [
+          17,
+          18
+        ],
+        "color": [
+          17,
+          18
+        ],
+        "font_size": [
+          18,
+          18
+        ],
+        "font_weight": [
+          17,
+          18
+        ],
+        "gradient": [
+          13,
+          18
+        ],
+        "justify": [
+          18,
+          18
+        ],
+        "letter_spacing": [
+          18,
+          18
+        ],
+        "line_height": [
+          16,
+          18
+        ],
+        "opacity": [
+          18,
+          18
+        ],
+        "position": [
+          18,
+          18
+        ],
+        "rounded": [
+          17,
+          18
+        ],
+        "spacing": [
+          15,
+          18
+        ],
+        "text": [
+          17,
+          18
+        ]
+      },
+      "costUsd": 0.0212472337037037,
+      "turns": 4.355555555555555
+    }
+  },
+  "foundByOneArmOnly": {
+    "screenshots": 2,
+    "pixels": 15
+  }
+}

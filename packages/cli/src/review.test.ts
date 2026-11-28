@@ -7,7 +7,7 @@ import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { writeLayout, type Layout } from '@pixsame/analysis';
 import { run, type Io } from './cli';
-import { startReview, type Review } from './review';
+import { reviewReport, startReview, type Review } from './review';
 import { png } from './test-utils';
 
 const template = await readFile(
@@ -29,12 +29,16 @@ const baselineBytes = png();
 const actualBytes = writeLayout(png('FRSOURCE_CPVRD_V'), layout);
 
 /** A finished run: a manifest, and the baseline, actual and diff it points at. */
-const project = async ({ hashes = true } = {}) => {
+const project = async ({
+  hashes = true,
+  analysis = {} as Record<string, unknown>,
+} = {}) => {
   await mkdir(path.join(dir, 'shots'), { recursive: true });
   await writeFile(path.join(dir, 'shots', 'home_#0.png'), baselineBytes);
   await writeFile(path.join(dir, 'shots', 'home_#0.actual.png'), actualBytes);
   await writeFile(path.join(dir, 'shots', 'home_#0.diff.png'), png());
   const manifest = JSON.parse(template.replace('__PROJECT_ROOT__', dir));
+  Object.assign(manifest.entries[0].extra.pixsame.analysis, analysis);
   if (hashes)
     manifest.entries[0].hashes = {
       baseline: sha(baselineBytes),
@@ -76,11 +80,85 @@ describe('review server', () => {
       label: 'moved-and-changed',
       description:
         '3 elements moved down by 40 px. Changed: added div.promo "Free shipping".',
+      // the fixture's analysis has no facts
+      pins: [],
+      rest: [],
       // the baseline fixture has no layout
       oldBaseline: true,
       approved: false,
       images: ['baseline', 'actual', 'diff'],
     });
+  });
+
+  it('gives each change of the analysis a place on the image', async () => {
+    await project({
+      analysis: {
+        scale: 2,
+        factsOmitted: 2,
+        facts: [
+          {
+            type: 'element',
+            kinds: ['added'],
+            element: 'div.promo',
+            rect: [1, 2, 3, 4],
+            text: 'added div.promo',
+          },
+          { type: 'pixels', label: 'x', text: 'no place for this one' },
+        ],
+      },
+    });
+    const { items } = await start();
+    expect(items()[0]).toMatchObject({
+      pins: [
+        {
+          number: 1,
+          kind: 'added',
+          side: 'actual',
+          boxes: [{ x: 2, y: 4, width: 6, height: 8 }],
+          text: 'added div.promo',
+        },
+      ],
+      rest: ['no place for this one', '2 more changes are not shown.'],
+    });
+  });
+
+  it('writes the page as one file that asks no server for anything', async () => {
+    await project({
+      analysis: {
+        facts: [
+          {
+            type: 'element',
+            kinds: ['added'],
+            element: 'div.promo',
+            rect: [1, 2, 3, 4],
+            text: 'added </script><b>div.promo',
+          },
+        ],
+      },
+    });
+    const { html, count } = reviewReport([dir]);
+    expect(count).toBe(1);
+    expect(html).toContain('<title>pixsame report</title>');
+    expect(html).toContain(
+      `data:image/png;base64,${Buffer.from(actualBytes).toString('base64')}`,
+    );
+    // a text from the page cannot end the script it is embedded in
+    expect(html).toContain('added \\u003c/script>\\u003cb>div.promo');
+    expect(html.match(/<\/script>/g)).toHaveLength(1);
+
+    const lines: string[] = [];
+    const code = await run(['review', dir, '--out', 'out/report.html'], {
+      out: (line) => void lines.push(line),
+      exec: async () => 0,
+      open: () => undefined,
+      wait: async () => undefined,
+      cwd: dir,
+    });
+    expect(code).toBe(0);
+    expect(lines).toEqual(['1 failed comparison written to out/report.html']);
+    expect(await readFile(path.join(dir, 'out', 'report.html'), 'utf8')).toBe(
+      html,
+    );
   });
 
   it('serves the page and the images, but only at the secret address', async () => {

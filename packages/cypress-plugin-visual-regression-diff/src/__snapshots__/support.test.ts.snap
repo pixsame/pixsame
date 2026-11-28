@@ -10,19 +10,38 @@ exports[`generateOverlayTemplate > generates proper template 1`] = `
     <button type="button" data-type="close" style="background:transparent;border:1px solid #4a5568;color:#a0aec0;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:.85em">✕ Close</button>
   </header>
   <div data-diff-base64="img-diff-base64" style="flex:1;overflow:auto;padding:20px;color:#fff">
-    <div style="display:flex;justify-content:center;align-items:flex-start;gap:15px;flex-wrap:wrap">
+    <div data-pix-root style="display:flex;justify-content:center;align-items:flex-start;gap:16px"><style>
+  [data-pix-panel] [data-pix-old] { opacity:1; }
+  [data-pix-panel] [data-pix-new] { opacity:0; }
+  [data-pix-panel][data-side="actual"] [data-pix-old] { opacity:0; }
+  [data-pix-panel][data-side="actual"] [data-pix-new] { opacity:1; }
+  [data-pix-panel] [data-pin-side="actual"] { display:none; }
+  [data-pix-panel][data-side="actual"] [data-pin-side="actual"] { display:block; }
+  [data-pix-panel][data-side="actual"] [data-pin-side="baseline"] { display:none; }
+  [data-pix-root][data-pins="off"] [data-pix-pins] { display:none; }
+  [data-pix-box] { visibility:hidden; }
+  [data-pix-root][data-lit="1"] [data-pix-box="1"] { visibility:visible; } [data-pix-root][data-lit="1"] [data-pix-line="1"] { background:#2d3748; } [data-pix-root][data-lit="2"] [data-pix-box="2"] { visibility:visible; } [data-pix-root][data-lit="2"] [data-pix-line="2"] { background:#2d3748; } [data-pix-root][data-lit="3"] [data-pix-box="3"] { visibility:visible; } [data-pix-root][data-lit="3"] [data-pix-line="3"] { background:#2d3748; } [data-pix-root][data-lit="4"] [data-pix-box="4"] { visibility:visible; } [data-pix-root][data-lit="4"] [data-pix-line="4"] { background:#2d3748; } [data-pix-root][data-lit="5"] [data-pix-box="5"] { visibility:visible; } [data-pix-root][data-lit="5"] [data-pix-line="5"] { background:#2d3748; } [data-pix-root][data-lit="6"] [data-pix-box="6"] { visibility:visible; } [data-pix-root][data-lit="6"] [data-pix-line="6"] { background:#2d3748; } [data-pix-root][data-lit="7"] [data-pix-box="7"] { visibility:visible; } [data-pix-root][data-lit="7"] [data-pix-line="7"] { background:#2d3748; } [data-pix-root][data-lit="8"] [data-pix-box="8"] { visibility:visible; } [data-pix-root][data-lit="8"] [data-pix-line="8"] { background:#2d3748; } [data-pix-root][data-lit="9"] [data-pix-box="9"] { visibility:visible; } [data-pix-root][data-lit="9"] [data-pix-line="9"] { background:#2d3748; } [data-pix-root][data-lit="10"] [data-pix-box="10"] { visibility:visible; } [data-pix-root][data-lit="10"] [data-pix-line="10"] { background:#2d3748; }
+</style>
     <div
-      style="position:relative;background:#fff;border:solid 15px #fff;overflow:hidden;color:#1a202c"
-      onmouseover="this.querySelector('div').style.opacity=0,this.querySelector('img').style.opacity=1"
-      onmouseleave="this.querySelector('div').style.opacity=1,this.querySelector('img').style.opacity=0"
+      data-pix-panel data-side="baseline"
+      style="position:relative;flex:0 1 auto;min-width:0;background:#fff;border:solid 15px #fff;overflow:hidden;color:#1a202c"
+      onmouseover="this.dataset.side='actual'"
+      onmouseleave="this.dataset.side='baseline'"
     >
       <h3 style="margin:0 0 8px">New screenshot (hover off to see old one):</h3>
-      <img style="min-width:200px;max-width:100%;opacity:0" src="data:image/png;base64,img-new-base64" />
-      <div style="position:absolute;top:0;left:0;width:100%;background:#fff">
+      <div style="position:relative;display:inline-block;max-width:100%">
+        <img data-pix-new style="display:block;min-width:200px;max-width:100%" src="data:image/png;base64,img-new-base64" />
+        <div data-pix-pins style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:2"></div>
+      </div>
+      <div data-pix-old style="position:absolute;top:0;left:0;width:100%;background:#fff">
         <h3 style="margin:0 0 8px">Old screenshot (hover to see new one):</h3>
-        <img style="min-width:200px;max-width:100%" src="data:image/png;base64,img-old-base64" />
+        <img style="display:block;min-width:200px;max-width:100%" src="data:image/png;base64,img-old-base64" />
       </div>
     </div>
+    
+    
+    
+    
   </div>
   </div>
   <div style="background:#1a202c;padding:0 16px 10px;display:flex;justify-content:flex-end;flex-shrink:0">
@@ -48,19 +67,38 @@ exports[`generateOverlayTemplate > generates proper template 2`] = `
     <button type="button" data-type="close" style="background:transparent;border:1px solid #4a5568;color:#a0aec0;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:.85em">✕ Close</button>
   </header>
   <div data-diff-base64="img-diff-base64" style="flex:1;overflow:auto;padding:20px;color:#fff">
-    <div style="display:flex;justify-content:center;align-items:flex-start;gap:15px;flex-wrap:wrap">
+    <div data-pix-root style="display:flex;justify-content:center;align-items:flex-start;gap:16px"><style>
+  [data-pix-panel] [data-pix-old] { opacity:1; }
+  [data-pix-panel] [data-pix-new] { opacity:0; }
+  [data-pix-panel][data-side="actual"] [data-pix-old] { opacity:0; }
+  [data-pix-panel][data-side="actual"] [data-pix-new] { opacity:1; }
+  [data-pix-panel] [data-pin-side="actual"] { display:none; }
+  [data-pix-panel][data-side="actual"] [data-pin-side="actual"] { display:block; }
+  [data-pix-panel][data-side="actual"] [data-pin-side="baseline"] { display:none; }
+  [data-pix-root][data-pins="off"] [data-pix-pins] { display:none; }
+  [data-pix-box] { visibility:hidden; }
+  [data-pix-root][data-lit="1"] [data-pix-box="1"] { visibility:visible; } [data-pix-root][data-lit="1"] [data-pix-line="1"] { background:#2d3748; } [data-pix-root][data-lit="2"] [data-pix-box="2"] { visibility:visible; } [data-pix-root][data-lit="2"] [data-pix-line="2"] { background:#2d3748; } [data-pix-root][data-lit="3"] [data-pix-box="3"] { visibility:visible; } [data-pix-root][data-lit="3"] [data-pix-line="3"] { background:#2d3748; } [data-pix-root][data-lit="4"] [data-pix-box="4"] { visibility:visible; } [data-pix-root][data-lit="4"] [data-pix-line="4"] { background:#2d3748; } [data-pix-root][data-lit="5"] [data-pix-box="5"] { visibility:visible; } [data-pix-root][data-lit="5"] [data-pix-line="5"] { background:#2d3748; } [data-pix-root][data-lit="6"] [data-pix-box="6"] { visibility:visible; } [data-pix-root][data-lit="6"] [data-pix-line="6"] { background:#2d3748; } [data-pix-root][data-lit="7"] [data-pix-box="7"] { visibility:visible; } [data-pix-root][data-lit="7"] [data-pix-line="7"] { background:#2d3748; } [data-pix-root][data-lit="8"] [data-pix-box="8"] { visibility:visible; } [data-pix-root][data-lit="8"] [data-pix-line="8"] { background:#2d3748; } [data-pix-root][data-lit="9"] [data-pix-box="9"] { visibility:visible; } [data-pix-root][data-lit="9"] [data-pix-line="9"] { background:#2d3748; } [data-pix-root][data-lit="10"] [data-pix-box="10"] { visibility:visible; } [data-pix-root][data-lit="10"] [data-pix-line="10"] { background:#2d3748; }
+</style>
     <div
-      style="position:relative;background:#fff;border:solid 15px #fff;overflow:hidden;color:#1a202c"
-      onmouseover="this.querySelector('div').style.opacity=0,this.querySelector('img').style.opacity=1"
-      onmouseleave="this.querySelector('div').style.opacity=1,this.querySelector('img').style.opacity=0"
+      data-pix-panel data-side="baseline"
+      style="position:relative;flex:0 1 auto;min-width:0;background:#fff;border:solid 15px #fff;overflow:hidden;color:#1a202c"
+      onmouseover="this.dataset.side='actual'"
+      onmouseleave="this.dataset.side='baseline'"
     >
       <h3 style="margin:0 0 8px">New screenshot (hover off to see old one):</h3>
-      <img style="min-width:200px;max-width:100%;opacity:0" src="data:image/png;base64,img-new-base64" />
-      <div style="position:absolute;top:0;left:0;width:100%;background:#fff">
+      <div style="position:relative;display:inline-block;max-width:100%">
+        <img data-pix-new style="display:block;min-width:200px;max-width:100%" src="data:image/png;base64,img-new-base64" />
+        <div data-pix-pins style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:2"></div>
+      </div>
+      <div data-pix-old style="position:absolute;top:0;left:0;width:100%;background:#fff">
         <h3 style="margin:0 0 8px">Old screenshot (hover to see new one):</h3>
-        <img style="min-width:200px;max-width:100%" src="data:image/png;base64,img-old-base64" />
+        <img style="display:block;min-width:200px;max-width:100%" src="data:image/png;base64,img-old-base64" />
       </div>
     </div>
+    
+    
+    
+    
   </div>
   </div>
   <div style="background:#1a202c;padding:0 16px 10px;display:flex;justify-content:flex-end;flex-shrink:0">
@@ -86,19 +124,38 @@ exports[`generateOverlayTemplate > generates proper template 3`] = `
     <button type="button" data-type="close" style="background:transparent;border:1px solid #4a5568;color:#a0aec0;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:.85em">✕ Close</button>
   </header>
   <div data-diff-base64="img-diff-base64" style="flex:1;overflow:auto;padding:20px;color:#fff">
-    <div style="display:flex;justify-content:center;align-items:flex-start;gap:15px;flex-wrap:wrap">
+    <div data-pix-root style="display:flex;justify-content:center;align-items:flex-start;gap:16px"><style>
+  [data-pix-panel] [data-pix-old] { opacity:1; }
+  [data-pix-panel] [data-pix-new] { opacity:0; }
+  [data-pix-panel][data-side="actual"] [data-pix-old] { opacity:0; }
+  [data-pix-panel][data-side="actual"] [data-pix-new] { opacity:1; }
+  [data-pix-panel] [data-pin-side="actual"] { display:none; }
+  [data-pix-panel][data-side="actual"] [data-pin-side="actual"] { display:block; }
+  [data-pix-panel][data-side="actual"] [data-pin-side="baseline"] { display:none; }
+  [data-pix-root][data-pins="off"] [data-pix-pins] { display:none; }
+  [data-pix-box] { visibility:hidden; }
+  [data-pix-root][data-lit="1"] [data-pix-box="1"] { visibility:visible; } [data-pix-root][data-lit="1"] [data-pix-line="1"] { background:#2d3748; } [data-pix-root][data-lit="2"] [data-pix-box="2"] { visibility:visible; } [data-pix-root][data-lit="2"] [data-pix-line="2"] { background:#2d3748; } [data-pix-root][data-lit="3"] [data-pix-box="3"] { visibility:visible; } [data-pix-root][data-lit="3"] [data-pix-line="3"] { background:#2d3748; } [data-pix-root][data-lit="4"] [data-pix-box="4"] { visibility:visible; } [data-pix-root][data-lit="4"] [data-pix-line="4"] { background:#2d3748; } [data-pix-root][data-lit="5"] [data-pix-box="5"] { visibility:visible; } [data-pix-root][data-lit="5"] [data-pix-line="5"] { background:#2d3748; } [data-pix-root][data-lit="6"] [data-pix-box="6"] { visibility:visible; } [data-pix-root][data-lit="6"] [data-pix-line="6"] { background:#2d3748; } [data-pix-root][data-lit="7"] [data-pix-box="7"] { visibility:visible; } [data-pix-root][data-lit="7"] [data-pix-line="7"] { background:#2d3748; } [data-pix-root][data-lit="8"] [data-pix-box="8"] { visibility:visible; } [data-pix-root][data-lit="8"] [data-pix-line="8"] { background:#2d3748; } [data-pix-root][data-lit="9"] [data-pix-box="9"] { visibility:visible; } [data-pix-root][data-lit="9"] [data-pix-line="9"] { background:#2d3748; } [data-pix-root][data-lit="10"] [data-pix-box="10"] { visibility:visible; } [data-pix-root][data-lit="10"] [data-pix-line="10"] { background:#2d3748; }
+</style>
     <div
-      style="position:relative;background:#fff;border:solid 15px #fff;overflow:hidden;color:#1a202c"
-      onmouseover="this.querySelector('div').style.opacity=0,this.querySelector('img').style.opacity=1"
-      onmouseleave="this.querySelector('div').style.opacity=1,this.querySelector('img').style.opacity=0"
+      data-pix-panel data-side="baseline"
+      style="position:relative;flex:0 1 auto;min-width:0;background:#fff;border:solid 15px #fff;overflow:hidden;color:#1a202c"
+      onmouseover="this.dataset.side='actual'"
+      onmouseleave="this.dataset.side='baseline'"
     >
       <h3 style="margin:0 0 8px">New screenshot (hover off to see old one):</h3>
-      <img style="min-width:200px;max-width:100%;opacity:0" src="data:image/png;base64,img-new-base64" />
-      <div style="position:absolute;top:0;left:0;width:100%;background:#fff">
+      <div style="position:relative;display:inline-block;max-width:100%">
+        <img data-pix-new style="display:block;min-width:200px;max-width:100%" src="data:image/png;base64,img-new-base64" />
+        <div data-pix-pins style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:2"></div>
+      </div>
+      <div data-pix-old style="position:absolute;top:0;left:0;width:100%;background:#fff">
         <h3 style="margin:0 0 8px">Old screenshot (hover to see new one):</h3>
-        <img style="min-width:200px;max-width:100%" src="data:image/png;base64,img-old-base64" />
+        <img style="display:block;min-width:200px;max-width:100%" src="data:image/png;base64,img-old-base64" />
       </div>
     </div>
+    
+    
+    
+    
   </div>
   </div>
   <div style="background:#1a202c;padding:0 16px 10px;display:flex;justify-content:flex-end;flex-shrink:0">

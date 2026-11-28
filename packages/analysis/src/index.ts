@@ -1,9 +1,19 @@
 export { analyze, type AnalyzeInput } from './analyze';
+export {
+  drawPins,
+  pinsOf,
+  PIN_COLORS,
+  type Pin,
+  type PinKind,
+  type Pins,
+} from './pins';
 export { analysisOf, bundle, type Bundle, type BundleEntry } from './bundle';
 export { descriptions, type Descriptions } from './describe';
+export { facts, type Fact, type FactsInput } from './facts';
 export { regionHash } from './hash';
 export {
   analysisPlugin,
+  factLines,
   captureComparison,
   withAnalysis,
   type AnalysisPlugin,
@@ -37,6 +47,15 @@ export {
   type RawLayout,
   type SnapshotInput,
 } from './layout/snapshot';
+export {
+  overflowOf,
+  STYLE,
+  transformInWords,
+  styleChanges,
+  styleOf,
+  type StyleChange,
+  type StyleProperty,
+} from './layout/style';
 export type { Environment, Layout, LayoutNode, Rect } from './layout/types';
 export { checkAgainstPixels, type Checked } from './layout/verify';
 export { OLD_BASELINES_NOTICE, UPDATE_BASELINES_COMMAND } from './notice';

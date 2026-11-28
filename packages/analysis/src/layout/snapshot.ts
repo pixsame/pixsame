@@ -82,6 +82,56 @@ export const snapshotLayout = ({
     'stroke',
     'list-style-type',
   ];
+  // the styles kept as values; the same list, in the same order, as STYLE in ./style
+  const STYLE = [
+    'font-family',
+    'font-size',
+    'font-weight',
+    'line-height',
+    'color',
+    'background-color',
+    'border-top-left-radius',
+    'border-top-right-radius',
+    'border-bottom-right-radius',
+    'border-bottom-left-radius',
+    'padding-top',
+    'padding-right',
+    'padding-bottom',
+    'padding-left',
+    'row-gap',
+    'column-gap',
+    'margin-top',
+    'margin-right',
+    'margin-bottom',
+    'margin-left',
+    'letter-spacing',
+    'font-style',
+    'text-align',
+    'text-transform',
+    'text-decoration-line',
+    'opacity',
+    'border-top-width',
+    'border-right-width',
+    'border-bottom-width',
+    'border-left-width',
+    'border-top-style',
+    'border-right-style',
+    'border-bottom-style',
+    'border-left-style',
+    'border-top-color',
+    'border-right-color',
+    'border-bottom-color',
+    'border-left-color',
+    'box-shadow',
+    'outline-style',
+    'outline-width',
+    'outline-color',
+    'background-image',
+    'transform',
+    'filter',
+    'outline-offset',
+    'order',
+  ];
   const SKIP = ['script', 'style', 'head', 'template', 'noscript'];
   const MEDIA = ['img', 'canvas', 'svg', 'video', 'iframe'];
   const hash = (text: string): string => {
@@ -166,6 +216,13 @@ export const snapshotLayout = ({
       }
     }
     node.paint = hash(paint);
+    // a value is kept short (a background can be a whole picture as a data URI) and free of the separator
+    node.style = STYLE.map((p) => {
+      const value = String(cs.getPropertyValue(p)).replace(/\|/g, ' ');
+      return value.length > 160
+        ? `${value.slice(0, 120)}… #${hash(value)}`
+        : value;
+    }).join('|');
     const border = ['top', 'right', 'bottom', 'left'].some(
       (side) => parseFloat(cs.getPropertyValue(`border-${side}-width`)) > 0,
     );

@@ -1,3 +1,4 @@
+import type { Fact } from './facts';
 import type { PixelMove } from './blocks';
 import type { Environment } from './layout/types';
 
@@ -83,6 +84,16 @@ export type Analysis = {
   sizes?: { baseline: Size; actual: Size };
   /** What rendered the baseline and this screenshot, as far as it is known. */
   environment?: { baseline?: Environment; actual?: Environment };
+  /**
+   * Set when a layout snapshot of the page was available on both sides:
+   * everything that differs, one fact each, at most 20 (see `facts`). The
+   * description is one sentence about the whole; these are what to act on.
+   */
+  facts?: Fact[];
+  /** How many facts did not fit in `facts`. */
+  factsOmitted?: number;
+  /** Image pixels per CSS pixel of the screenshot: the rectangles in `facts` times this are places on the image. */
+  scale?: number;
   /** Entries with the same key changed in the same way. */
   bundleKey: string;
 };

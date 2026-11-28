@@ -1,0 +1,22 @@
+{
+  "name": "@pixsame/benchmark",
+  "private": true,
+  "description": "Measures how well a coding agent finds what changed on a page from screenshots, from accessibility snapshots and from `pixsame snap`.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "generate": "node generate.mjs",
+    "answers": "node run.mjs",
+    "score": "node score.mjs"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "@pixsame/analysis": "workspace:*",
+    "hyparquet": "^1.33.1",
+    "pixsame": "workspace:*",
+    "playwright-core": "1.65.0",
+    "visual-regression-compare": "1.0.0-beta.4"
+  }
+}

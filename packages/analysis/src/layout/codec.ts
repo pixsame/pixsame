@@ -26,6 +26,7 @@ type Columns = {
   paint: number[];
   src: number[];
   font: number[];
+  style: number[];
   lineCount: number[];
   lines: number[];
 };
@@ -70,6 +71,7 @@ export const toColumns = (layout: Layout): Columns => {
     paint: [],
     src: [],
     font: [],
+    style: [],
     lineCount: [],
     lines: [],
   };
@@ -95,6 +97,7 @@ export const toColumns = (layout: Layout): Columns => {
     c.paint.push(str(n.paint));
     c.src.push(str(n.src));
     c.font.push(str(n.font));
+    c.style.push(str(n.style));
     c.lineCount.push(n.lines?.length ?? 0);
     for (const line of n.lines ?? []) c.lines.push(...line.map(hundredths));
     n.kids.forEach(walk);
@@ -139,6 +142,8 @@ export const fromColumns = (c: Columns): Layout => {
     if (src !== undefined) node.src = src;
     const font = str(c.font[i]);
     if (font !== undefined) node.font = font;
+    const style = str(c.style[i]);
+    if (style !== undefined) node.style = style;
     for (let k = 0; k < c.kids[i]; k++) node.kids.push(walk());
     return node;
   };

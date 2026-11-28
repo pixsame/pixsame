@@ -9,6 +9,7 @@ import { getPluginConfig } from './version.utils';
 import {
   analysisOf,
   OLD_BASELINES_NOTICE,
+  pinsOf,
   pngSize,
   readLayout,
   withAnalysis,
@@ -34,6 +35,7 @@ import type {
   ManifestEntry,
   ManifestEntryOptions,
   ManifestRenderer,
+  OverlayPin,
   PendingDiffRecord,
 } from './types';
 
@@ -251,6 +253,27 @@ export const compareImagesTask = async (
   const oldBaseline = hadNoLayout && entry.status !== 'updated';
   if (oldBaseline) noteOldBaseline();
 
+  // each change that has a place on the screenshot, in percent of it
+  const analysis = analysisOf(entry);
+  const found = analysis?.facts ? pinsOf(analysis) : undefined;
+  const size =
+    found?.pins.length && images.actual ? pngSize(images.actual) : undefined;
+  const pins: OverlayPin[] | undefined =
+    found && size
+      ? found.pins.map(({ number, kind, side, text, boxes }) => ({
+          number,
+          kind,
+          side,
+          text,
+          boxes: boxes.map((box) => ({
+            left: (box.x / size.width) * 100,
+            top: (box.y / size.height) * 100,
+            width: (box.width / size.width) * 100,
+            height: (box.height / size.height) * 100,
+          })),
+        }))
+      : undefined;
+
   // the images of a comparison that ran; a created or replaced baseline has none to show
   const base64 = (bytes?: Uint8Array) =>
     bytes && images.baseline ? Buffer.from(bytes).toString('base64') : '';
@@ -262,7 +285,9 @@ export const compareImagesTask = async (
     imgDiffBase64: base64(images.diff),
     imgOldBase64: base64(images.baseline),
     maxDiffThreshold: cfg.maxDiffThreshold,
-    description: analysisOf(entry)?.description,
+    description: analysis?.description,
+    ...(pins && { pins }),
+    ...(found?.rest.length && { rest: found.rest }),
     ...(oldBaseline && { oldBaseline }),
   };
 };

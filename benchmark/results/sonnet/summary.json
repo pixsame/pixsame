@@ -1,0 +1,43 @@
+{
+  "model": "claude-sonnet-5-5",
+  "judge": "sonnet",
+  "overhead": 6942,
+  "arms": [
+    {
+      "arm": "screenshots",
+      "changed": 140,
+      "found": 122,
+      "same": 30,
+      "invented": 0,
+      "input": 9710,
+      "output": 321,
+      "cost": 0.01709588058823528,
+      "seconds": 4.626882352941177,
+      "turns": 3
+    },
+    {
+      "arm": "aria",
+      "changed": 140,
+      "found": 0,
+      "same": 30,
+      "invented": 0,
+      "input": 7948,
+      "output": 223,
+      "cost": 0.008874201764705889,
+      "seconds": 3.562858823529412,
+      "turns": 3
+    },
+    {
+      "arm": "facts",
+      "changed": 140,
+      "found": 108,
+      "same": 30,
+      "invented": 0,
+      "input": 7514,
+      "output": 226,
+      "cost": 0.005578028823529412,
+      "seconds": 3.9375235294117648,
+      "turns": 2.3058823529411763
+    }
+  ]
+}

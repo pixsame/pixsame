@@ -124,3 +124,16 @@ scripts/.palette.png
 
 # Google Apps Script sources for the website forms (kept out of the repo, deployed from script.google.com)
 apps/website/apps-script/
+
+# copied from /skills when the CLI is packed
+packages/cli/skills
+
+# benchmark: rebuilt by `pnpm generate`
+benchmark/cases
+benchmark/cases-*
+# one file per answer while a run is going; `node pack.mjs` makes the answers.jsonl that is kept
+benchmark/results*/*/*/
+# DiffSpot: cases are cut from its dataset by `node diffspot/extract.mjs`
+benchmark/diffspot/cases*
+benchmark/diffspot/results*/*/*/
+benchmark/diffspot/results-dev*

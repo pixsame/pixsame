@@ -2,10 +2,13 @@ import {
   analysisOf,
   analysisPlugin,
   captureComparison,
+  drawPins,
+  pinsOf,
   readLayout,
   withAnalysis,
   writeLayout,
   type Layout,
+  type Pins,
 } from '@pixsame/analysis';
 import fs from 'fs';
 import path from 'path';
@@ -87,6 +90,13 @@ export type CompareResult = {
   imgNew?: Buffer;
   imgOld?: Buffer;
   imgDiff?: Buffer;
+  /**
+   * The changes that have a place on the screenshot, numbered, and the rest
+   * in words; only when the page's layout was known on both sides.
+   */
+  pins?: Pins;
+  /** The screenshot with the pins drawn on it, for a failed comparison that has any. */
+  imgChanges?: Buffer;
   /** What the comparer recorded in the manifest. */
   entry: ManifestEntry;
 };
@@ -272,11 +282,22 @@ export const compareImages = async (
   const status = entry.status as CompareStatus;
   const buffer = (bytes?: Uint8Array) =>
     bytes ? Buffer.from(bytes) : undefined;
+  const analysis = analysisOf(entry);
+  const pins = analysis?.facts ? pinsOf(analysis) : undefined;
+  let imgChanges: Buffer | undefined;
+  if (status === 'failed' && pins?.pins.length && images.actual) {
+    const { decodePng, encodePng } = await import('visual-regression-compare');
+    imgChanges = Buffer.from(
+      encodePng(drawPins(decodePng(images.actual), pins.pins)),
+    );
+  }
   return {
     status,
     error: status === 'failed' || status === 'missing-baseline',
     message: entry.message ?? '',
-    description: analysisOf(entry)?.description,
+    description: analysis?.description,
+    ...(pins && { pins }),
+    ...(imgChanges && { imgChanges }),
     diffRatio: entry.comparison.diffRatio,
     threshold: cfg.maxDiffThreshold,
     baselineWritten: entry.baselineWritten,

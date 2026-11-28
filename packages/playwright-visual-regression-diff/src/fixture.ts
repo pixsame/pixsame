@@ -302,7 +302,10 @@ export const visualRegressionFixtures: Fixtures<
         // Playwright's HTML report and UI mode group image attachments named
         // `<name>-expected.png`, `-actual.png` and `-diff.png` into their own
         // viewer (diff, actual, expected, side by side, slider)
-        const attach = (kind: 'expected' | 'actual' | 'diff', body?: Buffer) =>
+        const attach = (
+          kind: 'expected' | 'actual' | 'diff' | 'changes',
+          body?: Buffer,
+        ) =>
           body &&
           testInfo.attach(`${name}-${kind}.png`, {
             body,
@@ -312,6 +315,19 @@ export const visualRegressionFixtures: Fixtures<
         await attach('expected', result.imgOld);
         await attach('actual', result.imgNew ?? imgNew);
         await attach('diff', result.imgDiff);
+        // the screenshot with each change numbered on it, and the list the
+        // numbers belong to: the report can show a picture and a text
+        await attach('changes', result.imgChanges);
+        if (result.pins && result.pins.pins.length + result.pins.rest.length)
+          await testInfo.attach('pixsame: what changed', {
+            body: [
+              ...result.pins.pins.map(
+                ({ number, text }) => `${number}. ${text}`,
+              ),
+              ...result.pins.rest.map((text) => `- ${text}`),
+            ].join('\n'),
+            contentType: 'text/plain',
+          });
         // the report cannot host a button, but it gives text attachments a
         // copy button: one click to the command that reviews and replaces
         await testInfo.attach('pixsame: review and replace baselines', {

@@ -2,6 +2,7 @@ packages:
   - 'packages/*'
   - 'apps/*'
   - 'examples/*'
+  - 'benchmark'
 allowBuilds:
   cypress: true
   esbuild: true

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import path from 'path';
 import fs from 'fs';
 import sharp from 'sharp';
-import { ANALYSIS_VERSION } from '@pixsame/analysis';
+import { ANALYSIS_VERSION, writeLayout, type Layout } from '@pixsame/analysis';
 import { dir, setGracefulCleanup } from 'tmp-promise';
 import {
   compareImages as compare,
@@ -116,7 +116,7 @@ describe('compareImages', () => {
     expect(result.description).toBe(
       'The screenshot is 125 px wider and 56 px taller than the baseline.',
     );
-    expect(result.message.endsWith(result.description as string)).toBe(true);
+    expect(result.message).toContain(result.description as string);
     expect(result.entry.extra?.pixsame?.analysis).toMatchObject({
       version: ANALYSIS_VERSION,
       label: 'size-change',
@@ -277,5 +277,83 @@ describe('compareImages with an old baseline', () => {
     expect((await compareImages((await setup()).input)).oldBaseline).toBe(
       false,
     );
+  });
+});
+
+describe('compareImages with the layout of both pages', () => {
+  const card = async (color: string) =>
+    sharp({
+      create: { width: 200, height: 100, channels: 4, background: '#ffffff' },
+    })
+      .composite([
+        {
+          input: {
+            create: { width: 100, height: 40, channels: 4, background: color },
+          },
+          left: 20,
+          top: 20,
+        },
+      ])
+      .png()
+      .toBuffer();
+  const layoutOf = (paint: string) =>
+    ({
+      size: { width: 200, height: 100 },
+      scale: 1,
+      count: 2,
+      root: {
+        tag: 'html',
+        rect: [0, 0, 200, 100],
+        kids: [
+          {
+            tag: 'div',
+            cls: 'card',
+            rect: [20, 20, 100, 40],
+            box: true,
+            paint,
+            kids: [],
+          },
+        ],
+      },
+    }) as unknown as Layout;
+
+  it('lists each change under the message of a failed comparison', async () => {
+    const baseline = Buffer.from(
+      writeLayout(await card('#1e5ac8'), layoutOf('blue')),
+    );
+    const { input } = await setup(
+      { imgNew: await card('#c81e1e'), layout: layoutOf('red') },
+      { baseline },
+    );
+
+    const result = await compareImages(input);
+
+    expect(result.status).toBe('failed');
+    expect(result.message.split('\n').slice(1)).toEqual([
+      'What changed:',
+      '  - look changed on div.card',
+    ]);
+    expect(result.entry.extra?.pixsame?.analysis).toMatchObject({
+      facts: [{ type: 'element', element: 'div.card' }],
+    });
+    // the same change as a pin, and drawn on the screenshot
+    expect(result.pins).toEqual({
+      pins: [
+        {
+          number: 1,
+          kind: 'changed',
+          side: 'both',
+          boxes: [{ x: 20, y: 20, width: 100, height: 40 }],
+          text: 'look changed on div.card',
+        },
+      ],
+      rest: [],
+    });
+    const { data } = await sharp(result.imgChanges as Buffer)
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    expect([
+      ...data.subarray((20 * 200 + 60) * 4, (20 * 200 + 60) * 4 + 3),
+    ]).toEqual([217, 119, 6]);
   });
 });
