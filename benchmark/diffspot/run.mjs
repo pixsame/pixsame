@@ -13,7 +13,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { askClaude, inParallel } from "../ask.mjs";
+import { ask, inParallel } from "../ask.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const arg = (name, fallback) => {
@@ -22,7 +22,7 @@ const arg = (name, fallback) => {
 };
 const model = arg("model");
 if (!model) {
-  console.error("Give a model: --model sonnet (or haiku, opus, a full id)");
+  console.error("Give a model: --model sonnet (or haiku, opus, gemini-4-hydrogen, a full id)");
   process.exit(2);
 }
 const casesDir = path.resolve(here, arg("cases", "cases-test"));
@@ -71,9 +71,9 @@ await inParallel(todo, concurrency, async (job) => {
   try {
     fs.cpSync(path.join(casesDir, job.id, job.arm), cwd, { recursive: true });
     const question = { cwd, prompt: PROMPTS[job.arm], model, read: true };
-    let result = await askClaude(question);
+    let result = await ask(question);
     // one more try: a usage limit or a dropped connection is not an answer
-    if (result.error) result = await askClaude(question);
+    if (result.error) result = await ask(question);
     if (result.error) {
       failed++;
       console.error(`${job.id} ${job.arm}: ${result.error}`);

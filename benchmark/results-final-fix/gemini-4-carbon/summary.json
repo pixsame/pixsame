@@ -1,0 +1,43 @@
+{
+  "model": "gemini-4-carbon",
+  "judge": "sonnet",
+  "overhead": 167,
+  "arms": [
+    {
+      "arm": "screenshots",
+      "changed": 290,
+      "found": 266,
+      "same": 30,
+      "invented": 1,
+      "input": 2322,
+      "output": 1317,
+      "cost": 0.017816187499999997,
+      "seconds": 25.77410625,
+      "turns": 1
+    },
+    {
+      "arm": "aria",
+      "changed": 290,
+      "found": 20,
+      "same": 30,
+      "invented": 0,
+      "input": 751,
+      "output": 487,
+      "cost": 0.006371950000000004,
+      "seconds": 10.074746875,
+      "turns": 1
+    },
+    {
+      "arm": "facts",
+      "changed": 290,
+      "found": 290,
+      "same": 30,
+      "invented": 0,
+      "input": 290,
+      "output": 257,
+      "cost": 0.003150056249999998,
+      "seconds": 8.54333125,
+      "turns": 1
+    }
+  ]
+}

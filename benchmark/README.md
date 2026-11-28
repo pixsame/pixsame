@@ -57,6 +57,20 @@ Read this one as a check that the fixes work and broke nothing, not as a second 
 - Every `snap` answer is new. The screenshots and accessibility snapshots of a case did not change, so their answers are those of the final run, with two exceptions: the fourteen portfolio cases built before the border were asked again in every arm, and the letter spacing case was judged again against the corrected key.
 - Rounds 1 and 2, run again the same way (`snap` arm only): 220 of 220 and 174 of 174, with no difference reported on an unchanged page ([`results-round1-fix`](results-round1-fix), [`results-round2-fix`](results-round2-fix)).
 
+## A second model
+
+The same 320 cases, with the same `snap` output, given to Gemini 4 Carbon and judged by the same judge ([`results-final-fix/gemini-4-carbon/RESULTS.md`](results-final-fix/gemini-4-carbon/RESULTS.md)):
+
+| What the model was given    | Changes found (95% interval) | Invented a difference | Cost per answer |
+| --------------------------- | ---------------------------- | --------------------- | --------------- |
+| Two screenshots             | 92% (88–94), 266 of 290      | 1 of 30               | $0.0178         |
+| Two accessibility snapshots | 7% (5–10), 20 of 290         | 0 of 30               | $0.0064         |
+| `pixsame snap` output       | 100% (99–100), 290 of 290    | 0 of 30               | $0.0032         |
+
+- `snap` was never run against Gemini before this, and nothing was changed for it. The answers were asked for once.
+- From screenshots it misses the same kinds as Claude does: line height (1 of 10), letter spacing (5), font size and margin (7 each).
+- Gemini is not run as an agent here. It is asked through the Gemini API with every file of the case attached, so its tokens and cost have no agent overhead in them and do not compare with the Claude rows. The share of changes found does.
+
 ## What is measured
 
 **The pages**: small self-contained pages of the kinds agents edit, each set with its own stylesheet and its own kinds of page: [`pages.mjs`](pages.mjs) (pilot), [`pages-round1.mjs`](pages-round1.mjs), [`pages-round2.mjs`](pages-round2.mjs), [`pages-final.mjs`](pages-final.mjs). No network, web fonts or scripts, so a page renders the same every time.
@@ -104,7 +118,7 @@ node run.mjs --model sonnet --cases cases-final --out results-final     # 960 an
 node score.mjs --model sonnet --judge sonnet --cases cases-final --out results-final
 ```
 
-`--pages landing,pricing` limits any step to some pages, `--part 1/3` makes `generate.mjs` build every third page so that three runs can share the work, `--limit 20` stops `run.mjs` after twenty answers, `--judge` picks the judge model (default `haiku`). At list prices a full run costs about what `RESULTS.md` shows per answer times the number of answers (about $10 for the final set, three arms).
+`--pages landing,pricing` limits any step to some pages, `--part 1/3` makes `generate.mjs` build every third page so that three runs can share the work, `--limit 20` stops `run.mjs` after twenty answers, `--judge` picks the judge model (default `haiku`). A `--model` that starts with `gemini` (`gemini-4-carbon`) is asked through the Gemini API and needs `GEMINI_API_KEY`. At list prices a full run costs about what `RESULTS.md` shows per answer times the number of answers (about $10 for the final set, three arms).
 
 ## Results
 

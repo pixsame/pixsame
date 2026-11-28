@@ -16,7 +16,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { askClaude } from "./ask.mjs";
+import { ask as askModel } from "./ask.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const arg = (name, fallback) => {
@@ -26,7 +26,7 @@ const arg = (name, fallback) => {
 const model = arg("model");
 if (!model) {
   console.error(
-    "Give a model: --model sonnet (or haiku, opus, or a full model id)",
+    "Give a model: --model sonnet (or haiku, opus, gemini-4-hydrogen, or a full model id)",
   );
   process.exit(2);
 }
@@ -47,7 +47,7 @@ export const PROMPTS = {
   facts: `A web page was captured before and after a code change. A comparison tool (pixsame snap) already compared the two captures; its output is snap.txt in the current directory; read it. ${TASK}`,
 };
 
-const ask = (cwd, prompt) => askClaude({ cwd, prompt, model, read: true });
+const ask = (cwd, prompt) => askModel({ cwd, prompt, model, read: true });
 
 const jobs = [];
 for (const id of fs.readdirSync(casesDir).sort()) {

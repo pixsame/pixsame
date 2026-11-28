@@ -34,9 +34,25 @@ Read it with these in mind:
 - **Some of what counts as a miss is the answer key.** In several spacing cases the agent described what is on the screen ("the group moved 16 px left, the gaps between the links did not change") and the key says the gaps changed. Others have [reported the same](https://github.com/Tencent/DiffSpot/issues/2). Both arms lose these, so the difference between the arms is not affected.
 - **Every unchanged pair in the sample is the same image twice, byte for byte.** A comparison of bytes separates changed from unchanged pairs without a model.
 
+## A second model
+
+The same 270 pairs, given to Gemini 4 Carbon through the Gemini API (every file attached, no agent) and judged by the same judge:
+
+| What the model was given             | Changes found (95% interval) | Right on unchanged pairs | Cost per answer |
+| ------------------------------------ | ---------------------------- | ------------------------ | --------------- |
+| Two screenshots                      | 85% (80–89), 200 of 234      | 23 of 36                 | $0.0281         |
+| Two screenshots and pixsame's pixels | 95% (91–97), 222 of 234      | 36 of 36                 | $0.0233         |
+
+pixsame's output turned 23 misses into finds and 1 find into a miss. The full table is in [`results-test/gemini-4-carbon/RESULTS.md`](results-test/gemini-4-carbon/RESULTS.md).
+
+- **On 13 of 36 pairs that are the same image twice, Gemini listed a difference.** Told by pixsame that no pixel differs, it listed none.
+- **The gain is largest on the hard pairs**: 59 of 78 from screenshots, 74 of 78 with pixsame.
+- **Here it costs less with pixsame**, although more is sent: Gemini thinks for longer over two bare screenshots, and thinking is billed.
+- These answers were asked for once, on pairs that nothing was chosen on with Gemini.
+
 ## What pixsame got wrong
 
-The 15 changes the `pixels` arm missed:
+In the Claude run, the 15 changes the `pixels` arm missed:
 
 - A crop of a few pixels is too small for the model to say what happened in it: it named the right element and then could not tell rounder from sharper, or which way a gradient turned (6 cases).
 - A one pixel border around a box was called "rendering noise" and no area was reported (1 case, and 1 more among the first 88).
@@ -62,6 +78,6 @@ node run.mjs --model sonnet --cases cases-test --out results-test      # 540 ans
 node score.mjs --model sonnet --judge sonnet --cases cases-test --out results-test
 ```
 
-The answers and the judge's verdicts are in [`results-test/sonnet/answers.jsonl`](results-test/sonnet/answers.jsonl); `node ../pack.mjs --out diffspot/results-test --model sonnet --unpack` turns it back into one file per answer. The 540 answers cost about $11 at list prices and judging them about $8.
+The answers and the judge's verdicts are in [`results-test/sonnet/answers.jsonl`](results-test/sonnet/answers.jsonl); `node ../pack.mjs --out diffspot/results-test --model sonnet --unpack` turns it back into one file per answer. The 540 answers cost about $11 at list prices and judging them about $8. `--model gemini-4-carbon` asks through the Gemini API and needs `GEMINI_API_KEY`.
 
 The question the agent is asked is DiffSpot's own, word for word, after one sentence that says where the files are. [`judge.txt`](judge.txt) is DiffSpot's judge prompt, unchanged, and the counting is theirs: a change is found when the judge calls it "correct", "partial" is a miss, and an unchanged pair is right when the judge lists no invented difference. Both are MIT licensed, © 2026 Tencent.

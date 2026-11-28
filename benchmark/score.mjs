@@ -195,7 +195,9 @@ const lines = [
       `| ${NAMES[s.arm]} | ${pct(s.found, s.changed)}${interval(s.found, s.changed)} | ${pct(s.invented, s.same)} (${s.invented} of ${s.same}) | ${s.input.toLocaleString("en")} | ${s.output.toLocaleString("en")} | $${s.cost.toFixed(4)} | ${s.seconds.toFixed(1)} s |`,
   ),
   "",
-  `Input tokens include what Claude Code itself sends with every call (its instructions and the Read tool), about ${floor.toLocaleString("en")} tokens whatever the arm; the difference between rows is what the arm's material costs. Cost is at list prices, as Claude Code reports it.`,
+  modelId.startsWith("gemini")
+    ? "The model was asked through the Gemini API with every file of the case attached, not as an agent that reads them, so there is no agent overhead in these tokens and they do not compare with a Claude Code run. Output tokens include thinking. Cost is counted from the tokens at list prices."
+    : `Input tokens include what Claude Code itself sends with every call (its instructions and the Read tool), about ${floor.toLocaleString("en")} tokens whatever the arm; the difference between rows is what the arm's material costs. Cost is at list prices, as Claude Code reports it.`,
   "",
   "## Changes found, by kind of change",
   "",
